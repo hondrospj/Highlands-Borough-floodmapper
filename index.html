@@ -30035,6 +30035,7 @@ html.platform-mac-template .export-simple-datetime-field input[type="datetime-lo
     var root = document.documentElement;
     var legend = document.getElementById("legendDock");
     var toggle = document.getElementById("mobileControlsToggle");
+    var legendOriginPill = document.getElementById("shorelyLegendOriginPill");
     var appRoot = document.getElementById("app") || document.body;
     var left = document.getElementById("leftPanel");
     var timeline = document.getElementById("timelineDock");
@@ -30058,6 +30059,7 @@ html.platform-mac-template .export-simple-datetime-field input[type="datetime-lo
     if (!mobile) {
       body.classList.remove("shorely-compact-mobile-ui");
       body.classList.remove("shorely-phone-landscape");
+      if (legendOriginPill) legendOriginPill.hidden = true;
       return;
     }
     body.classList.add("shorely-compact-mobile-ui");
@@ -30085,10 +30087,25 @@ html.platform-mac-template .export-simple-datetime-field input[type="datetime-lo
     root.style.setProperty("--shorely-compact-top-row", "52px");
 
     if (legend) {
+      if (!legendOriginPill) {
+        legendOriginPill = document.createElement("button");
+        legendOriginPill.id = "shorelyLegendOriginPill";
+        legendOriginPill.type = "button";
+        legendOriginPill.addEventListener("click", function(event){
+          event.preventDefault();
+          event.stopPropagation();
+          body.classList.toggle("mobile-legend-open");
+          schedule();
+        });
+        document.body.appendChild(legendOriginPill);
+      }
       if (appRoot && legend.parentNode !== appRoot) {
         appRoot.appendChild(legend);
       }
       legend.dataset.compactLegendLabel = legend.dataset.legendMode === "dynamic" ? "Stages" : "Depth";
+      legendOriginPill.textContent = legend.dataset.compactLegendLabel + " ▴";
+      legendOriginPill.setAttribute("aria-label", "Close flood depth legend");
+      legendOriginPill.hidden = !body.classList.contains("mobile-legend-open");
       setImportant(legend, "position", "fixed");
       setImportant(legend, "top", "calc(var(--shorely-compact-top-row, 52px) + env(safe-area-inset-top, 0px))");
       setImportant(legend, "transform", "none");
@@ -30524,6 +30541,49 @@ html.platform-mac-template .export-simple-datetime-field input[type="datetime-lo
     outline:0 !important;
     box-shadow:none !important;
     transform:none !important;
+  }
+
+  html body.mobile-optimized #shorelyLegendOriginPill{
+    display:none !important;
+    position:fixed !important;
+    top:calc(var(--shorely-compact-top-row, 52px) + env(safe-area-inset-top, 0px)) !important;
+    left:calc(8px + env(safe-area-inset-left, 0px)) !important;
+    z-index:6700 !important;
+    width:88px !important;
+    min-width:88px !important;
+    max-width:88px !important;
+    height:32px !important;
+    min-height:32px !important;
+    max-height:32px !important;
+    align-items:center !important;
+    justify-content:center !important;
+    padding:0 8px !important;
+    border-radius:999px !important;
+    border:1px solid rgba(148,163,184,.34) !important;
+    background:rgba(11,18,32,.90) !important;
+    box-shadow:0 14px 34px rgba(2,6,23,.36), inset 0 1px 0 rgba(255,255,255,.08) !important;
+    color:#fff !important;
+    -webkit-text-fill-color:#fff !important;
+    font-size:11px !important;
+    font-weight:950 !important;
+    line-height:1 !important;
+    letter-spacing:0 !important;
+    white-space:nowrap !important;
+    box-sizing:border-box !important;
+    cursor:pointer !important;
+    pointer-events:auto !important;
+  }
+
+  html body.mobile-optimized.mobile-legend-open #shorelyLegendOriginPill{
+    display:flex !important;
+  }
+
+  @media (max-width:360px){
+    html body.mobile-optimized #shorelyLegendOriginPill{
+      width:82px !important;
+      min-width:82px !important;
+      max-width:82px !important;
+    }
   }
 
   html body.mobile-optimized.mobile-legend-open #legendDock::after{
