@@ -30331,6 +30331,15 @@ html.platform-mac-template .export-simple-datetime-field input[type="datetime-lo
         setImportant(observedDateInput, "white-space", "nowrap");
       }
     }
+
+    if (body.classList.contains("top-tides-modal-open")) {
+      [document.getElementById("mapTitleBadge"), toggle, legend, zoomCorner].forEach(function(el){
+        if (!el) return;
+        setImportant(el, "visibility", "hidden");
+        setImportant(el, "opacity", "0");
+        setImportant(el, "pointer-events", "none");
+      });
+    }
   }
 
   function schedule(){
@@ -30544,49 +30553,6 @@ html.platform-mac-template .export-simple-datetime-field input[type="datetime-lo
     outline:0 !important;
     box-shadow:none !important;
     transform:none !important;
-  }
-
-  html body.mobile-optimized #shorelyLegendOriginPill{
-    display:none !important;
-    position:fixed !important;
-    top:calc(var(--shorely-compact-top-row, 52px) + env(safe-area-inset-top, 0px)) !important;
-    left:calc(8px + env(safe-area-inset-left, 0px)) !important;
-    z-index:6700 !important;
-    width:88px !important;
-    min-width:88px !important;
-    max-width:88px !important;
-    height:32px !important;
-    min-height:32px !important;
-    max-height:32px !important;
-    align-items:center !important;
-    justify-content:center !important;
-    padding:0 8px !important;
-    border-radius:999px !important;
-    border:1px solid rgba(148,163,184,.34) !important;
-    background:rgba(11,18,32,.90) !important;
-    box-shadow:0 14px 34px rgba(2,6,23,.36), inset 0 1px 0 rgba(255,255,255,.08) !important;
-    color:#fff !important;
-    -webkit-text-fill-color:#fff !important;
-    font-size:11px !important;
-    font-weight:950 !important;
-    line-height:1 !important;
-    letter-spacing:0 !important;
-    white-space:nowrap !important;
-    box-sizing:border-box !important;
-    cursor:pointer !important;
-    pointer-events:auto !important;
-  }
-
-  html body.mobile-optimized.mobile-legend-open #shorelyLegendOriginPill{
-    display:flex !important;
-  }
-
-  @media (max-width:360px){
-    html body.mobile-optimized #shorelyLegendOriginPill{
-      width:82px !important;
-      min-width:82px !important;
-      max-width:82px !important;
-    }
   }
 
   html body.mobile-optimized.mobile-legend-open #legendDock::after{
@@ -31006,6 +30972,262 @@ main().catch(err => {
   }
 }
 </style>
+<style id="shorely-cape-mobile-followup-ui">
+@media (max-width:900px), (max-height:560px){
+  html body.mobile-optimized #mobileControlsToggle,
+  html body.mobile-optimized.mobile-controls-open #mobileControlsToggle,
+  html body.mobile-optimized.mobile-legend-open #mobileControlsToggle,
+  html body.mobile-optimized.mobile-controls-open.mobile-legend-open #mobileControlsToggle{
+    display:inline-flex !important;
+    visibility:visible !important;
+    opacity:1 !important;
+    pointer-events:auto !important;
+    color:transparent !important;
+    font-size:0 !important;
+    background:rgba(11,18,32,.97) !important;
+    border:1px solid rgba(191,219,254,.38) !important;
+    box-shadow:0 14px 28px rgba(0,0,0,.34) !important;
+    z-index:6600 !important;
+  }
+
+  html body.mobile-optimized #mobileControlsToggle::after,
+  html body.mobile-optimized.mobile-controls-open #mobileControlsToggle::after,
+  html body.mobile-optimized.mobile-legend-open #mobileControlsToggle::after,
+  html body.mobile-optimized.mobile-controls-open.mobile-legend-open #mobileControlsToggle::after{
+    display:flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    width:100% !important;
+    height:100% !important;
+    min-width:0 !important;
+    color:#fff !important;
+    -webkit-text-fill-color:#fff !important;
+    opacity:1 !important;
+    visibility:visible !important;
+    font-size:11px !important;
+    font-weight:950 !important;
+    line-height:1 !important;
+    letter-spacing:0 !important;
+    white-space:nowrap !important;
+    overflow:hidden !important;
+    text-overflow:clip !important;
+  }
+
+  html body.mobile-optimized #mobileControlsToggle::after,
+  html body.mobile-optimized.mobile-legend-open #mobileControlsToggle::after{
+    content:"Controls ▾" !important;
+  }
+
+  html body.mobile-optimized.mobile-controls-open #mobileControlsToggle::after,
+  html body.mobile-optimized.mobile-controls-open.mobile-legend-open #mobileControlsToggle::after{
+    content:"Controls ▴" !important;
+  }
+
+  html body.mobile-optimized #legendDock,
+  html body.mobile-optimized #legendDock.legend-card,
+  html body.mobile-optimized.mobile-controls-open #legendDock,
+  html body.mobile-optimized.mobile-controls-open #legendDock.legend-card,
+  html body.mobile-optimized.mobile-legend-open #legendDock,
+  html body.mobile-optimized.mobile-legend-open #legendDock.legend-card{
+    display:block !important;
+    visibility:visible !important;
+    opacity:1 !important;
+    pointer-events:auto !important;
+    z-index:6600 !important;
+  }
+
+  html body.mobile-optimized:not(.mobile-legend-open) #legendDock::after,
+  html body.mobile-optimized.mobile-controls-open:not(.mobile-legend-open) #legendDock::after,
+  html body.mobile-optimized.mobile-legend-open #legendDock::before{
+    display:flex !important;
+    color:#fff !important;
+    -webkit-text-fill-color:#fff !important;
+    opacity:1 !important;
+    visibility:visible !important;
+    font-weight:950 !important;
+    letter-spacing:0 !important;
+  }
+
+  html body.mobile-optimized.mobile-controls-open:not(.mobile-legend-open) #legendDock::after{
+    content:attr(data-compact-legend-label) " ▾" !important;
+  }
+
+  html body.mobile-optimized.mobile-legend-open #legendDock::before{
+    content:attr(data-compact-legend-label) " ▴" !important;
+  }
+
+  html body.mobile-optimized #shorelyLegendOriginPill{
+    display:none !important;
+    position:fixed !important;
+    top:calc(var(--shorely-compact-top-row, 52px) + env(safe-area-inset-top, 0px)) !important;
+    left:calc(8px + env(safe-area-inset-left, 0px)) !important;
+    z-index:6700 !important;
+    width:88px !important;
+    min-width:88px !important;
+    max-width:88px !important;
+    height:32px !important;
+    min-height:32px !important;
+    max-height:32px !important;
+    align-items:center !important;
+    justify-content:center !important;
+    padding:0 8px !important;
+    border-radius:999px !important;
+    border:1px solid rgba(148,163,184,.34) !important;
+    background:rgba(11,18,32,.90) !important;
+    box-shadow:0 14px 34px rgba(2,6,23,.36), inset 0 1px 0 rgba(255,255,255,.08) !important;
+    color:#fff !important;
+    -webkit-text-fill-color:#fff !important;
+    font-size:11px !important;
+    font-weight:950 !important;
+    line-height:1 !important;
+    letter-spacing:0 !important;
+    white-space:nowrap !important;
+    box-sizing:border-box !important;
+    cursor:pointer !important;
+    pointer-events:auto !important;
+  }
+
+  html body.mobile-optimized.mobile-legend-open #shorelyLegendOriginPill{
+    display:flex !important;
+  }
+
+  @media (max-width:360px){
+    html body.mobile-optimized #shorelyLegendOriginPill{
+      width:82px !important;
+      min-width:82px !important;
+      max-width:82px !important;
+    }
+  }
+
+  html body.mobile-optimized .top-tides-modal,
+  html body.mobile-optimized.top-tides-modal-open .top-tides-modal{
+    z-index:19000 !important;
+    padding:14px 10px !important;
+    background:rgba(5,11,22,.90) !important;
+    align-items:center !important;
+    justify-content:center !important;
+  }
+
+  html body.mobile-optimized.top-tides-modal-open #mapTitleBadge,
+  html body.mobile-optimized.top-tides-modal-open #mobileControlsToggle,
+  html body.mobile-optimized.top-tides-modal-open #legendDock,
+  html body.mobile-optimized.top-tides-modal-open .leaflet-top.leaflet-right{
+    visibility:hidden !important;
+    opacity:0 !important;
+    pointer-events:none !important;
+  }
+
+  html body.mobile-optimized .top-tides-modal-card{
+    width:min(358px, calc(100vw - 20px - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px))) !important;
+    max-height:calc(100dvh - 28px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)) !important;
+    padding:12px !important;
+    border-radius:18px !important;
+    background:#0b1220 !important;
+    overflow:auto !important;
+  }
+
+  html body.mobile-optimized .top-tides-modal-head{
+    margin-bottom:9px !important;
+  }
+
+  html body.mobile-optimized .top-tides-modal-head h3{
+    font-size:16px !important;
+    letter-spacing:0 !important;
+  }
+
+  html body.mobile-optimized .top-tides-modal-head p{
+    font-size:10px !important;
+    line-height:1.25 !important;
+  }
+
+  html body.mobile-optimized .top-tides-modal-list{
+    gap:7px !important;
+  }
+
+  html body.mobile-optimized .top-tide-modal-item{
+    min-height:58px !important;
+    background:#1a2433 !important;
+  }
+
+  html body.mobile-optimized .top-tide-more-btn{
+    min-height:42px !important;
+    font-size:11px !important;
+  }
+
+  html body.mobile-optimized #downloadModal .download-modal-card{
+    width:min(366px, calc(100vw - 18px - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px))) !important;
+    max-height:calc(100dvh - 24px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)) !important;
+    border-radius:18px !important;
+    overflow:auto !important;
+  }
+
+  html body.mobile-optimized #downloadModal #exportTimePicker{
+    padding:10px !important;
+    gap:9px !important;
+    border-radius:14px !important;
+  }
+
+  html body.mobile-optimized #downloadModal #downloadRangeFields.export-simple-range-grid{
+    gap:9px !important;
+  }
+
+  html body.mobile-optimized #downloadModal .export-date-time-controls{
+    display:grid !important;
+    grid-template-columns:minmax(0, 1fr) 108px !important;
+    gap:7px !important;
+    min-width:0 !important;
+    align-items:stretch !important;
+  }
+
+  html body.mobile-optimized #downloadModal .export-date-control,
+  html body.mobile-optimized #downloadModal .export-date-text-input,
+  html body.mobile-optimized #downloadModal .export-time-select{
+    min-width:0 !important;
+    max-width:100% !important;
+    box-sizing:border-box !important;
+  }
+
+  html body.mobile-optimized #downloadModal .export-date-text-input,
+  html body.mobile-optimized #downloadModal .export-time-select{
+    height:44px !important;
+    min-height:44px !important;
+    max-height:44px !important;
+    border-radius:13px !important;
+    font-size:14px !important;
+    line-height:1 !important;
+    letter-spacing:0 !important;
+    white-space:nowrap !important;
+    overflow:hidden !important;
+    text-overflow:clip !important;
+  }
+
+  html body.mobile-optimized #downloadModal .export-date-text-input{
+    padding:0 36px 0 10px !important;
+  }
+
+  html body.mobile-optimized #downloadModal .export-time-select{
+    padding:0 22px 0 8px !important;
+    font-size:13px !important;
+  }
+
+  html body.mobile-optimized #downloadModal .export-calendar-button{
+    right:4px !important;
+    width:32px !important;
+    min-width:32px !important;
+    height:32px !important;
+    min-height:32px !important;
+    padding:6px !important;
+    border-radius:9px !important;
+  }
+}
+
+@media (max-width:370px){
+  html body.mobile-optimized #downloadModal .export-date-time-controls{
+    grid-template-columns:1fr !important;
+  }
+}
+</style>
+
 <style id="shorely-mobile-slider-polish">
 @media (max-width:900px), (max-height:560px){
   :root{
@@ -31444,5 +31666,14 @@ main().catch(err => {
   });
 })();
 </script>
+<style id="shorely-mobile-close-placement-fix">
+@media (max-width:900px), (max-height:560px){
+  html body.mobile-optimized.mobile-controls-open #leftPanel > #mobileControlsClose{
+    position:absolute !important;
+    top:8px !important;
+    right:8px !important;
+  }
+}
+</style>
 </body>
 </html>
