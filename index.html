@@ -30117,10 +30117,10 @@ html.platform-mac-template .export-simple-datetime-field input[type="datetime-lo
         setImportant(legend, "top", "calc(var(--shorely-compact-top-row, 52px) + 38px + env(safe-area-inset-top, 0px))");
         setImportant(legend, "left", "50%");
         setImportant(legend, "transform", "translateX(-50%)");
-        setImportant(legend, "width", "min(270px, calc(100vw - 16px - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px)))");
+        setImportant(legend, "width", "min(342px, calc(100vw - 14px - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px)))");
         setImportant(legend, "height", "auto");
         setImportant(legend, "min-height", "0");
-        setImportant(legend, "max-height", "min(32dvh, 164px)");
+        setImportant(legend, "max-height", "min(29dvh, 150px)");
         setImportant(legend, "overflow-y", "auto");
         setImportant(legend, "overflow-x", "hidden");
       } else {
@@ -30510,11 +30510,11 @@ html.platform-mac-template .export-simple-datetime-field input[type="datetime-lo
     left:50% !important;
     right:auto !important;
     transform:translateX(-50%) !important;
-    width:min(270px, calc(100vw - 16px - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px))) !important;
+    width:min(342px, calc(100vw - 14px - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px))) !important;
     min-width:0 !important;
-    max-width:calc(100vw - 16px - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px)) !important;
-    max-height:min(32dvh, 164px) !important;
-    padding:6px 8px 7px !important;
+    max-width:calc(100vw - 14px - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px)) !important;
+    max-height:min(29dvh, 150px) !important;
+    padding:5px 8px 6px !important;
     border-radius:12px !important;
     overflow-y:auto !important;
     overflow-x:hidden !important;
@@ -30613,7 +30613,7 @@ html.platform-mac-template .export-simple-datetime-field input[type="datetime-lo
     visibility:visible !important;
     opacity:1 !important;
     grid-template-columns:repeat(2, minmax(0, 1fr)) !important;
-    gap:5px 8px !important;
+    gap:4px 9px !important;
   }
 
   html body.mobile-optimized.mobile-legend-open #legendDock .legend-row,
@@ -30624,9 +30624,9 @@ html.platform-mac-template .export-simple-datetime-field input[type="datetime-lo
     grid-template-columns:9px minmax(0, 1fr) !important;
     gap:4px !important;
     align-items:center !important;
-    min-height:14px !important;
+    min-height:13px !important;
     font-size:9px !important;
-    line-height:1.05 !important;
+    line-height:1 !important;
     white-space:nowrap !important;
     overflow:visible !important;
   }
@@ -30934,5 +30934,74 @@ main().catch(err => {
   toast(err.message);
 });
 </script>
+<style id="shorely-desktop-title-fit-fix">
+@media (min-width:901px) and (min-height:561px){
+  html body #mapTitleBadge,
+  html body #mapTitleBadge.shorely-title-badge,
+  html body.forecast-mode #mapTitleBadge.shorely-title-badge,
+  html body.observed-mode #mapTitleBadge.shorely-title-badge{
+    display:flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    gap:clamp(8px, 1vw, 14px) !important;
+    box-sizing:border-box !important;
+    width:auto !important;
+    min-width:0 !important;
+    max-width:min(900px, calc(100vw - 32px)) !important;
+    padding:9px clamp(12px, 1.2vw, 20px) !important;
+    overflow:hidden !important;
+    white-space:nowrap !important;
+  }
+
+  html body #mapTitleBadge #mapTitleText,
+  html body #mapTitleBadge .shorely-title-text{
+    flex:1 1 auto !important;
+    min-width:0 !important;
+    max-width:100% !important;
+    font-size:clamp(18px, 2.35vw, 38px) !important;
+    line-height:1.04 !important;
+    letter-spacing:0 !important;
+    white-space:nowrap !important;
+    overflow:hidden !important;
+    text-overflow:ellipsis !important;
+  }
+
+  html body #mapTitleBadge #mapTitleLogo,
+  html body #mapTitleBadge #mapTitlePartnerLogo,
+  html body #mapTitleBadge .shorely-title-logo,
+  html body #mapTitleBadge .shorely-title-logo-town,
+  html body #mapTitleBadge .shorely-title-logo-shorelysafe{
+    flex:0 1 auto !important;
+    min-width:0 !important;
+    max-width:clamp(76px, 8vw, 138px) !important;
+    max-height:42px !important;
+    object-fit:contain !important;
+  }
+}
+
+@media (min-width:901px) and (max-width:1280px) and (min-height:561px){
+  html body #mapTitleBadge,
+  html body #mapTitleBadge.shorely-title-badge,
+  html body.forecast-mode #mapTitleBadge.shorely-title-badge,
+  html body.observed-mode #mapTitleBadge.shorely-title-badge{
+    max-width:calc(100vw - 24px) !important;
+    gap:8px !important;
+  }
+
+  html body #mapTitleBadge #mapTitleText,
+  html body #mapTitleBadge .shorely-title-text{
+    font-size:clamp(17px, 2.45vw, 30px) !important;
+  }
+
+  html body #mapTitleBadge #mapTitleLogo,
+  html body #mapTitleBadge #mapTitlePartnerLogo,
+  html body #mapTitleBadge .shorely-title-logo,
+  html body #mapTitleBadge .shorely-title-logo-town,
+  html body #mapTitleBadge .shorely-title-logo-shorelysafe{
+    max-width:108px !important;
+    max-height:36px !important;
+  }
+}
+</style>
 </body>
 </html>
