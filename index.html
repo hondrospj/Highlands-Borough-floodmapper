@@ -19666,6 +19666,7 @@ function formatSelectedObservedDate(dateStr) {
     async function renderHour(index) {
       if (!currentSeriesHours.length) return;
 
+      index = Math.max(0, Math.min(Math.round(Number(index) || 0), currentSeriesHours.length - 1));
       const entry = currentSeriesHours[index];
       if (!entry) return;
 
@@ -21139,7 +21140,9 @@ function startPlayback() {
 
       document.getElementById("hourSlider").addEventListener("input", async e => {
         stopPlayback();
-        await renderHour(Number(e.target.value));
+        const index = Math.max(0, Math.min(Math.round(Number(e.target.value) || 0), currentSeriesHours.length - 1));
+        e.target.value = String(index);
+        await renderHour(index);
       });
 
       document.getElementById("opacitySlider").addEventListener("input", e => {
@@ -31167,14 +31170,14 @@ main().catch(err => {
 @media (max-width:900px), (max-height:560px){
   html body.mobile-optimized #shorelyMobileSliderKey{
     position:absolute !important;
-    top:10px !important;
-    left:60px !important;
-    right:14px !important;
-    height:13px !important;
+    top:13px !important;
+    left:16px !important;
+    right:58px !important;
+    height:12px !important;
     display:flex !important;
     align-items:center !important;
     justify-content:center !important;
-    gap:clamp(6px, 2.2vw, 11px) !important;
+    gap:clamp(6px, 2vw, 10px) !important;
     z-index:12 !important;
     pointer-events:none !important;
     overflow:hidden !important;
@@ -31187,7 +31190,7 @@ main().catch(err => {
     gap:3px !important;
     min-width:0 !important;
     color:#eaf0ff !important;
-    font-size:8.5px !important;
+    font-size:8.2px !important;
     font-weight:900 !important;
     line-height:1 !important;
     letter-spacing:0 !important;
@@ -31302,6 +31305,10 @@ main().catch(err => {
       return;
     }
 
+    document.documentElement.style.setProperty("--shorely-mobile-timeline-height", "104px");
+    document.documentElement.style.setProperty("--pj-request-timeline-height", "104px");
+    document.documentElement.style.setProperty("--shorely-mobile-drawer-bottom", "108px");
+
     var originalKey = document.getElementById("timelineFloodKey");
     var toggle = document.getElementById("mobileControlsToggle");
     var legend = document.getElementById("legendDock");
@@ -31311,62 +31318,74 @@ main().catch(err => {
     var play = document.getElementById("playBtn");
     var days = document.getElementById("timelineDayTabs");
     var track = timeline && timeline.querySelector(".timeline-trackRow");
+    var slider = document.getElementById("hourSlider");
     var key = ensureSliderKey(timeline);
 
     if (originalKey) setImportant(originalKey, "display", "none");
     if (timeline) {
-      setImportant(timeline, "height", "100px");
-      setImportant(timeline, "min-height", "100px");
-      setImportant(timeline, "max-height", "100px");
+      setImportant(timeline, "height", "104px");
+      setImportant(timeline, "min-height", "104px");
+      setImportant(timeline, "max-height", "104px");
       setImportant(timeline, "padding", "10px 10px 10px");
       setImportant(timeline, "overflow", "visible");
     }
     if (key) {
       setImportant(key, "display", "flex");
-      setImportant(key, "top", "10px");
-      setImportant(key, "left", "60px");
-      setImportant(key, "right", "14px");
+      setImportant(key, "top", "13px");
+      setImportant(key, "left", "16px");
+      setImportant(key, "right", "58px");
     }
     if (top) {
-      setImportant(top, "left", "10px");
-      setImportant(top, "top", "calc(50% + 5px)");
-      setImportant(top, "width", "36px");
-      setImportant(top, "height", "36px");
+      setImportant(top, "left", "auto");
+      setImportant(top, "right", "12px");
+      setImportant(top, "top", "8px");
+      setImportant(top, "transform", "none");
+      setImportant(top, "width", "34px");
+      setImportant(top, "height", "34px");
       setImportant(top, "z-index", "14");
     }
     if (controls) {
-      setImportant(controls, "width", "36px");
-      setImportant(controls, "height", "36px");
+      setImportant(controls, "width", "34px");
+      setImportant(controls, "height", "34px");
       setImportant(controls, "display", "grid");
       setImportant(controls, "place-items", "center");
     }
     if (play) {
-      setImportant(play, "width", "36px");
-      setImportant(play, "height", "36px");
-      setImportant(play, "min-width", "36px");
-      setImportant(play, "min-height", "36px");
-      setImportant(play, "max-width", "36px");
-      setImportant(play, "max-height", "36px");
-      setImportant(play, "flex", "0 0 36px");
+      setImportant(play, "width", "34px");
+      setImportant(play, "height", "34px");
+      setImportant(play, "min-width", "34px");
+      setImportant(play, "min-height", "34px");
+      setImportant(play, "max-width", "34px");
+      setImportant(play, "max-height", "34px");
+      setImportant(play, "flex", "0 0 34px");
     }
     if (days) {
-      setImportant(days, "width", "calc(100% - 54px)");
-      setImportant(days, "max-width", "calc(100% - 54px)");
+      setImportant(days, "width", "calc(100% - 24px)");
+      setImportant(days, "max-width", "calc(100% - 24px)");
       setImportant(days, "height", "20px");
-      setImportant(days, "margin", "18px 0 4px 54px");
+      setImportant(days, "margin", "28px 12px 4px 12px");
     }
     if (track) {
-      setImportant(track, "width", "calc(100% - 54px)");
-      setImportant(track, "max-width", "calc(100% - 54px)");
-      setImportant(track, "margin-left", "54px");
+      setImportant(track, "width", "calc(100% - 24px)");
+      setImportant(track, "max-width", "calc(100% - 24px)");
+      setImportant(track, "margin-left", "12px");
+      setImportant(track, "margin-right", "12px");
       setImportant(track, "margin-top", "4px");
       setImportant(track, "height", "24px");
     }
+    if (slider) {
+      setImportant(slider, "width", "calc(100% - var(--pj-slider-thumb-size, 16px))");
+      setImportant(slider, "max-width", "calc(100% - var(--pj-slider-thumb-size, 16px))");
+      setImportant(slider, "margin", "0 var(--pj-slider-thumb-half, 8px)");
+    }
 
     if (toggle) {
+      setImportant(toggle, "display", "inline-flex");
       setImportant(toggle, "position", "fixed");
       setImportant(toggle, "left", "50%");
       setImportant(toggle, "right", "auto");
+      setImportant(toggle, "bottom", "auto");
+      setImportant(toggle, "margin", "0");
       setImportant(toggle, "transform", "translateX(-50%)");
       setImportant(toggle, "top", "calc(var(--shorely-compact-top-row, 52px) + env(safe-area-inset-top, 0px))");
       setImportant(toggle, "width", window.innerWidth <= 360 ? "104px" : "112px");
@@ -31410,7 +31429,9 @@ main().catch(err => {
   window.addEventListener("load", boot, { once:true });
   window.addEventListener("resize", schedule, { passive:true });
   window.addEventListener("orientationchange", function(){ window.setTimeout(schedule, 80); }, { passive:true });
-  document.addEventListener("click", function(){ window.setTimeout(schedule, 20); window.setTimeout(schedule, 160); }, true);
+  document.addEventListener("click", function(){
+    [20, 80, 180, 360, 700].forEach(function(ms){ window.setTimeout(schedule, ms); });
+  }, true);
 })();
 </script>
 </body>
