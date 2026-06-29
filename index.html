@@ -31163,5 +31163,255 @@ main().catch(err => {
   }
 }
 </style>
+<style id="shorely-mobile-slider-key-correction">
+@media (max-width:900px), (max-height:560px){
+  html body.mobile-optimized #shorelyMobileSliderKey{
+    position:absolute !important;
+    top:10px !important;
+    left:60px !important;
+    right:14px !important;
+    height:13px !important;
+    display:flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    gap:clamp(6px, 2.2vw, 11px) !important;
+    z-index:12 !important;
+    pointer-events:none !important;
+    overflow:hidden !important;
+    white-space:nowrap !important;
+  }
+
+  html body.mobile-optimized #shorelyMobileSliderKey .shorely-mobile-slider-key-item{
+    display:inline-flex !important;
+    align-items:center !important;
+    gap:3px !important;
+    min-width:0 !important;
+    color:#eaf0ff !important;
+    font-size:8.5px !important;
+    font-weight:900 !important;
+    line-height:1 !important;
+    letter-spacing:0 !important;
+    text-shadow:0 1px 2px rgba(0,0,0,.35) !important;
+  }
+
+  html body.mobile-optimized #shorelyMobileSliderKey .shorely-mobile-slider-key-swatch{
+    width:7px !important;
+    min-width:7px !important;
+    height:7px !important;
+    border-radius:999px !important;
+    box-shadow:0 0 0 1px rgba(255,255,255,.16) !important;
+  }
+
+  html body.mobile-optimized #shorelyMobileSliderKey .shorely-mobile-slider-key-swatch.no{ background:#72d85d !important; }
+  html body.mobile-optimized #shorelyMobileSliderKey .shorely-mobile-slider-key-swatch.minor{ background:#d99a28 !important; }
+  html body.mobile-optimized #shorelyMobileSliderKey .shorely-mobile-slider-key-swatch.moderate{ background:#d75470 !important; }
+  html body.mobile-optimized #shorelyMobileSliderKey .shorely-mobile-slider-key-swatch.major{ background:#7659d6 !important; }
+}
+</style>
+<script id="shorely-mobile-slider-key-correction-script">
+(function(){
+  "use strict";
+
+  var queued = false;
+  var observerStarted = false;
+
+  function isMobile(){
+    try {
+      return window.matchMedia("(max-width: 900px), (max-height: 560px)").matches;
+    } catch (e) {
+      return Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0) <= 900;
+    }
+  }
+
+  function setImportant(el, prop, value){
+    if (!el) return;
+    el.style.setProperty(prop, value, "important");
+  }
+
+  function ensureSliderKey(timeline){
+    if (!timeline) return null;
+    var key = document.getElementById("shorelyMobileSliderKey");
+    if (!key) {
+      key = document.createElement("div");
+      key.id = "shorelyMobileSliderKey";
+      key.setAttribute("aria-label", "Flood stage key");
+      key.innerHTML = [
+        '<span class="shorely-mobile-slider-key-item"><span class="shorely-mobile-slider-key-swatch no"></span>None</span>',
+        '<span class="shorely-mobile-slider-key-item"><span class="shorely-mobile-slider-key-swatch minor"></span>Minor</span>',
+        '<span class="shorely-mobile-slider-key-item"><span class="shorely-mobile-slider-key-swatch moderate"></span>Moderate</span>',
+        '<span class="shorely-mobile-slider-key-item"><span class="shorely-mobile-slider-key-swatch major"></span>Major</span>'
+      ].join("");
+      timeline.appendChild(key);
+    } else if (key.parentNode !== timeline) {
+      timeline.appendChild(key);
+    }
+    return key;
+  }
+
+  function compactLegend(legend){
+    if (!legend || !document.body.classList.contains("mobile-legend-open")) return;
+    setImportant(legend, "left", "50%");
+    setImportant(legend, "right", "auto");
+    setImportant(legend, "transform", "translateX(-50%)");
+    setImportant(legend, "width", "min(344px, calc(100vw - 18px - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px)))");
+    setImportant(legend, "max-width", "calc(100vw - 18px - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px))");
+    setImportant(legend, "height", "auto");
+    setImportant(legend, "max-height", "min(38dvh, 190px)");
+    setImportant(legend, "overflow", "hidden");
+    setImportant(legend, "padding", "5px 10px 7px");
+
+    var list = legend.querySelector(".legend-list");
+    if (list) {
+      setImportant(list, "display", "grid");
+      setImportant(list, "grid-template-columns", "repeat(2, minmax(0, 1fr))");
+      setImportant(list, "gap", "3px 12px");
+    }
+
+    legend.querySelectorAll(".legend-row").forEach(function(row){
+      setImportant(row, "grid-template-columns", "8px minmax(0, 1fr)");
+      setImportant(row, "gap", "4px");
+      setImportant(row, "min-height", "11px");
+      setImportant(row, "font-size", "8.4px");
+      setImportant(row, "line-height", "1");
+      setImportant(row, "overflow", "visible");
+    });
+
+    legend.querySelectorAll(".legend-label").forEach(function(label){
+      setImportant(label, "font-size", "8.4px");
+      setImportant(label, "line-height", "1.02");
+      setImportant(label, "white-space", "nowrap");
+      setImportant(label, "overflow", "visible");
+    });
+
+    legend.querySelectorAll(".legend-swatch").forEach(function(swatch){
+      setImportant(swatch, "width", "8px");
+      setImportant(swatch, "height", "8px");
+      setImportant(swatch, "border-radius", "2px");
+    });
+  }
+
+  function apply(){
+    queued = false;
+    var body = document.body;
+    if (!body) return;
+    var mobile = isMobile();
+    var timeline = document.getElementById("timelineDock");
+    var sliderKey = document.getElementById("shorelyMobileSliderKey");
+    if (!mobile) {
+      if (sliderKey) setImportant(sliderKey, "display", "none");
+      return;
+    }
+
+    var originalKey = document.getElementById("timelineFloodKey");
+    var toggle = document.getElementById("mobileControlsToggle");
+    var legend = document.getElementById("legendDock");
+    var origin = document.getElementById("shorelyLegendOriginPill");
+    var top = timeline && timeline.querySelector(".timeline-top");
+    var controls = timeline && timeline.querySelector(".timeline-controls");
+    var play = document.getElementById("playBtn");
+    var days = document.getElementById("timelineDayTabs");
+    var track = timeline && timeline.querySelector(".timeline-trackRow");
+    var key = ensureSliderKey(timeline);
+
+    if (originalKey) setImportant(originalKey, "display", "none");
+    if (timeline) {
+      setImportant(timeline, "height", "100px");
+      setImportant(timeline, "min-height", "100px");
+      setImportant(timeline, "max-height", "100px");
+      setImportant(timeline, "padding", "10px 10px 10px");
+      setImportant(timeline, "overflow", "visible");
+    }
+    if (key) {
+      setImportant(key, "display", "flex");
+      setImportant(key, "top", "10px");
+      setImportant(key, "left", "60px");
+      setImportant(key, "right", "14px");
+    }
+    if (top) {
+      setImportant(top, "left", "10px");
+      setImportant(top, "top", "calc(50% + 5px)");
+      setImportant(top, "width", "36px");
+      setImportant(top, "height", "36px");
+      setImportant(top, "z-index", "14");
+    }
+    if (controls) {
+      setImportant(controls, "width", "36px");
+      setImportant(controls, "height", "36px");
+      setImportant(controls, "display", "grid");
+      setImportant(controls, "place-items", "center");
+    }
+    if (play) {
+      setImportant(play, "width", "36px");
+      setImportant(play, "height", "36px");
+      setImportant(play, "min-width", "36px");
+      setImportant(play, "min-height", "36px");
+      setImportant(play, "max-width", "36px");
+      setImportant(play, "max-height", "36px");
+      setImportant(play, "flex", "0 0 36px");
+    }
+    if (days) {
+      setImportant(days, "width", "calc(100% - 54px)");
+      setImportant(days, "max-width", "calc(100% - 54px)");
+      setImportant(days, "height", "20px");
+      setImportant(days, "margin", "18px 0 4px 54px");
+    }
+    if (track) {
+      setImportant(track, "width", "calc(100% - 54px)");
+      setImportant(track, "max-width", "calc(100% - 54px)");
+      setImportant(track, "margin-left", "54px");
+      setImportant(track, "margin-top", "4px");
+      setImportant(track, "height", "24px");
+    }
+
+    if (toggle) {
+      setImportant(toggle, "position", "fixed");
+      setImportant(toggle, "left", "50%");
+      setImportant(toggle, "right", "auto");
+      setImportant(toggle, "transform", "translateX(-50%)");
+      setImportant(toggle, "top", "calc(var(--shorely-compact-top-row, 52px) + env(safe-area-inset-top, 0px))");
+      setImportant(toggle, "width", window.innerWidth <= 360 ? "104px" : "112px");
+      setImportant(toggle, "min-width", window.innerWidth <= 360 ? "104px" : "112px");
+      setImportant(toggle, "max-width", window.innerWidth <= 360 ? "104px" : "112px");
+    }
+    if (origin) {
+      setImportant(origin, "background", "rgba(11,18,32,.97)");
+      setImportant(origin, "border-color", "rgba(191,219,254,.38)");
+    }
+    compactLegend(legend);
+  }
+
+  function schedule(){
+    if (queued) return;
+    queued = true;
+    requestAnimationFrame(apply);
+  }
+
+  function boot(){
+    apply();
+    [40, 120, 260, 600, 1200, 2400].forEach(function(ms){ window.setTimeout(schedule, ms); });
+    if (observerStarted) return;
+    observerStarted = true;
+    try {
+      var observer = new MutationObserver(schedule);
+      observer.observe(document.documentElement, { attributes:true, attributeFilter:["class", "style"] });
+      if (document.body) observer.observe(document.body, { attributes:true, attributeFilter:["class", "style"] });
+      ["timelineDock", "timelineDayTabs", "timelineFloodKey", "mobileControlsToggle", "legendDock", "shorelyLegendOriginPill"].forEach(function(id){
+        var el = document.getElementById(id);
+        if (el) observer.observe(el, { attributes:true, attributeFilter:["class", "style"] });
+      });
+    } catch(e) {}
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", boot, { once:true });
+  } else {
+    boot();
+  }
+  window.addEventListener("load", boot, { once:true });
+  window.addEventListener("resize", schedule, { passive:true });
+  window.addEventListener("orientationchange", function(){ window.setTimeout(schedule, 80); }, { passive:true });
+  document.addEventListener("click", function(){ window.setTimeout(schedule, 20); window.setTimeout(schedule, 160); }, true);
+})();
+</script>
 </body>
 </html>
