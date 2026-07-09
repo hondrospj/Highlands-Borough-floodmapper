@@ -4,12 +4,12 @@
   "stationName": "SEA BRIGHT, NJ",
   "noaaGaugeId": "8531804",
   "usgsGaugeId": "01407600",
-  "issuedUtc": "2026-07-09T12:00:00Z",
-  "petssCycleUtc": "2026-07-09T00:00:00Z",
-  "forecastStartUtc": "2026-07-09T12:00:00Z",
-  "forecastEndUtc": "2026-07-13T00:00:00Z",
-  "sourceUrl": "https://nomads.ncep.noaa.gov/pub/data/nccf/com/petss/prod/petss.20260709/petss.t00z.csv.tar.gz",
-  "sourceMember": "petss.20260709/t00z.csv/8531804.csv",
+  "issuedUtc": "2026-07-09T15:00:00Z",
+  "petssCycleUtc": "2026-07-09T06:00:00Z",
+  "forecastStartUtc": "2026-07-09T15:00:00Z",
+  "forecastEndUtc": "2026-07-13T03:00:00Z",
+  "sourceUrl": "https://nomads.ncep.noaa.gov/pub/data/nccf/com/petss/prod/petss.20260709/petss.t06z.csv.tar.gz",
+  "sourceMember": "petss.20260709/t06z.csv/8531804.csv",
   "sourceType": "NOMADS_PETSS_FORECAST_ONLY_station_csv_TWL_TWL10p_TWL90p",
   "sourceDatum": "MLLW",
   "mapDatum": "NAVD88",
@@ -53,22 +53,22 @@
       "label": "Mean",
       "percentile": "Mean",
       "product": "mean",
-      "sourceUrl": "https://nomads.ncep.noaa.gov/pub/data/nccf/com/petss/prod/petss.20260709/petss.t00z.csv.tar.gz",
-      "sourceMember": "petss.20260709/t00z.csv/8531804.csv",
-      "petssCycleUtc": "2026-07-09T00:00:00Z",
+      "sourceUrl": "https://nomads.ncep.noaa.gov/pub/data/nccf/com/petss/prod/petss.20260709/petss.t06z.csv.tar.gz",
+      "sourceMember": "petss.20260709/t06z.csv/8531804.csv",
+      "petssCycleUtc": "2026-07-09T06:00:00Z",
       "rawRowCount": 85,
-      "forecastMllwMin": 0.98,
-      "forecastMllwMax": 5.31,
-      "forecastNavd88Min": -1.15,
-      "forecastNavd88Max": 3.18
+      "forecastMllwMin": 0.93,
+      "forecastMllwMax": 5.21,
+      "forecastNavd88Min": -1.2,
+      "forecastNavd88Max": 3.08
     },
     "lowEnd": {
       "label": "Low End",
       "percentile": "90p / e90",
       "product": "e90",
-      "sourceUrl": "https://nomads.ncep.noaa.gov/pub/data/nccf/com/petss/prod/petss.20260709/petss.t00z.csv.tar.gz",
-      "sourceMember": "petss.20260709/t00z.csv/8531804.csv",
-      "petssCycleUtc": "2026-07-09T00:00:00Z",
+      "sourceUrl": "https://nomads.ncep.noaa.gov/pub/data/nccf/com/petss/prod/petss.20260709/petss.t06z.csv.tar.gz",
+      "sourceMember": "petss.20260709/t06z.csv/8531804.csv",
+      "petssCycleUtc": "2026-07-09T06:00:00Z",
       "rawRowCount": 85,
       "forecastMllwMin": 0.83,
       "forecastMllwMax": 5.11,
@@ -79,9 +79,9 @@
       "label": "High End",
       "percentile": "10p / e10",
       "product": "e10",
-      "sourceUrl": "https://nomads.ncep.noaa.gov/pub/data/nccf/com/petss/prod/petss.20260709/petss.t00z.csv.tar.gz",
-      "sourceMember": "petss.20260709/t00z.csv/8531804.csv",
-      "petssCycleUtc": "2026-07-09T00:00:00Z",
+      "sourceUrl": "https://nomads.ncep.noaa.gov/pub/data/nccf/com/petss/prod/petss.20260709/petss.t06z.csv.tar.gz",
+      "sourceMember": "petss.20260709/t06z.csv/8531804.csv",
+      "petssCycleUtc": "2026-07-09T06:00:00Z",
       "rawRowCount": 85,
       "forecastMllwMin": 1.08,
       "forecastMllwMax": 5.41,
@@ -96,119 +96,65 @@
       "product": "mean",
       "hours": [
         {
-          "timeUtc": "2026-07-09T12:00:00Z",
-          "scenario": "mean",
-          "product": "mean",
-          "percentile": "Mean",
-          "rawPetssValue": 2.014,
-          "rawPetssScale": 1.0,
-          "sourceStageFt": -0.12,
-          "sourceDatum": "NAVD88",
-          "navd88StageFt": -0.12,
-          "mllwStageFt": 2.01,
-          "twlMllwFt": 2.01,
-          "tideMllwFt": 1.173,
-          "surgeFt": 0.7,
-          "matchedStageKey": "-0.1",
-          "wasClamped": false,
-          "hourIndex": 0
-        },
-        {
-          "timeUtc": "2026-07-09T13:00:00Z",
-          "scenario": "mean",
-          "product": "mean",
-          "percentile": "Mean",
-          "rawPetssValue": 1.405,
-          "rawPetssScale": 1.0,
-          "sourceStageFt": -0.72,
-          "sourceDatum": "NAVD88",
-          "navd88StageFt": -0.72,
-          "mllwStageFt": 1.41,
-          "twlMllwFt": 1.41,
-          "tideMllwFt": 0.647,
-          "surgeFt": 0.6,
-          "matchedStageKey": "-0.7",
-          "wasClamped": false,
-          "hourIndex": 1
-        },
-        {
-          "timeUtc": "2026-07-09T14:00:00Z",
-          "scenario": "mean",
-          "product": "mean",
-          "percentile": "Mean",
-          "rawPetssValue": 1.092,
-          "rawPetssScale": 1.0,
-          "sourceStageFt": -1.04,
-          "sourceDatum": "NAVD88",
-          "navd88StageFt": -1.04,
-          "mllwStageFt": 1.09,
-          "twlMllwFt": 1.09,
-          "tideMllwFt": 0.317,
-          "surgeFt": 0.6,
-          "matchedStageKey": "-1.0",
-          "wasClamped": false,
-          "hourIndex": 2
-        },
-        {
           "timeUtc": "2026-07-09T15:00:00Z",
           "scenario": "mean",
           "product": "mean",
           "percentile": "Mean",
-          "rawPetssValue": 1.086,
+          "rawPetssValue": 1.128,
           "rawPetssScale": 1.0,
-          "sourceStageFt": -1.04,
+          "sourceStageFt": -1.0,
           "sourceDatum": "NAVD88",
-          "navd88StageFt": -1.04,
-          "mllwStageFt": 1.09,
-          "twlMllwFt": 1.09,
+          "navd88StageFt": -1.0,
+          "mllwStageFt": 1.13,
+          "twlMllwFt": 1.13,
           "tideMllwFt": 0.294,
           "surgeFt": 0.6,
           "matchedStageKey": "-1.0",
           "wasClamped": false,
-          "hourIndex": 3
+          "hourIndex": 0
         },
         {
           "timeUtc": "2026-07-09T16:00:00Z",
           "scenario": "mean",
           "product": "mean",
           "percentile": "Mean",
-          "rawPetssValue": 1.563,
+          "rawPetssValue": 1.587,
           "rawPetssScale": 1.0,
-          "sourceStageFt": -0.57,
+          "sourceStageFt": -0.54,
           "sourceDatum": "NAVD88",
-          "navd88StageFt": -0.57,
-          "mllwStageFt": 1.56,
-          "twlMllwFt": 1.56,
+          "navd88StageFt": -0.54,
+          "mllwStageFt": 1.59,
+          "twlMllwFt": 1.59,
           "tideMllwFt": 0.754,
           "surgeFt": 0.6,
-          "matchedStageKey": "-0.6",
+          "matchedStageKey": "-0.5",
           "wasClamped": false,
-          "hourIndex": 4
+          "hourIndex": 1
         },
         {
           "timeUtc": "2026-07-09T17:00:00Z",
           "scenario": "mean",
           "product": "mean",
           "percentile": "Mean",
-          "rawPetssValue": 2.413,
+          "rawPetssValue": 2.419,
           "rawPetssScale": 1.0,
-          "sourceStageFt": 0.28,
+          "sourceStageFt": 0.29,
           "sourceDatum": "NAVD88",
-          "navd88StageFt": 0.28,
-          "mllwStageFt": 2.41,
-          "twlMllwFt": 2.41,
+          "navd88StageFt": 0.29,
+          "mllwStageFt": 2.42,
+          "twlMllwFt": 2.42,
           "tideMllwFt": 1.587,
           "surgeFt": 0.6,
           "matchedStageKey": "0.3",
           "wasClamped": false,
-          "hourIndex": 5
+          "hourIndex": 2
         },
         {
           "timeUtc": "2026-07-09T18:00:00Z",
           "scenario": "mean",
           "product": "mean",
           "percentile": "Mean",
-          "rawPetssValue": 3.305,
+          "rawPetssValue": 3.31,
           "rawPetssScale": 1.0,
           "sourceStageFt": 1.18,
           "sourceDatum": "NAVD88",
@@ -219,32 +165,32 @@
           "surgeFt": 0.6,
           "matchedStageKey": "1.2",
           "wasClamped": false,
-          "hourIndex": 6
+          "hourIndex": 3
         },
         {
           "timeUtc": "2026-07-09T19:00:00Z",
           "scenario": "mean",
           "product": "mean",
           "percentile": "Mean",
-          "rawPetssValue": 4.052,
+          "rawPetssValue": 4.057,
           "rawPetssScale": 1.0,
-          "sourceStageFt": 1.92,
+          "sourceStageFt": 1.93,
           "sourceDatum": "NAVD88",
-          "navd88StageFt": 1.92,
-          "mllwStageFt": 4.05,
-          "twlMllwFt": 4.05,
+          "navd88StageFt": 1.93,
+          "mllwStageFt": 4.06,
+          "twlMllwFt": 4.06,
           "tideMllwFt": 3.226,
           "surgeFt": 0.6,
           "matchedStageKey": "1.9",
           "wasClamped": false,
-          "hourIndex": 7
+          "hourIndex": 4
         },
         {
           "timeUtc": "2026-07-09T20:00:00Z",
           "scenario": "mean",
           "product": "mean",
           "percentile": "Mean",
-          "rawPetssValue": 4.577,
+          "rawPetssValue": 4.581,
           "rawPetssScale": 1.0,
           "sourceStageFt": 2.45,
           "sourceDatum": "NAVD88",
@@ -255,14 +201,14 @@
           "surgeFt": 0.6,
           "matchedStageKey": "2.4",
           "wasClamped": false,
-          "hourIndex": 8
+          "hourIndex": 5
         },
         {
           "timeUtc": "2026-07-09T21:00:00Z",
           "scenario": "mean",
           "product": "mean",
           "percentile": "Mean",
-          "rawPetssValue": 4.79,
+          "rawPetssValue": 4.793,
           "rawPetssScale": 1.0,
           "sourceStageFt": 2.66,
           "sourceDatum": "NAVD88",
@@ -273,61 +219,61 @@
           "surgeFt": 0.6,
           "matchedStageKey": "2.7",
           "wasClamped": false,
-          "hourIndex": 9
+          "hourIndex": 6
         },
         {
           "timeUtc": "2026-07-09T22:00:00Z",
           "scenario": "mean",
           "product": "mean",
           "percentile": "Mean",
-          "rawPetssValue": 4.576,
+          "rawPetssValue": 4.478,
           "rawPetssScale": 1.0,
-          "sourceStageFt": 2.45,
+          "sourceStageFt": 2.35,
           "sourceDatum": "NAVD88",
-          "navd88StageFt": 2.45,
-          "mllwStageFt": 4.58,
-          "twlMllwFt": 4.58,
+          "navd88StageFt": 2.35,
+          "mllwStageFt": 4.48,
+          "twlMllwFt": 4.48,
           "tideMllwFt": 3.75,
-          "surgeFt": 0.6,
+          "surgeFt": 0.5,
           "matchedStageKey": "2.4",
           "wasClamped": false,
-          "hourIndex": 10
+          "hourIndex": 7
         },
         {
           "timeUtc": "2026-07-09T23:00:00Z",
           "scenario": "mean",
           "product": "mean",
           "percentile": "Mean",
-          "rawPetssValue": 3.948,
+          "rawPetssValue": 3.849,
           "rawPetssScale": 1.0,
-          "sourceStageFt": 1.82,
+          "sourceStageFt": 1.72,
           "sourceDatum": "NAVD88",
-          "navd88StageFt": 1.82,
-          "mllwStageFt": 3.95,
-          "twlMllwFt": 3.95,
+          "navd88StageFt": 1.72,
+          "mllwStageFt": 3.85,
+          "twlMllwFt": 3.85,
           "tideMllwFt": 3.122,
-          "surgeFt": 0.6,
-          "matchedStageKey": "1.8",
+          "surgeFt": 0.5,
+          "matchedStageKey": "1.7",
           "wasClamped": false,
-          "hourIndex": 11
+          "hourIndex": 8
         },
         {
           "timeUtc": "2026-07-10T00:00:00Z",
           "scenario": "mean",
           "product": "mean",
           "percentile": "Mean",
-          "rawPetssValue": 3.155,
+          "rawPetssValue": 3.055,
           "rawPetssScale": 1.0,
-          "sourceStageFt": 1.03,
+          "sourceStageFt": 0.93,
           "sourceDatum": "NAVD88",
-          "navd88StageFt": 1.03,
-          "mllwStageFt": 3.16,
-          "twlMllwFt": 3.16,
+          "navd88StageFt": 0.93,
+          "mllwStageFt": 3.06,
+          "twlMllwFt": 3.06,
           "tideMllwFt": 2.329,
-          "surgeFt": 0.6,
-          "matchedStageKey": "1.0",
+          "surgeFt": 0.5,
+          "matchedStageKey": "0.9",
           "wasClamped": false,
-          "hourIndex": 12
+          "hourIndex": 9
         },
         {
           "timeUtc": "2026-07-10T01:00:00Z",
@@ -345,7 +291,7 @@
           "surgeFt": 0.5,
           "matchedStageKey": "0.2",
           "wasClamped": false,
-          "hourIndex": 13
+          "hourIndex": 10
         },
         {
           "timeUtc": "2026-07-10T02:00:00Z",
@@ -363,7 +309,7 @@
           "surgeFt": 0.5,
           "matchedStageKey": "-0.3",
           "wasClamped": false,
-          "hourIndex": 14
+          "hourIndex": 11
         },
         {
           "timeUtc": "2026-07-10T03:00:00Z",
@@ -381,7 +327,7 @@
           "surgeFt": 0.5,
           "matchedStageKey": "-0.8",
           "wasClamped": false,
-          "hourIndex": 15
+          "hourIndex": 12
         },
         {
           "timeUtc": "2026-07-10T04:00:00Z",
@@ -399,7 +345,7 @@
           "surgeFt": 0.5,
           "matchedStageKey": "-0.8",
           "wasClamped": false,
-          "hourIndex": 16
+          "hourIndex": 13
         },
         {
           "timeUtc": "2026-07-10T05:00:00Z",
@@ -417,7 +363,7 @@
           "surgeFt": 0.5,
           "matchedStageKey": "-0.4",
           "wasClamped": false,
-          "hourIndex": 17
+          "hourIndex": 14
         },
         {
           "timeUtc": "2026-07-10T06:00:00Z",
@@ -435,7 +381,7 @@
           "surgeFt": 0.5,
           "matchedStageKey": "0.3",
           "wasClamped": false,
-          "hourIndex": 18
+          "hourIndex": 15
         },
         {
           "timeUtc": "2026-07-10T07:00:00Z",
@@ -453,7 +399,7 @@
           "surgeFt": 0.5,
           "matchedStageKey": "0.9",
           "wasClamped": false,
-          "hourIndex": 19
+          "hourIndex": 16
         },
         {
           "timeUtc": "2026-07-10T08:00:00Z",
@@ -471,7 +417,7 @@
           "surgeFt": 0.5,
           "matchedStageKey": "1.4",
           "wasClamped": false,
-          "hourIndex": 20
+          "hourIndex": 17
         },
         {
           "timeUtc": "2026-07-10T09:00:00Z",
@@ -489,7 +435,7 @@
           "surgeFt": 0.5,
           "matchedStageKey": "1.7",
           "wasClamped": false,
-          "hourIndex": 21
+          "hourIndex": 18
         },
         {
           "timeUtc": "2026-07-10T10:00:00Z",
@@ -507,7 +453,7 @@
           "surgeFt": 0.5,
           "matchedStageKey": "1.7",
           "wasClamped": false,
-          "hourIndex": 22
+          "hourIndex": 19
         },
         {
           "timeUtc": "2026-07-10T11:00:00Z",
@@ -525,7 +471,7 @@
           "surgeFt": 0.5,
           "matchedStageKey": "1.2",
           "wasClamped": false,
-          "hourIndex": 23
+          "hourIndex": 20
         },
         {
           "timeUtc": "2026-07-10T12:00:00Z",
@@ -543,7 +489,7 @@
           "surgeFt": 0.5,
           "matchedStageKey": "0.5",
           "wasClamped": false,
-          "hourIndex": 24
+          "hourIndex": 21
         },
         {
           "timeUtc": "2026-07-10T13:00:00Z",
@@ -561,7 +507,7 @@
           "surgeFt": 0.5,
           "matchedStageKey": "-0.2",
           "wasClamped": false,
-          "hourIndex": 25
+          "hourIndex": 22
         },
         {
           "timeUtc": "2026-07-10T14:00:00Z",
@@ -579,7 +525,7 @@
           "surgeFt": 0.5,
           "matchedStageKey": "-0.8",
           "wasClamped": false,
-          "hourIndex": 26
+          "hourIndex": 23
         },
         {
           "timeUtc": "2026-07-10T15:00:00Z",
@@ -597,7 +543,7 @@
           "surgeFt": 0.5,
           "matchedStageKey": "-1.1",
           "wasClamped": false,
-          "hourIndex": 27
+          "hourIndex": 24
         },
         {
           "timeUtc": "2026-07-10T16:00:00Z",
@@ -615,7 +561,7 @@
           "surgeFt": 0.5,
           "matchedStageKey": "-1.1",
           "wasClamped": false,
-          "hourIndex": 28
+          "hourIndex": 25
         },
         {
           "timeUtc": "2026-07-10T17:00:00Z",
@@ -633,7 +579,7 @@
           "surgeFt": 0.5,
           "matchedStageKey": "-0.7",
           "wasClamped": false,
-          "hourIndex": 29
+          "hourIndex": 26
         },
         {
           "timeUtc": "2026-07-10T18:00:00Z",
@@ -651,7 +597,7 @@
           "surgeFt": 0.5,
           "matchedStageKey": "0.2",
           "wasClamped": false,
-          "hourIndex": 30
+          "hourIndex": 27
         },
         {
           "timeUtc": "2026-07-10T19:00:00Z",
@@ -669,7 +615,7 @@
           "surgeFt": 0.5,
           "matchedStageKey": "1.1",
           "wasClamped": false,
-          "hourIndex": 31
+          "hourIndex": 28
         },
         {
           "timeUtc": "2026-07-10T20:00:00Z",
@@ -687,79 +633,79 @@
           "surgeFt": 0.5,
           "matchedStageKey": "1.9",
           "wasClamped": false,
-          "hourIndex": 32
+          "hourIndex": 29
         },
         {
           "timeUtc": "2026-07-10T21:00:00Z",
           "scenario": "mean",
           "product": "mean",
           "percentile": "Mean",
-          "rawPetssValue": 4.68,
+          "rawPetssValue": 4.58,
           "rawPetssScale": 1.0,
-          "sourceStageFt": 2.55,
+          "sourceStageFt": 2.45,
           "sourceDatum": "NAVD88",
-          "navd88StageFt": 2.55,
-          "mllwStageFt": 4.68,
-          "twlMllwFt": 4.68,
+          "navd88StageFt": 2.45,
+          "mllwStageFt": 4.58,
+          "twlMllwFt": 4.58,
           "tideMllwFt": 3.854,
-          "surgeFt": 0.6,
-          "matchedStageKey": "2.5",
+          "surgeFt": 0.5,
+          "matchedStageKey": "2.4",
           "wasClamped": false,
-          "hourIndex": 33
+          "hourIndex": 30
         },
         {
           "timeUtc": "2026-07-10T22:00:00Z",
           "scenario": "mean",
           "product": "mean",
           "percentile": "Mean",
-          "rawPetssValue": 4.929,
+          "rawPetssValue": 4.829,
           "rawPetssScale": 1.0,
-          "sourceStageFt": 2.8,
+          "sourceStageFt": 2.7,
           "sourceDatum": "NAVD88",
-          "navd88StageFt": 2.8,
-          "mllwStageFt": 4.93,
-          "twlMllwFt": 4.93,
+          "navd88StageFt": 2.7,
+          "mllwStageFt": 4.83,
+          "twlMllwFt": 4.83,
           "tideMllwFt": 4.103,
-          "surgeFt": 0.6,
-          "matchedStageKey": "2.8",
+          "surgeFt": 0.5,
+          "matchedStageKey": "2.7",
           "wasClamped": false,
-          "hourIndex": 34
+          "hourIndex": 31
         },
         {
           "timeUtc": "2026-07-10T23:00:00Z",
           "scenario": "mean",
           "product": "mean",
           "percentile": "Mean",
-          "rawPetssValue": 4.728,
+          "rawPetssValue": 4.628,
           "rawPetssScale": 1.0,
-          "sourceStageFt": 2.6,
+          "sourceStageFt": 2.5,
           "sourceDatum": "NAVD88",
-          "navd88StageFt": 2.6,
-          "mllwStageFt": 4.73,
-          "twlMllwFt": 4.73,
+          "navd88StageFt": 2.5,
+          "mllwStageFt": 4.63,
+          "twlMllwFt": 4.63,
           "tideMllwFt": 3.902,
-          "surgeFt": 0.6,
-          "matchedStageKey": "2.6",
+          "surgeFt": 0.5,
+          "matchedStageKey": "2.5",
           "wasClamped": false,
-          "hourIndex": 35
+          "hourIndex": 32
         },
         {
           "timeUtc": "2026-07-11T00:00:00Z",
           "scenario": "mean",
           "product": "mean",
           "percentile": "Mean",
-          "rawPetssValue": 4.091,
+          "rawPetssValue": 3.991,
           "rawPetssScale": 1.0,
-          "sourceStageFt": 1.96,
+          "sourceStageFt": 1.86,
           "sourceDatum": "NAVD88",
-          "navd88StageFt": 1.96,
-          "mllwStageFt": 4.09,
-          "twlMllwFt": 4.09,
+          "navd88StageFt": 1.86,
+          "mllwStageFt": 3.99,
+          "twlMllwFt": 3.99,
           "tideMllwFt": 3.265,
-          "surgeFt": 0.6,
-          "matchedStageKey": "2.0",
+          "surgeFt": 0.5,
+          "matchedStageKey": "1.9",
           "wasClamped": false,
-          "hourIndex": 36
+          "hourIndex": 33
         },
         {
           "timeUtc": "2026-07-11T01:00:00Z",
@@ -777,7 +723,7 @@
           "surgeFt": 0.5,
           "matchedStageKey": "1.0",
           "wasClamped": false,
-          "hourIndex": 37
+          "hourIndex": 34
         },
         {
           "timeUtc": "2026-07-11T02:00:00Z",
@@ -795,7 +741,7 @@
           "surgeFt": 0.5,
           "matchedStageKey": "0.3",
           "wasClamped": false,
-          "hourIndex": 38
+          "hourIndex": 35
         },
         {
           "timeUtc": "2026-07-11T03:00:00Z",
@@ -813,7 +759,7 @@
           "surgeFt": 0.5,
           "matchedStageKey": "-0.4",
           "wasClamped": false,
-          "hourIndex": 39
+          "hourIndex": 36
         },
         {
           "timeUtc": "2026-07-11T04:00:00Z",
@@ -831,7 +777,7 @@
           "surgeFt": 0.5,
           "matchedStageKey": "-0.8",
           "wasClamped": false,
-          "hourIndex": 40
+          "hourIndex": 37
         },
         {
           "timeUtc": "2026-07-11T05:00:00Z",
@@ -849,7 +795,7 @@
           "surgeFt": 0.5,
           "matchedStageKey": "-0.9",
           "wasClamped": false,
-          "hourIndex": 41
+          "hourIndex": 38
         },
         {
           "timeUtc": "2026-07-11T06:00:00Z",
@@ -867,7 +813,7 @@
           "surgeFt": 0.5,
           "matchedStageKey": "-0.5",
           "wasClamped": false,
-          "hourIndex": 42
+          "hourIndex": 39
         },
         {
           "timeUtc": "2026-07-11T07:00:00Z",
@@ -885,43 +831,43 @@
           "surgeFt": 0.5,
           "matchedStageKey": "0.1",
           "wasClamped": false,
-          "hourIndex": 43
+          "hourIndex": 40
         },
         {
           "timeUtc": "2026-07-11T08:00:00Z",
           "scenario": "mean",
           "product": "mean",
           "percentile": "Mean",
-          "rawPetssValue": 2.994,
+          "rawPetssValue": 2.894,
           "rawPetssScale": 1.0,
-          "sourceStageFt": 0.86,
+          "sourceStageFt": 0.76,
           "sourceDatum": "NAVD88",
-          "navd88StageFt": 0.86,
-          "mllwStageFt": 2.99,
-          "twlMllwFt": 2.99,
+          "navd88StageFt": 0.76,
+          "mllwStageFt": 2.89,
+          "twlMllwFt": 2.89,
           "tideMllwFt": 2.168,
-          "surgeFt": 0.6,
-          "matchedStageKey": "0.9",
+          "surgeFt": 0.5,
+          "matchedStageKey": "0.8",
           "wasClamped": false,
-          "hourIndex": 44
+          "hourIndex": 41
         },
         {
           "timeUtc": "2026-07-11T09:00:00Z",
           "scenario": "mean",
           "product": "mean",
           "percentile": "Mean",
-          "rawPetssValue": 3.531,
+          "rawPetssValue": 3.431,
           "rawPetssScale": 1.0,
-          "sourceStageFt": 1.4,
+          "sourceStageFt": 1.3,
           "sourceDatum": "NAVD88",
-          "navd88StageFt": 1.4,
-          "mllwStageFt": 3.53,
-          "twlMllwFt": 3.53,
+          "navd88StageFt": 1.3,
+          "mllwStageFt": 3.43,
+          "twlMllwFt": 3.43,
           "tideMllwFt": 2.705,
-          "surgeFt": 0.6,
-          "matchedStageKey": "1.4",
+          "surgeFt": 0.5,
+          "matchedStageKey": "1.3",
           "wasClamped": false,
-          "hourIndex": 45
+          "hourIndex": 42
         },
         {
           "timeUtc": "2026-07-11T10:00:00Z",
@@ -939,7 +885,7 @@
           "surgeFt": 0.6,
           "matchedStageKey": "1.8",
           "wasClamped": false,
-          "hourIndex": 46
+          "hourIndex": 43
         },
         {
           "timeUtc": "2026-07-11T11:00:00Z",
@@ -957,7 +903,7 @@
           "surgeFt": 0.6,
           "matchedStageKey": "1.8",
           "wasClamped": false,
-          "hourIndex": 47
+          "hourIndex": 44
         },
         {
           "timeUtc": "2026-07-11T12:00:00Z",
@@ -975,7 +921,7 @@
           "surgeFt": 0.6,
           "matchedStageKey": "1.4",
           "wasClamped": false,
-          "hourIndex": 48
+          "hourIndex": 45
         },
         {
           "timeUtc": "2026-07-11T13:00:00Z",
@@ -993,7 +939,7 @@
           "surgeFt": 0.6,
           "matchedStageKey": "0.6",
           "wasClamped": false,
-          "hourIndex": 49
+          "hourIndex": 46
         },
         {
           "timeUtc": "2026-07-11T14:00:00Z",
@@ -1011,7 +957,7 @@
           "surgeFt": 0.6,
           "matchedStageKey": "-0.1",
           "wasClamped": false,
-          "hourIndex": 50
+          "hourIndex": 47
         },
         {
           "timeUtc": "2026-07-11T15:00:00Z",
@@ -1029,7 +975,7 @@
           "surgeFt": 0.6,
           "matchedStageKey": "-0.7",
           "wasClamped": false,
-          "hourIndex": 51
+          "hourIndex": 48
         },
         {
           "timeUtc": "2026-07-11T16:00:00Z",
@@ -1047,7 +993,7 @@
           "surgeFt": 0.6,
           "matchedStageKey": "-1.1",
           "wasClamped": false,
-          "hourIndex": 52
+          "hourIndex": 49
         },
         {
           "timeUtc": "2026-07-11T17:00:00Z",
@@ -1065,7 +1011,7 @@
           "surgeFt": 0.7,
           "matchedStageKey": "-1.0",
           "wasClamped": false,
-          "hourIndex": 53
+          "hourIndex": 50
         },
         {
           "timeUtc": "2026-07-11T18:00:00Z",
@@ -1083,7 +1029,7 @@
           "surgeFt": 0.7,
           "matchedStageKey": "-0.5",
           "wasClamped": false,
-          "hourIndex": 54
+          "hourIndex": 51
         },
         {
           "timeUtc": "2026-07-11T19:00:00Z",
@@ -1101,7 +1047,7 @@
           "surgeFt": 0.7,
           "matchedStageKey": "0.4",
           "wasClamped": false,
-          "hourIndex": 55
+          "hourIndex": 52
         },
         {
           "timeUtc": "2026-07-11T20:00:00Z",
@@ -1119,7 +1065,7 @@
           "surgeFt": 0.7,
           "matchedStageKey": "1.3",
           "wasClamped": false,
-          "hourIndex": 56
+          "hourIndex": 53
         },
         {
           "timeUtc": "2026-07-11T21:00:00Z",
@@ -1137,7 +1083,7 @@
           "surgeFt": 0.7,
           "matchedStageKey": "2.1",
           "wasClamped": false,
-          "hourIndex": 57
+          "hourIndex": 54
         },
         {
           "timeUtc": "2026-07-11T22:00:00Z",
@@ -1155,7 +1101,7 @@
           "surgeFt": 0.7,
           "matchedStageKey": "2.8",
           "wasClamped": false,
-          "hourIndex": 58
+          "hourIndex": 55
         },
         {
           "timeUtc": "2026-07-11T23:00:00Z",
@@ -1173,7 +1119,7 @@
           "surgeFt": 0.7,
           "matchedStageKey": "3.0",
           "wasClamped": false,
-          "hourIndex": 59
+          "hourIndex": 56
         },
         {
           "timeUtc": "2026-07-12T00:00:00Z",
@@ -1191,7 +1137,7 @@
           "surgeFt": 0.7,
           "matchedStageKey": "2.8",
           "wasClamped": false,
-          "hourIndex": 60
+          "hourIndex": 57
         },
         {
           "timeUtc": "2026-07-12T01:00:00Z",
@@ -1209,7 +1155,7 @@
           "surgeFt": 0.7,
           "matchedStageKey": "2.2",
           "wasClamped": false,
-          "hourIndex": 61
+          "hourIndex": 58
         },
         {
           "timeUtc": "2026-07-12T02:00:00Z",
@@ -1227,7 +1173,7 @@
           "surgeFt": 0.7,
           "matchedStageKey": "1.3",
           "wasClamped": false,
-          "hourIndex": 62
+          "hourIndex": 59
         },
         {
           "timeUtc": "2026-07-12T03:00:00Z",
@@ -1245,7 +1191,7 @@
           "surgeFt": 0.7,
           "matchedStageKey": "0.5",
           "wasClamped": false,
-          "hourIndex": 63
+          "hourIndex": 60
         },
         {
           "timeUtc": "2026-07-12T04:00:00Z",
@@ -1263,7 +1209,7 @@
           "surgeFt": 0.7,
           "matchedStageKey": "-0.2",
           "wasClamped": false,
-          "hourIndex": 64
+          "hourIndex": 61
         },
         {
           "timeUtc": "2026-07-12T05:00:00Z",
@@ -1281,7 +1227,7 @@
           "surgeFt": 0.7,
           "matchedStageKey": "-0.8",
           "wasClamped": false,
-          "hourIndex": 65
+          "hourIndex": 62
         },
         {
           "timeUtc": "2026-07-12T06:00:00Z",
@@ -1299,7 +1245,7 @@
           "surgeFt": 0.7,
           "matchedStageKey": "-0.8",
           "wasClamped": false,
-          "hourIndex": 66
+          "hourIndex": 63
         },
         {
           "timeUtc": "2026-07-12T07:00:00Z",
@@ -1317,7 +1263,7 @@
           "surgeFt": 0.7,
           "matchedStageKey": "-0.4",
           "wasClamped": false,
-          "hourIndex": 67
+          "hourIndex": 64
         },
         {
           "timeUtc": "2026-07-12T08:00:00Z",
@@ -1335,7 +1281,7 @@
           "surgeFt": 0.7,
           "matchedStageKey": "0.2",
           "wasClamped": false,
-          "hourIndex": 68
+          "hourIndex": 65
         },
         {
           "timeUtc": "2026-07-12T09:00:00Z",
@@ -1353,7 +1299,7 @@
           "surgeFt": 0.7,
           "matchedStageKey": "0.9",
           "wasClamped": false,
-          "hourIndex": 69
+          "hourIndex": 66
         },
         {
           "timeUtc": "2026-07-12T10:00:00Z",
@@ -1371,7 +1317,7 @@
           "surgeFt": 0.7,
           "matchedStageKey": "1.5",
           "wasClamped": false,
-          "hourIndex": 70
+          "hourIndex": 67
         },
         {
           "timeUtc": "2026-07-12T11:00:00Z",
@@ -1389,7 +1335,7 @@
           "surgeFt": 0.7,
           "matchedStageKey": "1.9",
           "wasClamped": false,
-          "hourIndex": 71
+          "hourIndex": 68
         },
         {
           "timeUtc": "2026-07-12T12:00:00Z",
@@ -1407,7 +1353,7 @@
           "surgeFt": 0.7,
           "matchedStageKey": "2.0",
           "wasClamped": false,
-          "hourIndex": 72
+          "hourIndex": 69
         },
         {
           "timeUtc": "2026-07-12T13:00:00Z",
@@ -1425,7 +1371,7 @@
           "surgeFt": 0.7,
           "matchedStageKey": "1.6",
           "wasClamped": false,
-          "hourIndex": 73
+          "hourIndex": 70
         },
         {
           "timeUtc": "2026-07-12T14:00:00Z",
@@ -1443,7 +1389,7 @@
           "surgeFt": 0.7,
           "matchedStageKey": "0.8",
           "wasClamped": false,
-          "hourIndex": 74
+          "hourIndex": 71
         },
         {
           "timeUtc": "2026-07-12T15:00:00Z",
@@ -1461,7 +1407,7 @@
           "surgeFt": 0.7,
           "matchedStageKey": "0.0",
           "wasClamped": false,
-          "hourIndex": 75
+          "hourIndex": 72
         },
         {
           "timeUtc": "2026-07-12T16:00:00Z",
@@ -1479,7 +1425,7 @@
           "surgeFt": 0.7,
           "matchedStageKey": "-0.6",
           "wasClamped": false,
-          "hourIndex": 76
+          "hourIndex": 73
         },
         {
           "timeUtc": "2026-07-12T17:00:00Z",
@@ -1497,79 +1443,79 @@
           "surgeFt": 0.7,
           "matchedStageKey": "-1.1",
           "wasClamped": false,
-          "hourIndex": 77
+          "hourIndex": 74
         },
         {
           "timeUtc": "2026-07-12T18:00:00Z",
           "scenario": "mean",
           "product": "mean",
           "percentile": "Mean",
-          "rawPetssValue": 1.03,
+          "rawPetssValue": 0.93,
           "rawPetssScale": 1.0,
-          "sourceStageFt": -1.1,
+          "sourceStageFt": -1.2,
           "sourceDatum": "NAVD88",
-          "navd88StageFt": -1.1,
-          "mllwStageFt": 1.03,
-          "twlMllwFt": 1.03,
+          "navd88StageFt": -1.2,
+          "mllwStageFt": 0.93,
+          "twlMllwFt": 0.93,
           "tideMllwFt": 0.104,
-          "surgeFt": 0.7,
-          "matchedStageKey": "-1.1",
+          "surgeFt": 0.6,
+          "matchedStageKey": "-1.2",
           "wasClamped": false,
-          "hourIndex": 78
+          "hourIndex": 75
         },
         {
           "timeUtc": "2026-07-12T19:00:00Z",
           "scenario": "mean",
           "product": "mean",
           "percentile": "Mean",
-          "rawPetssValue": 1.603,
+          "rawPetssValue": 1.503,
           "rawPetssScale": 1.0,
-          "sourceStageFt": -0.53,
+          "sourceStageFt": -0.63,
           "sourceDatum": "NAVD88",
-          "navd88StageFt": -0.53,
-          "mllwStageFt": 1.6,
-          "twlMllwFt": 1.6,
+          "navd88StageFt": -0.63,
+          "mllwStageFt": 1.5,
+          "twlMllwFt": 1.5,
           "tideMllwFt": 0.677,
-          "surgeFt": 0.7,
-          "matchedStageKey": "-0.5",
+          "surgeFt": 0.6,
+          "matchedStageKey": "-0.6",
           "wasClamped": false,
-          "hourIndex": 79
+          "hourIndex": 76
         },
         {
           "timeUtc": "2026-07-12T20:00:00Z",
           "scenario": "mean",
           "product": "mean",
           "percentile": "Mean",
-          "rawPetssValue": 2.507,
+          "rawPetssValue": 2.407,
           "rawPetssScale": 1.0,
-          "sourceStageFt": 0.38,
+          "sourceStageFt": 0.28,
           "sourceDatum": "NAVD88",
-          "navd88StageFt": 0.38,
-          "mllwStageFt": 2.51,
-          "twlMllwFt": 2.51,
+          "navd88StageFt": 0.28,
+          "mllwStageFt": 2.41,
+          "twlMllwFt": 2.41,
           "tideMllwFt": 1.581,
-          "surgeFt": 0.7,
-          "matchedStageKey": "0.4",
+          "surgeFt": 0.6,
+          "matchedStageKey": "0.3",
           "wasClamped": false,
-          "hourIndex": 80
+          "hourIndex": 77
         },
         {
           "timeUtc": "2026-07-12T21:00:00Z",
           "scenario": "mean",
           "product": "mean",
           "percentile": "Mean",
-          "rawPetssValue": 3.45,
+          "rawPetssValue": 3.35,
           "rawPetssScale": 1.0,
-          "sourceStageFt": 1.32,
+          "sourceStageFt": 1.22,
           "sourceDatum": "NAVD88",
-          "navd88StageFt": 1.32,
-          "mllwStageFt": 3.45,
-          "twlMllwFt": 3.45,
+          "navd88StageFt": 1.22,
+          "mllwStageFt": 3.35,
+          "twlMllwFt": 3.35,
           "tideMllwFt": 2.524,
-          "surgeFt": 0.7,
-          "matchedStageKey": "1.3",
+          "surgeFt": 0.6,
+          "matchedStageKey": "1.2",
           "wasClamped": false,
-          "hourIndex": 81
+          "hourIndex": 78
         },
         {
           "timeUtc": "2026-07-12T22:00:00Z",
@@ -1587,7 +1533,7 @@
           "surgeFt": 0.6,
           "matchedStageKey": "2.1",
           "wasClamped": false,
-          "hourIndex": 82
+          "hourIndex": 79
         },
         {
           "timeUtc": "2026-07-12T23:00:00Z",
@@ -1605,23 +1551,77 @@
           "surgeFt": 0.6,
           "matchedStageKey": "2.8",
           "wasClamped": false,
-          "hourIndex": 83
+          "hourIndex": 80
         },
         {
           "timeUtc": "2026-07-13T00:00:00Z",
           "scenario": "mean",
           "product": "mean",
           "percentile": "Mean",
-          "rawPetssValue": 5.31,
+          "rawPetssValue": 5.21,
           "rawPetssScale": 1.0,
-          "sourceStageFt": 3.18,
+          "sourceStageFt": 3.08,
           "sourceDatum": "NAVD88",
-          "navd88StageFt": 3.18,
-          "mllwStageFt": 5.31,
-          "twlMllwFt": 5.31,
+          "navd88StageFt": 3.08,
+          "mllwStageFt": 5.21,
+          "twlMllwFt": 5.21,
           "tideMllwFt": 4.384,
-          "surgeFt": 0.7,
-          "matchedStageKey": "3.2",
+          "surgeFt": 0.6,
+          "matchedStageKey": "3.1",
+          "wasClamped": false,
+          "hourIndex": 81
+        },
+        {
+          "timeUtc": "2026-07-13T01:00:00Z",
+          "scenario": "mean",
+          "product": "mean",
+          "percentile": "Mean",
+          "rawPetssValue": 4.981,
+          "rawPetssScale": 1.0,
+          "sourceStageFt": 2.85,
+          "sourceDatum": "NAVD88",
+          "navd88StageFt": 2.85,
+          "mllwStageFt": 4.98,
+          "twlMllwFt": 4.98,
+          "tideMllwFt": 4.155,
+          "surgeFt": 0.6,
+          "matchedStageKey": "2.8",
+          "wasClamped": false,
+          "hourIndex": 82
+        },
+        {
+          "timeUtc": "2026-07-13T02:00:00Z",
+          "scenario": "mean",
+          "product": "mean",
+          "percentile": "Mean",
+          "rawPetssValue": 4.284,
+          "rawPetssScale": 1.0,
+          "sourceStageFt": 2.15,
+          "sourceDatum": "NAVD88",
+          "navd88StageFt": 2.15,
+          "mllwStageFt": 4.28,
+          "twlMllwFt": 4.28,
+          "tideMllwFt": 3.458,
+          "surgeFt": 0.6,
+          "matchedStageKey": "2.1",
+          "wasClamped": false,
+          "hourIndex": 83
+        },
+        {
+          "timeUtc": "2026-07-13T03:00:00Z",
+          "scenario": "mean",
+          "product": "mean",
+          "percentile": "Mean",
+          "rawPetssValue": 3.405,
+          "rawPetssScale": 1.0,
+          "sourceStageFt": 1.28,
+          "sourceDatum": "NAVD88",
+          "navd88StageFt": 1.28,
+          "mllwStageFt": 3.41,
+          "twlMllwFt": 3.41,
+          "tideMllwFt": 2.579,
+          "surgeFt": 0.6,
+          "matchedStageKey": "1.3",
           "wasClamped": false,
           "hourIndex": 84
         }
@@ -1633,191 +1633,137 @@
       "product": "e90",
       "hours": [
         {
-          "timeUtc": "2026-07-09T12:00:00Z",
-          "scenario": "lowEnd",
-          "product": "e90",
-          "percentile": "90p / e90",
-          "rawPetssValue": 1.914,
-          "rawPetssScale": 1.0,
-          "sourceStageFt": -0.22,
-          "sourceDatum": "NAVD88",
-          "navd88StageFt": -0.22,
-          "mllwStageFt": 1.91,
-          "twlMllwFt": 1.91,
-          "tideMllwFt": 1.173,
-          "surgeFt": 0.7,
-          "matchedStageKey": "-0.2",
-          "wasClamped": false,
-          "hourIndex": 0
-        },
-        {
-          "timeUtc": "2026-07-09T13:00:00Z",
-          "scenario": "lowEnd",
-          "product": "e90",
-          "percentile": "90p / e90",
-          "rawPetssValue": 1.405,
-          "rawPetssScale": 1.0,
-          "sourceStageFt": -0.72,
-          "sourceDatum": "NAVD88",
-          "navd88StageFt": -0.72,
-          "mllwStageFt": 1.41,
-          "twlMllwFt": 1.41,
-          "tideMllwFt": 0.647,
-          "surgeFt": 0.6,
-          "matchedStageKey": "-0.7",
-          "wasClamped": false,
-          "hourIndex": 1
-        },
-        {
-          "timeUtc": "2026-07-09T14:00:00Z",
-          "scenario": "lowEnd",
-          "product": "e90",
-          "percentile": "90p / e90",
-          "rawPetssValue": 1.092,
-          "rawPetssScale": 1.0,
-          "sourceStageFt": -1.04,
-          "sourceDatum": "NAVD88",
-          "navd88StageFt": -1.04,
-          "mllwStageFt": 1.09,
-          "twlMllwFt": 1.09,
-          "tideMllwFt": 0.317,
-          "surgeFt": 0.6,
-          "matchedStageKey": "-1.0",
-          "wasClamped": false,
-          "hourIndex": 2
-        },
-        {
           "timeUtc": "2026-07-09T15:00:00Z",
           "scenario": "lowEnd",
           "product": "e90",
           "percentile": "90p / e90",
-          "rawPetssValue": 1.086,
+          "rawPetssValue": 1.028,
           "rawPetssScale": 1.0,
-          "sourceStageFt": -1.04,
+          "sourceStageFt": -1.1,
           "sourceDatum": "NAVD88",
-          "navd88StageFt": -1.04,
-          "mllwStageFt": 1.09,
-          "twlMllwFt": 1.09,
+          "navd88StageFt": -1.1,
+          "mllwStageFt": 1.03,
+          "twlMllwFt": 1.03,
           "tideMllwFt": 0.294,
           "surgeFt": 0.6,
-          "matchedStageKey": "-1.0",
+          "matchedStageKey": "-1.1",
           "wasClamped": false,
-          "hourIndex": 3
+          "hourIndex": 0
         },
         {
           "timeUtc": "2026-07-09T16:00:00Z",
           "scenario": "lowEnd",
           "product": "e90",
           "percentile": "90p / e90",
-          "rawPetssValue": 1.563,
+          "rawPetssValue": 1.487,
           "rawPetssScale": 1.0,
-          "sourceStageFt": -0.57,
+          "sourceStageFt": -0.64,
           "sourceDatum": "NAVD88",
-          "navd88StageFt": -0.57,
-          "mllwStageFt": 1.56,
-          "twlMllwFt": 1.56,
+          "navd88StageFt": -0.64,
+          "mllwStageFt": 1.49,
+          "twlMllwFt": 1.49,
           "tideMllwFt": 0.754,
           "surgeFt": 0.6,
           "matchedStageKey": "-0.6",
           "wasClamped": false,
-          "hourIndex": 4
+          "hourIndex": 1
         },
         {
           "timeUtc": "2026-07-09T17:00:00Z",
           "scenario": "lowEnd",
           "product": "e90",
           "percentile": "90p / e90",
-          "rawPetssValue": 2.413,
+          "rawPetssValue": 2.319,
           "rawPetssScale": 1.0,
-          "sourceStageFt": 0.28,
+          "sourceStageFt": 0.19,
           "sourceDatum": "NAVD88",
-          "navd88StageFt": 0.28,
-          "mllwStageFt": 2.41,
-          "twlMllwFt": 2.41,
+          "navd88StageFt": 0.19,
+          "mllwStageFt": 2.32,
+          "twlMllwFt": 2.32,
           "tideMllwFt": 1.587,
           "surgeFt": 0.6,
-          "matchedStageKey": "0.3",
+          "matchedStageKey": "0.2",
           "wasClamped": false,
-          "hourIndex": 5
+          "hourIndex": 2
         },
         {
           "timeUtc": "2026-07-09T18:00:00Z",
           "scenario": "lowEnd",
           "product": "e90",
           "percentile": "90p / e90",
-          "rawPetssValue": 3.305,
+          "rawPetssValue": 3.21,
           "rawPetssScale": 1.0,
-          "sourceStageFt": 1.18,
+          "sourceStageFt": 1.08,
           "sourceDatum": "NAVD88",
-          "navd88StageFt": 1.18,
-          "mllwStageFt": 3.31,
-          "twlMllwFt": 3.31,
+          "navd88StageFt": 1.08,
+          "mllwStageFt": 3.21,
+          "twlMllwFt": 3.21,
           "tideMllwFt": 2.479,
           "surgeFt": 0.6,
-          "matchedStageKey": "1.2",
+          "matchedStageKey": "1.1",
           "wasClamped": false,
-          "hourIndex": 6
+          "hourIndex": 3
         },
         {
           "timeUtc": "2026-07-09T19:00:00Z",
           "scenario": "lowEnd",
           "product": "e90",
           "percentile": "90p / e90",
-          "rawPetssValue": 4.052,
+          "rawPetssValue": 4.057,
           "rawPetssScale": 1.0,
-          "sourceStageFt": 1.92,
+          "sourceStageFt": 1.93,
           "sourceDatum": "NAVD88",
-          "navd88StageFt": 1.92,
-          "mllwStageFt": 4.05,
-          "twlMllwFt": 4.05,
+          "navd88StageFt": 1.93,
+          "mllwStageFt": 4.06,
+          "twlMllwFt": 4.06,
           "tideMllwFt": 3.226,
           "surgeFt": 0.6,
           "matchedStageKey": "1.9",
           "wasClamped": false,
-          "hourIndex": 7
+          "hourIndex": 4
         },
         {
           "timeUtc": "2026-07-09T20:00:00Z",
           "scenario": "lowEnd",
           "product": "e90",
           "percentile": "90p / e90",
-          "rawPetssValue": 4.577,
+          "rawPetssValue": 4.481,
           "rawPetssScale": 1.0,
-          "sourceStageFt": 2.45,
+          "sourceStageFt": 2.35,
           "sourceDatum": "NAVD88",
-          "navd88StageFt": 2.45,
-          "mllwStageFt": 4.58,
-          "twlMllwFt": 4.58,
+          "navd88StageFt": 2.35,
+          "mllwStageFt": 4.48,
+          "twlMllwFt": 4.48,
           "tideMllwFt": 3.751,
           "surgeFt": 0.6,
           "matchedStageKey": "2.4",
           "wasClamped": false,
-          "hourIndex": 8
+          "hourIndex": 5
         },
         {
           "timeUtc": "2026-07-09T21:00:00Z",
           "scenario": "lowEnd",
           "product": "e90",
           "percentile": "90p / e90",
-          "rawPetssValue": 4.79,
+          "rawPetssValue": 4.693,
           "rawPetssScale": 1.0,
-          "sourceStageFt": 2.66,
+          "sourceStageFt": 2.56,
           "sourceDatum": "NAVD88",
-          "navd88StageFt": 2.66,
-          "mllwStageFt": 4.79,
-          "twlMllwFt": 4.79,
+          "navd88StageFt": 2.56,
+          "mllwStageFt": 4.69,
+          "twlMllwFt": 4.69,
           "tideMllwFt": 3.964,
           "surgeFt": 0.6,
-          "matchedStageKey": "2.7",
+          "matchedStageKey": "2.6",
           "wasClamped": false,
-          "hourIndex": 9
+          "hourIndex": 6
         },
         {
           "timeUtc": "2026-07-09T22:00:00Z",
           "scenario": "lowEnd",
           "product": "e90",
           "percentile": "90p / e90",
-          "rawPetssValue": 4.476,
+          "rawPetssValue": 4.478,
           "rawPetssScale": 1.0,
           "sourceStageFt": 2.35,
           "sourceDatum": "NAVD88",
@@ -1825,17 +1771,17 @@
           "mllwStageFt": 4.48,
           "twlMllwFt": 4.48,
           "tideMllwFt": 3.75,
-          "surgeFt": 0.6,
+          "surgeFt": 0.5,
           "matchedStageKey": "2.4",
           "wasClamped": false,
-          "hourIndex": 10
+          "hourIndex": 7
         },
         {
           "timeUtc": "2026-07-09T23:00:00Z",
           "scenario": "lowEnd",
           "product": "e90",
           "percentile": "90p / e90",
-          "rawPetssValue": 3.848,
+          "rawPetssValue": 3.849,
           "rawPetssScale": 1.0,
           "sourceStageFt": 1.72,
           "sourceDatum": "NAVD88",
@@ -1843,10 +1789,10 @@
           "mllwStageFt": 3.85,
           "twlMllwFt": 3.85,
           "tideMllwFt": 3.122,
-          "surgeFt": 0.6,
+          "surgeFt": 0.5,
           "matchedStageKey": "1.7",
           "wasClamped": false,
-          "hourIndex": 11
+          "hourIndex": 8
         },
         {
           "timeUtc": "2026-07-10T00:00:00Z",
@@ -1861,118 +1807,118 @@
           "mllwStageFt": 3.06,
           "twlMllwFt": 3.06,
           "tideMllwFt": 2.329,
-          "surgeFt": 0.6,
+          "surgeFt": 0.5,
           "matchedStageKey": "0.9",
           "wasClamped": false,
-          "hourIndex": 12
+          "hourIndex": 9
         },
         {
           "timeUtc": "2026-07-10T01:00:00Z",
           "scenario": "lowEnd",
           "product": "e90",
           "percentile": "90p / e90",
-          "rawPetssValue": 2.356,
+          "rawPetssValue": 2.256,
           "rawPetssScale": 1.0,
-          "sourceStageFt": 0.23,
+          "sourceStageFt": 0.13,
           "sourceDatum": "NAVD88",
-          "navd88StageFt": 0.23,
-          "mllwStageFt": 2.36,
-          "twlMllwFt": 2.36,
+          "navd88StageFt": 0.13,
+          "mllwStageFt": 2.26,
+          "twlMllwFt": 2.26,
           "tideMllwFt": 1.63,
           "surgeFt": 0.5,
-          "matchedStageKey": "0.2",
+          "matchedStageKey": "0.1",
           "wasClamped": false,
-          "hourIndex": 13
+          "hourIndex": 10
         },
         {
           "timeUtc": "2026-07-10T02:00:00Z",
           "scenario": "lowEnd",
           "product": "e90",
           "percentile": "90p / e90",
-          "rawPetssValue": 1.784,
+          "rawPetssValue": 1.684,
           "rawPetssScale": 1.0,
-          "sourceStageFt": -0.35,
+          "sourceStageFt": -0.45,
           "sourceDatum": "NAVD88",
-          "navd88StageFt": -0.35,
-          "mllwStageFt": 1.78,
-          "twlMllwFt": 1.78,
+          "navd88StageFt": -0.45,
+          "mllwStageFt": 1.68,
+          "twlMllwFt": 1.68,
           "tideMllwFt": 1.058,
           "surgeFt": 0.5,
-          "matchedStageKey": "-0.3",
+          "matchedStageKey": "-0.4",
           "wasClamped": false,
-          "hourIndex": 14
+          "hourIndex": 11
         },
         {
           "timeUtc": "2026-07-10T03:00:00Z",
           "scenario": "lowEnd",
           "product": "e90",
           "percentile": "90p / e90",
-          "rawPetssValue": 1.376,
+          "rawPetssValue": 1.276,
           "rawPetssScale": 1.0,
-          "sourceStageFt": -0.75,
+          "sourceStageFt": -0.85,
           "sourceDatum": "NAVD88",
-          "navd88StageFt": -0.75,
-          "mllwStageFt": 1.38,
-          "twlMllwFt": 1.38,
+          "navd88StageFt": -0.85,
+          "mllwStageFt": 1.28,
+          "twlMllwFt": 1.28,
           "tideMllwFt": 0.65,
           "surgeFt": 0.5,
           "matchedStageKey": "-0.8",
           "wasClamped": false,
-          "hourIndex": 15
+          "hourIndex": 12
         },
         {
           "timeUtc": "2026-07-10T04:00:00Z",
           "scenario": "lowEnd",
           "product": "e90",
           "percentile": "90p / e90",
-          "rawPetssValue": 1.344,
+          "rawPetssValue": 1.244,
           "rawPetssScale": 1.0,
-          "sourceStageFt": -0.79,
+          "sourceStageFt": -0.89,
           "sourceDatum": "NAVD88",
-          "navd88StageFt": -0.79,
-          "mllwStageFt": 1.34,
-          "twlMllwFt": 1.34,
+          "navd88StageFt": -0.89,
+          "mllwStageFt": 1.24,
+          "twlMllwFt": 1.24,
           "tideMllwFt": 0.618,
           "surgeFt": 0.5,
-          "matchedStageKey": "-0.8",
+          "matchedStageKey": "-0.9",
           "wasClamped": false,
-          "hourIndex": 16
+          "hourIndex": 13
         },
         {
           "timeUtc": "2026-07-10T05:00:00Z",
           "scenario": "lowEnd",
           "product": "e90",
           "percentile": "90p / e90",
-          "rawPetssValue": 1.763,
+          "rawPetssValue": 1.663,
           "rawPetssScale": 1.0,
-          "sourceStageFt": -0.37,
+          "sourceStageFt": -0.47,
           "sourceDatum": "NAVD88",
-          "navd88StageFt": -0.37,
-          "mllwStageFt": 1.76,
-          "twlMllwFt": 1.76,
+          "navd88StageFt": -0.47,
+          "mllwStageFt": 1.66,
+          "twlMllwFt": 1.66,
           "tideMllwFt": 1.037,
           "surgeFt": 0.5,
-          "matchedStageKey": "-0.4",
+          "matchedStageKey": "-0.5",
           "wasClamped": false,
-          "hourIndex": 17
+          "hourIndex": 14
         },
         {
           "timeUtc": "2026-07-10T06:00:00Z",
           "scenario": "lowEnd",
           "product": "e90",
           "percentile": "90p / e90",
-          "rawPetssValue": 2.403,
+          "rawPetssValue": 2.303,
           "rawPetssScale": 1.0,
-          "sourceStageFt": 0.27,
+          "sourceStageFt": 0.17,
           "sourceDatum": "NAVD88",
-          "navd88StageFt": 0.27,
-          "mllwStageFt": 2.4,
-          "twlMllwFt": 2.4,
+          "navd88StageFt": 0.17,
+          "mllwStageFt": 2.3,
+          "twlMllwFt": 2.3,
           "tideMllwFt": 1.677,
           "surgeFt": 0.5,
-          "matchedStageKey": "0.3",
+          "matchedStageKey": "0.2",
           "wasClamped": false,
-          "hourIndex": 18
+          "hourIndex": 15
         },
         {
           "timeUtc": "2026-07-10T07:00:00Z",
@@ -1990,223 +1936,223 @@
           "surgeFt": 0.5,
           "matchedStageKey": "0.8",
           "wasClamped": false,
-          "hourIndex": 19
+          "hourIndex": 16
         },
         {
           "timeUtc": "2026-07-10T08:00:00Z",
           "scenario": "lowEnd",
           "product": "e90",
           "percentile": "90p / e90",
-          "rawPetssValue": 3.512,
+          "rawPetssValue": 3.412,
           "rawPetssScale": 1.0,
-          "sourceStageFt": 1.38,
+          "sourceStageFt": 1.28,
           "sourceDatum": "NAVD88",
-          "navd88StageFt": 1.38,
-          "mllwStageFt": 3.51,
-          "twlMllwFt": 3.51,
+          "navd88StageFt": 1.28,
+          "mllwStageFt": 3.41,
+          "twlMllwFt": 3.41,
           "tideMllwFt": 2.786,
           "surgeFt": 0.5,
-          "matchedStageKey": "1.4",
+          "matchedStageKey": "1.3",
           "wasClamped": false,
-          "hourIndex": 20
+          "hourIndex": 17
         },
         {
           "timeUtc": "2026-07-10T09:00:00Z",
           "scenario": "lowEnd",
           "product": "e90",
           "percentile": "90p / e90",
-          "rawPetssValue": 3.816,
+          "rawPetssValue": 3.716,
           "rawPetssScale": 1.0,
-          "sourceStageFt": 1.69,
+          "sourceStageFt": 1.59,
           "sourceDatum": "NAVD88",
-          "navd88StageFt": 1.69,
-          "mllwStageFt": 3.82,
-          "twlMllwFt": 3.82,
+          "navd88StageFt": 1.59,
+          "mllwStageFt": 3.72,
+          "twlMllwFt": 3.72,
           "tideMllwFt": 3.09,
           "surgeFt": 0.5,
-          "matchedStageKey": "1.7",
+          "matchedStageKey": "1.6",
           "wasClamped": false,
-          "hourIndex": 21
+          "hourIndex": 18
         },
         {
           "timeUtc": "2026-07-10T10:00:00Z",
           "scenario": "lowEnd",
           "product": "e90",
           "percentile": "90p / e90",
-          "rawPetssValue": 3.797,
+          "rawPetssValue": 3.697,
           "rawPetssScale": 1.0,
-          "sourceStageFt": 1.67,
+          "sourceStageFt": 1.57,
           "sourceDatum": "NAVD88",
-          "navd88StageFt": 1.67,
-          "mllwStageFt": 3.8,
-          "twlMllwFt": 3.8,
+          "navd88StageFt": 1.57,
+          "mllwStageFt": 3.7,
+          "twlMllwFt": 3.7,
           "tideMllwFt": 3.071,
           "surgeFt": 0.5,
-          "matchedStageKey": "1.7",
+          "matchedStageKey": "1.6",
           "wasClamped": false,
-          "hourIndex": 22
+          "hourIndex": 19
         },
         {
           "timeUtc": "2026-07-10T11:00:00Z",
           "scenario": "lowEnd",
           "product": "e90",
           "percentile": "90p / e90",
-          "rawPetssValue": 3.356,
+          "rawPetssValue": 3.256,
           "rawPetssScale": 1.0,
-          "sourceStageFt": 1.23,
+          "sourceStageFt": 1.13,
           "sourceDatum": "NAVD88",
-          "navd88StageFt": 1.23,
-          "mllwStageFt": 3.36,
-          "twlMllwFt": 3.36,
+          "navd88StageFt": 1.13,
+          "mllwStageFt": 3.26,
+          "twlMllwFt": 3.26,
           "tideMllwFt": 2.63,
           "surgeFt": 0.5,
-          "matchedStageKey": "1.2",
+          "matchedStageKey": "1.1",
           "wasClamped": false,
-          "hourIndex": 23
+          "hourIndex": 20
         },
         {
           "timeUtc": "2026-07-10T12:00:00Z",
           "scenario": "lowEnd",
           "product": "e90",
           "percentile": "90p / e90",
-          "rawPetssValue": 2.626,
+          "rawPetssValue": 2.526,
           "rawPetssScale": 1.0,
-          "sourceStageFt": 0.5,
+          "sourceStageFt": 0.4,
           "sourceDatum": "NAVD88",
-          "navd88StageFt": 0.5,
-          "mllwStageFt": 2.63,
-          "twlMllwFt": 2.63,
+          "navd88StageFt": 0.4,
+          "mllwStageFt": 2.53,
+          "twlMllwFt": 2.53,
           "tideMllwFt": 1.9,
           "surgeFt": 0.5,
-          "matchedStageKey": "0.5",
+          "matchedStageKey": "0.4",
           "wasClamped": false,
-          "hourIndex": 24
+          "hourIndex": 21
         },
         {
           "timeUtc": "2026-07-10T13:00:00Z",
           "scenario": "lowEnd",
           "product": "e90",
           "percentile": "90p / e90",
-          "rawPetssValue": 1.912,
+          "rawPetssValue": 1.812,
           "rawPetssScale": 1.0,
-          "sourceStageFt": -0.22,
+          "sourceStageFt": -0.32,
           "sourceDatum": "NAVD88",
-          "navd88StageFt": -0.22,
-          "mllwStageFt": 1.91,
-          "twlMllwFt": 1.91,
+          "navd88StageFt": -0.32,
+          "mllwStageFt": 1.81,
+          "twlMllwFt": 1.81,
           "tideMllwFt": 1.186,
           "surgeFt": 0.5,
-          "matchedStageKey": "-0.2",
+          "matchedStageKey": "-0.3",
           "wasClamped": false,
-          "hourIndex": 25
+          "hourIndex": 22
         },
         {
           "timeUtc": "2026-07-10T14:00:00Z",
           "scenario": "lowEnd",
           "product": "e90",
           "percentile": "90p / e90",
-          "rawPetssValue": 1.365,
+          "rawPetssValue": 1.265,
           "rawPetssScale": 1.0,
-          "sourceStageFt": -0.76,
+          "sourceStageFt": -0.86,
           "sourceDatum": "NAVD88",
-          "navd88StageFt": -0.76,
-          "mllwStageFt": 1.37,
-          "twlMllwFt": 1.37,
+          "navd88StageFt": -0.86,
+          "mllwStageFt": 1.27,
+          "twlMllwFt": 1.27,
           "tideMllwFt": 0.639,
           "surgeFt": 0.5,
-          "matchedStageKey": "-0.8",
+          "matchedStageKey": "-0.9",
           "wasClamped": false,
-          "hourIndex": 26
+          "hourIndex": 23
         },
         {
           "timeUtc": "2026-07-10T15:00:00Z",
           "scenario": "lowEnd",
           "product": "e90",
           "percentile": "90p / e90",
-          "rawPetssValue": 0.997,
+          "rawPetssValue": 0.897,
           "rawPetssScale": 1.0,
-          "sourceStageFt": -1.13,
+          "sourceStageFt": -1.23,
           "sourceDatum": "NAVD88",
-          "navd88StageFt": -1.13,
-          "mllwStageFt": 1.0,
-          "twlMllwFt": 1.0,
+          "navd88StageFt": -1.23,
+          "mllwStageFt": 0.9,
+          "twlMllwFt": 0.9,
           "tideMllwFt": 0.271,
           "surgeFt": 0.5,
-          "matchedStageKey": "-1.1",
+          "matchedStageKey": "-1.2",
           "wasClamped": false,
-          "hourIndex": 27
+          "hourIndex": 24
         },
         {
           "timeUtc": "2026-07-10T16:00:00Z",
           "scenario": "lowEnd",
           "product": "e90",
           "percentile": "90p / e90",
-          "rawPetssValue": 0.975,
+          "rawPetssValue": 0.875,
           "rawPetssScale": 1.0,
-          "sourceStageFt": -1.15,
+          "sourceStageFt": -1.25,
           "sourceDatum": "NAVD88",
-          "navd88StageFt": -1.15,
-          "mllwStageFt": 0.98,
-          "twlMllwFt": 0.98,
+          "navd88StageFt": -1.25,
+          "mllwStageFt": 0.88,
+          "twlMllwFt": 0.88,
           "tideMllwFt": 0.249,
           "surgeFt": 0.5,
-          "matchedStageKey": "-1.1",
+          "matchedStageKey": "-1.2",
           "wasClamped": false,
-          "hourIndex": 28
+          "hourIndex": 25
         },
         {
           "timeUtc": "2026-07-10T17:00:00Z",
           "scenario": "lowEnd",
           "product": "e90",
           "percentile": "90p / e90",
-          "rawPetssValue": 1.474,
+          "rawPetssValue": 1.374,
           "rawPetssScale": 1.0,
-          "sourceStageFt": -0.66,
+          "sourceStageFt": -0.76,
           "sourceDatum": "NAVD88",
-          "navd88StageFt": -0.66,
-          "mllwStageFt": 1.47,
-          "twlMllwFt": 1.47,
+          "navd88StageFt": -0.76,
+          "mllwStageFt": 1.37,
+          "twlMllwFt": 1.37,
           "tideMllwFt": 0.748,
           "surgeFt": 0.5,
-          "matchedStageKey": "-0.7",
+          "matchedStageKey": "-0.8",
           "wasClamped": false,
-          "hourIndex": 29
+          "hourIndex": 26
         },
         {
           "timeUtc": "2026-07-10T18:00:00Z",
           "scenario": "lowEnd",
           "product": "e90",
           "percentile": "90p / e90",
-          "rawPetssValue": 2.342,
+          "rawPetssValue": 2.242,
           "rawPetssScale": 1.0,
-          "sourceStageFt": 0.21,
+          "sourceStageFt": 0.11,
           "sourceDatum": "NAVD88",
-          "navd88StageFt": 0.21,
-          "mllwStageFt": 2.34,
-          "twlMllwFt": 2.34,
+          "navd88StageFt": 0.11,
+          "mllwStageFt": 2.24,
+          "twlMllwFt": 2.24,
           "tideMllwFt": 1.616,
           "surgeFt": 0.5,
-          "matchedStageKey": "0.2",
+          "matchedStageKey": "0.1",
           "wasClamped": false,
-          "hourIndex": 30
+          "hourIndex": 27
         },
         {
           "timeUtc": "2026-07-10T19:00:00Z",
           "scenario": "lowEnd",
           "product": "e90",
           "percentile": "90p / e90",
-          "rawPetssValue": 3.253,
+          "rawPetssValue": 3.153,
           "rawPetssScale": 1.0,
-          "sourceStageFt": 1.12,
+          "sourceStageFt": 1.02,
           "sourceDatum": "NAVD88",
-          "navd88StageFt": 1.12,
-          "mllwStageFt": 3.25,
-          "twlMllwFt": 3.25,
+          "navd88StageFt": 1.02,
+          "mllwStageFt": 3.15,
+          "twlMllwFt": 3.15,
           "tideMllwFt": 2.527,
           "surgeFt": 0.5,
-          "matchedStageKey": "1.1",
+          "matchedStageKey": "1.0",
           "wasClamped": false,
-          "hourIndex": 31
+          "hourIndex": 28
         },
         {
           "timeUtc": "2026-07-10T20:00:00Z",
@@ -2224,7 +2170,7 @@
           "surgeFt": 0.5,
           "matchedStageKey": "1.9",
           "wasClamped": false,
-          "hourIndex": 32
+          "hourIndex": 29
         },
         {
           "timeUtc": "2026-07-10T21:00:00Z",
@@ -2239,10 +2185,10 @@
           "mllwStageFt": 4.58,
           "twlMllwFt": 4.58,
           "tideMllwFt": 3.854,
-          "surgeFt": 0.6,
+          "surgeFt": 0.5,
           "matchedStageKey": "2.4",
           "wasClamped": false,
-          "hourIndex": 33
+          "hourIndex": 30
         },
         {
           "timeUtc": "2026-07-10T22:00:00Z",
@@ -2257,100 +2203,100 @@
           "mllwStageFt": 4.83,
           "twlMllwFt": 4.83,
           "tideMllwFt": 4.103,
-          "surgeFt": 0.6,
+          "surgeFt": 0.5,
           "matchedStageKey": "2.7",
           "wasClamped": false,
-          "hourIndex": 34
+          "hourIndex": 31
         },
         {
           "timeUtc": "2026-07-10T23:00:00Z",
           "scenario": "lowEnd",
           "product": "e90",
           "percentile": "90p / e90",
-          "rawPetssValue": 4.628,
+          "rawPetssValue": 4.528,
           "rawPetssScale": 1.0,
-          "sourceStageFt": 2.5,
+          "sourceStageFt": 2.4,
           "sourceDatum": "NAVD88",
-          "navd88StageFt": 2.5,
-          "mllwStageFt": 4.63,
-          "twlMllwFt": 4.63,
+          "navd88StageFt": 2.4,
+          "mllwStageFt": 4.53,
+          "twlMllwFt": 4.53,
           "tideMllwFt": 3.902,
-          "surgeFt": 0.6,
-          "matchedStageKey": "2.5",
+          "surgeFt": 0.5,
+          "matchedStageKey": "2.4",
           "wasClamped": false,
-          "hourIndex": 35
+          "hourIndex": 32
         },
         {
           "timeUtc": "2026-07-11T00:00:00Z",
           "scenario": "lowEnd",
           "product": "e90",
           "percentile": "90p / e90",
-          "rawPetssValue": 3.991,
+          "rawPetssValue": 3.891,
           "rawPetssScale": 1.0,
-          "sourceStageFt": 1.86,
+          "sourceStageFt": 1.76,
           "sourceDatum": "NAVD88",
-          "navd88StageFt": 1.86,
-          "mllwStageFt": 3.99,
-          "twlMllwFt": 3.99,
+          "navd88StageFt": 1.76,
+          "mllwStageFt": 3.89,
+          "twlMllwFt": 3.89,
           "tideMllwFt": 3.265,
-          "surgeFt": 0.6,
-          "matchedStageKey": "1.9",
+          "surgeFt": 0.5,
+          "matchedStageKey": "1.8",
           "wasClamped": false,
-          "hourIndex": 36
+          "hourIndex": 33
         },
         {
           "timeUtc": "2026-07-11T01:00:00Z",
           "scenario": "lowEnd",
           "product": "e90",
           "percentile": "90p / e90",
-          "rawPetssValue": 3.18,
+          "rawPetssValue": 3.08,
           "rawPetssScale": 1.0,
-          "sourceStageFt": 1.05,
+          "sourceStageFt": 0.95,
           "sourceDatum": "NAVD88",
-          "navd88StageFt": 1.05,
-          "mllwStageFt": 3.18,
-          "twlMllwFt": 3.18,
+          "navd88StageFt": 0.95,
+          "mllwStageFt": 3.08,
+          "twlMllwFt": 3.08,
           "tideMllwFt": 2.454,
           "surgeFt": 0.5,
-          "matchedStageKey": "1.0",
+          "matchedStageKey": "0.9",
           "wasClamped": false,
-          "hourIndex": 37
+          "hourIndex": 34
         },
         {
           "timeUtc": "2026-07-11T02:00:00Z",
           "scenario": "lowEnd",
           "product": "e90",
           "percentile": "90p / e90",
-          "rawPetssValue": 2.431,
+          "rawPetssValue": 2.331,
           "rawPetssScale": 1.0,
-          "sourceStageFt": 0.3,
+          "sourceStageFt": 0.2,
           "sourceDatum": "NAVD88",
-          "navd88StageFt": 0.3,
-          "mllwStageFt": 2.43,
-          "twlMllwFt": 2.43,
+          "navd88StageFt": 0.2,
+          "mllwStageFt": 2.33,
+          "twlMllwFt": 2.33,
           "tideMllwFt": 1.705,
           "surgeFt": 0.5,
-          "matchedStageKey": "0.3",
+          "matchedStageKey": "0.2",
           "wasClamped": false,
-          "hourIndex": 38
+          "hourIndex": 35
         },
         {
           "timeUtc": "2026-07-11T03:00:00Z",
           "scenario": "lowEnd",
           "product": "e90",
           "percentile": "90p / e90",
-          "rawPetssValue": 1.767,
+          "rawPetssValue": 1.667,
           "rawPetssScale": 1.0,
-          "sourceStageFt": -0.36,
+          "sourceStageFt": -0.46,
           "sourceDatum": "NAVD88",
-          "navd88StageFt": -0.36,
-          "mllwStageFt": 1.77,
-          "twlMllwFt": 1.77,
+          "navd88StageFt": -0.46,
+          "mllwStageFt": 1.67,
+          "twlMllwFt": 1.67,
           "tideMllwFt": 1.041,
           "surgeFt": 0.5,
-          "matchedStageKey": "-0.4",
+          "matchedStageKey": "-0.5",
           "wasClamped": false,
-          "hourIndex": 39
+          "hourIndex": 36
         },
         {
           "timeUtc": "2026-07-11T04:00:00Z",
@@ -2368,7 +2314,7 @@
           "surgeFt": 0.5,
           "matchedStageKey": "-0.9",
           "wasClamped": false,
-          "hourIndex": 40
+          "hourIndex": 37
         },
         {
           "timeUtc": "2026-07-11T05:00:00Z",
@@ -2386,7 +2332,7 @@
           "surgeFt": 0.5,
           "matchedStageKey": "-1.0",
           "wasClamped": false,
-          "hourIndex": 41
+          "hourIndex": 38
         },
         {
           "timeUtc": "2026-07-11T06:00:00Z",
@@ -2404,25 +2350,25 @@
           "surgeFt": 0.5,
           "matchedStageKey": "-0.6",
           "wasClamped": false,
-          "hourIndex": 42
+          "hourIndex": 39
         },
         {
           "timeUtc": "2026-07-11T07:00:00Z",
           "scenario": "lowEnd",
           "product": "e90",
           "percentile": "90p / e90",
-          "rawPetssValue": 2.273,
+          "rawPetssValue": 2.173,
           "rawPetssScale": 1.0,
-          "sourceStageFt": 0.14,
+          "sourceStageFt": 0.04,
           "sourceDatum": "NAVD88",
-          "navd88StageFt": 0.14,
-          "mllwStageFt": 2.27,
-          "twlMllwFt": 2.27,
+          "navd88StageFt": 0.04,
+          "mllwStageFt": 2.17,
+          "twlMllwFt": 2.17,
           "tideMllwFt": 1.547,
           "surgeFt": 0.5,
-          "matchedStageKey": "0.1",
+          "matchedStageKey": "0.0",
           "wasClamped": false,
-          "hourIndex": 43
+          "hourIndex": 40
         },
         {
           "timeUtc": "2026-07-11T08:00:00Z",
@@ -2437,10 +2383,10 @@
           "mllwStageFt": 2.89,
           "twlMllwFt": 2.89,
           "tideMllwFt": 2.168,
-          "surgeFt": 0.6,
+          "surgeFt": 0.5,
           "matchedStageKey": "0.8",
           "wasClamped": false,
-          "hourIndex": 44
+          "hourIndex": 41
         },
         {
           "timeUtc": "2026-07-11T09:00:00Z",
@@ -2455,10 +2401,10 @@
           "mllwStageFt": 3.43,
           "twlMllwFt": 3.43,
           "tideMllwFt": 2.705,
-          "surgeFt": 0.6,
+          "surgeFt": 0.5,
           "matchedStageKey": "1.3",
           "wasClamped": false,
-          "hourIndex": 45
+          "hourIndex": 42
         },
         {
           "timeUtc": "2026-07-11T10:00:00Z",
@@ -2476,7 +2422,7 @@
           "surgeFt": 0.6,
           "matchedStageKey": "1.7",
           "wasClamped": false,
-          "hourIndex": 46
+          "hourIndex": 43
         },
         {
           "timeUtc": "2026-07-11T11:00:00Z",
@@ -2494,7 +2440,7 @@
           "surgeFt": 0.6,
           "matchedStageKey": "1.7",
           "wasClamped": false,
-          "hourIndex": 47
+          "hourIndex": 44
         },
         {
           "timeUtc": "2026-07-11T12:00:00Z",
@@ -2512,7 +2458,7 @@
           "surgeFt": 0.6,
           "matchedStageKey": "1.3",
           "wasClamped": false,
-          "hourIndex": 48
+          "hourIndex": 45
         },
         {
           "timeUtc": "2026-07-11T13:00:00Z",
@@ -2530,7 +2476,7 @@
           "surgeFt": 0.6,
           "matchedStageKey": "0.5",
           "wasClamped": false,
-          "hourIndex": 49
+          "hourIndex": 46
         },
         {
           "timeUtc": "2026-07-11T14:00:00Z",
@@ -2548,7 +2494,7 @@
           "surgeFt": 0.6,
           "matchedStageKey": "-0.2",
           "wasClamped": false,
-          "hourIndex": 50
+          "hourIndex": 47
         },
         {
           "timeUtc": "2026-07-11T15:00:00Z",
@@ -2566,25 +2512,25 @@
           "surgeFt": 0.6,
           "matchedStageKey": "-0.8",
           "wasClamped": false,
-          "hourIndex": 51
+          "hourIndex": 48
         },
         {
           "timeUtc": "2026-07-11T16:00:00Z",
           "scenario": "lowEnd",
           "product": "e90",
           "percentile": "90p / e90",
-          "rawPetssValue": 1.024,
+          "rawPetssValue": 0.924,
           "rawPetssScale": 1.0,
-          "sourceStageFt": -1.11,
+          "sourceStageFt": -1.21,
           "sourceDatum": "NAVD88",
-          "navd88StageFt": -1.11,
-          "mllwStageFt": 1.02,
-          "twlMllwFt": 1.02,
+          "navd88StageFt": -1.21,
+          "mllwStageFt": 0.92,
+          "twlMllwFt": 0.92,
           "tideMllwFt": 0.198,
           "surgeFt": 0.6,
-          "matchedStageKey": "-1.1",
+          "matchedStageKey": "-1.2",
           "wasClamped": false,
-          "hourIndex": 52
+          "hourIndex": 49
         },
         {
           "timeUtc": "2026-07-11T17:00:00Z",
@@ -2602,7 +2548,7 @@
           "surgeFt": 0.7,
           "matchedStageKey": "-1.1",
           "wasClamped": false,
-          "hourIndex": 53
+          "hourIndex": 50
         },
         {
           "timeUtc": "2026-07-11T18:00:00Z",
@@ -2620,7 +2566,7 @@
           "surgeFt": 0.7,
           "matchedStageKey": "-0.6",
           "wasClamped": false,
-          "hourIndex": 54
+          "hourIndex": 51
         },
         {
           "timeUtc": "2026-07-11T19:00:00Z",
@@ -2638,7 +2584,7 @@
           "surgeFt": 0.7,
           "matchedStageKey": "0.3",
           "wasClamped": false,
-          "hourIndex": 55
+          "hourIndex": 52
         },
         {
           "timeUtc": "2026-07-11T20:00:00Z",
@@ -2656,7 +2602,7 @@
           "surgeFt": 0.7,
           "matchedStageKey": "1.2",
           "wasClamped": false,
-          "hourIndex": 56
+          "hourIndex": 53
         },
         {
           "timeUtc": "2026-07-11T21:00:00Z",
@@ -2674,7 +2620,7 @@
           "surgeFt": 0.7,
           "matchedStageKey": "2.0",
           "wasClamped": false,
-          "hourIndex": 57
+          "hourIndex": 54
         },
         {
           "timeUtc": "2026-07-11T22:00:00Z",
@@ -2692,7 +2638,7 @@
           "surgeFt": 0.7,
           "matchedStageKey": "2.6",
           "wasClamped": false,
-          "hourIndex": 58
+          "hourIndex": 55
         },
         {
           "timeUtc": "2026-07-11T23:00:00Z",
@@ -2710,7 +2656,7 @@
           "surgeFt": 0.7,
           "matchedStageKey": "3.0",
           "wasClamped": false,
-          "hourIndex": 59
+          "hourIndex": 56
         },
         {
           "timeUtc": "2026-07-12T00:00:00Z",
@@ -2728,7 +2674,7 @@
           "surgeFt": 0.7,
           "matchedStageKey": "2.8",
           "wasClamped": false,
-          "hourIndex": 60
+          "hourIndex": 57
         },
         {
           "timeUtc": "2026-07-12T01:00:00Z",
@@ -2746,7 +2692,7 @@
           "surgeFt": 0.7,
           "matchedStageKey": "2.1",
           "wasClamped": false,
-          "hourIndex": 61
+          "hourIndex": 58
         },
         {
           "timeUtc": "2026-07-12T02:00:00Z",
@@ -2764,7 +2710,7 @@
           "surgeFt": 0.7,
           "matchedStageKey": "1.2",
           "wasClamped": false,
-          "hourIndex": 62
+          "hourIndex": 59
         },
         {
           "timeUtc": "2026-07-12T03:00:00Z",
@@ -2782,7 +2728,7 @@
           "surgeFt": 0.7,
           "matchedStageKey": "0.4",
           "wasClamped": false,
-          "hourIndex": 63
+          "hourIndex": 60
         },
         {
           "timeUtc": "2026-07-12T04:00:00Z",
@@ -2800,7 +2746,7 @@
           "surgeFt": 0.7,
           "matchedStageKey": "-0.3",
           "wasClamped": false,
-          "hourIndex": 64
+          "hourIndex": 61
         },
         {
           "timeUtc": "2026-07-12T05:00:00Z",
@@ -2818,7 +2764,7 @@
           "surgeFt": 0.7,
           "matchedStageKey": "-0.9",
           "wasClamped": false,
-          "hourIndex": 65
+          "hourIndex": 62
         },
         {
           "timeUtc": "2026-07-12T06:00:00Z",
@@ -2836,7 +2782,7 @@
           "surgeFt": 0.7,
           "matchedStageKey": "-0.9",
           "wasClamped": false,
-          "hourIndex": 66
+          "hourIndex": 63
         },
         {
           "timeUtc": "2026-07-12T07:00:00Z",
@@ -2854,7 +2800,7 @@
           "surgeFt": 0.7,
           "matchedStageKey": "-0.5",
           "wasClamped": false,
-          "hourIndex": 67
+          "hourIndex": 64
         },
         {
           "timeUtc": "2026-07-12T08:00:00Z",
@@ -2872,7 +2818,7 @@
           "surgeFt": 0.7,
           "matchedStageKey": "0.1",
           "wasClamped": false,
-          "hourIndex": 68
+          "hourIndex": 65
         },
         {
           "timeUtc": "2026-07-12T09:00:00Z",
@@ -2890,7 +2836,7 @@
           "surgeFt": 0.7,
           "matchedStageKey": "0.8",
           "wasClamped": false,
-          "hourIndex": 69
+          "hourIndex": 66
         },
         {
           "timeUtc": "2026-07-12T10:00:00Z",
@@ -2908,7 +2854,7 @@
           "surgeFt": 0.7,
           "matchedStageKey": "1.4",
           "wasClamped": false,
-          "hourIndex": 70
+          "hourIndex": 67
         },
         {
           "timeUtc": "2026-07-12T11:00:00Z",
@@ -2926,25 +2872,25 @@
           "surgeFt": 0.7,
           "matchedStageKey": "1.8",
           "wasClamped": false,
-          "hourIndex": 71
+          "hourIndex": 68
         },
         {
           "timeUtc": "2026-07-12T12:00:00Z",
           "scenario": "lowEnd",
           "product": "e90",
           "percentile": "90p / e90",
-          "rawPetssValue": 4.021,
+          "rawPetssValue": 3.921,
           "rawPetssScale": 1.0,
-          "sourceStageFt": 1.89,
+          "sourceStageFt": 1.79,
           "sourceDatum": "NAVD88",
-          "navd88StageFt": 1.89,
-          "mllwStageFt": 4.02,
-          "twlMllwFt": 4.02,
+          "navd88StageFt": 1.79,
+          "mllwStageFt": 3.92,
+          "twlMllwFt": 3.92,
           "tideMllwFt": 3.195,
           "surgeFt": 0.7,
-          "matchedStageKey": "1.9",
+          "matchedStageKey": "1.8",
           "wasClamped": false,
-          "hourIndex": 72
+          "hourIndex": 69
         },
         {
           "timeUtc": "2026-07-12T13:00:00Z",
@@ -2962,7 +2908,7 @@
           "surgeFt": 0.7,
           "matchedStageKey": "1.4",
           "wasClamped": false,
-          "hourIndex": 73
+          "hourIndex": 70
         },
         {
           "timeUtc": "2026-07-12T14:00:00Z",
@@ -2980,7 +2926,7 @@
           "surgeFt": 0.7,
           "matchedStageKey": "0.6",
           "wasClamped": false,
-          "hourIndex": 74
+          "hourIndex": 71
         },
         {
           "timeUtc": "2026-07-12T15:00:00Z",
@@ -2998,7 +2944,7 @@
           "surgeFt": 0.7,
           "matchedStageKey": "-0.1",
           "wasClamped": false,
-          "hourIndex": 75
+          "hourIndex": 72
         },
         {
           "timeUtc": "2026-07-12T16:00:00Z",
@@ -3016,7 +2962,7 @@
           "surgeFt": 0.7,
           "matchedStageKey": "-0.8",
           "wasClamped": false,
-          "hourIndex": 76
+          "hourIndex": 73
         },
         {
           "timeUtc": "2026-07-12T17:00:00Z",
@@ -3034,7 +2980,7 @@
           "surgeFt": 0.7,
           "matchedStageKey": "-1.3",
           "wasClamped": false,
-          "hourIndex": 77
+          "hourIndex": 74
         },
         {
           "timeUtc": "2026-07-12T18:00:00Z",
@@ -3049,10 +2995,10 @@
           "mllwStageFt": 0.83,
           "twlMllwFt": 0.83,
           "tideMllwFt": 0.104,
-          "surgeFt": 0.7,
+          "surgeFt": 0.6,
           "matchedStageKey": "-1.3",
           "wasClamped": false,
-          "hourIndex": 78
+          "hourIndex": 75
         },
         {
           "timeUtc": "2026-07-12T19:00:00Z",
@@ -3067,10 +3013,10 @@
           "mllwStageFt": 1.4,
           "twlMllwFt": 1.4,
           "tideMllwFt": 0.677,
-          "surgeFt": 0.7,
+          "surgeFt": 0.6,
           "matchedStageKey": "-0.7",
           "wasClamped": false,
-          "hourIndex": 79
+          "hourIndex": 76
         },
         {
           "timeUtc": "2026-07-12T20:00:00Z",
@@ -3085,10 +3031,10 @@
           "mllwStageFt": 2.31,
           "twlMllwFt": 2.31,
           "tideMllwFt": 1.581,
-          "surgeFt": 0.7,
+          "surgeFt": 0.6,
           "matchedStageKey": "0.2",
           "wasClamped": false,
-          "hourIndex": 80
+          "hourIndex": 77
         },
         {
           "timeUtc": "2026-07-12T21:00:00Z",
@@ -3103,10 +3049,10 @@
           "mllwStageFt": 3.25,
           "twlMllwFt": 3.25,
           "tideMllwFt": 2.524,
-          "surgeFt": 0.7,
+          "surgeFt": 0.6,
           "matchedStageKey": "1.1",
           "wasClamped": false,
-          "hourIndex": 81
+          "hourIndex": 78
         },
         {
           "timeUtc": "2026-07-12T22:00:00Z",
@@ -3124,7 +3070,7 @@
           "surgeFt": 0.6,
           "matchedStageKey": "2.0",
           "wasClamped": false,
-          "hourIndex": 82
+          "hourIndex": 79
         },
         {
           "timeUtc": "2026-07-12T23:00:00Z",
@@ -3142,7 +3088,7 @@
           "surgeFt": 0.6,
           "matchedStageKey": "2.7",
           "wasClamped": false,
-          "hourIndex": 83
+          "hourIndex": 80
         },
         {
           "timeUtc": "2026-07-13T00:00:00Z",
@@ -3157,8 +3103,62 @@
           "mllwStageFt": 5.11,
           "twlMllwFt": 5.11,
           "tideMllwFt": 4.384,
-          "surgeFt": 0.7,
+          "surgeFt": 0.6,
           "matchedStageKey": "3.0",
+          "wasClamped": false,
+          "hourIndex": 81
+        },
+        {
+          "timeUtc": "2026-07-13T01:00:00Z",
+          "scenario": "lowEnd",
+          "product": "e90",
+          "percentile": "90p / e90",
+          "rawPetssValue": 4.881,
+          "rawPetssScale": 1.0,
+          "sourceStageFt": 2.75,
+          "sourceDatum": "NAVD88",
+          "navd88StageFt": 2.75,
+          "mllwStageFt": 4.88,
+          "twlMllwFt": 4.88,
+          "tideMllwFt": 4.155,
+          "surgeFt": 0.6,
+          "matchedStageKey": "2.8",
+          "wasClamped": false,
+          "hourIndex": 82
+        },
+        {
+          "timeUtc": "2026-07-13T02:00:00Z",
+          "scenario": "lowEnd",
+          "product": "e90",
+          "percentile": "90p / e90",
+          "rawPetssValue": 4.184,
+          "rawPetssScale": 1.0,
+          "sourceStageFt": 2.05,
+          "sourceDatum": "NAVD88",
+          "navd88StageFt": 2.05,
+          "mllwStageFt": 4.18,
+          "twlMllwFt": 4.18,
+          "tideMllwFt": 3.458,
+          "surgeFt": 0.6,
+          "matchedStageKey": "2.0",
+          "wasClamped": false,
+          "hourIndex": 83
+        },
+        {
+          "timeUtc": "2026-07-13T03:00:00Z",
+          "scenario": "lowEnd",
+          "product": "e90",
+          "percentile": "90p / e90",
+          "rawPetssValue": 3.205,
+          "rawPetssScale": 1.0,
+          "sourceStageFt": 1.08,
+          "sourceDatum": "NAVD88",
+          "navd88StageFt": 1.08,
+          "mllwStageFt": 3.21,
+          "twlMllwFt": 3.21,
+          "tideMllwFt": 2.579,
+          "surgeFt": 0.6,
+          "matchedStageKey": "1.1",
           "wasClamped": false,
           "hourIndex": 84
         }
@@ -3170,119 +3170,65 @@
       "product": "e10",
       "hours": [
         {
-          "timeUtc": "2026-07-09T12:00:00Z",
-          "scenario": "highEnd",
-          "product": "e10",
-          "percentile": "10p / e10",
-          "rawPetssValue": 2.014,
-          "rawPetssScale": 1.0,
-          "sourceStageFt": -0.12,
-          "sourceDatum": "NAVD88",
-          "navd88StageFt": -0.12,
-          "mllwStageFt": 2.01,
-          "twlMllwFt": 2.01,
-          "tideMllwFt": 1.173,
-          "surgeFt": 0.7,
-          "matchedStageKey": "-0.1",
-          "wasClamped": false,
-          "hourIndex": 0
-        },
-        {
-          "timeUtc": "2026-07-09T13:00:00Z",
-          "scenario": "highEnd",
-          "product": "e10",
-          "percentile": "10p / e10",
-          "rawPetssValue": 1.505,
-          "rawPetssScale": 1.0,
-          "sourceStageFt": -0.62,
-          "sourceDatum": "NAVD88",
-          "navd88StageFt": -0.62,
-          "mllwStageFt": 1.51,
-          "twlMllwFt": 1.51,
-          "tideMllwFt": 0.647,
-          "surgeFt": 0.6,
-          "matchedStageKey": "-0.6",
-          "wasClamped": false,
-          "hourIndex": 1
-        },
-        {
-          "timeUtc": "2026-07-09T14:00:00Z",
-          "scenario": "highEnd",
-          "product": "e10",
-          "percentile": "10p / e10",
-          "rawPetssValue": 1.192,
-          "rawPetssScale": 1.0,
-          "sourceStageFt": -0.94,
-          "sourceDatum": "NAVD88",
-          "navd88StageFt": -0.94,
-          "mllwStageFt": 1.19,
-          "twlMllwFt": 1.19,
-          "tideMllwFt": 0.317,
-          "surgeFt": 0.6,
-          "matchedStageKey": "-0.9",
-          "wasClamped": false,
-          "hourIndex": 2
-        },
-        {
           "timeUtc": "2026-07-09T15:00:00Z",
           "scenario": "highEnd",
           "product": "e10",
           "percentile": "10p / e10",
-          "rawPetssValue": 1.186,
+          "rawPetssValue": 1.128,
           "rawPetssScale": 1.0,
-          "sourceStageFt": -0.94,
+          "sourceStageFt": -1.0,
           "sourceDatum": "NAVD88",
-          "navd88StageFt": -0.94,
-          "mllwStageFt": 1.19,
-          "twlMllwFt": 1.19,
+          "navd88StageFt": -1.0,
+          "mllwStageFt": 1.13,
+          "twlMllwFt": 1.13,
           "tideMllwFt": 0.294,
           "surgeFt": 0.6,
-          "matchedStageKey": "-0.9",
+          "matchedStageKey": "-1.0",
           "wasClamped": false,
-          "hourIndex": 3
+          "hourIndex": 0
         },
         {
           "timeUtc": "2026-07-09T16:00:00Z",
           "scenario": "highEnd",
           "product": "e10",
           "percentile": "10p / e10",
-          "rawPetssValue": 1.563,
+          "rawPetssValue": 1.587,
           "rawPetssScale": 1.0,
-          "sourceStageFt": -0.57,
+          "sourceStageFt": -0.54,
           "sourceDatum": "NAVD88",
-          "navd88StageFt": -0.57,
-          "mllwStageFt": 1.56,
-          "twlMllwFt": 1.56,
+          "navd88StageFt": -0.54,
+          "mllwStageFt": 1.59,
+          "twlMllwFt": 1.59,
           "tideMllwFt": 0.754,
           "surgeFt": 0.6,
-          "matchedStageKey": "-0.6",
+          "matchedStageKey": "-0.5",
           "wasClamped": false,
-          "hourIndex": 4
+          "hourIndex": 1
         },
         {
           "timeUtc": "2026-07-09T17:00:00Z",
           "scenario": "highEnd",
           "product": "e10",
           "percentile": "10p / e10",
-          "rawPetssValue": 2.413,
+          "rawPetssValue": 2.419,
           "rawPetssScale": 1.0,
-          "sourceStageFt": 0.28,
+          "sourceStageFt": 0.29,
           "sourceDatum": "NAVD88",
-          "navd88StageFt": 0.28,
-          "mllwStageFt": 2.41,
-          "twlMllwFt": 2.41,
+          "navd88StageFt": 0.29,
+          "mllwStageFt": 2.42,
+          "twlMllwFt": 2.42,
           "tideMllwFt": 1.587,
           "surgeFt": 0.6,
           "matchedStageKey": "0.3",
           "wasClamped": false,
-          "hourIndex": 5
+          "hourIndex": 2
         },
         {
           "timeUtc": "2026-07-09T18:00:00Z",
           "scenario": "highEnd",
           "product": "e10",
           "percentile": "10p / e10",
-          "rawPetssValue": 3.305,
+          "rawPetssValue": 3.31,
           "rawPetssScale": 1.0,
           "sourceStageFt": 1.18,
           "sourceDatum": "NAVD88",
@@ -3293,32 +3239,32 @@
           "surgeFt": 0.6,
           "matchedStageKey": "1.2",
           "wasClamped": false,
-          "hourIndex": 6
+          "hourIndex": 3
         },
         {
           "timeUtc": "2026-07-09T19:00:00Z",
           "scenario": "highEnd",
           "product": "e10",
           "percentile": "10p / e10",
-          "rawPetssValue": 4.052,
+          "rawPetssValue": 4.057,
           "rawPetssScale": 1.0,
-          "sourceStageFt": 1.92,
+          "sourceStageFt": 1.93,
           "sourceDatum": "NAVD88",
-          "navd88StageFt": 1.92,
-          "mllwStageFt": 4.05,
-          "twlMllwFt": 4.05,
+          "navd88StageFt": 1.93,
+          "mllwStageFt": 4.06,
+          "twlMllwFt": 4.06,
           "tideMllwFt": 3.226,
           "surgeFt": 0.6,
           "matchedStageKey": "1.9",
           "wasClamped": false,
-          "hourIndex": 7
+          "hourIndex": 4
         },
         {
           "timeUtc": "2026-07-09T20:00:00Z",
           "scenario": "highEnd",
           "product": "e10",
           "percentile": "10p / e10",
-          "rawPetssValue": 4.577,
+          "rawPetssValue": 4.581,
           "rawPetssScale": 1.0,
           "sourceStageFt": 2.45,
           "sourceDatum": "NAVD88",
@@ -3329,14 +3275,14 @@
           "surgeFt": 0.6,
           "matchedStageKey": "2.4",
           "wasClamped": false,
-          "hourIndex": 8
+          "hourIndex": 5
         },
         {
           "timeUtc": "2026-07-09T21:00:00Z",
           "scenario": "highEnd",
           "product": "e10",
           "percentile": "10p / e10",
-          "rawPetssValue": 4.79,
+          "rawPetssValue": 4.793,
           "rawPetssScale": 1.0,
           "sourceStageFt": 2.66,
           "sourceDatum": "NAVD88",
@@ -3347,14 +3293,14 @@
           "surgeFt": 0.6,
           "matchedStageKey": "2.7",
           "wasClamped": false,
-          "hourIndex": 9
+          "hourIndex": 6
         },
         {
           "timeUtc": "2026-07-09T22:00:00Z",
           "scenario": "highEnd",
           "product": "e10",
           "percentile": "10p / e10",
-          "rawPetssValue": 4.576,
+          "rawPetssValue": 4.578,
           "rawPetssScale": 1.0,
           "sourceStageFt": 2.45,
           "sourceDatum": "NAVD88",
@@ -3362,17 +3308,17 @@
           "mllwStageFt": 4.58,
           "twlMllwFt": 4.58,
           "tideMllwFt": 3.75,
-          "surgeFt": 0.6,
+          "surgeFt": 0.5,
           "matchedStageKey": "2.4",
           "wasClamped": false,
-          "hourIndex": 10
+          "hourIndex": 7
         },
         {
           "timeUtc": "2026-07-09T23:00:00Z",
           "scenario": "highEnd",
           "product": "e10",
           "percentile": "10p / e10",
-          "rawPetssValue": 3.948,
+          "rawPetssValue": 3.949,
           "rawPetssScale": 1.0,
           "sourceStageFt": 1.82,
           "sourceDatum": "NAVD88",
@@ -3380,10 +3326,10 @@
           "mllwStageFt": 3.95,
           "twlMllwFt": 3.95,
           "tideMllwFt": 3.122,
-          "surgeFt": 0.6,
+          "surgeFt": 0.5,
           "matchedStageKey": "1.8",
           "wasClamped": false,
-          "hourIndex": 11
+          "hourIndex": 8
         },
         {
           "timeUtc": "2026-07-10T00:00:00Z",
@@ -3398,10 +3344,10 @@
           "mllwStageFt": 3.16,
           "twlMllwFt": 3.16,
           "tideMllwFt": 2.329,
-          "surgeFt": 0.6,
+          "surgeFt": 0.5,
           "matchedStageKey": "1.0",
           "wasClamped": false,
-          "hourIndex": 12
+          "hourIndex": 9
         },
         {
           "timeUtc": "2026-07-10T01:00:00Z",
@@ -3419,7 +3365,7 @@
           "surgeFt": 0.5,
           "matchedStageKey": "0.3",
           "wasClamped": false,
-          "hourIndex": 13
+          "hourIndex": 10
         },
         {
           "timeUtc": "2026-07-10T02:00:00Z",
@@ -3437,43 +3383,43 @@
           "surgeFt": 0.5,
           "matchedStageKey": "-0.2",
           "wasClamped": false,
-          "hourIndex": 14
+          "hourIndex": 11
         },
         {
           "timeUtc": "2026-07-10T03:00:00Z",
           "scenario": "highEnd",
           "product": "e10",
           "percentile": "10p / e10",
-          "rawPetssValue": 1.476,
+          "rawPetssValue": 1.376,
           "rawPetssScale": 1.0,
-          "sourceStageFt": -0.65,
+          "sourceStageFt": -0.75,
           "sourceDatum": "NAVD88",
-          "navd88StageFt": -0.65,
-          "mllwStageFt": 1.48,
-          "twlMllwFt": 1.48,
+          "navd88StageFt": -0.75,
+          "mllwStageFt": 1.38,
+          "twlMllwFt": 1.38,
           "tideMllwFt": 0.65,
           "surgeFt": 0.5,
-          "matchedStageKey": "-0.6",
+          "matchedStageKey": "-0.8",
           "wasClamped": false,
-          "hourIndex": 15
+          "hourIndex": 12
         },
         {
           "timeUtc": "2026-07-10T04:00:00Z",
           "scenario": "highEnd",
           "product": "e10",
           "percentile": "10p / e10",
-          "rawPetssValue": 1.444,
+          "rawPetssValue": 1.344,
           "rawPetssScale": 1.0,
-          "sourceStageFt": -0.69,
+          "sourceStageFt": -0.79,
           "sourceDatum": "NAVD88",
-          "navd88StageFt": -0.69,
-          "mllwStageFt": 1.44,
-          "twlMllwFt": 1.44,
+          "navd88StageFt": -0.79,
+          "mllwStageFt": 1.34,
+          "twlMllwFt": 1.34,
           "tideMllwFt": 0.618,
           "surgeFt": 0.5,
-          "matchedStageKey": "-0.7",
+          "matchedStageKey": "-0.8",
           "wasClamped": false,
-          "hourIndex": 16
+          "hourIndex": 13
         },
         {
           "timeUtc": "2026-07-10T05:00:00Z",
@@ -3491,7 +3437,7 @@
           "surgeFt": 0.5,
           "matchedStageKey": "-0.4",
           "wasClamped": false,
-          "hourIndex": 17
+          "hourIndex": 14
         },
         {
           "timeUtc": "2026-07-10T06:00:00Z",
@@ -3509,25 +3455,25 @@
           "surgeFt": 0.5,
           "matchedStageKey": "0.3",
           "wasClamped": false,
-          "hourIndex": 18
+          "hourIndex": 15
         },
         {
           "timeUtc": "2026-07-10T07:00:00Z",
           "scenario": "highEnd",
           "product": "e10",
           "percentile": "10p / e10",
-          "rawPetssValue": 3.118,
+          "rawPetssValue": 3.018,
           "rawPetssScale": 1.0,
-          "sourceStageFt": 0.99,
+          "sourceStageFt": 0.89,
           "sourceDatum": "NAVD88",
-          "navd88StageFt": 0.99,
-          "mllwStageFt": 3.12,
-          "twlMllwFt": 3.12,
+          "navd88StageFt": 0.89,
+          "mllwStageFt": 3.02,
+          "twlMllwFt": 3.02,
           "tideMllwFt": 2.292,
           "surgeFt": 0.5,
-          "matchedStageKey": "1.0",
+          "matchedStageKey": "0.9",
           "wasClamped": false,
-          "hourIndex": 19
+          "hourIndex": 16
         },
         {
           "timeUtc": "2026-07-10T08:00:00Z",
@@ -3545,7 +3491,7 @@
           "surgeFt": 0.5,
           "matchedStageKey": "1.5",
           "wasClamped": false,
-          "hourIndex": 20
+          "hourIndex": 17
         },
         {
           "timeUtc": "2026-07-10T09:00:00Z",
@@ -3563,7 +3509,7 @@
           "surgeFt": 0.5,
           "matchedStageKey": "1.8",
           "wasClamped": false,
-          "hourIndex": 21
+          "hourIndex": 18
         },
         {
           "timeUtc": "2026-07-10T10:00:00Z",
@@ -3581,7 +3527,7 @@
           "surgeFt": 0.5,
           "matchedStageKey": "1.8",
           "wasClamped": false,
-          "hourIndex": 22
+          "hourIndex": 19
         },
         {
           "timeUtc": "2026-07-10T11:00:00Z",
@@ -3599,7 +3545,7 @@
           "surgeFt": 0.5,
           "matchedStageKey": "1.3",
           "wasClamped": false,
-          "hourIndex": 23
+          "hourIndex": 20
         },
         {
           "timeUtc": "2026-07-10T12:00:00Z",
@@ -3617,7 +3563,7 @@
           "surgeFt": 0.5,
           "matchedStageKey": "0.6",
           "wasClamped": false,
-          "hourIndex": 24
+          "hourIndex": 21
         },
         {
           "timeUtc": "2026-07-10T13:00:00Z",
@@ -3635,7 +3581,7 @@
           "surgeFt": 0.5,
           "matchedStageKey": "-0.1",
           "wasClamped": false,
-          "hourIndex": 25
+          "hourIndex": 22
         },
         {
           "timeUtc": "2026-07-10T14:00:00Z",
@@ -3653,7 +3599,7 @@
           "surgeFt": 0.5,
           "matchedStageKey": "-0.7",
           "wasClamped": false,
-          "hourIndex": 26
+          "hourIndex": 23
         },
         {
           "timeUtc": "2026-07-10T15:00:00Z",
@@ -3671,7 +3617,7 @@
           "surgeFt": 0.5,
           "matchedStageKey": "-1.0",
           "wasClamped": false,
-          "hourIndex": 27
+          "hourIndex": 24
         },
         {
           "timeUtc": "2026-07-10T16:00:00Z",
@@ -3689,7 +3635,7 @@
           "surgeFt": 0.5,
           "matchedStageKey": "-1.0",
           "wasClamped": false,
-          "hourIndex": 28
+          "hourIndex": 25
         },
         {
           "timeUtc": "2026-07-10T17:00:00Z",
@@ -3707,7 +3653,7 @@
           "surgeFt": 0.5,
           "matchedStageKey": "-0.6",
           "wasClamped": false,
-          "hourIndex": 29
+          "hourIndex": 26
         },
         {
           "timeUtc": "2026-07-10T18:00:00Z",
@@ -3725,7 +3671,7 @@
           "surgeFt": 0.5,
           "matchedStageKey": "0.3",
           "wasClamped": false,
-          "hourIndex": 30
+          "hourIndex": 27
         },
         {
           "timeUtc": "2026-07-10T19:00:00Z",
@@ -3743,7 +3689,7 @@
           "surgeFt": 0.5,
           "matchedStageKey": "1.2",
           "wasClamped": false,
-          "hourIndex": 31
+          "hourIndex": 28
         },
         {
           "timeUtc": "2026-07-10T20:00:00Z",
@@ -3761,7 +3707,7 @@
           "surgeFt": 0.5,
           "matchedStageKey": "2.0",
           "wasClamped": false,
-          "hourIndex": 32
+          "hourIndex": 29
         },
         {
           "timeUtc": "2026-07-10T21:00:00Z",
@@ -3776,10 +3722,10 @@
           "mllwStageFt": 4.68,
           "twlMllwFt": 4.68,
           "tideMllwFt": 3.854,
-          "surgeFt": 0.6,
+          "surgeFt": 0.5,
           "matchedStageKey": "2.5",
           "wasClamped": false,
-          "hourIndex": 33
+          "hourIndex": 30
         },
         {
           "timeUtc": "2026-07-10T22:00:00Z",
@@ -3794,10 +3740,10 @@
           "mllwStageFt": 4.93,
           "twlMllwFt": 4.93,
           "tideMllwFt": 4.103,
-          "surgeFt": 0.6,
+          "surgeFt": 0.5,
           "matchedStageKey": "2.8",
           "wasClamped": false,
-          "hourIndex": 34
+          "hourIndex": 31
         },
         {
           "timeUtc": "2026-07-10T23:00:00Z",
@@ -3812,10 +3758,10 @@
           "mllwStageFt": 4.73,
           "twlMllwFt": 4.73,
           "tideMllwFt": 3.902,
-          "surgeFt": 0.6,
+          "surgeFt": 0.5,
           "matchedStageKey": "2.6",
           "wasClamped": false,
-          "hourIndex": 35
+          "hourIndex": 32
         },
         {
           "timeUtc": "2026-07-11T00:00:00Z",
@@ -3830,10 +3776,10 @@
           "mllwStageFt": 4.09,
           "twlMllwFt": 4.09,
           "tideMllwFt": 3.265,
-          "surgeFt": 0.6,
+          "surgeFt": 0.5,
           "matchedStageKey": "2.0",
           "wasClamped": false,
-          "hourIndex": 36
+          "hourIndex": 33
         },
         {
           "timeUtc": "2026-07-11T01:00:00Z",
@@ -3851,7 +3797,7 @@
           "surgeFt": 0.5,
           "matchedStageKey": "1.1",
           "wasClamped": false,
-          "hourIndex": 37
+          "hourIndex": 34
         },
         {
           "timeUtc": "2026-07-11T02:00:00Z",
@@ -3869,43 +3815,43 @@
           "surgeFt": 0.5,
           "matchedStageKey": "0.4",
           "wasClamped": false,
-          "hourIndex": 38
+          "hourIndex": 35
         },
         {
           "timeUtc": "2026-07-11T03:00:00Z",
           "scenario": "highEnd",
           "product": "e10",
           "percentile": "10p / e10",
-          "rawPetssValue": 1.867,
+          "rawPetssValue": 1.767,
           "rawPetssScale": 1.0,
-          "sourceStageFt": -0.26,
+          "sourceStageFt": -0.36,
           "sourceDatum": "NAVD88",
-          "navd88StageFt": -0.26,
-          "mllwStageFt": 1.87,
-          "twlMllwFt": 1.87,
+          "navd88StageFt": -0.36,
+          "mllwStageFt": 1.77,
+          "twlMllwFt": 1.77,
           "tideMllwFt": 1.041,
           "surgeFt": 0.5,
-          "matchedStageKey": "-0.3",
+          "matchedStageKey": "-0.4",
           "wasClamped": false,
-          "hourIndex": 39
+          "hourIndex": 36
         },
         {
           "timeUtc": "2026-07-11T04:00:00Z",
           "scenario": "highEnd",
           "product": "e10",
           "percentile": "10p / e10",
-          "rawPetssValue": 1.38,
+          "rawPetssValue": 1.28,
           "rawPetssScale": 1.0,
-          "sourceStageFt": -0.75,
+          "sourceStageFt": -0.85,
           "sourceDatum": "NAVD88",
-          "navd88StageFt": -0.75,
-          "mllwStageFt": 1.38,
-          "twlMllwFt": 1.38,
+          "navd88StageFt": -0.85,
+          "mllwStageFt": 1.28,
+          "twlMllwFt": 1.28,
           "tideMllwFt": 0.554,
           "surgeFt": 0.5,
           "matchedStageKey": "-0.8",
           "wasClamped": false,
-          "hourIndex": 40
+          "hourIndex": 37
         },
         {
           "timeUtc": "2026-07-11T05:00:00Z",
@@ -3923,7 +3869,7 @@
           "surgeFt": 0.5,
           "matchedStageKey": "-0.8",
           "wasClamped": false,
-          "hourIndex": 41
+          "hourIndex": 38
         },
         {
           "timeUtc": "2026-07-11T06:00:00Z",
@@ -3941,7 +3887,7 @@
           "surgeFt": 0.5,
           "matchedStageKey": "-0.4",
           "wasClamped": false,
-          "hourIndex": 42
+          "hourIndex": 39
         },
         {
           "timeUtc": "2026-07-11T07:00:00Z",
@@ -3959,7 +3905,7 @@
           "surgeFt": 0.5,
           "matchedStageKey": "0.2",
           "wasClamped": false,
-          "hourIndex": 43
+          "hourIndex": 40
         },
         {
           "timeUtc": "2026-07-11T08:00:00Z",
@@ -3974,10 +3920,10 @@
           "mllwStageFt": 2.99,
           "twlMllwFt": 2.99,
           "tideMllwFt": 2.168,
-          "surgeFt": 0.6,
+          "surgeFt": 0.5,
           "matchedStageKey": "0.9",
           "wasClamped": false,
-          "hourIndex": 44
+          "hourIndex": 41
         },
         {
           "timeUtc": "2026-07-11T09:00:00Z",
@@ -3992,64 +3938,64 @@
           "mllwStageFt": 3.53,
           "twlMllwFt": 3.53,
           "tideMllwFt": 2.705,
-          "surgeFt": 0.6,
+          "surgeFt": 0.5,
           "matchedStageKey": "1.4",
           "wasClamped": false,
-          "hourIndex": 45
+          "hourIndex": 42
         },
         {
           "timeUtc": "2026-07-11T10:00:00Z",
           "scenario": "highEnd",
           "product": "e10",
           "percentile": "10p / e10",
-          "rawPetssValue": 4.001,
+          "rawPetssValue": 3.901,
           "rawPetssScale": 1.0,
-          "sourceStageFt": 1.87,
+          "sourceStageFt": 1.77,
           "sourceDatum": "NAVD88",
-          "navd88StageFt": 1.87,
-          "mllwStageFt": 4.0,
-          "twlMllwFt": 4.0,
+          "navd88StageFt": 1.77,
+          "mllwStageFt": 3.9,
+          "twlMllwFt": 3.9,
           "tideMllwFt": 3.075,
           "surgeFt": 0.6,
-          "matchedStageKey": "1.9",
+          "matchedStageKey": "1.8",
           "wasClamped": false,
-          "hourIndex": 46
+          "hourIndex": 43
         },
         {
           "timeUtc": "2026-07-11T11:00:00Z",
           "scenario": "highEnd",
           "product": "e10",
           "percentile": "10p / e10",
-          "rawPetssValue": 4.029,
+          "rawPetssValue": 3.929,
           "rawPetssScale": 1.0,
-          "sourceStageFt": 1.9,
+          "sourceStageFt": 1.8,
           "sourceDatum": "NAVD88",
-          "navd88StageFt": 1.9,
-          "mllwStageFt": 4.03,
-          "twlMllwFt": 4.03,
+          "navd88StageFt": 1.8,
+          "mllwStageFt": 3.93,
+          "twlMllwFt": 3.93,
           "tideMllwFt": 3.103,
           "surgeFt": 0.6,
-          "matchedStageKey": "1.9",
+          "matchedStageKey": "1.8",
           "wasClamped": false,
-          "hourIndex": 47
+          "hourIndex": 44
         },
         {
           "timeUtc": "2026-07-11T12:00:00Z",
           "scenario": "highEnd",
           "product": "e10",
           "percentile": "10p / e10",
-          "rawPetssValue": 3.599,
+          "rawPetssValue": 3.499,
           "rawPetssScale": 1.0,
-          "sourceStageFt": 1.47,
+          "sourceStageFt": 1.37,
           "sourceDatum": "NAVD88",
-          "navd88StageFt": 1.47,
-          "mllwStageFt": 3.6,
-          "twlMllwFt": 3.6,
+          "navd88StageFt": 1.37,
+          "mllwStageFt": 3.5,
+          "twlMllwFt": 3.5,
           "tideMllwFt": 2.673,
           "surgeFt": 0.6,
-          "matchedStageKey": "1.5",
+          "matchedStageKey": "1.4",
           "wasClamped": false,
-          "hourIndex": 48
+          "hourIndex": 45
         },
         {
           "timeUtc": "2026-07-11T13:00:00Z",
@@ -4067,7 +4013,7 @@
           "surgeFt": 0.6,
           "matchedStageKey": "0.7",
           "wasClamped": false,
-          "hourIndex": 49
+          "hourIndex": 46
         },
         {
           "timeUtc": "2026-07-11T14:00:00Z",
@@ -4085,7 +4031,7 @@
           "surgeFt": 0.6,
           "matchedStageKey": "0.0",
           "wasClamped": false,
-          "hourIndex": 50
+          "hourIndex": 47
         },
         {
           "timeUtc": "2026-07-11T15:00:00Z",
@@ -4103,7 +4049,7 @@
           "surgeFt": 0.6,
           "matchedStageKey": "-0.6",
           "wasClamped": false,
-          "hourIndex": 51
+          "hourIndex": 48
         },
         {
           "timeUtc": "2026-07-11T16:00:00Z",
@@ -4121,25 +4067,25 @@
           "surgeFt": 0.6,
           "matchedStageKey": "-1.0",
           "wasClamped": false,
-          "hourIndex": 52
+          "hourIndex": 49
         },
         {
           "timeUtc": "2026-07-11T17:00:00Z",
           "scenario": "highEnd",
           "product": "e10",
           "percentile": "10p / e10",
-          "rawPetssValue": 1.102,
+          "rawPetssValue": 1.202,
           "rawPetssScale": 1.0,
-          "sourceStageFt": -1.03,
+          "sourceStageFt": -0.93,
           "sourceDatum": "NAVD88",
-          "navd88StageFt": -1.03,
-          "mllwStageFt": 1.1,
-          "twlMllwFt": 1.1,
+          "navd88StageFt": -0.93,
+          "mllwStageFt": 1.2,
+          "twlMllwFt": 1.2,
           "tideMllwFt": 0.176,
           "surgeFt": 0.7,
-          "matchedStageKey": "-1.0",
+          "matchedStageKey": "-0.9",
           "wasClamped": false,
-          "hourIndex": 53
+          "hourIndex": 50
         },
         {
           "timeUtc": "2026-07-11T18:00:00Z",
@@ -4157,7 +4103,7 @@
           "surgeFt": 0.7,
           "matchedStageKey": "-0.4",
           "wasClamped": false,
-          "hourIndex": 54
+          "hourIndex": 51
         },
         {
           "timeUtc": "2026-07-11T19:00:00Z",
@@ -4175,7 +4121,7 @@
           "surgeFt": 0.7,
           "matchedStageKey": "0.5",
           "wasClamped": false,
-          "hourIndex": 55
+          "hourIndex": 52
         },
         {
           "timeUtc": "2026-07-11T20:00:00Z",
@@ -4193,7 +4139,7 @@
           "surgeFt": 0.7,
           "matchedStageKey": "1.4",
           "wasClamped": false,
-          "hourIndex": 56
+          "hourIndex": 53
         },
         {
           "timeUtc": "2026-07-11T21:00:00Z",
@@ -4211,7 +4157,7 @@
           "surgeFt": 0.7,
           "matchedStageKey": "2.2",
           "wasClamped": false,
-          "hourIndex": 57
+          "hourIndex": 54
         },
         {
           "timeUtc": "2026-07-11T22:00:00Z",
@@ -4229,7 +4175,7 @@
           "surgeFt": 0.7,
           "matchedStageKey": "2.8",
           "wasClamped": false,
-          "hourIndex": 58
+          "hourIndex": 55
         },
         {
           "timeUtc": "2026-07-11T23:00:00Z",
@@ -4247,7 +4193,7 @@
           "surgeFt": 0.7,
           "matchedStageKey": "3.1",
           "wasClamped": false,
-          "hourIndex": 59
+          "hourIndex": 56
         },
         {
           "timeUtc": "2026-07-12T00:00:00Z",
@@ -4265,7 +4211,7 @@
           "surgeFt": 0.7,
           "matchedStageKey": "3.0",
           "wasClamped": false,
-          "hourIndex": 60
+          "hourIndex": 57
         },
         {
           "timeUtc": "2026-07-12T01:00:00Z",
@@ -4283,7 +4229,7 @@
           "surgeFt": 0.7,
           "matchedStageKey": "2.3",
           "wasClamped": false,
-          "hourIndex": 61
+          "hourIndex": 58
         },
         {
           "timeUtc": "2026-07-12T02:00:00Z",
@@ -4301,25 +4247,25 @@
           "surgeFt": 0.7,
           "matchedStageKey": "1.5",
           "wasClamped": false,
-          "hourIndex": 62
+          "hourIndex": 59
         },
         {
           "timeUtc": "2026-07-12T03:00:00Z",
           "scenario": "highEnd",
           "product": "e10",
           "percentile": "10p / e10",
-          "rawPetssValue": 2.759,
+          "rawPetssValue": 2.859,
           "rawPetssScale": 1.0,
-          "sourceStageFt": 0.63,
+          "sourceStageFt": 0.73,
           "sourceDatum": "NAVD88",
-          "navd88StageFt": 0.63,
-          "mllwStageFt": 2.76,
-          "twlMllwFt": 2.76,
+          "navd88StageFt": 0.73,
+          "mllwStageFt": 2.86,
+          "twlMllwFt": 2.86,
           "tideMllwFt": 1.733,
           "surgeFt": 0.7,
-          "matchedStageKey": "0.6",
+          "matchedStageKey": "0.7",
           "wasClamped": false,
-          "hourIndex": 63
+          "hourIndex": 60
         },
         {
           "timeUtc": "2026-07-12T04:00:00Z",
@@ -4337,7 +4283,7 @@
           "surgeFt": 0.7,
           "matchedStageKey": "0.0",
           "wasClamped": false,
-          "hourIndex": 64
+          "hourIndex": 61
         },
         {
           "timeUtc": "2026-07-12T05:00:00Z",
@@ -4355,7 +4301,7 @@
           "surgeFt": 0.7,
           "matchedStageKey": "-0.6",
           "wasClamped": false,
-          "hourIndex": 65
+          "hourIndex": 62
         },
         {
           "timeUtc": "2026-07-12T06:00:00Z",
@@ -4373,7 +4319,7 @@
           "surgeFt": 0.7,
           "matchedStageKey": "-0.6",
           "wasClamped": false,
-          "hourIndex": 66
+          "hourIndex": 63
         },
         {
           "timeUtc": "2026-07-12T07:00:00Z",
@@ -4391,7 +4337,7 @@
           "surgeFt": 0.7,
           "matchedStageKey": "-0.2",
           "wasClamped": false,
-          "hourIndex": 67
+          "hourIndex": 64
         },
         {
           "timeUtc": "2026-07-12T08:00:00Z",
@@ -4409,79 +4355,79 @@
           "surgeFt": 0.7,
           "matchedStageKey": "0.4",
           "wasClamped": false,
-          "hourIndex": 68
+          "hourIndex": 65
         },
         {
           "timeUtc": "2026-07-12T09:00:00Z",
           "scenario": "highEnd",
           "product": "e10",
           "percentile": "10p / e10",
-          "rawPetssValue": 3.109,
+          "rawPetssValue": 3.209,
           "rawPetssScale": 1.0,
-          "sourceStageFt": 0.98,
+          "sourceStageFt": 1.08,
           "sourceDatum": "NAVD88",
-          "navd88StageFt": 0.98,
-          "mllwStageFt": 3.11,
-          "twlMllwFt": 3.11,
+          "navd88StageFt": 1.08,
+          "mllwStageFt": 3.21,
+          "twlMllwFt": 3.21,
           "tideMllwFt": 2.083,
           "surgeFt": 0.7,
-          "matchedStageKey": "1.0",
+          "matchedStageKey": "1.1",
           "wasClamped": false,
-          "hourIndex": 69
+          "hourIndex": 66
         },
         {
           "timeUtc": "2026-07-12T10:00:00Z",
           "scenario": "highEnd",
           "product": "e10",
           "percentile": "10p / e10",
-          "rawPetssValue": 3.722,
+          "rawPetssValue": 3.822,
           "rawPetssScale": 1.0,
-          "sourceStageFt": 1.59,
+          "sourceStageFt": 1.69,
           "sourceDatum": "NAVD88",
-          "navd88StageFt": 1.59,
-          "mllwStageFt": 3.72,
-          "twlMllwFt": 3.72,
+          "navd88StageFt": 1.69,
+          "mllwStageFt": 3.82,
+          "twlMllwFt": 3.82,
           "tideMllwFt": 2.696,
           "surgeFt": 0.7,
-          "matchedStageKey": "1.6",
+          "matchedStageKey": "1.7",
           "wasClamped": false,
-          "hourIndex": 70
+          "hourIndex": 67
         },
         {
           "timeUtc": "2026-07-12T11:00:00Z",
           "scenario": "highEnd",
           "product": "e10",
           "percentile": "10p / e10",
-          "rawPetssValue": 4.167,
+          "rawPetssValue": 4.267,
           "rawPetssScale": 1.0,
-          "sourceStageFt": 2.04,
+          "sourceStageFt": 2.14,
           "sourceDatum": "NAVD88",
-          "navd88StageFt": 2.04,
-          "mllwStageFt": 4.17,
-          "twlMllwFt": 4.17,
+          "navd88StageFt": 2.14,
+          "mllwStageFt": 4.27,
+          "twlMllwFt": 4.27,
           "tideMllwFt": 3.141,
           "surgeFt": 0.7,
-          "matchedStageKey": "2.0",
+          "matchedStageKey": "2.1",
           "wasClamped": false,
-          "hourIndex": 71
+          "hourIndex": 68
         },
         {
           "timeUtc": "2026-07-12T12:00:00Z",
           "scenario": "highEnd",
           "product": "e10",
           "percentile": "10p / e10",
-          "rawPetssValue": 4.221,
+          "rawPetssValue": 4.321,
           "rawPetssScale": 1.0,
-          "sourceStageFt": 2.09,
+          "sourceStageFt": 2.19,
           "sourceDatum": "NAVD88",
-          "navd88StageFt": 2.09,
-          "mllwStageFt": 4.22,
-          "twlMllwFt": 4.22,
+          "navd88StageFt": 2.19,
+          "mllwStageFt": 4.32,
+          "twlMllwFt": 4.32,
           "tideMllwFt": 3.195,
           "surgeFt": 0.7,
-          "matchedStageKey": "2.1",
+          "matchedStageKey": "2.2",
           "wasClamped": false,
-          "hourIndex": 72
+          "hourIndex": 69
         },
         {
           "timeUtc": "2026-07-12T13:00:00Z",
@@ -4499,7 +4445,7 @@
           "surgeFt": 0.7,
           "matchedStageKey": "1.6",
           "wasClamped": false,
-          "hourIndex": 73
+          "hourIndex": 70
         },
         {
           "timeUtc": "2026-07-12T14:00:00Z",
@@ -4517,7 +4463,7 @@
           "surgeFt": 0.7,
           "matchedStageKey": "0.9",
           "wasClamped": false,
-          "hourIndex": 74
+          "hourIndex": 71
         },
         {
           "timeUtc": "2026-07-12T15:00:00Z",
@@ -4535,7 +4481,7 @@
           "surgeFt": 0.7,
           "matchedStageKey": "0.1",
           "wasClamped": false,
-          "hourIndex": 75
+          "hourIndex": 72
         },
         {
           "timeUtc": "2026-07-12T16:00:00Z",
@@ -4553,7 +4499,7 @@
           "surgeFt": 0.7,
           "matchedStageKey": "-0.5",
           "wasClamped": false,
-          "hourIndex": 76
+          "hourIndex": 73
         },
         {
           "timeUtc": "2026-07-12T17:00:00Z",
@@ -4571,7 +4517,7 @@
           "surgeFt": 0.7,
           "matchedStageKey": "-1.0",
           "wasClamped": false,
-          "hourIndex": 77
+          "hourIndex": 74
         },
         {
           "timeUtc": "2026-07-12T18:00:00Z",
@@ -4586,10 +4532,10 @@
           "mllwStageFt": 1.13,
           "twlMllwFt": 1.13,
           "tideMllwFt": 0.104,
-          "surgeFt": 0.7,
+          "surgeFt": 0.6,
           "matchedStageKey": "-1.0",
           "wasClamped": false,
-          "hourIndex": 78
+          "hourIndex": 75
         },
         {
           "timeUtc": "2026-07-12T19:00:00Z",
@@ -4604,10 +4550,10 @@
           "mllwStageFt": 1.7,
           "twlMllwFt": 1.7,
           "tideMllwFt": 0.677,
-          "surgeFt": 0.7,
+          "surgeFt": 0.6,
           "matchedStageKey": "-0.4",
           "wasClamped": false,
-          "hourIndex": 79
+          "hourIndex": 76
         },
         {
           "timeUtc": "2026-07-12T20:00:00Z",
@@ -4622,10 +4568,10 @@
           "mllwStageFt": 2.61,
           "twlMllwFt": 2.61,
           "tideMllwFt": 1.581,
-          "surgeFt": 0.7,
+          "surgeFt": 0.6,
           "matchedStageKey": "0.5",
           "wasClamped": false,
-          "hourIndex": 80
+          "hourIndex": 77
         },
         {
           "timeUtc": "2026-07-12T21:00:00Z",
@@ -4640,10 +4586,10 @@
           "mllwStageFt": 3.55,
           "twlMllwFt": 3.55,
           "tideMllwFt": 2.524,
-          "surgeFt": 0.7,
+          "surgeFt": 0.6,
           "matchedStageKey": "1.4",
           "wasClamped": false,
-          "hourIndex": 81
+          "hourIndex": 78
         },
         {
           "timeUtc": "2026-07-12T22:00:00Z",
@@ -4661,7 +4607,7 @@
           "surgeFt": 0.6,
           "matchedStageKey": "2.3",
           "wasClamped": false,
-          "hourIndex": 82
+          "hourIndex": 79
         },
         {
           "timeUtc": "2026-07-12T23:00:00Z",
@@ -4679,7 +4625,7 @@
           "surgeFt": 0.6,
           "matchedStageKey": "3.0",
           "wasClamped": false,
-          "hourIndex": 83
+          "hourIndex": 80
         },
         {
           "timeUtc": "2026-07-13T00:00:00Z",
@@ -4694,8 +4640,62 @@
           "mllwStageFt": 5.41,
           "twlMllwFt": 5.41,
           "tideMllwFt": 4.384,
-          "surgeFt": 0.7,
+          "surgeFt": 0.6,
           "matchedStageKey": "3.3",
+          "wasClamped": false,
+          "hourIndex": 81
+        },
+        {
+          "timeUtc": "2026-07-13T01:00:00Z",
+          "scenario": "highEnd",
+          "product": "e10",
+          "percentile": "10p / e10",
+          "rawPetssValue": 5.181,
+          "rawPetssScale": 1.0,
+          "sourceStageFt": 3.05,
+          "sourceDatum": "NAVD88",
+          "navd88StageFt": 3.05,
+          "mllwStageFt": 5.18,
+          "twlMllwFt": 5.18,
+          "tideMllwFt": 4.155,
+          "surgeFt": 0.6,
+          "matchedStageKey": "3.0",
+          "wasClamped": false,
+          "hourIndex": 82
+        },
+        {
+          "timeUtc": "2026-07-13T02:00:00Z",
+          "scenario": "highEnd",
+          "product": "e10",
+          "percentile": "10p / e10",
+          "rawPetssValue": 4.384,
+          "rawPetssScale": 1.0,
+          "sourceStageFt": 2.25,
+          "sourceDatum": "NAVD88",
+          "navd88StageFt": 2.25,
+          "mllwStageFt": 4.38,
+          "twlMllwFt": 4.38,
+          "tideMllwFt": 3.458,
+          "surgeFt": 0.6,
+          "matchedStageKey": "2.2",
+          "wasClamped": false,
+          "hourIndex": 83
+        },
+        {
+          "timeUtc": "2026-07-13T03:00:00Z",
+          "scenario": "highEnd",
+          "product": "e10",
+          "percentile": "10p / e10",
+          "rawPetssValue": 3.505,
+          "rawPetssScale": 1.0,
+          "sourceStageFt": 1.38,
+          "sourceDatum": "NAVD88",
+          "navd88StageFt": 1.38,
+          "mllwStageFt": 3.51,
+          "twlMllwFt": 3.51,
+          "tideMllwFt": 2.579,
+          "surgeFt": 0.6,
+          "matchedStageKey": "1.4",
           "wasClamped": false,
           "hourIndex": 84
         }
@@ -4704,119 +4704,65 @@
   },
   "hours": [
     {
-      "timeUtc": "2026-07-09T12:00:00Z",
-      "scenario": "mean",
-      "product": "mean",
-      "percentile": "Mean",
-      "rawPetssValue": 2.014,
-      "rawPetssScale": 1.0,
-      "sourceStageFt": -0.12,
-      "sourceDatum": "NAVD88",
-      "navd88StageFt": -0.12,
-      "mllwStageFt": 2.01,
-      "twlMllwFt": 2.01,
-      "tideMllwFt": 1.173,
-      "surgeFt": 0.7,
-      "matchedStageKey": "-0.1",
-      "wasClamped": false,
-      "hourIndex": 0
-    },
-    {
-      "timeUtc": "2026-07-09T13:00:00Z",
-      "scenario": "mean",
-      "product": "mean",
-      "percentile": "Mean",
-      "rawPetssValue": 1.405,
-      "rawPetssScale": 1.0,
-      "sourceStageFt": -0.72,
-      "sourceDatum": "NAVD88",
-      "navd88StageFt": -0.72,
-      "mllwStageFt": 1.41,
-      "twlMllwFt": 1.41,
-      "tideMllwFt": 0.647,
-      "surgeFt": 0.6,
-      "matchedStageKey": "-0.7",
-      "wasClamped": false,
-      "hourIndex": 1
-    },
-    {
-      "timeUtc": "2026-07-09T14:00:00Z",
-      "scenario": "mean",
-      "product": "mean",
-      "percentile": "Mean",
-      "rawPetssValue": 1.092,
-      "rawPetssScale": 1.0,
-      "sourceStageFt": -1.04,
-      "sourceDatum": "NAVD88",
-      "navd88StageFt": -1.04,
-      "mllwStageFt": 1.09,
-      "twlMllwFt": 1.09,
-      "tideMllwFt": 0.317,
-      "surgeFt": 0.6,
-      "matchedStageKey": "-1.0",
-      "wasClamped": false,
-      "hourIndex": 2
-    },
-    {
       "timeUtc": "2026-07-09T15:00:00Z",
       "scenario": "mean",
       "product": "mean",
       "percentile": "Mean",
-      "rawPetssValue": 1.086,
+      "rawPetssValue": 1.128,
       "rawPetssScale": 1.0,
-      "sourceStageFt": -1.04,
+      "sourceStageFt": -1.0,
       "sourceDatum": "NAVD88",
-      "navd88StageFt": -1.04,
-      "mllwStageFt": 1.09,
-      "twlMllwFt": 1.09,
+      "navd88StageFt": -1.0,
+      "mllwStageFt": 1.13,
+      "twlMllwFt": 1.13,
       "tideMllwFt": 0.294,
       "surgeFt": 0.6,
       "matchedStageKey": "-1.0",
       "wasClamped": false,
-      "hourIndex": 3
+      "hourIndex": 0
     },
     {
       "timeUtc": "2026-07-09T16:00:00Z",
       "scenario": "mean",
       "product": "mean",
       "percentile": "Mean",
-      "rawPetssValue": 1.563,
+      "rawPetssValue": 1.587,
       "rawPetssScale": 1.0,
-      "sourceStageFt": -0.57,
+      "sourceStageFt": -0.54,
       "sourceDatum": "NAVD88",
-      "navd88StageFt": -0.57,
-      "mllwStageFt": 1.56,
-      "twlMllwFt": 1.56,
+      "navd88StageFt": -0.54,
+      "mllwStageFt": 1.59,
+      "twlMllwFt": 1.59,
       "tideMllwFt": 0.754,
       "surgeFt": 0.6,
-      "matchedStageKey": "-0.6",
+      "matchedStageKey": "-0.5",
       "wasClamped": false,
-      "hourIndex": 4
+      "hourIndex": 1
     },
     {
       "timeUtc": "2026-07-09T17:00:00Z",
       "scenario": "mean",
       "product": "mean",
       "percentile": "Mean",
-      "rawPetssValue": 2.413,
+      "rawPetssValue": 2.419,
       "rawPetssScale": 1.0,
-      "sourceStageFt": 0.28,
+      "sourceStageFt": 0.29,
       "sourceDatum": "NAVD88",
-      "navd88StageFt": 0.28,
-      "mllwStageFt": 2.41,
-      "twlMllwFt": 2.41,
+      "navd88StageFt": 0.29,
+      "mllwStageFt": 2.42,
+      "twlMllwFt": 2.42,
       "tideMllwFt": 1.587,
       "surgeFt": 0.6,
       "matchedStageKey": "0.3",
       "wasClamped": false,
-      "hourIndex": 5
+      "hourIndex": 2
     },
     {
       "timeUtc": "2026-07-09T18:00:00Z",
       "scenario": "mean",
       "product": "mean",
       "percentile": "Mean",
-      "rawPetssValue": 3.305,
+      "rawPetssValue": 3.31,
       "rawPetssScale": 1.0,
       "sourceStageFt": 1.18,
       "sourceDatum": "NAVD88",
@@ -4827,32 +4773,32 @@
       "surgeFt": 0.6,
       "matchedStageKey": "1.2",
       "wasClamped": false,
-      "hourIndex": 6
+      "hourIndex": 3
     },
     {
       "timeUtc": "2026-07-09T19:00:00Z",
       "scenario": "mean",
       "product": "mean",
       "percentile": "Mean",
-      "rawPetssValue": 4.052,
+      "rawPetssValue": 4.057,
       "rawPetssScale": 1.0,
-      "sourceStageFt": 1.92,
+      "sourceStageFt": 1.93,
       "sourceDatum": "NAVD88",
-      "navd88StageFt": 1.92,
-      "mllwStageFt": 4.05,
-      "twlMllwFt": 4.05,
+      "navd88StageFt": 1.93,
+      "mllwStageFt": 4.06,
+      "twlMllwFt": 4.06,
       "tideMllwFt": 3.226,
       "surgeFt": 0.6,
       "matchedStageKey": "1.9",
       "wasClamped": false,
-      "hourIndex": 7
+      "hourIndex": 4
     },
     {
       "timeUtc": "2026-07-09T20:00:00Z",
       "scenario": "mean",
       "product": "mean",
       "percentile": "Mean",
-      "rawPetssValue": 4.577,
+      "rawPetssValue": 4.581,
       "rawPetssScale": 1.0,
       "sourceStageFt": 2.45,
       "sourceDatum": "NAVD88",
@@ -4863,14 +4809,14 @@
       "surgeFt": 0.6,
       "matchedStageKey": "2.4",
       "wasClamped": false,
-      "hourIndex": 8
+      "hourIndex": 5
     },
     {
       "timeUtc": "2026-07-09T21:00:00Z",
       "scenario": "mean",
       "product": "mean",
       "percentile": "Mean",
-      "rawPetssValue": 4.79,
+      "rawPetssValue": 4.793,
       "rawPetssScale": 1.0,
       "sourceStageFt": 2.66,
       "sourceDatum": "NAVD88",
@@ -4881,61 +4827,61 @@
       "surgeFt": 0.6,
       "matchedStageKey": "2.7",
       "wasClamped": false,
-      "hourIndex": 9
+      "hourIndex": 6
     },
     {
       "timeUtc": "2026-07-09T22:00:00Z",
       "scenario": "mean",
       "product": "mean",
       "percentile": "Mean",
-      "rawPetssValue": 4.576,
+      "rawPetssValue": 4.478,
       "rawPetssScale": 1.0,
-      "sourceStageFt": 2.45,
+      "sourceStageFt": 2.35,
       "sourceDatum": "NAVD88",
-      "navd88StageFt": 2.45,
-      "mllwStageFt": 4.58,
-      "twlMllwFt": 4.58,
+      "navd88StageFt": 2.35,
+      "mllwStageFt": 4.48,
+      "twlMllwFt": 4.48,
       "tideMllwFt": 3.75,
-      "surgeFt": 0.6,
+      "surgeFt": 0.5,
       "matchedStageKey": "2.4",
       "wasClamped": false,
-      "hourIndex": 10
+      "hourIndex": 7
     },
     {
       "timeUtc": "2026-07-09T23:00:00Z",
       "scenario": "mean",
       "product": "mean",
       "percentile": "Mean",
-      "rawPetssValue": 3.948,
+      "rawPetssValue": 3.849,
       "rawPetssScale": 1.0,
-      "sourceStageFt": 1.82,
+      "sourceStageFt": 1.72,
       "sourceDatum": "NAVD88",
-      "navd88StageFt": 1.82,
-      "mllwStageFt": 3.95,
-      "twlMllwFt": 3.95,
+      "navd88StageFt": 1.72,
+      "mllwStageFt": 3.85,
+      "twlMllwFt": 3.85,
       "tideMllwFt": 3.122,
-      "surgeFt": 0.6,
-      "matchedStageKey": "1.8",
+      "surgeFt": 0.5,
+      "matchedStageKey": "1.7",
       "wasClamped": false,
-      "hourIndex": 11
+      "hourIndex": 8
     },
     {
       "timeUtc": "2026-07-10T00:00:00Z",
       "scenario": "mean",
       "product": "mean",
       "percentile": "Mean",
-      "rawPetssValue": 3.155,
+      "rawPetssValue": 3.055,
       "rawPetssScale": 1.0,
-      "sourceStageFt": 1.03,
+      "sourceStageFt": 0.93,
       "sourceDatum": "NAVD88",
-      "navd88StageFt": 1.03,
-      "mllwStageFt": 3.16,
-      "twlMllwFt": 3.16,
+      "navd88StageFt": 0.93,
+      "mllwStageFt": 3.06,
+      "twlMllwFt": 3.06,
       "tideMllwFt": 2.329,
-      "surgeFt": 0.6,
-      "matchedStageKey": "1.0",
+      "surgeFt": 0.5,
+      "matchedStageKey": "0.9",
       "wasClamped": false,
-      "hourIndex": 12
+      "hourIndex": 9
     },
     {
       "timeUtc": "2026-07-10T01:00:00Z",
@@ -4953,7 +4899,7 @@
       "surgeFt": 0.5,
       "matchedStageKey": "0.2",
       "wasClamped": false,
-      "hourIndex": 13
+      "hourIndex": 10
     },
     {
       "timeUtc": "2026-07-10T02:00:00Z",
@@ -4971,7 +4917,7 @@
       "surgeFt": 0.5,
       "matchedStageKey": "-0.3",
       "wasClamped": false,
-      "hourIndex": 14
+      "hourIndex": 11
     },
     {
       "timeUtc": "2026-07-10T03:00:00Z",
@@ -4989,7 +4935,7 @@
       "surgeFt": 0.5,
       "matchedStageKey": "-0.8",
       "wasClamped": false,
-      "hourIndex": 15
+      "hourIndex": 12
     },
     {
       "timeUtc": "2026-07-10T04:00:00Z",
@@ -5007,7 +4953,7 @@
       "surgeFt": 0.5,
       "matchedStageKey": "-0.8",
       "wasClamped": false,
-      "hourIndex": 16
+      "hourIndex": 13
     },
     {
       "timeUtc": "2026-07-10T05:00:00Z",
@@ -5025,7 +4971,7 @@
       "surgeFt": 0.5,
       "matchedStageKey": "-0.4",
       "wasClamped": false,
-      "hourIndex": 17
+      "hourIndex": 14
     },
     {
       "timeUtc": "2026-07-10T06:00:00Z",
@@ -5043,7 +4989,7 @@
       "surgeFt": 0.5,
       "matchedStageKey": "0.3",
       "wasClamped": false,
-      "hourIndex": 18
+      "hourIndex": 15
     },
     {
       "timeUtc": "2026-07-10T07:00:00Z",
@@ -5061,7 +5007,7 @@
       "surgeFt": 0.5,
       "matchedStageKey": "0.9",
       "wasClamped": false,
-      "hourIndex": 19
+      "hourIndex": 16
     },
     {
       "timeUtc": "2026-07-10T08:00:00Z",
@@ -5079,7 +5025,7 @@
       "surgeFt": 0.5,
       "matchedStageKey": "1.4",
       "wasClamped": false,
-      "hourIndex": 20
+      "hourIndex": 17
     },
     {
       "timeUtc": "2026-07-10T09:00:00Z",
@@ -5097,7 +5043,7 @@
       "surgeFt": 0.5,
       "matchedStageKey": "1.7",
       "wasClamped": false,
-      "hourIndex": 21
+      "hourIndex": 18
     },
     {
       "timeUtc": "2026-07-10T10:00:00Z",
@@ -5115,7 +5061,7 @@
       "surgeFt": 0.5,
       "matchedStageKey": "1.7",
       "wasClamped": false,
-      "hourIndex": 22
+      "hourIndex": 19
     },
     {
       "timeUtc": "2026-07-10T11:00:00Z",
@@ -5133,7 +5079,7 @@
       "surgeFt": 0.5,
       "matchedStageKey": "1.2",
       "wasClamped": false,
-      "hourIndex": 23
+      "hourIndex": 20
     },
     {
       "timeUtc": "2026-07-10T12:00:00Z",
@@ -5151,7 +5097,7 @@
       "surgeFt": 0.5,
       "matchedStageKey": "0.5",
       "wasClamped": false,
-      "hourIndex": 24
+      "hourIndex": 21
     },
     {
       "timeUtc": "2026-07-10T13:00:00Z",
@@ -5169,7 +5115,7 @@
       "surgeFt": 0.5,
       "matchedStageKey": "-0.2",
       "wasClamped": false,
-      "hourIndex": 25
+      "hourIndex": 22
     },
     {
       "timeUtc": "2026-07-10T14:00:00Z",
@@ -5187,7 +5133,7 @@
       "surgeFt": 0.5,
       "matchedStageKey": "-0.8",
       "wasClamped": false,
-      "hourIndex": 26
+      "hourIndex": 23
     },
     {
       "timeUtc": "2026-07-10T15:00:00Z",
@@ -5205,7 +5151,7 @@
       "surgeFt": 0.5,
       "matchedStageKey": "-1.1",
       "wasClamped": false,
-      "hourIndex": 27
+      "hourIndex": 24
     },
     {
       "timeUtc": "2026-07-10T16:00:00Z",
@@ -5223,7 +5169,7 @@
       "surgeFt": 0.5,
       "matchedStageKey": "-1.1",
       "wasClamped": false,
-      "hourIndex": 28
+      "hourIndex": 25
     },
     {
       "timeUtc": "2026-07-10T17:00:00Z",
@@ -5241,7 +5187,7 @@
       "surgeFt": 0.5,
       "matchedStageKey": "-0.7",
       "wasClamped": false,
-      "hourIndex": 29
+      "hourIndex": 26
     },
     {
       "timeUtc": "2026-07-10T18:00:00Z",
@@ -5259,7 +5205,7 @@
       "surgeFt": 0.5,
       "matchedStageKey": "0.2",
       "wasClamped": false,
-      "hourIndex": 30
+      "hourIndex": 27
     },
     {
       "timeUtc": "2026-07-10T19:00:00Z",
@@ -5277,7 +5223,7 @@
       "surgeFt": 0.5,
       "matchedStageKey": "1.1",
       "wasClamped": false,
-      "hourIndex": 31
+      "hourIndex": 28
     },
     {
       "timeUtc": "2026-07-10T20:00:00Z",
@@ -5295,79 +5241,79 @@
       "surgeFt": 0.5,
       "matchedStageKey": "1.9",
       "wasClamped": false,
-      "hourIndex": 32
+      "hourIndex": 29
     },
     {
       "timeUtc": "2026-07-10T21:00:00Z",
       "scenario": "mean",
       "product": "mean",
       "percentile": "Mean",
-      "rawPetssValue": 4.68,
+      "rawPetssValue": 4.58,
       "rawPetssScale": 1.0,
-      "sourceStageFt": 2.55,
+      "sourceStageFt": 2.45,
       "sourceDatum": "NAVD88",
-      "navd88StageFt": 2.55,
-      "mllwStageFt": 4.68,
-      "twlMllwFt": 4.68,
+      "navd88StageFt": 2.45,
+      "mllwStageFt": 4.58,
+      "twlMllwFt": 4.58,
       "tideMllwFt": 3.854,
-      "surgeFt": 0.6,
-      "matchedStageKey": "2.5",
+      "surgeFt": 0.5,
+      "matchedStageKey": "2.4",
       "wasClamped": false,
-      "hourIndex": 33
+      "hourIndex": 30
     },
     {
       "timeUtc": "2026-07-10T22:00:00Z",
       "scenario": "mean",
       "product": "mean",
       "percentile": "Mean",
-      "rawPetssValue": 4.929,
+      "rawPetssValue": 4.829,
       "rawPetssScale": 1.0,
-      "sourceStageFt": 2.8,
+      "sourceStageFt": 2.7,
       "sourceDatum": "NAVD88",
-      "navd88StageFt": 2.8,
-      "mllwStageFt": 4.93,
-      "twlMllwFt": 4.93,
+      "navd88StageFt": 2.7,
+      "mllwStageFt": 4.83,
+      "twlMllwFt": 4.83,
       "tideMllwFt": 4.103,
-      "surgeFt": 0.6,
-      "matchedStageKey": "2.8",
+      "surgeFt": 0.5,
+      "matchedStageKey": "2.7",
       "wasClamped": false,
-      "hourIndex": 34
+      "hourIndex": 31
     },
     {
       "timeUtc": "2026-07-10T23:00:00Z",
       "scenario": "mean",
       "product": "mean",
       "percentile": "Mean",
-      "rawPetssValue": 4.728,
+      "rawPetssValue": 4.628,
       "rawPetssScale": 1.0,
-      "sourceStageFt": 2.6,
+      "sourceStageFt": 2.5,
       "sourceDatum": "NAVD88",
-      "navd88StageFt": 2.6,
-      "mllwStageFt": 4.73,
-      "twlMllwFt": 4.73,
+      "navd88StageFt": 2.5,
+      "mllwStageFt": 4.63,
+      "twlMllwFt": 4.63,
       "tideMllwFt": 3.902,
-      "surgeFt": 0.6,
-      "matchedStageKey": "2.6",
+      "surgeFt": 0.5,
+      "matchedStageKey": "2.5",
       "wasClamped": false,
-      "hourIndex": 35
+      "hourIndex": 32
     },
     {
       "timeUtc": "2026-07-11T00:00:00Z",
       "scenario": "mean",
       "product": "mean",
       "percentile": "Mean",
-      "rawPetssValue": 4.091,
+      "rawPetssValue": 3.991,
       "rawPetssScale": 1.0,
-      "sourceStageFt": 1.96,
+      "sourceStageFt": 1.86,
       "sourceDatum": "NAVD88",
-      "navd88StageFt": 1.96,
-      "mllwStageFt": 4.09,
-      "twlMllwFt": 4.09,
+      "navd88StageFt": 1.86,
+      "mllwStageFt": 3.99,
+      "twlMllwFt": 3.99,
       "tideMllwFt": 3.265,
-      "surgeFt": 0.6,
-      "matchedStageKey": "2.0",
+      "surgeFt": 0.5,
+      "matchedStageKey": "1.9",
       "wasClamped": false,
-      "hourIndex": 36
+      "hourIndex": 33
     },
     {
       "timeUtc": "2026-07-11T01:00:00Z",
@@ -5385,7 +5331,7 @@
       "surgeFt": 0.5,
       "matchedStageKey": "1.0",
       "wasClamped": false,
-      "hourIndex": 37
+      "hourIndex": 34
     },
     {
       "timeUtc": "2026-07-11T02:00:00Z",
@@ -5403,7 +5349,7 @@
       "surgeFt": 0.5,
       "matchedStageKey": "0.3",
       "wasClamped": false,
-      "hourIndex": 38
+      "hourIndex": 35
     },
     {
       "timeUtc": "2026-07-11T03:00:00Z",
@@ -5421,7 +5367,7 @@
       "surgeFt": 0.5,
       "matchedStageKey": "-0.4",
       "wasClamped": false,
-      "hourIndex": 39
+      "hourIndex": 36
     },
     {
       "timeUtc": "2026-07-11T04:00:00Z",
@@ -5439,7 +5385,7 @@
       "surgeFt": 0.5,
       "matchedStageKey": "-0.8",
       "wasClamped": false,
-      "hourIndex": 40
+      "hourIndex": 37
     },
     {
       "timeUtc": "2026-07-11T05:00:00Z",
@@ -5457,7 +5403,7 @@
       "surgeFt": 0.5,
       "matchedStageKey": "-0.9",
       "wasClamped": false,
-      "hourIndex": 41
+      "hourIndex": 38
     },
     {
       "timeUtc": "2026-07-11T06:00:00Z",
@@ -5475,7 +5421,7 @@
       "surgeFt": 0.5,
       "matchedStageKey": "-0.5",
       "wasClamped": false,
-      "hourIndex": 42
+      "hourIndex": 39
     },
     {
       "timeUtc": "2026-07-11T07:00:00Z",
@@ -5493,43 +5439,43 @@
       "surgeFt": 0.5,
       "matchedStageKey": "0.1",
       "wasClamped": false,
-      "hourIndex": 43
+      "hourIndex": 40
     },
     {
       "timeUtc": "2026-07-11T08:00:00Z",
       "scenario": "mean",
       "product": "mean",
       "percentile": "Mean",
-      "rawPetssValue": 2.994,
+      "rawPetssValue": 2.894,
       "rawPetssScale": 1.0,
-      "sourceStageFt": 0.86,
+      "sourceStageFt": 0.76,
       "sourceDatum": "NAVD88",
-      "navd88StageFt": 0.86,
-      "mllwStageFt": 2.99,
-      "twlMllwFt": 2.99,
+      "navd88StageFt": 0.76,
+      "mllwStageFt": 2.89,
+      "twlMllwFt": 2.89,
       "tideMllwFt": 2.168,
-      "surgeFt": 0.6,
-      "matchedStageKey": "0.9",
+      "surgeFt": 0.5,
+      "matchedStageKey": "0.8",
       "wasClamped": false,
-      "hourIndex": 44
+      "hourIndex": 41
     },
     {
       "timeUtc": "2026-07-11T09:00:00Z",
       "scenario": "mean",
       "product": "mean",
       "percentile": "Mean",
-      "rawPetssValue": 3.531,
+      "rawPetssValue": 3.431,
       "rawPetssScale": 1.0,
-      "sourceStageFt": 1.4,
+      "sourceStageFt": 1.3,
       "sourceDatum": "NAVD88",
-      "navd88StageFt": 1.4,
-      "mllwStageFt": 3.53,
-      "twlMllwFt": 3.53,
+      "navd88StageFt": 1.3,
+      "mllwStageFt": 3.43,
+      "twlMllwFt": 3.43,
       "tideMllwFt": 2.705,
-      "surgeFt": 0.6,
-      "matchedStageKey": "1.4",
+      "surgeFt": 0.5,
+      "matchedStageKey": "1.3",
       "wasClamped": false,
-      "hourIndex": 45
+      "hourIndex": 42
     },
     {
       "timeUtc": "2026-07-11T10:00:00Z",
@@ -5547,7 +5493,7 @@
       "surgeFt": 0.6,
       "matchedStageKey": "1.8",
       "wasClamped": false,
-      "hourIndex": 46
+      "hourIndex": 43
     },
     {
       "timeUtc": "2026-07-11T11:00:00Z",
@@ -5565,7 +5511,7 @@
       "surgeFt": 0.6,
       "matchedStageKey": "1.8",
       "wasClamped": false,
-      "hourIndex": 47
+      "hourIndex": 44
     },
     {
       "timeUtc": "2026-07-11T12:00:00Z",
@@ -5583,7 +5529,7 @@
       "surgeFt": 0.6,
       "matchedStageKey": "1.4",
       "wasClamped": false,
-      "hourIndex": 48
+      "hourIndex": 45
     },
     {
       "timeUtc": "2026-07-11T13:00:00Z",
@@ -5601,7 +5547,7 @@
       "surgeFt": 0.6,
       "matchedStageKey": "0.6",
       "wasClamped": false,
-      "hourIndex": 49
+      "hourIndex": 46
     },
     {
       "timeUtc": "2026-07-11T14:00:00Z",
@@ -5619,7 +5565,7 @@
       "surgeFt": 0.6,
       "matchedStageKey": "-0.1",
       "wasClamped": false,
-      "hourIndex": 50
+      "hourIndex": 47
     },
     {
       "timeUtc": "2026-07-11T15:00:00Z",
@@ -5637,7 +5583,7 @@
       "surgeFt": 0.6,
       "matchedStageKey": "-0.7",
       "wasClamped": false,
-      "hourIndex": 51
+      "hourIndex": 48
     },
     {
       "timeUtc": "2026-07-11T16:00:00Z",
@@ -5655,7 +5601,7 @@
       "surgeFt": 0.6,
       "matchedStageKey": "-1.1",
       "wasClamped": false,
-      "hourIndex": 52
+      "hourIndex": 49
     },
     {
       "timeUtc": "2026-07-11T17:00:00Z",
@@ -5673,7 +5619,7 @@
       "surgeFt": 0.7,
       "matchedStageKey": "-1.0",
       "wasClamped": false,
-      "hourIndex": 53
+      "hourIndex": 50
     },
     {
       "timeUtc": "2026-07-11T18:00:00Z",
@@ -5691,7 +5637,7 @@
       "surgeFt": 0.7,
       "matchedStageKey": "-0.5",
       "wasClamped": false,
-      "hourIndex": 54
+      "hourIndex": 51
     },
     {
       "timeUtc": "2026-07-11T19:00:00Z",
@@ -5709,7 +5655,7 @@
       "surgeFt": 0.7,
       "matchedStageKey": "0.4",
       "wasClamped": false,
-      "hourIndex": 55
+      "hourIndex": 52
     },
     {
       "timeUtc": "2026-07-11T20:00:00Z",
@@ -5727,7 +5673,7 @@
       "surgeFt": 0.7,
       "matchedStageKey": "1.3",
       "wasClamped": false,
-      "hourIndex": 56
+      "hourIndex": 53
     },
     {
       "timeUtc": "2026-07-11T21:00:00Z",
@@ -5745,7 +5691,7 @@
       "surgeFt": 0.7,
       "matchedStageKey": "2.1",
       "wasClamped": false,
-      "hourIndex": 57
+      "hourIndex": 54
     },
     {
       "timeUtc": "2026-07-11T22:00:00Z",
@@ -5763,7 +5709,7 @@
       "surgeFt": 0.7,
       "matchedStageKey": "2.8",
       "wasClamped": false,
-      "hourIndex": 58
+      "hourIndex": 55
     },
     {
       "timeUtc": "2026-07-11T23:00:00Z",
@@ -5781,7 +5727,7 @@
       "surgeFt": 0.7,
       "matchedStageKey": "3.0",
       "wasClamped": false,
-      "hourIndex": 59
+      "hourIndex": 56
     },
     {
       "timeUtc": "2026-07-12T00:00:00Z",
@@ -5799,7 +5745,7 @@
       "surgeFt": 0.7,
       "matchedStageKey": "2.8",
       "wasClamped": false,
-      "hourIndex": 60
+      "hourIndex": 57
     },
     {
       "timeUtc": "2026-07-12T01:00:00Z",
@@ -5817,7 +5763,7 @@
       "surgeFt": 0.7,
       "matchedStageKey": "2.2",
       "wasClamped": false,
-      "hourIndex": 61
+      "hourIndex": 58
     },
     {
       "timeUtc": "2026-07-12T02:00:00Z",
@@ -5835,7 +5781,7 @@
       "surgeFt": 0.7,
       "matchedStageKey": "1.3",
       "wasClamped": false,
-      "hourIndex": 62
+      "hourIndex": 59
     },
     {
       "timeUtc": "2026-07-12T03:00:00Z",
@@ -5853,7 +5799,7 @@
       "surgeFt": 0.7,
       "matchedStageKey": "0.5",
       "wasClamped": false,
-      "hourIndex": 63
+      "hourIndex": 60
     },
     {
       "timeUtc": "2026-07-12T04:00:00Z",
@@ -5871,7 +5817,7 @@
       "surgeFt": 0.7,
       "matchedStageKey": "-0.2",
       "wasClamped": false,
-      "hourIndex": 64
+      "hourIndex": 61
     },
     {
       "timeUtc": "2026-07-12T05:00:00Z",
@@ -5889,7 +5835,7 @@
       "surgeFt": 0.7,
       "matchedStageKey": "-0.8",
       "wasClamped": false,
-      "hourIndex": 65
+      "hourIndex": 62
     },
     {
       "timeUtc": "2026-07-12T06:00:00Z",
@@ -5907,7 +5853,7 @@
       "surgeFt": 0.7,
       "matchedStageKey": "-0.8",
       "wasClamped": false,
-      "hourIndex": 66
+      "hourIndex": 63
     },
     {
       "timeUtc": "2026-07-12T07:00:00Z",
@@ -5925,7 +5871,7 @@
       "surgeFt": 0.7,
       "matchedStageKey": "-0.4",
       "wasClamped": false,
-      "hourIndex": 67
+      "hourIndex": 64
     },
     {
       "timeUtc": "2026-07-12T08:00:00Z",
@@ -5943,7 +5889,7 @@
       "surgeFt": 0.7,
       "matchedStageKey": "0.2",
       "wasClamped": false,
-      "hourIndex": 68
+      "hourIndex": 65
     },
     {
       "timeUtc": "2026-07-12T09:00:00Z",
@@ -5961,7 +5907,7 @@
       "surgeFt": 0.7,
       "matchedStageKey": "0.9",
       "wasClamped": false,
-      "hourIndex": 69
+      "hourIndex": 66
     },
     {
       "timeUtc": "2026-07-12T10:00:00Z",
@@ -5979,7 +5925,7 @@
       "surgeFt": 0.7,
       "matchedStageKey": "1.5",
       "wasClamped": false,
-      "hourIndex": 70
+      "hourIndex": 67
     },
     {
       "timeUtc": "2026-07-12T11:00:00Z",
@@ -5997,7 +5943,7 @@
       "surgeFt": 0.7,
       "matchedStageKey": "1.9",
       "wasClamped": false,
-      "hourIndex": 71
+      "hourIndex": 68
     },
     {
       "timeUtc": "2026-07-12T12:00:00Z",
@@ -6015,7 +5961,7 @@
       "surgeFt": 0.7,
       "matchedStageKey": "2.0",
       "wasClamped": false,
-      "hourIndex": 72
+      "hourIndex": 69
     },
     {
       "timeUtc": "2026-07-12T13:00:00Z",
@@ -6033,7 +5979,7 @@
       "surgeFt": 0.7,
       "matchedStageKey": "1.6",
       "wasClamped": false,
-      "hourIndex": 73
+      "hourIndex": 70
     },
     {
       "timeUtc": "2026-07-12T14:00:00Z",
@@ -6051,7 +5997,7 @@
       "surgeFt": 0.7,
       "matchedStageKey": "0.8",
       "wasClamped": false,
-      "hourIndex": 74
+      "hourIndex": 71
     },
     {
       "timeUtc": "2026-07-12T15:00:00Z",
@@ -6069,7 +6015,7 @@
       "surgeFt": 0.7,
       "matchedStageKey": "0.0",
       "wasClamped": false,
-      "hourIndex": 75
+      "hourIndex": 72
     },
     {
       "timeUtc": "2026-07-12T16:00:00Z",
@@ -6087,7 +6033,7 @@
       "surgeFt": 0.7,
       "matchedStageKey": "-0.6",
       "wasClamped": false,
-      "hourIndex": 76
+      "hourIndex": 73
     },
     {
       "timeUtc": "2026-07-12T17:00:00Z",
@@ -6105,79 +6051,79 @@
       "surgeFt": 0.7,
       "matchedStageKey": "-1.1",
       "wasClamped": false,
-      "hourIndex": 77
+      "hourIndex": 74
     },
     {
       "timeUtc": "2026-07-12T18:00:00Z",
       "scenario": "mean",
       "product": "mean",
       "percentile": "Mean",
-      "rawPetssValue": 1.03,
+      "rawPetssValue": 0.93,
       "rawPetssScale": 1.0,
-      "sourceStageFt": -1.1,
+      "sourceStageFt": -1.2,
       "sourceDatum": "NAVD88",
-      "navd88StageFt": -1.1,
-      "mllwStageFt": 1.03,
-      "twlMllwFt": 1.03,
+      "navd88StageFt": -1.2,
+      "mllwStageFt": 0.93,
+      "twlMllwFt": 0.93,
       "tideMllwFt": 0.104,
-      "surgeFt": 0.7,
-      "matchedStageKey": "-1.1",
+      "surgeFt": 0.6,
+      "matchedStageKey": "-1.2",
       "wasClamped": false,
-      "hourIndex": 78
+      "hourIndex": 75
     },
     {
       "timeUtc": "2026-07-12T19:00:00Z",
       "scenario": "mean",
       "product": "mean",
       "percentile": "Mean",
-      "rawPetssValue": 1.603,
+      "rawPetssValue": 1.503,
       "rawPetssScale": 1.0,
-      "sourceStageFt": -0.53,
+      "sourceStageFt": -0.63,
       "sourceDatum": "NAVD88",
-      "navd88StageFt": -0.53,
-      "mllwStageFt": 1.6,
-      "twlMllwFt": 1.6,
+      "navd88StageFt": -0.63,
+      "mllwStageFt": 1.5,
+      "twlMllwFt": 1.5,
       "tideMllwFt": 0.677,
-      "surgeFt": 0.7,
-      "matchedStageKey": "-0.5",
+      "surgeFt": 0.6,
+      "matchedStageKey": "-0.6",
       "wasClamped": false,
-      "hourIndex": 79
+      "hourIndex": 76
     },
     {
       "timeUtc": "2026-07-12T20:00:00Z",
       "scenario": "mean",
       "product": "mean",
       "percentile": "Mean",
-      "rawPetssValue": 2.507,
+      "rawPetssValue": 2.407,
       "rawPetssScale": 1.0,
-      "sourceStageFt": 0.38,
+      "sourceStageFt": 0.28,
       "sourceDatum": "NAVD88",
-      "navd88StageFt": 0.38,
-      "mllwStageFt": 2.51,
-      "twlMllwFt": 2.51,
+      "navd88StageFt": 0.28,
+      "mllwStageFt": 2.41,
+      "twlMllwFt": 2.41,
       "tideMllwFt": 1.581,
-      "surgeFt": 0.7,
-      "matchedStageKey": "0.4",
+      "surgeFt": 0.6,
+      "matchedStageKey": "0.3",
       "wasClamped": false,
-      "hourIndex": 80
+      "hourIndex": 77
     },
     {
       "timeUtc": "2026-07-12T21:00:00Z",
       "scenario": "mean",
       "product": "mean",
       "percentile": "Mean",
-      "rawPetssValue": 3.45,
+      "rawPetssValue": 3.35,
       "rawPetssScale": 1.0,
-      "sourceStageFt": 1.32,
+      "sourceStageFt": 1.22,
       "sourceDatum": "NAVD88",
-      "navd88StageFt": 1.32,
-      "mllwStageFt": 3.45,
-      "twlMllwFt": 3.45,
+      "navd88StageFt": 1.22,
+      "mllwStageFt": 3.35,
+      "twlMllwFt": 3.35,
       "tideMllwFt": 2.524,
-      "surgeFt": 0.7,
-      "matchedStageKey": "1.3",
+      "surgeFt": 0.6,
+      "matchedStageKey": "1.2",
       "wasClamped": false,
-      "hourIndex": 81
+      "hourIndex": 78
     },
     {
       "timeUtc": "2026-07-12T22:00:00Z",
@@ -6195,7 +6141,7 @@
       "surgeFt": 0.6,
       "matchedStageKey": "2.1",
       "wasClamped": false,
-      "hourIndex": 82
+      "hourIndex": 79
     },
     {
       "timeUtc": "2026-07-12T23:00:00Z",
@@ -6213,23 +6159,77 @@
       "surgeFt": 0.6,
       "matchedStageKey": "2.8",
       "wasClamped": false,
-      "hourIndex": 83
+      "hourIndex": 80
     },
     {
       "timeUtc": "2026-07-13T00:00:00Z",
       "scenario": "mean",
       "product": "mean",
       "percentile": "Mean",
-      "rawPetssValue": 5.31,
+      "rawPetssValue": 5.21,
       "rawPetssScale": 1.0,
-      "sourceStageFt": 3.18,
+      "sourceStageFt": 3.08,
       "sourceDatum": "NAVD88",
-      "navd88StageFt": 3.18,
-      "mllwStageFt": 5.31,
-      "twlMllwFt": 5.31,
+      "navd88StageFt": 3.08,
+      "mllwStageFt": 5.21,
+      "twlMllwFt": 5.21,
       "tideMllwFt": 4.384,
-      "surgeFt": 0.7,
-      "matchedStageKey": "3.2",
+      "surgeFt": 0.6,
+      "matchedStageKey": "3.1",
+      "wasClamped": false,
+      "hourIndex": 81
+    },
+    {
+      "timeUtc": "2026-07-13T01:00:00Z",
+      "scenario": "mean",
+      "product": "mean",
+      "percentile": "Mean",
+      "rawPetssValue": 4.981,
+      "rawPetssScale": 1.0,
+      "sourceStageFt": 2.85,
+      "sourceDatum": "NAVD88",
+      "navd88StageFt": 2.85,
+      "mllwStageFt": 4.98,
+      "twlMllwFt": 4.98,
+      "tideMllwFt": 4.155,
+      "surgeFt": 0.6,
+      "matchedStageKey": "2.8",
+      "wasClamped": false,
+      "hourIndex": 82
+    },
+    {
+      "timeUtc": "2026-07-13T02:00:00Z",
+      "scenario": "mean",
+      "product": "mean",
+      "percentile": "Mean",
+      "rawPetssValue": 4.284,
+      "rawPetssScale": 1.0,
+      "sourceStageFt": 2.15,
+      "sourceDatum": "NAVD88",
+      "navd88StageFt": 2.15,
+      "mllwStageFt": 4.28,
+      "twlMllwFt": 4.28,
+      "tideMllwFt": 3.458,
+      "surgeFt": 0.6,
+      "matchedStageKey": "2.1",
+      "wasClamped": false,
+      "hourIndex": 83
+    },
+    {
+      "timeUtc": "2026-07-13T03:00:00Z",
+      "scenario": "mean",
+      "product": "mean",
+      "percentile": "Mean",
+      "rawPetssValue": 3.405,
+      "rawPetssScale": 1.0,
+      "sourceStageFt": 1.28,
+      "sourceDatum": "NAVD88",
+      "navd88StageFt": 1.28,
+      "mllwStageFt": 3.41,
+      "twlMllwFt": 3.41,
+      "tideMllwFt": 2.579,
+      "surgeFt": 0.6,
+      "matchedStageKey": "1.3",
       "wasClamped": false,
       "hourIndex": 84
     }
