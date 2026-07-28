@@ -18881,8 +18881,7 @@ function getUniqueExportStages(frameItems) {
         const rawStage = getStageValue(item.entry);
         const displayStage = getOverlayStage(rawStage);
         if (displayStage != null) {
-          const stageKey = stageToCode(displayStage);
-          let overlayImg = overlayImageLookup?.get(stageKey) || null;
+          let overlayImg = overlayImageLookup?.get(stageToCode(displayStage)) || null;
           if (!overlayImg) {
             const record = await getOverlayRecord(currentOverlayMode, displayStage);
             overlayImg = record?.url ? await getExportImageElement(record.url) : null;
