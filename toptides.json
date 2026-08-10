@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-10T02:00:00Z",
+  "generatedAt": "2026-08-10T20:00:00Z",
   "schema": "single-zone-top-tides-v1",
   "town": "Highlands Borough",
   "toptides": [
@@ -423,7 +423,7 @@
       "rank": 23,
       "height_ft": 4.87,
       "height_navd88_ft": 4.87,
-      "height_mllw_ft": 7,
+      "height_mllw_ft": 7.0,
       "date": "2018-03-03",
       "display_date": "Mar 3, 2018",
       "zoneId": "default",
@@ -551,7 +551,5 @@
       "source_url": "https://nwis.waterdata.usgs.gov/nwis/peak?site_no=01407535&agency_cd=USGS&format=rdb",
       "rank": 29
     }
-  ],
-  "officialUsgsCrestCatalog": "usgs_crests.json",
-  "officialUsgsCrestPolicy": "Official USGS annual peak storm-tide crests are authoritative for their America/New_York calendar date. The updater preserves every official crest and removes any observed-archive duplicate on the same date."
+  ]
 }
