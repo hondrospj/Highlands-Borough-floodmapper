@@ -15,7 +15,8 @@ concurrency:
   group: highlands-borough-floodmapper-data-updates-v2
   cancel-in-progress: false
 
-jobs:  update-forecast:
+jobs:
+  update-forecast:
     runs-on: ubuntu-latest
     timeout-minutes: 15
 
