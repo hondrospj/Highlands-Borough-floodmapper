@@ -14819,6 +14819,7 @@ function cloneStyleObject(value) {
     let imageExistsCache = new Map();
     let overlayRecordCache = new Map();
     let fillingCompositeCache = new Map();
+    let hydraulicTransitionCompositeCache = new Map();
     let preloadPromiseCache = new Map();
     let exportInProgress = false;
     let exportCancelRequested = false;
@@ -15850,6 +15851,9 @@ function setDatumHelpOpen(isOpen) {
     }
 
     function getHydraulicPhaseForEntry(entry, index = null, series = currentSeriesHours) {
+      if (entry?.hydraulicPhaseCanonical && entry?.hydraulicPhase) {
+        return normalizeHydraulicPhase(entry.hydraulicPhase);
+      }
       const rows = Array.isArray(series) ? series : [];
       let resolvedIndex = Number.isInteger(index) ? index : rows.indexOf(entry);
       if (resolvedIndex < 0 && entry) resolvedIndex = findClosestEntryIndex(rows, entry);
@@ -15857,6 +15861,32 @@ function setDatumHelpOpen(isOpen) {
         ? normalizeHydraulicPhase(entry.hydraulicPhase)
         : "slack";
       return inferHydraulicPhaseForIndex(rows, resolvedIndex);
+    }
+
+    function annotateHydraulicSeries(series = []) {
+      const rows = (Array.isArray(series) ? series : []).map(entry => ({ ...entry }));
+      return rows.map((entry, index) => {
+        const phase = Number.isFinite(getStageValue(entry))
+          ? inferHydraulicPhaseForIndex(rows, index)
+          : "slack";
+        const annotated = {
+          ...entry,
+          hydraulicPhase: phase,
+          hydraulicPhaseCanonical: true
+        };
+        if (!phase.startsWith("draining")) return annotated;
+        const crestIndex = findHydraulicCrestIndex(rows, index);
+        const crestEntry = rows[crestIndex];
+        return {
+          ...annotated,
+          hydraulicCrestIndex: crestIndex,
+          hydraulicCrestTimeUtc: Number.isFinite(entryTimeMs(crestEntry))
+            ? new Date(entryTimeMs(crestEntry)).toISOString()
+            : null,
+          hydraulicCrestStageFt: getStageValue(crestEntry),
+          hydraulicElapsedMinutes: getHydraulicElapsedMinutes(rows, crestIndex, index)
+        };
+      });
     }
 
 
@@ -16277,6 +16307,144 @@ function setDatumHelpOpen(isOpen) {
       return cacheFillingComposite(key, record);
     }
 
+    function getHydraulicStageFraction(rawStageFt, lowerStageFt) {
+      const raw = Number(rawStageFt);
+      const lower = Number(lowerStageFt);
+      if (!Number.isFinite(raw) || !Number.isFinite(lower)) return 0;
+      return Math.max(0, Math.min(1, (raw - lower) / STAGE_STEP));
+    }
+
+    function getHydraulicTransitionBlend(stageFraction) {
+      const fraction = Math.max(0, Math.min(1, Number(stageFraction) || 0));
+      const nearestFrameProgress = Math.min(1, fraction * 2);
+      return nearestFrameProgress * nearestFrameProgress * (3 - 2 * nearestFrameProgress);
+    }
+
+    function cacheHydraulicTransitionComposite(key, record) {
+      hydraulicTransitionCompositeCache.set(key, record);
+      while (hydraulicTransitionCompositeCache.size > 48) {
+        const oldestKey = hydraulicTransitionCompositeCache.keys().next().value;
+        const oldest = hydraulicTransitionCompositeCache.get(oldestKey);
+        if (oldest?.url?.startsWith("blob:")) URL.revokeObjectURL(oldest.url);
+        hydraulicTransitionCompositeCache.delete(oldestKey);
+      }
+      return record;
+    }
+
+    async function buildHydraulicTransitionComposite(
+      mode,
+      rawStage,
+      lowerStage,
+      upperStage,
+      phase,
+      lowerRecord,
+      upperRecord
+    ) {
+      const [lowerImage, upperImage] = await Promise.all([
+        getExportImageElement(lowerRecord?.url),
+        getExportImageElement(upperRecord?.url)
+      ]);
+      if (!lowerImage || !upperImage ||
+          lowerImage.naturalWidth !== upperImage.naturalWidth ||
+          lowerImage.naturalHeight !== upperImage.naturalHeight) {
+        return lowerRecord;
+      }
+
+      const blend = getHydraulicTransitionBlend(getHydraulicStageFraction(rawStage, lowerStage));
+      if (!(blend > 1e-6)) return lowerRecord;
+      if (blend >= 1 - 1e-6) return upperRecord;
+
+      const width = lowerImage.naturalWidth;
+      const height = lowerImage.naturalHeight;
+      const canvas = document.createElement("canvas");
+      canvas.width = width;
+      canvas.height = height;
+      const context = canvas.getContext("2d", { willReadFrequently: true });
+      if (!context) return lowerRecord;
+
+      context.drawImage(lowerImage, 0, 0);
+      const lowerData = context.getImageData(0, 0, width, height);
+      context.clearRect(0, 0, width, height);
+      context.drawImage(upperImage, 0, 0);
+      const upper = context.getImageData(0, 0, width, height).data;
+      const target = lowerData.data;
+      const uncertaintyRgba = getUncertaintyRasterColor();
+
+      for (let offset = 0; offset < target.length; offset += 4) {
+        const lowerWet = isWetRasterPixel(target, offset, uncertaintyRgba);
+        const upperWet = isWetRasterPixel(upper, offset, uncertaintyRgba);
+        if (upperWet && !lowerWet) {
+          target[offset] = upper[offset];
+          target[offset + 1] = upper[offset + 1];
+          target[offset + 2] = upper[offset + 2];
+          target[offset + 3] = Math.round(upper[offset + 3] * blend);
+        } else if (upperWet && lowerWet && blend >= 0.5) {
+          target[offset] = upper[offset];
+          target[offset + 1] = upper[offset + 1];
+          target[offset + 2] = upper[offset + 2];
+          target[offset + 3] = upper[offset + 3];
+        }
+      }
+
+      context.putImageData(lowerData, 0, 0);
+      const url = await canvasToFillingObjectUrl(canvas);
+      return {
+        ...lowerRecord,
+        url,
+        filename: `${lowerRecord.filename || getOverlayFilename(mode, lowerStage)}#hydraulic-transition`,
+        rawStage,
+        lowerStage,
+        upperStage,
+        hydraulicPhase: normalizeHydraulicPhase(phase),
+        hydraulicTransitionBlend: blend,
+        isNorthWildwoodHydraulicTransition: true
+      };
+    }
+
+    async function getHydraulicOverlayRecord(mode, stageValue, phase = "slack") {
+      const rawStage = Number(stageValue);
+      const lowerStage = getOverlayStage(rawStage);
+      if (lowerStage == null) return null;
+      const normalizedPhase = normalizeHydraulicPhase(phase);
+      const lowerRecord = await getOverlayRecord(mode, rawStage, normalizedPhase);
+      const fraction = getHydraulicStageFraction(rawStage, lowerStage);
+      if (!lowerRecord || !(fraction > 1e-6)) return lowerRecord;
+
+      const upperStage = roundToOneDecimal(Math.min(MAX_STAGE, lowerStage + STAGE_STEP));
+      if (!(upperStage > lowerStage)) return lowerRecord;
+      const key = [
+        "hydraulic-transition",
+        mode,
+        normalizedPhase,
+        Number(rawStage).toFixed(3),
+        stageToCode(lowerStage),
+        stageToCode(upperStage)
+      ].join("|");
+      if (hydraulicTransitionCompositeCache.has(key)) {
+        return hydraulicTransitionCompositeCache.get(key);
+      }
+
+      const request = (async () => {
+        const upperRecord = await getOverlayRecord(mode, upperStage, normalizedPhase);
+        if (!upperRecord) return lowerRecord;
+        return buildHydraulicTransitionComposite(
+          mode,
+          rawStage,
+          lowerStage,
+          upperStage,
+          normalizedPhase,
+          lowerRecord,
+          upperRecord
+        );
+      })().catch(error => {
+        console.warn("Could not build the North Wildwood-style hydraulic transition; using the lower catalog raster.", error);
+        return lowerRecord;
+      });
+      hydraulicTransitionCompositeCache.set(key, request);
+      const record = await request;
+      return cacheHydraulicTransitionComposite(key, record);
+    }
+
 
     function preloadAroundHour(index) {
       if (!currentSeriesHours.length) return;
@@ -16289,7 +16457,7 @@ function setDatumHelpOpen(isOpen) {
         const phase = getHydraulicPhaseForEntry(entry, i, currentSeriesHours);
 
         ["depth", "dynamic"].forEach(mode => {
-          getOverlayRecord(mode, stage, phase).then(record => {
+          getHydraulicOverlayRecord(mode, stage, phase).then(record => {
             if (record?.url) preloadImage(record.url);
           });
         });
@@ -19030,7 +19198,7 @@ function updateExportSegmentedUI() {
 
     async function setExportFloodLayer(mode, stageValue, phase = "slack") {
       ensureExportMap();
-      const match = await getOverlayRecord(mode, stageValue, phase);
+      const match = await getHydraulicOverlayRecord(mode, stageValue, phase);
       if (!match) {
         throw new Error(`Overlay missing for ${stageValue.toFixed(1)} ft. Check your folder path or file naming.`);
       }
@@ -19248,7 +19416,7 @@ function getUniqueExportStages(frameItems) {
           item?.series || currentSeriesHours
         );
         const adjustedStage = getPenaltyAdjustedOverlayStage(rawStage, phase);
-        const key = `${phase}:${stageToCode(displayStage)}:${stageToCode(adjustedStage)}`;
+        const key = `${phase}:${Number(rawStage).toFixed(3)}:${stageToCode(displayStage)}:${stageToCode(adjustedStage)}`;
         if (!byKey.has(key)) byKey.set(key, { stage: rawStage, phase });
       }
       return Array.from(byKey.entries()).map(([key, value]) => ({ key, ...value }));
@@ -19264,7 +19432,7 @@ function getUniqueExportStages(frameItems) {
 
       await runExportLimited(uniqueStages, EXPORT_PRELOAD_CONCURRENCY, async ({ key, stage, phase }, idx) => {
         throwIfExportCancelled();
-        const record = await getOverlayRecord(currentOverlayMode, stage, phase);
+        const record = await getHydraulicOverlayRecord(currentOverlayMode, stage, phase);
         if (!record?.url) return;
         if (!firstUrl) firstUrl = record.url;
         const img = await getExportImageElement(record.url);
@@ -19538,10 +19706,10 @@ function getUniqueExportStages(frameItems) {
             item.series || currentSeriesHours
           );
           const adjustedStage = getPenaltyAdjustedOverlayStage(rawStage, hydraulicPhase);
-          const stageKey = `${hydraulicPhase}:${stageToCode(displayStage)}:${stageToCode(adjustedStage)}`;
+          const stageKey = `${hydraulicPhase}:${Number(rawStage).toFixed(3)}:${stageToCode(displayStage)}:${stageToCode(adjustedStage)}`;
           let overlayImg = overlayImageLookup?.get(stageKey) || null;
           if (!overlayImg) {
-            const record = await getOverlayRecord(currentOverlayMode, rawStage, hydraulicPhase);
+            const record = await getHydraulicOverlayRecord(currentOverlayMode, rawStage, hydraulicPhase);
             overlayImg = record?.url ? await getExportImageElement(record.url) : null;
             throwIfExportCancelled();
           }
@@ -20680,7 +20848,7 @@ function formatSelectedObservedDate(dateStr) {
       toast("");
       ensureMap();
 
-      const match = await getOverlayRecord(mode, stageValue, phase);
+      const match = await getHydraulicOverlayRecord(mode, stageValue, phase);
       if (token !== lastRenderToken) return;
 
       if (!match) {
@@ -20795,7 +20963,7 @@ function formatSelectedObservedDate(dateStr) {
       forecastData = await fetchJson(withFreshJsonUrl(FORECAST_URL));
       clearExportAvailabilityCache();
       currentRawSeriesHours = getActiveForecastHours();
-      currentSeriesHours = buildForecastDisplaySeries(currentRawSeriesHours);
+      currentSeriesHours = annotateHydraulicSeries(buildForecastDisplaySeries(currentRawSeriesHours));
       currentViewType = "forecast";
       currentTopTideIndex = null;
       currentSelectedLabel = getForecastScenarioLabel();
@@ -21252,7 +21420,7 @@ function populateCalendarSelectors() {
       selectedObservedDate = dateStr;
       currentMonthKey = dateStr.slice(0, 7);
       currentRawSeriesHours = getObservedSourceHoursForDay(dayRecord);
-      currentSeriesHours = buildObservedDayDisplaySeries(dayRecord, dateStr);
+      currentSeriesHours = annotateHydraulicSeries(buildObservedDayDisplaySeries(dayRecord, dateStr));
       currentViewType = "observed-day";
       currentTopTideIndex = null;
       currentSelectedLabel = dateStr;
@@ -21306,7 +21474,9 @@ function populateCalendarSelectors() {
         observationInterval: isCrestOnly ? "crest" : (entry.observationInterval || "1hour"),
         isHistoricalTopTide: Boolean(entry.isHistoricalTopTide || event.sourceType === "historical")
       }));
-      currentSeriesHours = isCrestOnly ? currentRawSeriesHours.slice(0, 1) : currentRawSeriesHours;
+      currentSeriesHours = annotateHydraulicSeries(
+        isCrestOnly ? currentRawSeriesHours.slice(0, 1) : currentRawSeriesHours
+      );
 
       syncSliderBounds();
       currentHourIndex = isCrestOnly ? 0 : Math.max(0, Math.min(event.peakLocalIndex || 0, currentSeriesHours.length - 1));
@@ -33410,7 +33580,7 @@ html body #mapTitleBadge #mapTitleLogo{
 
   async function v11SampleDisplayedDepth(lat,lon,stage,phase){
     if (!Number.isFinite(stage) || !floodLatLngBounds) return null;
-    const record = await getOverlayRecord("depth",stage,phase);
+    const record = await getHydraulicOverlayRecord("depth",stage,phase);
     if (!record?.url) return null;
     const canvas = await v11LoadOverlayCanvas(record.url);
     const west = floodLatLngBounds.getWest(), east = floodLatLngBounds.getEast();
