@@ -1,0 +1,239 @@
+{
+  "schema": "portable-north-wildwood-style-connectivity-assets-v1",
+  "generatedUtc": "2026-08-25T23:14:31Z",
+  "town": "Highlands Borough",
+  "graph": {
+    "schema": "portable-one-foot-conditional-connectivity-graph-v1",
+    "width": 7380,
+    "height": 8190,
+    "cellSizeFt": 1,
+    "sourceStageNavd88Ft": 2.0,
+    "sourceMinComponentCells": 101,
+    "qualifiedSourceComponentCount": 32,
+    "qualifiedSourceCellCount": 4191445,
+    "sourceConnectivity": "four-neighbour/shared-side only",
+    "connectionMethod": "multi-source minimax path; lowest controlling crest",
+    "modelMaximumNavd88Ft": 20.0,
+    "connectedCellCount": 12968823,
+    "bulkheadPixelCount": 0,
+    "bulkheadTerrainTreatment": "only supplied site-specific conditioned terrain; no borrowed crest",
+    "geotransform": [
+      629945,
+      1,
+      0,
+      575195,
+      0,
+      -1
+    ]
+  },
+  "render": {
+    "width": 1476,
+    "height": 1638,
+    "cellSizeFt": 5,
+    "geotransform": [
+      629944.9999999895,
+      5.0,
+      0.0,
+      575194.9999999992,
+      0.0,
+      -5.0
+    ],
+    "projection": "PROJCS[\"NAD83(2011) / New Jersey (ftUS)\",GEOGCS[\"NAD83(2011)\",DATUM[\"NAD83_National_Spatial_Reference_System_2011\",SPHEROID[\"GRS 1980\",6378137,298.257222101,AUTHORITY[\"EPSG\",\"7019\"]],AUTHORITY[\"EPSG\",\"1116\"]],PRIMEM[\"Greenwich\",0,AUTHORITY[\"EPSG\",\"8901\"]],UNIT[\"degree\",0.0174532925199433,AUTHORITY[\"EPSG\",\"9122\"]],AUTHORITY[\"EPSG\",\"6318\"]],PROJECTION[\"Transverse_Mercator\"],PARAMETER[\"latitude_of_origin\",38.8333333333333],PARAMETER[\"central_meridian\",-74.5],PARAMETER[\"scale_factor\",0.9999],PARAMETER[\"false_easting\",492125],PARAMETER[\"false_northing\",0],UNIT[\"US survey foot\",0.304800609601219,AUTHORITY[\"EPSG\",\"9003\"]],AXIS[\"Easting\",EAST],AXIS[\"Northing\",NORTH],AUTHORITY[\"EPSG\",\"6527\"]]",
+    "phases": {
+      "filling": {
+        "stageCount": 201,
+        "pngCount": 402,
+        "pngBytes": 8290261,
+        "visibleFeederPixelInstances": 0,
+        "greenPixelInstances": 287300,
+        "fillingPixelsPreserved": 0,
+        "enclosedHolePixelsRepaired": 0
+      },
+      "slack": {
+        "stageCount": 201,
+        "pngCount": 402,
+        "pngBytes": 8290261,
+        "visibleFeederPixelInstances": 0,
+        "greenPixelInstances": 287300,
+        "fillingPixelsPreserved": 0,
+        "enclosedHolePixelsRepaired": 0
+      },
+      "draining-release-15": {
+        "stageCount": 201,
+        "pngCount": 402,
+        "pngBytes": 8290261,
+        "visibleFeederPixelInstances": 0,
+        "greenPixelInstances": 287300,
+        "fillingPixelsPreserved": 0,
+        "enclosedHolePixelsRepaired": 0
+      },
+      "draining-release-30": {
+        "stageCount": 201,
+        "pngCount": 402,
+        "pngBytes": 8290261,
+        "visibleFeederPixelInstances": 0,
+        "greenPixelInstances": 287300,
+        "fillingPixelsPreserved": 0,
+        "enclosedHolePixelsRepaired": 0
+      },
+      "draining": {
+        "stageCount": 201,
+        "pngCount": 402,
+        "pngBytes": 8290261,
+        "visibleFeederPixelInstances": 0,
+        "greenPixelInstances": 287300,
+        "fillingPixelsPreserved": 0,
+        "enclosedHolePixelsRepaired": 0
+      }
+    }
+  },
+  "catalog": {
+    "minimumNavd88Ft": 0,
+    "maximumNavd88Ft": 20,
+    "stepFt": 0.1,
+    "stageCount": 201,
+    "phaseCount": 5,
+    "imageTypeCount": 2,
+    "pngCount": 2010
+  },
+  "thresholdsNavd88Ft": [
+    3.07,
+    4.07,
+    5.07
+  ],
+  "developedPenalty": {
+    "anchorsFt": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "quadraticCoefficients": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "spatialMask": "NJDEP Land Use 2015 TYPE15=URBAN"
+  },
+  "phaseDirectories": {
+    "filling": "filling",
+    "slack": "",
+    "draining-release-15": "draining-release-15",
+    "draining-release-30": "draining-release-30",
+    "draining": "draining"
+  },
+  "publicRoadMask": {
+    "source": "OpenStreetMap contributors via Overpass API",
+    "filter": "public primary/secondary/tertiary/residential/unclassified/living_street plus named public service streets; excludes footways, paths, tracks, parking aisles, driveways, private ways",
+    "roadPixels": 123913,
+    "feederWidthFt": 15,
+    "routeCriterion": "lowest crest, then shortest route"
+  },
+  "depthBreaksFt": [
+    0.1,
+    0.25,
+    0.5,
+    1.0,
+    1.5,
+    2.0,
+    2.5,
+    3.0,
+    4.0,
+    5.0
+  ],
+  "depthColorsRgb": [
+    [
+      207,
+      239,
+      255
+    ],
+    [
+      39,
+      105,
+      219
+    ],
+    [
+      91,
+      95,
+      214
+    ],
+    [
+      95,
+      45,
+      168
+    ],
+    [
+      124,
+      66,
+      196
+    ],
+    [
+      167,
+      63,
+      161
+    ],
+    [
+      224,
+      90,
+      174
+    ],
+    [
+      177,
+      54,
+      123
+    ],
+    [
+      165,
+      36,
+      64
+    ],
+    [
+      63,
+      0,
+      10
+    ],
+    [
+      58,
+      0,
+      8
+    ]
+  ],
+  "stageColorsRgb": [
+    [
+      213,
+      138,
+      0
+    ],
+    [
+      216,
+      75,
+      103
+    ],
+    [
+      124,
+      92,
+      224
+    ]
+  ],
+  "disconnectedColorRgb": [
+    121,
+    221,
+    90
+  ],
+  "queries": {
+    "hydraulicQuery": "queries/HighlandsHydraulicQuery5ft.png",
+    "developedQuery": "queries/HighlandsDevelopedMask5ft.png",
+    "developedPixels": 653734,
+    "sourceDistance": {
+      "method": "four-neighbour geodesic distance from immutable qualified source blocks",
+      "sourcePixels": 169225,
+      "traversablePixels": 954872,
+      "reachablePixels": 954872,
+      "unreachableTraversablePixels": 0,
+      "cellSizeFt": 5.0,
+      "maximumDistanceFt": 3280.0
+    }
+  },
+  "limitations": {
+    "bulkheads": "No site-specific crest input was supplied; no North Wildwood crest was borrowed."
+  }
+}

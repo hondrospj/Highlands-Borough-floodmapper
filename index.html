@@ -14446,6 +14446,7 @@ html.win-compact-ui #timelineDock #hourSlider{
 
     let TOWN_CONFIG = null;
     let OVERLAY_ROOTS = { depth: [], dynamic: [] };
+    let OVERLAY_PHASE_ROOTS = { depth: {}, dynamic: {} };
     let NWS_POINT_URL = "";
     let SITE_CONFIG = {};
     let MUNICIPAL_BOUNDARY_QUERY_CANDIDATES = [];
@@ -14464,11 +14465,11 @@ html.win-compact-ui #timelineDock #hourSlider{
     const MAJOR_VERTICAL_PENALTY_FT = 0.00;
 
     const HYDRAULIC_QUERY_PNG_URL = new URL(
-      "./assets/hydraulic-penalty/HighlandsHydraulicQuery5ft.png",
+      "./assets/hydraulic-connectivity-v1/queries/HighlandsHydraulicQuery5ft.png",
       APP_BASE
     ).href;
     const DEVELOPED_QUERY_PNG_URL = new URL(
-      "./assets/hydraulic-penalty/HighlandsDevelopedMask5ft.png",
+      "./assets/hydraulic-connectivity-v1/queries/HighlandsDevelopedMask5ft.png",
       APP_BASE
     ).href;
     const DRAINAGE_DEPTH_BREAKS_FT = [0.1, 0.25, 0.5, 1, 1.5, 2, 2.5, 3, 4, 5];
@@ -14624,6 +14625,11 @@ html.win-compact-ui #timelineDock #hourSlider{
       OVERLAY_ROOTS = {
         depth: buildOverlayRoots(config.overlays?.depthRoots),
         dynamic: buildOverlayRoots(config.overlays?.dynamicRoots)
+      };
+      const configuredPhaseRoots = config.overlays?.phaseRoots || {};
+      OVERLAY_PHASE_ROOTS = {
+        depth: Object.fromEntries(Object.entries(configuredPhaseRoots.depth || {}).map(([phase, roots]) => [phase, buildOverlayRoots(roots)])),
+        dynamic: Object.fromEntries(Object.entries(configuredPhaseRoots.dynamic || {}).map(([phase, roots]) => [phase, buildOverlayRoots(roots)]))
       };
 
       SITE_CONFIG = {
@@ -15965,8 +15971,10 @@ function setDatumHelpOpen(isOpen) {
       return [getOverlayFilename(mode, stageValue)];
     }
 
-    function getOverlayCandidates(mode, stageValue) {
-      const roots = OVERLAY_ROOTS[mode] || [];
+    function getOverlayCandidates(mode, stageValue, phase = "slack") {
+      const normalizedPhase = normalizeHydraulicPhase(phase);
+      const phaseRoots = OVERLAY_PHASE_ROOTS?.[mode]?.[normalizedPhase] || [];
+      const roots = phaseRoots.length ? phaseRoots : (OVERLAY_ROOTS[mode] || []);
       const filenames = getOverlayFilenameCandidates(mode, stageValue);
       return roots.flatMap(root => filenames.map(name => new URL(name, root).href));
     }
@@ -16119,8 +16127,8 @@ function setDatumHelpOpen(isOpen) {
       return promise;
     }
 
-    async function findWorkingOverlay(mode, stageValue) {
-      const candidates = getOverlayCandidates(mode, stageValue);
+    async function findWorkingOverlay(mode, stageValue, phase = "slack") {
+      const candidates = getOverlayCandidates(mode, stageValue, phase);
       for (const url of candidates) {
         throwIfExportCancelled();
         const exists = await testImageUrl(url);
@@ -16311,32 +16319,14 @@ function setDatumHelpOpen(isOpen) {
       const sourceStage = Number(stageValue);
       const rawStage = getOverlayStage(sourceStage);
       const normalizedPhase = normalizeHydraulicPhase(phase);
-      const adjustedStage = getPenaltyAdjustedOverlayStage(sourceStage, normalizedPhase);
-      if (rawStage == null || adjustedStage == null) return null;
-      if (Math.abs(rawStage - adjustedStage) < 1e-9) {
-        return getBaseOverlayRecord(mode, rawStage);
-      }
-
-      const key = [
-        mode,
-        normalizedPhase,
-        stageToCode(rawStage),
-        stageToCode(adjustedStage)
-      ].join("|");
-      if (fillingCompositeCache.has(key)) return fillingCompositeCache.get(key);
-
-      const request = buildPenaltyConnectivityComposite(
-        mode,
-        rawStage,
-        adjustedStage,
-        normalizedPhase
-      ).catch(error => {
-        console.warn("Could not build the connectivity filling composite; using the adjusted catalog raster.", error);
-        return getBaseOverlayRecord(mode, adjustedStage);
-      });
-      fillingCompositeCache.set(key, request);
+      if (rawStage == null) return null;
+      const key = `${mode}:${normalizedPhase}:${stageToCode(rawStage)}`;
+      if (overlayRecordCache.has(key)) return overlayRecordCache.get(key);
+      const request = findWorkingOverlay(mode, rawStage, normalizedPhase);
+      overlayRecordCache.set(key, request);
       const record = await request;
-      return cacheFillingComposite(key, record);
+      overlayRecordCache.set(key, record);
+      return record;
     }
 
     function getHydraulicStageFraction(rawStageFt, lowerStageFt) {
@@ -32388,11 +32378,27 @@ const TOWN_CONSTANTS = {
     "depthPngPrefix": "HighlandsBoroughDepth",
     "stagePngPrefix": "HighlandsBoroughStage",
     "depthRoots": [
-      "https://floodmapperv1.b-cdn.net/DepthPNGs/Highlands%20Borough/"
+      "./assets/hydraulic-connectivity-v1/DepthPNGs/Highlands%20Borough/"
     ],
     "dynamicRoots": [
-      "https://floodmapperv1.b-cdn.net/StagePNGs/Highlands%20Borough/"
-    ]
+      "./assets/hydraulic-connectivity-v1/StagePNGs/Highlands%20Borough/"
+    ],
+    "phaseRoots": {
+      "depth": {
+        "filling": ["./assets/hydraulic-connectivity-v1/DepthPNGs/Highlands%20Borough/filling/"],
+        "slack": ["./assets/hydraulic-connectivity-v1/DepthPNGs/Highlands%20Borough/"],
+        "draining-release-15": ["./assets/hydraulic-connectivity-v1/DepthPNGs/Highlands%20Borough/draining-release-15/"],
+        "draining-release-30": ["./assets/hydraulic-connectivity-v1/DepthPNGs/Highlands%20Borough/draining-release-30/"],
+        "draining": ["./assets/hydraulic-connectivity-v1/DepthPNGs/Highlands%20Borough/draining/"]
+      },
+      "dynamic": {
+        "filling": ["./assets/hydraulic-connectivity-v1/StagePNGs/Highlands%20Borough/filling/"],
+        "slack": ["./assets/hydraulic-connectivity-v1/StagePNGs/Highlands%20Borough/"],
+        "draining-release-15": ["./assets/hydraulic-connectivity-v1/StagePNGs/Highlands%20Borough/draining-release-15/"],
+        "draining-release-30": ["./assets/hydraulic-connectivity-v1/StagePNGs/Highlands%20Borough/draining-release-30/"],
+        "draining": ["./assets/hydraulic-connectivity-v1/StagePNGs/Highlands%20Borough/draining/"]
+      }
+    }
   },
   "addressLookup": {
     "title": "Find a Highlands Borough Address",

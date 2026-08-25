@@ -1,0 +1,41 @@
+{
+  "status": "passed",
+  "town": "Highlands Borough",
+  "pngCount": 2010,
+  "dimensions": [
+    1476,
+    1638
+  ],
+  "palettePreserved": true,
+  "depthStageMasksPaired": true,
+  "fillingMonotone": true,
+  "releasePhaseNesting": true,
+  "graph": {
+    "validCells": 23871800,
+    "sourceCells": 4191445,
+    "connectedCells": 12968823,
+    "unconnectedThrough20Ft": 10902977
+  },
+  "phaseWetPixelCounts": {
+    "filling": {
+      "minimum": 164230,
+      "maximum": 519849
+    },
+    "slack": {
+      "minimum": 164230,
+      "maximum": 519849
+    },
+    "draining-release-15": {
+      "minimum": 164230,
+      "maximum": 519849
+    },
+    "draining-release-30": {
+      "minimum": 164230,
+      "maximum": 519849
+    },
+    "draining": {
+      "minimum": 164230,
+      "maximum": 519849
+    }
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "schema": "portable-town-dem-resampling-v1",
+  "generatedUtc": "2026-08-25T23:11:55Z",
+  "source": "highlands-ground.dat",
+  "sourceSha256": "3cda455276fb066a6943aed36f4a3c7186776fe3a64b6938c68563c2a7a5a7aa",
+  "sourceCellSizeFt": 5.0,
+  "output": "highlands_1ft.tif",
+  "outputSha256": "8a184ab43bd53ce3c3eb7d1cb755d632f673318871e1662d8a1b1317db8723bc",
+  "outputCellSizeFt": 1.0,
+  "method": "cubic convolution bounded to local 5x5 finite source extrema",
+  "validOutputCells": 23871800,
+  "cubicValuesClampedLow": 82519,
+  "cubicValuesClampedHigh": 43734,
+  "maximumSourceCenterAbsoluteErrorFt": 1.4793499758525286e-11,
+  "accuracyStatement": "one-foot computational spacing; measurement support remains the five-foot source raster"
+}
