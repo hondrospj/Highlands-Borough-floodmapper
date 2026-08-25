@@ -14463,6 +14463,22 @@ html.win-compact-ui #timelineDock #hourSlider{
     const MODERATE_VERTICAL_PENALTY_FT = 0.00;
     const MAJOR_VERTICAL_PENALTY_FT = 0.00;
 
+    const HYDRAULIC_QUERY_PNG_URL = new URL(
+      "./assets/hydraulic-penalty/HighlandsHydraulicQuery5ft.png",
+      APP_BASE
+    ).href;
+    const DEVELOPED_QUERY_PNG_URL = new URL(
+      "./assets/hydraulic-penalty/HighlandsDevelopedMask5ft.png",
+      APP_BASE
+    ).href;
+    const DRAINAGE_DEPTH_BREAKS_FT = [0.1, 0.25, 0.5, 1, 1.5, 2, 2.5, 3, 4, 5];
+    const DRAINAGE_DEPTH_COLORS = [
+      [207, 239, 255], [39, 105, 219], [91, 95, 214], [95, 45, 168],
+      [124, 66, 196], [167, 63, 161], [224, 90, 174], [177, 54, 123],
+      [165, 36, 64], [63, 0, 10], [58, 0, 8]
+    ];
+    const DRAINAGE_STAGE_COLORS = [[213, 138, 0], [216, 75, 103], [124, 92, 224]];
+
     function formatOffsetWithSign(value, digits = 2) {
       const n = Number(value) || 0;
       const sign = n >= 0 ? "+" : "";
@@ -14819,7 +14835,9 @@ function cloneStyleObject(value) {
     let imageExistsCache = new Map();
     let overlayRecordCache = new Map();
     let fillingCompositeCache = new Map();
-    let hydraulicTransitionCompositeCache = new Map();
+    let drainageCompositeCache = new Map();
+    let hydraulicQueryGridPromise = null;
+    let developedQueryGridPromise = null;
     let preloadPromiseCache = new Map();
     let exportInProgress = false;
     let exportCancelRequested = false;
@@ -16183,9 +16201,10 @@ function setDatumHelpOpen(isOpen) {
     }
 
     async function buildPenaltyConnectivityComposite(mode, rawStage, adjustedStage, phase) {
-      const [rawRecord, adjustedRecord] = await Promise.all([
+      const [rawRecord, adjustedRecord, developedGrid] = await Promise.all([
         getBaseOverlayRecord(mode, rawStage),
-        getBaseOverlayRecord(mode, adjustedStage)
+        getBaseOverlayRecord(mode, adjustedStage),
+        getDevelopedQueryGrid()
       ]);
       if (!rawRecord || !adjustedRecord) return adjustedRecord || rawRecord || null;
 
@@ -16202,6 +16221,10 @@ function setDatumHelpOpen(isOpen) {
 
       const width = adjustedImage.naturalWidth;
       const height = adjustedImage.naturalHeight;
+      if (!developedGrid || developedGrid.width !== width || developedGrid.height !== height) {
+        console.warn("Developed-land penalty skipped because its mask does not match the flood raster.");
+        return rawRecord;
+      }
       const output = document.createElement("canvas");
       output.width = width;
       output.height = height;
@@ -16232,8 +16255,17 @@ function setDatumHelpOpen(isOpen) {
         const rawData = scratchContext.getImageData(0, 0, width, rows);
         const target = adjustedData.data;
         const raw = rawData.data;
+        const developed = developedGrid.values;
 
         for (let offset = 0; offset < target.length; offset += 4) {
+          const developedOffset = (y * width * 4) + offset;
+          if (developed[developedOffset + 2] < 128) {
+            target[offset] = raw[offset];
+            target[offset + 1] = raw[offset + 1];
+            target[offset + 2] = raw[offset + 2];
+            target[offset + 3] = raw[offset + 3];
+            continue;
+          }
           const adjustedWet = isWetRasterPixel(target, offset, uncertaintyRgba);
           const rawWet = isWetRasterPixel(raw, offset, uncertaintyRgba);
           const uncertainty = isUncertaintyRasterPixel(target, offset, uncertaintyRgba) ||
@@ -16314,137 +16346,332 @@ function setDatumHelpOpen(isOpen) {
       return Math.max(0, Math.min(1, (raw - lower) / STAGE_STEP));
     }
 
-    function getHydraulicTransitionBlend(stageFraction) {
+    function getFillingTransitionBlend(stageFraction) {
       const fraction = Math.max(0, Math.min(1, Number(stageFraction) || 0));
       const nearestFrameProgress = Math.min(1, fraction * 2);
       return nearestFrameProgress * nearestFrameProgress * (3 - 2 * nearestFrameProgress);
     }
 
-    function cacheHydraulicTransitionComposite(key, record) {
-      hydraulicTransitionCompositeCache.set(key, record);
-      while (hydraulicTransitionCompositeCache.size > 48) {
-        const oldestKey = hydraulicTransitionCompositeCache.keys().next().value;
-        const oldest = hydraulicTransitionCompositeCache.get(oldestKey);
+    function getDrainageDepthColor(depthFt) {
+      for (let index = 0; index < DRAINAGE_DEPTH_BREAKS_FT.length; index += 1) {
+        if (depthFt < DRAINAGE_DEPTH_BREAKS_FT[index]) return DRAINAGE_DEPTH_COLORS[index];
+      }
+      return DRAINAGE_DEPTH_COLORS[DRAINAGE_DEPTH_COLORS.length - 1];
+    }
+
+    function getDrainageStageColor(stageFt) {
+      if (stageFt >= MAJOR_FLOOD_FT) return DRAINAGE_STAGE_COLORS[2];
+      if (stageFt >= MODERATE_FLOOD_FT) return DRAINAGE_STAGE_COLORS[1];
+      return DRAINAGE_STAGE_COLORS[0];
+    }
+
+    function loadHydraulicQueryPng(url) {
+      return new Promise((resolve, reject) => {
+        const image = new Image();
+        image.crossOrigin = "anonymous";
+        image.decoding = "async";
+        image.onload = () => {
+          try {
+            const canvas = document.createElement("canvas");
+            canvas.width = image.naturalWidth;
+            canvas.height = image.naturalHeight;
+            const context = canvas.getContext("2d", { willReadFrequently: true });
+            if (!context) throw new Error("Hydraulic query canvas is unavailable.");
+            context.drawImage(image, 0, 0);
+            resolve({
+              values: context.getImageData(0, 0, canvas.width, canvas.height).data,
+              width: canvas.width,
+              height: canvas.height
+            });
+          } catch (error) {
+            reject(error);
+          }
+        };
+        image.onerror = () => reject(new Error(`Could not load hydraulic query asset: ${url}`));
+        image.src = url;
+      });
+    }
+
+    async function getHydraulicQueryGrid() {
+      if (!hydraulicQueryGridPromise) {
+        hydraulicQueryGridPromise = loadHydraulicQueryPng(HYDRAULIC_QUERY_PNG_URL)
+          .catch(error => {
+            hydraulicQueryGridPromise = null;
+            throw error;
+          });
+      }
+      return hydraulicQueryGridPromise;
+    }
+
+    async function getDevelopedQueryGrid() {
+      if (!developedQueryGridPromise) {
+        developedQueryGridPromise = loadHydraulicQueryPng(DEVELOPED_QUERY_PNG_URL)
+          .catch(error => {
+            developedQueryGridPromise = null;
+            throw error;
+          });
+      }
+      return developedQueryGridPromise;
+    }
+
+    function isDevelopedRasterPixel(developedPixels, offset) {
+      return Boolean(developedPixels && developedPixels[offset + 2] >= 128);
+    }
+
+    function getFillingTransitionPixelDepth(queryPixels, developedPixels, pixel, rawStageFt) {
+      if (!queryPixels || !developedPixels || queryPixels.length !== developedPixels.length) return null;
+      const offset = pixel * 4;
+      const encodedGround = queryPixels[offset] * 256 + queryPixels[offset + 1];
+      if (!encodedGround || queryPixels[offset + 2] === 255) return null;
+      const groundFt = (encodedGround - 32768) / 10;
+      const stageFt = Number(rawStageFt);
+      if (!Number.isFinite(stageFt)) return null;
+      const adjustedStageFt = stageFt -
+        (isDevelopedRasterPixel(developedPixels, offset) ? getVerticalBathtubPenalty(stageFt) : 0);
+      if (groundFt > adjustedStageFt + 1e-9) return null;
+      return Math.max(0.005, stageFt - groundFt);
+    }
+
+    function applyFillingTransitionPixels(
+      lowerPixels,
+      upperPixels,
+      developedPixels,
+      width,
+      height,
+      rawStageFt,
+      lowerStageFt,
+      mode,
+      depthPixels = upperPixels,
+      queryPixels = null
+    ) {
+      if (!lowerPixels || !upperPixels || lowerPixels.length !== upperPixels.length ||
+          !developedPixels || developedPixels.length !== lowerPixels.length ||
+          !queryPixels || queryPixels.length !== lowerPixels.length ||
+          width * height * 4 !== lowerPixels.length) return 0;
+      const fraction = getHydraulicStageFraction(rawStageFt, lowerStageFt);
+      if (!(fraction > 0)) return 0;
+      const blend = getFillingTransitionBlend(fraction);
+      const transitionStageRgb = getDrainageStageColor(rawStageFt);
+      const uncertaintyRgba = getUncertaintyRasterColor();
+      let added = 0;
+      const pixelCount = width * height;
+
+      for (let pixel = 0; pixel < pixelCount; pixel += 1) {
+        const offset = pixel * 4;
+        const candidate = !isWetRasterPixel(lowerPixels, offset, uncertaintyRgba) &&
+          isWetRasterPixel(upperPixels, offset, uncertaintyRgba) &&
+          isDevelopedRasterPixel(developedPixels, offset);
+        if (!candidate) continue;
+        const depthFt = getFillingTransitionPixelDepth(
+          queryPixels,
+          developedPixels,
+          pixel,
+          rawStageFt
+        );
+        if (!Number.isFinite(depthFt)) continue;
+        const color = mode === "depth"
+          ? getDrainageDepthColor(depthFt)
+          : transitionStageRgb;
+        const sourceAlpha = lowerPixels[offset + 3];
+        if (sourceAlpha > 0) {
+          lowerPixels[offset] = Math.round(lowerPixels[offset] * (1 - blend) + color[0] * blend);
+          lowerPixels[offset + 1] = Math.round(lowerPixels[offset + 1] * (1 - blend) + color[1] * blend);
+          lowerPixels[offset + 2] = Math.round(lowerPixels[offset + 2] * (1 - blend) + color[2] * blend);
+          lowerPixels[offset + 3] = Math.round(sourceAlpha * (1 - blend) + 225 * blend);
+        } else {
+          lowerPixels[offset] = color[0];
+          lowerPixels[offset + 1] = color[1];
+          lowerPixels[offset + 2] = color[2];
+          lowerPixels[offset + 3] = Math.round(225 * blend);
+        }
+        added += 1;
+      }
+      return added;
+    }
+
+    async function getFillingInterpolatedOverlayRecord(
+      mode,
+      lowerStageFt,
+      phase,
+      entry,
+      lowerRecord
+    ) {
+      const rawStageFt = getStageValue(entry);
+      const fraction = getHydraulicStageFraction(rawStageFt, lowerStageFt);
+      const normalizedPhase = normalizeHydraulicPhase(phase);
+      if (!lowerRecord || !(fraction > 1e-6) || fraction >= 1 - 1e-6 ||
+          (normalizedPhase !== "filling" && normalizedPhase !== "slack")) return lowerRecord;
+      const upperStageFt = roundToOneDecimal(Math.min(MAX_STAGE, lowerStageFt + STAGE_STEP));
+      if (!(upperStageFt > lowerStageFt)) return lowerRecord;
+      const key = ["continuous-filling", mode, normalizedPhase, Number(rawStageFt).toFixed(3), stageToCode(lowerStageFt), stageToCode(upperStageFt)].join("|");
+      if (fillingCompositeCache.has(key)) return fillingCompositeCache.get(key);
+      const request = (async () => {
+        const upperRequest = getOverlayRecord(mode, upperStageFt, normalizedPhase);
+        const depthRequest = mode === "depth" ? upperRequest : getOverlayRecord("depth", upperStageFt, normalizedPhase);
+        const [upperRecord, depthRecord] = await Promise.all([upperRequest, depthRequest]);
+        if (!upperRecord || !depthRecord) return lowerRecord;
+        const [lowerImage, upperImage, depthImage, developedGrid, queryGrid] = await Promise.all([
+          getExportImageElement(lowerRecord.url), getExportImageElement(upperRecord.url),
+          getExportImageElement(depthRecord.url), getDevelopedQueryGrid(), getHydraulicQueryGrid()
+        ]);
+        if (!lowerImage || !upperImage || !depthImage || !developedGrid || !queryGrid) return lowerRecord;
+        const width = lowerImage.naturalWidth;
+        const height = lowerImage.naturalHeight;
+        if (upperImage.naturalWidth !== width || upperImage.naturalHeight !== height ||
+            depthImage.naturalWidth !== width || depthImage.naturalHeight !== height ||
+            developedGrid.width !== width || developedGrid.height !== height ||
+            queryGrid.width !== width || queryGrid.height !== height) {
+          console.warn("Filling interpolation skipped because its raster grids do not match.");
+          return lowerRecord;
+        }
+        const canvas = document.createElement("canvas");
+        canvas.width = width;
+        canvas.height = height;
+        const context = canvas.getContext("2d", { willReadFrequently: true });
+        if (!context) return lowerRecord;
+        context.drawImage(lowerImage, 0, 0);
+        const lowerImageData = context.getImageData(0, 0, width, height);
+        context.clearRect(0, 0, width, height);
+        context.drawImage(upperImage, 0, 0);
+        const upperPixels = context.getImageData(0, 0, width, height).data;
+        let depthPixels = upperPixels;
+        if (depthImage !== upperImage) {
+          context.clearRect(0, 0, width, height);
+          context.drawImage(depthImage, 0, 0);
+          depthPixels = context.getImageData(0, 0, width, height).data;
+        }
+        const addedPixelCount = applyFillingTransitionPixels(
+          lowerImageData.data, upperPixels, developedGrid.values, width, height,
+          rawStageFt, lowerStageFt, mode, depthPixels, queryGrid.values
+        );
+        if (!addedPixelCount) return lowerRecord;
+        context.putImageData(lowerImageData, 0, 0);
+        return { ...lowerRecord, url: await canvasToFillingObjectUrl(canvas), isContinuousFillingComposite: true, fillingFraction: fraction, addedPixelCount };
+      })().catch(error => {
+        console.warn("Could not build the continuous filling raster; using the lower catalog raster.", error);
+        return lowerRecord;
+      });
+      fillingCompositeCache.set(key, request);
+      const record = await request;
+      return cacheFillingComposite(key, record);
+    }
+
+    function getDrainageRetentionMilestones(entry, series = currentSeriesHours) {
+      const phase = getHydraulicPhaseForEntry(entry, null, series);
+      const crestStage = Number(entry?.hydraulicCrestStageFt);
+      const currentTime = entryTimeMs(entry);
+      const crestTime = Date.parse(entry?.hydraulicCrestTimeUtc || "");
+      if (!phase.startsWith("draining") || !Number.isFinite(crestStage) || crestStage < MINOR_FLOOD_FT ||
+          !Number.isFinite(currentTime) || !Number.isFinite(crestTime)) return [];
+      const rows = (Array.isArray(series) ? series : []).filter(row => {
+        const time = entryTimeMs(row);
+        return Number.isFinite(time) && time >= crestTime && time < currentTime && Number.isFinite(getStageValue(row));
+      });
+      const selected = new Map();
+      for (const row of rows) {
+        const rowPhase = getHydraulicPhaseForEntry(row, null, series);
+        if (rowPhase === "filling") continue;
+        const existing = selected.get(rowPhase);
+        if (!existing || getStageValue(row) > getStageValue(existing)) selected.set(rowPhase, row);
+      }
+      return Array.from(selected.values()).sort((a, b) => entryTimeMs(a) - entryTimeMs(b));
+    }
+
+    function applyDrainageRetentionPixels(currentPixels, historicalPixelSets, queryPixels, stageFt, mode) {
+      const pixelCount = Math.floor(currentPixels.length / 4);
+      if (!pixelCount || !queryPixels || queryPixels.length !== currentPixels.length) return 0;
+      const history = (historicalPixelSets || []).filter(values => values && values.length === currentPixels.length);
+      if (!history.length) return 0;
+      const uncertaintyRgba = getUncertaintyRasterColor();
+      const crestPixels = history[0];
+      let modified = 0;
+      for (let pixel = 0, offset = 0; pixel < pixelCount; pixel += 1, offset += 4) {
+        if (!isWetRasterPixel(currentPixels, offset, uncertaintyRgba) || crestPixels[offset + 3] > 0) continue;
+        currentPixels[offset] = 0; currentPixels[offset + 1] = 0; currentPixels[offset + 2] = 0; currentPixels[offset + 3] = 0;
+        modified += 1;
+      }
+      const retained = new Uint8Array(pixelCount);
+      for (const historyPixels of history) {
+        for (let pixel = 0, offset = 0; pixel < pixelCount; pixel += 1, offset += 4) {
+          if (!retained[pixel] && crestPixels[offset + 3] > 0 && isWetRasterPixel(historyPixels, offset, uncertaintyRgba)) retained[pixel] = 1;
+        }
+      }
+      const retainedStageRgb = getDrainageStageColor(stageFt);
+      for (let pixel = 0, offset = 0; pixel < pixelCount; pixel += 1, offset += 4) {
+        if (!retained[pixel] || isWetRasterPixel(currentPixels, offset, uncertaintyRgba)) continue;
+        const encodedGround = queryPixels[offset] * 256 + queryPixels[offset + 1];
+        if (!encodedGround || queryPixels[offset + 2] === 255) continue;
+        const groundFt = (encodedGround - 32768) / 10;
+        const depthFt = Number(stageFt) - groundFt;
+        if (!(depthFt > 0.005)) continue;
+        const color = mode === "depth" ? getDrainageDepthColor(depthFt) : retainedStageRgb;
+        currentPixels[offset] = color[0]; currentPixels[offset + 1] = color[1]; currentPixels[offset + 2] = color[2]; currentPixels[offset + 3] = 225;
+        modified += 1;
+      }
+      return modified;
+    }
+
+    function cacheDrainageComposite(key, record) {
+      drainageCompositeCache.set(key, record);
+      while (drainageCompositeCache.size > 48) {
+        const oldestKey = drainageCompositeCache.keys().next().value;
+        const oldest = drainageCompositeCache.get(oldestKey);
         if (oldest?.url?.startsWith("blob:")) URL.revokeObjectURL(oldest.url);
-        hydraulicTransitionCompositeCache.delete(oldestKey);
+        drainageCompositeCache.delete(oldestKey);
       }
       return record;
     }
 
-    async function buildHydraulicTransitionComposite(
-      mode,
-      rawStage,
-      lowerStage,
-      upperStage,
-      phase,
-      lowerRecord,
-      upperRecord
-    ) {
-      const [lowerImage, upperImage] = await Promise.all([
-        getExportImageElement(lowerRecord?.url),
-        getExportImageElement(upperRecord?.url)
-      ]);
-      if (!lowerImage || !upperImage ||
-          lowerImage.naturalWidth !== upperImage.naturalWidth ||
-          lowerImage.naturalHeight !== upperImage.naturalHeight) {
-        return lowerRecord;
-      }
-
-      const blend = getHydraulicTransitionBlend(getHydraulicStageFraction(rawStage, lowerStage));
-      if (!(blend > 1e-6)) return lowerRecord;
-      if (blend >= 1 - 1e-6) return upperRecord;
-
-      const width = lowerImage.naturalWidth;
-      const height = lowerImage.naturalHeight;
-      const canvas = document.createElement("canvas");
-      canvas.width = width;
-      canvas.height = height;
-      const context = canvas.getContext("2d", { willReadFrequently: true });
-      if (!context) return lowerRecord;
-
-      context.drawImage(lowerImage, 0, 0);
-      const lowerData = context.getImageData(0, 0, width, height);
-      context.clearRect(0, 0, width, height);
-      context.drawImage(upperImage, 0, 0);
-      const upper = context.getImageData(0, 0, width, height).data;
-      const target = lowerData.data;
-      const uncertaintyRgba = getUncertaintyRasterColor();
-
-      for (let offset = 0; offset < target.length; offset += 4) {
-        const lowerWet = isWetRasterPixel(target, offset, uncertaintyRgba);
-        const upperWet = isWetRasterPixel(upper, offset, uncertaintyRgba);
-        if (upperWet && !lowerWet) {
-          target[offset] = upper[offset];
-          target[offset + 1] = upper[offset + 1];
-          target[offset + 2] = upper[offset + 2];
-          target[offset + 3] = Math.round(upper[offset + 3] * blend);
-        } else if (upperWet && lowerWet && blend >= 0.5) {
-          target[offset] = upper[offset];
-          target[offset + 1] = upper[offset + 1];
-          target[offset + 2] = upper[offset + 2];
-          target[offset + 3] = upper[offset + 3];
-        }
-      }
-
-      context.putImageData(lowerData, 0, 0);
-      const url = await canvasToFillingObjectUrl(canvas);
-      return {
-        ...lowerRecord,
-        url,
-        filename: `${lowerRecord.filename || getOverlayFilename(mode, lowerStage)}#hydraulic-transition`,
-        rawStage,
-        lowerStage,
-        upperStage,
-        hydraulicPhase: normalizeHydraulicPhase(phase),
-        hydraulicTransitionBlend: blend,
-        isNorthWildwoodHydraulicTransition: true
-      };
-    }
-
-    async function getHydraulicOverlayRecord(mode, stageValue, phase = "slack") {
+    async function getHydraulicOverlayRecord(mode, stageValue, phase = "slack", entry = null, series = currentSeriesHours) {
       const rawStage = Number(stageValue);
       const lowerStage = getOverlayStage(rawStage);
       if (lowerStage == null) return null;
-      const normalizedPhase = normalizeHydraulicPhase(phase);
-      const lowerRecord = await getOverlayRecord(mode, rawStage, normalizedPhase);
-      const fraction = getHydraulicStageFraction(rawStage, lowerStage);
-      if (!lowerRecord || !(fraction > 1e-6)) return lowerRecord;
-
-      const upperStage = roundToOneDecimal(Math.min(MAX_STAGE, lowerStage + STAGE_STEP));
-      if (!(upperStage > lowerStage)) return lowerRecord;
-      const key = [
-        "hydraulic-transition",
-        mode,
-        normalizedPhase,
-        Number(rawStage).toFixed(3),
-        stageToCode(lowerStage),
-        stageToCode(upperStage)
-      ].join("|");
-      if (hydraulicTransitionCompositeCache.has(key)) {
-        return hydraulicTransitionCompositeCache.get(key);
-      }
-
+      let baseRecord = await getOverlayRecord(mode, rawStage, phase);
+      if (!baseRecord || !entry) return baseRecord;
+      baseRecord = await getFillingInterpolatedOverlayRecord(mode, lowerStage, phase, entry, baseRecord);
+      const milestones = getDrainageRetentionMilestones(entry, series);
+      if (!milestones.length) return baseRecord;
+      const key = ["history-drainage", mode, Number(rawStage).toFixed(3), normalizeHydraulicPhase(phase), entryTimeMs(entry),
+        ...milestones.map(item => `${entryTimeMs(item)}:${normalizeHydraulicPhase(item.hydraulicPhase)}:${stageToCode(getOverlayStage(getStageValue(item)))}`)].join("|");
+      if (drainageCompositeCache.has(key)) return drainageCompositeCache.get(key);
       const request = (async () => {
-        const upperRecord = await getOverlayRecord(mode, upperStage, normalizedPhase);
-        if (!upperRecord) return lowerRecord;
-        return buildHydraulicTransitionComposite(
-          mode,
-          rawStage,
-          lowerStage,
-          upperStage,
-          normalizedPhase,
-          lowerRecord,
-          upperRecord
-        );
+        const historicalRecords = (await Promise.all(milestones.map(item => {
+          const itemStage = getOverlayStage(getStageValue(item));
+          return itemStage == null ? Promise.resolve(null) : getOverlayRecord(mode, itemStage, getHydraulicPhaseForEntry(item, null, series));
+        }))).filter(Boolean);
+        if (!historicalRecords.length) return baseRecord;
+        const [baseImage, queryGrid, ...historyImages] = await Promise.all([
+          getExportImageElement(baseRecord.url), getHydraulicQueryGrid(),
+          ...historicalRecords.map(record => getExportImageElement(record.url))
+        ]);
+        if (!baseImage || !queryGrid || historyImages.some(image => !image)) return baseRecord;
+        if (baseImage.naturalWidth !== queryGrid.width || baseImage.naturalHeight !== queryGrid.height ||
+            historyImages.some(image => image.naturalWidth !== baseImage.naturalWidth || image.naturalHeight !== baseImage.naturalHeight)) {
+          console.warn("Drainage retention skipped because its raster grids do not match.");
+          return baseRecord;
+        }
+        const canvas = document.createElement("canvas");
+        canvas.width = baseImage.naturalWidth; canvas.height = baseImage.naturalHeight;
+        const context = canvas.getContext("2d", { willReadFrequently: true });
+        if (!context) return baseRecord;
+        context.drawImage(baseImage, 0, 0);
+        const currentImageData = context.getImageData(0, 0, canvas.width, canvas.height);
+        const historicalPixelSets = historyImages.map(image => {
+          context.clearRect(0, 0, canvas.width, canvas.height); context.drawImage(image, 0, 0);
+          return context.getImageData(0, 0, canvas.width, canvas.height).data;
+        });
+        const retainedPixelCount = applyDrainageRetentionPixels(currentImageData.data, historicalPixelSets, queryGrid.values, rawStage, mode);
+        if (!retainedPixelCount) return baseRecord;
+        context.putImageData(currentImageData, 0, 0);
+        return { ...baseRecord, url: await canvasToFillingObjectUrl(canvas), isHistoryAwareDrainageComposite: true, retainedPixelCount };
       })().catch(error => {
-        console.warn("Could not build the North Wildwood-style hydraulic transition; using the lower catalog raster.", error);
-        return lowerRecord;
+        console.warn("Could not build the history-aware drainage raster; using the static phase raster.", error);
+        return baseRecord;
       });
-      hydraulicTransitionCompositeCache.set(key, request);
+      drainageCompositeCache.set(key, request);
       const record = await request;
-      return cacheHydraulicTransitionComposite(key, record);
+      return cacheDrainageComposite(key, record);
     }
-
 
     function preloadAroundHour(index) {
       if (!currentSeriesHours.length) return;
@@ -16457,7 +16684,7 @@ function setDatumHelpOpen(isOpen) {
         const phase = getHydraulicPhaseForEntry(entry, i, currentSeriesHours);
 
         ["depth", "dynamic"].forEach(mode => {
-          getHydraulicOverlayRecord(mode, stage, phase).then(record => {
+          getHydraulicOverlayRecord(mode, stage, phase, entry, currentSeriesHours).then(record => {
             if (record?.url) preloadImage(record.url);
           });
         });
@@ -19196,9 +19423,9 @@ function updateExportSegmentedUI() {
       if (!exportMap.hasLayer(exportBoundaryMask)) exportBoundaryMask.addTo(exportMap);
     }
 
-    async function setExportFloodLayer(mode, stageValue, phase = "slack") {
+    async function setExportFloodLayer(mode, stageValue, phase = "slack", entry = null, series = currentSeriesHours) {
       ensureExportMap();
-      const match = await getHydraulicOverlayRecord(mode, stageValue, phase);
+      const match = await getHydraulicOverlayRecord(mode, stageValue, phase, entry, series);
       if (!match) {
         throw new Error(`Overlay missing for ${stageValue.toFixed(1)} ft. Check your folder path or file naming.`);
       }
@@ -19266,7 +19493,7 @@ function updateExportSegmentedUI() {
         item.index,
         item.series || currentSeriesHours
       );
-      await setExportFloodLayer(currentOverlayMode, rawStage, hydraulicPhase);
+      await setExportFloodLayer(currentOverlayMode, rawStage, hydraulicPhase, item.entry, item.series || currentSeriesHours);
       mapInstance.invalidateSize(false);
       await waitForExportMapReady(isFirstFrame ? 70 : 10);
       await waitForStableRender();
@@ -19416,8 +19643,8 @@ function getUniqueExportStages(frameItems) {
           item?.series || currentSeriesHours
         );
         const adjustedStage = getPenaltyAdjustedOverlayStage(rawStage, phase);
-        const key = `${phase}:${Number(rawStage).toFixed(3)}:${stageToCode(displayStage)}:${stageToCode(adjustedStage)}`;
-        if (!byKey.has(key)) byKey.set(key, { stage: rawStage, phase });
+        const key = `${phase}:${Number(rawStage).toFixed(3)}:${stageToCode(displayStage)}:${stageToCode(adjustedStage)}:${entryTimeMs(item?.entry)}`;
+        if (!byKey.has(key)) byKey.set(key, { stage: rawStage, phase, item });
       }
       return Array.from(byKey.entries()).map(([key, value]) => ({ key, ...value }));
     }
@@ -19430,9 +19657,9 @@ function getUniqueExportStages(frameItems) {
       const lookup = new Map();
       let firstUrl = null;
 
-      await runExportLimited(uniqueStages, EXPORT_PRELOAD_CONCURRENCY, async ({ key, stage, phase }, idx) => {
+      await runExportLimited(uniqueStages, EXPORT_PRELOAD_CONCURRENCY, async ({ key, stage, phase, item }, idx) => {
         throwIfExportCancelled();
-        const record = await getHydraulicOverlayRecord(currentOverlayMode, stage, phase);
+        const record = await getHydraulicOverlayRecord(currentOverlayMode, stage, phase, item?.entry, item?.series || currentSeriesHours);
         if (!record?.url) return;
         if (!firstUrl) firstUrl = record.url;
         const img = await getExportImageElement(record.url);
@@ -19706,10 +19933,10 @@ function getUniqueExportStages(frameItems) {
             item.series || currentSeriesHours
           );
           const adjustedStage = getPenaltyAdjustedOverlayStage(rawStage, hydraulicPhase);
-          const stageKey = `${hydraulicPhase}:${Number(rawStage).toFixed(3)}:${stageToCode(displayStage)}:${stageToCode(adjustedStage)}`;
+          const stageKey = `${hydraulicPhase}:${Number(rawStage).toFixed(3)}:${stageToCode(displayStage)}:${stageToCode(adjustedStage)}:${entryTimeMs(item.entry)}`;
           let overlayImg = overlayImageLookup?.get(stageKey) || null;
           if (!overlayImg) {
-            const record = await getHydraulicOverlayRecord(currentOverlayMode, rawStage, hydraulicPhase);
+            const record = await getHydraulicOverlayRecord(currentOverlayMode, rawStage, hydraulicPhase, item.entry, item.series || currentSeriesHours);
             overlayImg = record?.url ? await getExportImageElement(record.url) : null;
             throwIfExportCancelled();
           }
@@ -20844,11 +21071,11 @@ function formatSelectedObservedDate(dateStr) {
       requestAnimationFrame(fitSnapshotTimeText);
     }
 
-    async function setFloodLayer(mode, stageValue, phase, token) {
+    async function setFloodLayer(mode, stageValue, phase, token, entry = null, series = currentSeriesHours) {
       toast("");
       ensureMap();
 
-      const match = await getHydraulicOverlayRecord(mode, stageValue, phase);
+      const match = await getHydraulicOverlayRecord(mode, stageValue, phase, entry, series);
       if (token !== lastRenderToken) return;
 
       if (!match) {
@@ -20949,7 +21176,7 @@ function formatSelectedObservedDate(dateStr) {
       toast(note);
 
       const token = ++lastRenderToken;
-      await setFloodLayer(currentOverlayMode, rawStage, hydraulicPhase, token);
+      await setFloodLayer(currentOverlayMode, rawStage, hydraulicPhase, token, entry, currentSeriesHours);
       preloadAroundHour(index);
     }
 
@@ -33580,7 +33807,8 @@ html body #mapTitleBadge #mapTitleLogo{
 
   async function v11SampleDisplayedDepth(lat,lon,stage,phase){
     if (!Number.isFinite(stage) || !floodLatLngBounds) return null;
-    const record = await getHydraulicOverlayRecord("depth",stage,phase);
+    const entry = currentSeriesHours[currentHourIndex] || null;
+    const record = await getHydraulicOverlayRecord("depth",stage,phase,entry,currentSeriesHours);
     if (!record?.url) return null;
     const canvas = await v11LoadOverlayCanvas(record.url);
     const west = floodLatLngBounds.getWest(), east = floodLatLngBounds.getEast();

@@ -1,0 +1,24 @@
+{
+  "schema": "shorely-north-wildwood-penalty-assets-v1",
+  "town": "Highlands Borough",
+  "width": 1476,
+  "height": 1638,
+  "ground": {
+    "source": "https://floodmapperv1.b-cdn.net/MasterRasters/cog-cors/highlands-borough.png",
+    "validPixels": 954872,
+    "minimumFtNavd88": -5.314960479736328,
+    "maximumFtNavd88": 243.91404724121094,
+    "packedPng": "HighlandsHydraulicQuery5ft.png",
+    "packedPngSha256": "6b953236919058b13155ea2c59c0d090c712b390570283eb33212ce1027acb5c"
+  },
+  "developedLand": {
+    "source": "NJDEP Land Use 2015, layer 13",
+    "selection": "TYPE15 = URBAN",
+    "sourceUrl": "https://mapsdep.nj.gov/arcgis/rest/services/Features/Land_lu/MapServer/13",
+    "sourceFeatureCount": 94,
+    "classification": "developed when at least 13 of 25 one-foot subcells are urban",
+    "developedPixels": 922704,
+    "packedPng": "HighlandsDevelopedMask5ft.png",
+    "packedPngSha256": "1b67405be6245fd753a0dd7c702e6ebfb0990896d0133fc9f2c9bcaa3bf774e3"
+  }
+}
