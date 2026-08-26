@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-  <title>Highlands Tidal Flood Dashboard</title>
+  <title>Highlands Flood Mapper</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <script>
     (function(){
@@ -13938,7 +13938,7 @@ html.win-compact-ui #timelineDock #hourSlider{
   <div id="app">
     <div id="mapTitleBadge" class="shorely-title-badge" aria-hidden="true">
       <img id="mapTitleLogo" class="shorely-title-logo shorely-title-logo-town" src="" alt="" loading="eager" decoding="async" style="display:none;" />
-      <span id="mapTitleText" class="shorely-title-text">Highlands Tidal Flood Dashboard</span>
+      <span id="mapTitleText" class="shorely-title-text">Highlands Flood Mapper</span>
       <img id="mapTitlePartnerLogo" class="shorely-title-logo shorely-title-logo-shorelysafe" src="" alt="" loading="eager" decoding="async" style="display:none;" />
     </div>
     <aside id="leftPanel">
@@ -14408,6 +14408,7 @@ html.win-compact-ui #timelineDock #hourSlider{
 
 
     const MIN_STAGE = -4.0;
+    const MIN_DEPTH_STAGE = 0.0;
     const MAX_STAGE = 14.0;
     const STAGE_STEP = 0.1;
     const DEFAULT_OVERLAY_MODE = "depth";
@@ -15724,7 +15725,9 @@ function setDatumHelpOpen(isOpen) {
     function getOverlayStage(value) {
       const n = Number(value);
       if (!Number.isFinite(n)) return null;
-      return clampStage(floorToCatalogStep(clampStage(n)));
+      const minimum = MIN_DEPTH_STAGE;
+      const clamped = Math.max(minimum, Math.min(MAX_STAGE, n));
+      return Math.max(minimum, floorToCatalogStep(clamped));
     }
 
     function getVerticalBathtubPenalty(stageValue) {
@@ -32319,10 +32322,10 @@ function bunnyCdnUrl(path) {
 }
 
 const TOWN_CONSTANTS = {
-  "pageTitle": "Highlands Tidal Flood Dashboard",
-  "mapTitle": "Highlands Tidal Flood Dashboard",
+  "pageTitle": "Highlands Flood Mapper",
+  "mapTitle": "Highlands Flood Mapper",
   "brandTitleLine1": "Highlands Borough",
-  "brandTitleLine2": "Tidal Flood Dashboard",
+  "brandTitleLine2": "Flood Mapper",
   "data": {
     "forecastPath": "./forecast.json",
     "observedPath": "./observed.json",
