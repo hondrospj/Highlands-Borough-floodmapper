@@ -83,6 +83,38 @@ jobs:
           USGS_CRESTS_PATH = Path("usgs_crests.json")
           CHUNK_DAYS = 31
           TOP_TIDE_LIMIT = 10
+          HISTORICAL_CRESTS = [
+              {
+                  "height_ft": 12.0,
+                  "height_navd88_ft": 12.0,
+                  "height_mllw_ft": None,
+                  "date": "1821-09-03",
+                  "display_date": "September 3, 1821",
+                  "source": "legacy historical archive",
+                  "record_type": "archival historical crest",
+                  "datum": "NAVD88",
+              },
+              {
+                  "height_ft": 10.0,
+                  "height_navd88_ft": 10.0,
+                  "height_mllw_ft": None,
+                  "date": "1788-08-19",
+                  "display_date": "August 19, 1788",
+                  "source": "legacy historical archive",
+                  "record_type": "archival historical crest",
+                  "datum": "NAVD88",
+              },
+              {
+                  "height_ft": 7.25,
+                  "height_navd88_ft": 7.25,
+                  "height_mllw_ft": None,
+                  "date": "1992-12-12",
+                  "display_date": "December 12, 1992",
+                  "source": "legacy historical archive",
+                  "record_type": "archival historical crest",
+                  "datum": "NAVD88",
+              },
+          ]
 
           def fetch_json(url):
               last_error = None
@@ -342,7 +374,16 @@ jobs:
                       observed_by_date[date] = (height, copy.deepcopy(row))
               observed = [row for _, row in sorted(observed_by_date.values(), key=lambda item: item[0], reverse=True)[:TOP_TIDE_LIMIT]]
               authoritative = {str(row.get("date", ""))[:10]: row for row in load_official_crest_rows(zone)}
-              combined = [row for row in observed if str(row.get("date", ""))[:10] not in authoritative]
+              historical = {}
+              for item in HISTORICAL_CRESTS:
+                  row = copy.deepcopy(item)
+                  row["zoneId"] = zone["id"]
+                  row["zoneLabel"] = zone["label"]
+                  row["gaugeName"] = zone["gaugeName"]
+                  historical[str(row.get("date", ""))[:10]] = row
+              protected_dates = set(authoritative) | set(historical)
+              combined = [row for row in observed if str(row.get("date", ""))[:10] not in protected_dates]
+              combined.extend(historical.values())
               combined.extend(authoritative.values())
               combined.sort(key=lambda row: (float(row.get("height_navd88_ft", row.get("height_ft"))), str(row.get("date", ""))), reverse=True)
               for rank, row in enumerate(combined, 1):
