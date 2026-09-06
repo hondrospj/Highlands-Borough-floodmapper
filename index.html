@@ -17840,7 +17840,10 @@ function normalizeBoundaryRingsFromArcGIS(rings, sourceWkid = 3857) {
         setRangeInputDate("downloadStartInput", selectedRange.firstDate);
       }
       if (force || !endEl.value || endEl.dataset.userEdited !== "1") {
-        setRangeInputDate("downloadEndInput", selectedRange.lastDate);
+        const endDate = getDownloadFormatValue() === "png"
+          ? (getRangeInputDate("downloadStartInput") || selectedRange.firstDate)
+          : selectedRange.lastDate;
+        setRangeInputDate("downloadEndInput", endDate);
       }
       return true;
     }
@@ -22965,7 +22968,12 @@ function startPlayback() {
           event.preventDefault();
           const input = document.getElementById("downloadFormatSelect");
           if (!input) return;
+          const previousFormat = getDownloadFormatValue();
           input.value = btn.dataset.format || "gif";
+          if (input.value !== previousFormat && input.value === "png") {
+            const endEl = document.getElementById("downloadEndInput");
+            if (endEl) delete endEl.dataset.userEdited;
+          }
           if (!exportInProgress) setDownloadStatus("", false);
           updateExportSegmentedUI();
           scheduleExportTimePickerRender(true);
