@@ -43,6 +43,8 @@ def main():
                                    "surveyPriority": [2022, 2014], "verticalDatum": "NAVD88", "verticalUnits": "feet"}
     manifest_path.write_text(json.dumps(manifest, indent=2) + "\n")
     run([sys.executable, tools / "validate_town_catalog.py", *common, "--catalog", work / "catalog", "--render-mask", work / "render_mask_5ft.tif"])
+    run([sys.executable, tools / "audit_calculations.py", "--build", work, "--sources", args.sources.resolve(),
+         "--report", work / "IndependentCalculationAudit.json"])
 
 
 if __name__ == "__main__":

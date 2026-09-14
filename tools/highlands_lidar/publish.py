@@ -14,8 +14,8 @@ import urllib.request
 
 ZONE = "floodmapperv1"
 CDN = "https://floodmapperv1.b-cdn.net"
-PREFIX = "HighlandsBorough/highlands-lidar-2022-2014-v2"
-COG_PATH = "MasterRasters/cog-cors/highlands-borough-2022-2014-1m-v2.png"
+PREFIX = "HighlandsBorough/highlands-lidar-2022-2014-v3"
+COG_PATH = "MasterRasters/cog-cors/highlands-borough-2022-2014-1m-v3.png"
 
 
 def credential():

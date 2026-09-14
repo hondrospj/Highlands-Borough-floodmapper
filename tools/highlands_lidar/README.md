@@ -8,7 +8,7 @@ are distinct from the one-meter measured-source raster spacing.
 ## Sources
 
 Download the files listed in
-`assets/hydraulic-connectivity-2022-2014-v2/SourceResamplingManifest.json`.
+`assets/hydraulic-connectivity-2022-2014-v3/SourceResamplingManifest.json`.
 Use each record's `downloadUrl`, save it with the local `file` name, and verify
 its SHA-256 checksum before rebuilding. The 2022 tiles are 18TWK8572,
 18TWK8573, 18TWK8671, 18TWK8672, and 18TWK8673. The complete fallback is
@@ -20,6 +20,12 @@ geoid-to-ellipsoid conversion is applied; heights are converted once using
 1 foot = 0.3048 meter. 2022 valid cells replace 2014 cells. No legacy elevations
 are used as a fallback. The established municipal valid-data footprint is
 stored in `inputs/municipal_mask_5ft.tif`.
+
+Horizontal transforms use GDAL's exact transformer (`errorThreshold=0`). PROJ
+network access is disabled through the OSR API as well as the runner environment,
+so standalone preparation and the complete runner use the same transform
+selection. The manifest records the GDAL and PROJ versions. A repeat preparation
+was verified byte-for-byte for all four terrain and mask outputs.
 
 The 2022 coastal flight has incomplete borough coverage. A per-cell source-year
 map is provided in `assets/elevation/source_year_1m.tif`. Mixing survey vintages
@@ -49,13 +55,35 @@ NAVD88 and zero attenuation anchors. Validation checks every image, its
 palette, paired depth/stage footprints, municipal clipping, monotone filling,
 release nesting, and graph predecessor/source constraints.
 
+The runner also invokes `audit_calculations.py`, which does not import the
+production graph, pooling, or mask-repair implementations. It independently
+checks native-tile interpolation and meter-to-foot conversion, bounded cubic
+interpolation, grid alignment, source components, all 201 connectivity levels,
+query encoding, and every pixel in all 2,010 depth and stage images. Connectivity
+uses a separate SciPy component-labeling solution at each water level. The audit
+checks computation against the stated rules; it does not establish field accuracy.
+
+The graph rounds elevations to 0.1 foot (at most 0.05 foot within the modeled
+range). Display depth uses the existing five-foot pooling and wet-mask-normalized
+Gaussian smoothing, with sigma of two display cells. Point elevation queries
+use the one-meter COG. These are different sampling and presentation methods.
+
+```sh
+python tools/highlands_lidar/audit_calculations.py --build /path/to/build --sources /path/to/source-tiles --report /path/to/audit.json
+```
+
+The committed audit is in `reports/IndependentCalculationAudit.json`. Browser
+validation also checks positive wet depths against water-surface-minus-ground
+and requires zero depth in green disconnected areas. The popup respects the
+disconnected class even when its ground lies below the water surface.
+
 ## Publication
 
-Copy the validated catalog into `assets/hydraulic-connectivity-2022-2014-v2/`
+Copy the validated catalog into `assets/hydraulic-connectivity-2022-2014-v3/`
 and the source COG into `assets/elevation/`. The site uses the bundled catalog
 and the versioned Bunny COG for elevation queries. A complete additional copy
 of the catalog is stored in Bunny under
-`HighlandsBorough/highlands-lidar-2022-2014-v2/`.
+`HighlandsBorough/highlands-lidar-2022-2014-v3/`.
 
 ```sh
 python tools/highlands_lidar/publish.py --catalog /path/to/build/catalog --cog /path/to/build/HighlandsBorough_2022_2014_1m_NAVD88ft.tif --report /path/to/build/PublicationValidation.json

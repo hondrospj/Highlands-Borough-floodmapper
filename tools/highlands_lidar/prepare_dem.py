@@ -23,7 +23,7 @@ NODATA = -9999.0
 FTUS_M = 1200 / 3937
 GRID = (629945.0, 5.0, 0.0, 575195.0, 0.0, -5.0)
 WIDTH, HEIGHT = 1476, 1638
-RELEASE = "highlands-lidar-2022-2014-v2"
+RELEASE = "highlands-lidar-2022-2014-v3"
 
 
 def sha(path):
@@ -64,6 +64,7 @@ def main():
     args = parser.parse_args()
     gdal.UseExceptions()
     gdal.SetConfigOption("PROJ_NETWORK", "OFF")
+    osr.SetPROJEnableNetwork(False)
     args.output.mkdir(parents=True, exist_ok=True)
     srs = osr.SpatialReference()
     srs.ImportFromEPSG(6527)
@@ -91,8 +92,11 @@ def main():
         horizontal.StripVertical()
         # Both input rasters already store NAVD88 heights. Passing horizontal
         # CRS prevents GDAL from silently applying an ellipsoid/geoid shift.
+        # Exact transforms avoid the default 0.125-source-pixel approximation,
+        # which can produce different heights when warp chunk boundaries vary.
         warped = gdal.Warp("", ds, format="MEM", srcSRS=horizontal.ExportToWkt(), dstSRS=wkt,
-                           outputBounds=bounds, width=nw, height=nh, resampleAlg="bilinear", dstNodata=NODATA)
+                           outputBounds=bounds, width=nw, height=nh, resampleAlg="bilinear", dstNodata=NODATA,
+                           errorThreshold=0)
         values = warped.ReadAsArray()
         valid = np.isfinite(values) & (values != NODATA)
         if i:
@@ -147,6 +151,10 @@ def main():
         "sourceWidth": nw, "sourceHeight": nh, "sourceCog": cog_path.name,
         "sourceCogSha256": sha(cog_path), "verticalDatum": "NAVD88", "verticalUnits": "feet",
         "metersToFeetFactor": 1 / 0.3048, "verticalGeoidTransformationApplied": False,
+        "horizontalTransformApproximationTolerancePixels": 0,
+        "projNetworkEnabled": False,
+        "processingRuntime": {"gdal": gdal.VersionInfo("RELEASE_NAME"),
+                              "proj": ".".join(str(x()) for x in (osr.GetPROJVersionMajor, osr.GetPROJVersionMinor, osr.GetPROJVersionMicro))},
         "validSourceCells": int(mask1m.sum()), "cells2022": int(np.count_nonzero(mask1m & (provenance == 22))),
         "cells2014": int(np.count_nonzero(mask1m & (provenance == 14))), "unfilledMunicipalCells": int(missing.sum()),
         "overlap2022Minus2014Meters": {"median": float(np.median(delta)), "p05": float(np.percentile(delta, 5)), "p95": float(np.percentile(delta, 95))},

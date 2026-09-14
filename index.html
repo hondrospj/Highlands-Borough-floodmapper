@@ -14466,11 +14466,11 @@ html.win-compact-ui #timelineDock #hourSlider{
     const MAJOR_VERTICAL_PENALTY_FT = 0.00;
 
     const HYDRAULIC_QUERY_PNG_URL = new URL(
-      "./assets/hydraulic-connectivity-2022-2014-v2/queries/HighlandsHydraulicQuery5ft.png",
+      "./assets/hydraulic-connectivity-2022-2014-v3/queries/HighlandsHydraulicQuery5ft.png",
       APP_BASE
     ).href;
     const DEVELOPED_QUERY_PNG_URL = new URL(
-      "./assets/hydraulic-connectivity-2022-2014-v2/queries/HighlandsDevelopedMask5ft.png",
+      "./assets/hydraulic-connectivity-2022-2014-v3/queries/HighlandsDevelopedMask5ft.png",
       APP_BASE
     ).href;
     const DRAINAGE_DEPTH_BREAKS_FT = [0.1, 0.25, 0.5, 1, 1.5, 2, 2.5, 3, 4, 5];
@@ -32388,25 +32388,25 @@ const TOWN_CONSTANTS = {
     "depthPngPrefix": "HighlandsBoroughDepth",
     "stagePngPrefix": "HighlandsBoroughStage",
     "depthRoots": [
-      "./assets/hydraulic-connectivity-2022-2014-v2/DepthPNGs/Highlands%20Borough/"
+      "./assets/hydraulic-connectivity-2022-2014-v3/DepthPNGs/Highlands%20Borough/"
     ],
     "dynamicRoots": [
-      "./assets/hydraulic-connectivity-2022-2014-v2/StagePNGs/Highlands%20Borough/"
+      "./assets/hydraulic-connectivity-2022-2014-v3/StagePNGs/Highlands%20Borough/"
     ],
     "phaseRoots": {
       "depth": {
-        "filling": ["./assets/hydraulic-connectivity-2022-2014-v2/DepthPNGs/Highlands%20Borough/filling/"],
-        "slack": ["./assets/hydraulic-connectivity-2022-2014-v2/DepthPNGs/Highlands%20Borough/"],
-        "draining-release-15": ["./assets/hydraulic-connectivity-2022-2014-v2/DepthPNGs/Highlands%20Borough/draining-release-15/"],
-        "draining-release-30": ["./assets/hydraulic-connectivity-2022-2014-v2/DepthPNGs/Highlands%20Borough/draining-release-30/"],
-        "draining": ["./assets/hydraulic-connectivity-2022-2014-v2/DepthPNGs/Highlands%20Borough/draining/"]
+        "filling": ["./assets/hydraulic-connectivity-2022-2014-v3/DepthPNGs/Highlands%20Borough/filling/"],
+        "slack": ["./assets/hydraulic-connectivity-2022-2014-v3/DepthPNGs/Highlands%20Borough/"],
+        "draining-release-15": ["./assets/hydraulic-connectivity-2022-2014-v3/DepthPNGs/Highlands%20Borough/draining-release-15/"],
+        "draining-release-30": ["./assets/hydraulic-connectivity-2022-2014-v3/DepthPNGs/Highlands%20Borough/draining-release-30/"],
+        "draining": ["./assets/hydraulic-connectivity-2022-2014-v3/DepthPNGs/Highlands%20Borough/draining/"]
       },
       "dynamic": {
-        "filling": ["./assets/hydraulic-connectivity-2022-2014-v2/StagePNGs/Highlands%20Borough/filling/"],
-        "slack": ["./assets/hydraulic-connectivity-2022-2014-v2/StagePNGs/Highlands%20Borough/"],
-        "draining-release-15": ["./assets/hydraulic-connectivity-2022-2014-v2/StagePNGs/Highlands%20Borough/draining-release-15/"],
-        "draining-release-30": ["./assets/hydraulic-connectivity-2022-2014-v2/StagePNGs/Highlands%20Borough/draining-release-30/"],
-        "draining": ["./assets/hydraulic-connectivity-2022-2014-v2/StagePNGs/Highlands%20Borough/draining/"]
+        "filling": ["./assets/hydraulic-connectivity-2022-2014-v3/StagePNGs/Highlands%20Borough/filling/"],
+        "slack": ["./assets/hydraulic-connectivity-2022-2014-v3/StagePNGs/Highlands%20Borough/"],
+        "draining-release-15": ["./assets/hydraulic-connectivity-2022-2014-v3/StagePNGs/Highlands%20Borough/draining-release-15/"],
+        "draining-release-30": ["./assets/hydraulic-connectivity-2022-2014-v3/StagePNGs/Highlands%20Borough/draining-release-30/"],
+        "draining": ["./assets/hydraulic-connectivity-2022-2014-v3/StagePNGs/Highlands%20Borough/draining/"]
       }
     }
   },
@@ -33668,7 +33668,7 @@ html body #mapTitleBadge #mapTitleLogo{
 (function(){
   "use strict";
 
-  const V11_RASTERS = {"HighlandsBoroughDepth":{"id":"highlands-borough-2022-2014-1m-v2","width":2250,"height":2497,"bounds":[[40.3889009,-74.0052046],[40.4114995,-73.9785369]],"noDataValue":-9999,"geoTransform":[629945.0,3.2808333333333337,0,575195.0,0,-3.2808333333333337],"cogUrl":"https://floodmapperv1.b-cdn.net/MasterRasters/cog-cors/highlands-borough-2022-2014-1m-v2.png"}};
+  const V11_RASTERS = {"HighlandsBoroughDepth":{"id":"highlands-borough-2022-2014-1m-v3","width":2250,"height":2497,"bounds":[[40.3889009,-74.0052046],[40.4114995,-73.9785369]],"noDataValue":-9999,"geoTransform":[629945.0,3.2808333333333337,0,575195.0,0,-3.2808333333333337],"cogUrl":"https://floodmapperv1.b-cdn.net/MasterRasters/cog-cors/highlands-borough-2022-2014-1m-v3.png"}};
   const V11_EPSG_6527 = "+proj=tmerc +lat_0=38.8333333333333 +lon_0=-74.5 +k=0.9999 +x_0=150000 +y_0=0 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=us-ft +no_defs +type=crs";
   const V11_DEPTH_COLORS = [
     { rgb:[207,239,255], value:0.05 }, { rgb:[39,105,219], value:0.175 },
@@ -33789,6 +33789,12 @@ html body #mapTitleBadge #mapTitleLogo{
 
   function v11ClosestDepthColor(rgba){
     if (!rgba || rgba[3] <= 8) return { visible:false, value:0 };
+    // Green marks below-water terrain with no modeled flood connection.
+    // It must produce zero depth, including when a COG elevation is available.
+    const disconnected = [121,221,90].every(function(channel,index){
+      return Math.abs(rgba[index] - channel) <= 2;
+    });
+    if (disconnected) return { visible:false, value:0, disconnected:true };
     let best = null;
     for (const item of V11_DEPTH_COLORS) {
       const distance = (rgba[0] - item.rgb[0]) ** 2 + (rgba[1] - item.rgb[1]) ** 2 + (rgba[2] - item.rgb[2]) ** 2;

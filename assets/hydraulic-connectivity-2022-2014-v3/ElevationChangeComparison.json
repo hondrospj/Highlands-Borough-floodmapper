@@ -1,0 +1,98 @@
+[
+  {
+    "stageNavd88Ft": 0.0,
+    "oldWetPixels": 164230,
+    "newWetPixels": 163198,
+    "newlyWetPixels": 611,
+    "newlyDryPixels": 1643,
+    "changedDepthPixels": 18192
+  },
+  {
+    "stageNavd88Ft": 2.0,
+    "oldWetPixels": 169350,
+    "newWetPixels": 168279,
+    "newlyWetPixels": 771,
+    "newlyDryPixels": 1842,
+    "changedDepthPixels": 10800
+  },
+  {
+    "stageNavd88Ft": 3.0,
+    "oldWetPixels": 172227,
+    "newWetPixels": 170779,
+    "newlyWetPixels": 643,
+    "newlyDryPixels": 2091,
+    "changedDepthPixels": 9771
+  },
+  {
+    "stageNavd88Ft": 3.1,
+    "oldWetPixels": 172521,
+    "newWetPixels": 171025,
+    "newlyWetPixels": 645,
+    "newlyDryPixels": 2141,
+    "changedDepthPixels": 10001
+  },
+  {
+    "stageNavd88Ft": 4.0,
+    "oldWetPixels": 182280,
+    "newWetPixels": 180127,
+    "newlyWetPixels": 1238,
+    "newlyDryPixels": 3391,
+    "changedDepthPixels": 22116
+  },
+  {
+    "stageNavd88Ft": 4.1,
+    "oldWetPixels": 184796,
+    "newWetPixels": 182633,
+    "newlyWetPixels": 1477,
+    "newlyDryPixels": 3640,
+    "changedDepthPixels": 25098
+  },
+  {
+    "stageNavd88Ft": 5.0,
+    "oldWetPixels": 290327,
+    "newWetPixels": 277540,
+    "newlyWetPixels": 4591,
+    "newlyDryPixels": 17378,
+    "changedDepthPixels": 64483
+  },
+  {
+    "stageNavd88Ft": 5.1,
+    "oldWetPixels": 298325,
+    "newWetPixels": 287277,
+    "newlyWetPixels": 4752,
+    "newlyDryPixels": 15800,
+    "changedDepthPixels": 66359
+  },
+  {
+    "stageNavd88Ft": 7.0,
+    "oldWetPixels": 403104,
+    "newWetPixels": 401162,
+    "newlyWetPixels": 3520,
+    "newlyDryPixels": 5462,
+    "changedDepthPixels": 80855
+  },
+  {
+    "stageNavd88Ft": 10.0,
+    "oldWetPixels": 490925,
+    "newWetPixels": 491072,
+    "newlyWetPixels": 938,
+    "newlyDryPixels": 791,
+    "changedDepthPixels": 50672
+  },
+  {
+    "stageNavd88Ft": 15.0,
+    "oldWetPixels": 512750,
+    "newWetPixels": 512371,
+    "newlyWetPixels": 400,
+    "newlyDryPixels": 779,
+    "changedDepthPixels": 6289
+  },
+  {
+    "stageNavd88Ft": 20.0,
+    "oldWetPixels": 519849,
+    "newWetPixels": 519654,
+    "newlyWetPixels": 365,
+    "newlyDryPixels": 560,
+    "changedDepthPixels": 3328
+  }
+]
