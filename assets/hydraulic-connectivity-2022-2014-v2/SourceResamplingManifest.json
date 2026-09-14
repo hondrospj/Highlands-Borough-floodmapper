@@ -1,0 +1,119 @@
+{
+  "schema": "highlands-elevation-mosaic-v2",
+  "release": "highlands-lidar-2022-2014-v2",
+  "generatedUtc": "2026-09-14T01:29:37.463311+00:00",
+  "sources": [
+    {
+      "file": "USGS_one_meter_x58y448_NJ_SdL5_2014.tif",
+      "sha256": "657e562b26b5351115d63459bd7376818078eb022f47e5f957f5944e8a263869",
+      "nativeCellSizeMeters": 1,
+      "surveyYear": 2014,
+      "horizontalSourceCrs": "NAD83 / UTM zone 18N",
+      "verticalDatum": "NAVD88",
+      "verticalUnits": "meters",
+      "originalFilename": "USGS_one_meter_x58y448_NJ_SdL5_2014.tif",
+      "downloadUrl": "https://prd-tnm.s3.amazonaws.com/StagedProducts/Elevation/1m/Projects/NJ_SdL5_2014/TIFF/USGS_one_meter_x58y448_NJ_SdL5_2014.tif"
+    },
+    {
+      "file": "2022_8572.tif",
+      "sha256": "04f12c2b888eb6c7ffc3b40293b44a160c008655d66079e818d94771596fb3a8",
+      "nativeCellSizeMeters": 1,
+      "surveyYear": 2022,
+      "horizontalSourceCrs": "NAD83(2011) / UTM zone 18N",
+      "verticalDatum": "NAVD88",
+      "verticalUnits": "meters",
+      "originalFilename": "2022_USGS_NJ_18TWK8572_BareEarth_1mGrid.tif",
+      "downloadUrl": "https://noaa-nos-coastal-lidar-pds.s3.amazonaws.com/dem/USACE_NJ_NY_DEM_2022_9851/nj/2022_USGS_NJ_18TWK8572_BareEarth_1mGrid.tif"
+    },
+    {
+      "file": "2022_8573.tif",
+      "sha256": "b9bf223aae918812b2993ba284cb4a01ab793cff7d795138b5455866c2dea67b",
+      "nativeCellSizeMeters": 1,
+      "surveyYear": 2022,
+      "horizontalSourceCrs": "NAD83(2011) / UTM zone 18N",
+      "verticalDatum": "NAVD88",
+      "verticalUnits": "meters",
+      "originalFilename": "2022_USGS_NJ_18TWK8573_BareEarth_1mGrid.tif",
+      "downloadUrl": "https://noaa-nos-coastal-lidar-pds.s3.amazonaws.com/dem/USACE_NJ_NY_DEM_2022_9851/nj/2022_USGS_NJ_18TWK8573_BareEarth_1mGrid.tif"
+    },
+    {
+      "file": "2022_8671.tif",
+      "sha256": "1237c2aa7346477c946016668d5ca6040f9d0d7a9fc21482f55d290349918e08",
+      "nativeCellSizeMeters": 1,
+      "surveyYear": 2022,
+      "horizontalSourceCrs": "NAD83(2011) / UTM zone 18N",
+      "verticalDatum": "NAVD88",
+      "verticalUnits": "meters",
+      "originalFilename": "2022_USGS_NJ_18TWK8671_BareEarth_1mGrid.tif",
+      "downloadUrl": "https://noaa-nos-coastal-lidar-pds.s3.amazonaws.com/dem/USACE_NJ_NY_DEM_2022_9851/nj/2022_USGS_NJ_18TWK8671_BareEarth_1mGrid.tif"
+    },
+    {
+      "file": "2022_8672.tif",
+      "sha256": "bca839bc0c1ca381ed354b9bafc4f9dac050a4bb439ace8e39e3bbe59c92b046",
+      "nativeCellSizeMeters": 1,
+      "surveyYear": 2022,
+      "horizontalSourceCrs": "NAD83(2011) / UTM zone 18N",
+      "verticalDatum": "NAVD88",
+      "verticalUnits": "meters",
+      "originalFilename": "2022_USGS_NJ_18TWK8672_BareEarth_1mGrid.tif",
+      "downloadUrl": "https://noaa-nos-coastal-lidar-pds.s3.amazonaws.com/dem/USACE_NJ_NY_DEM_2022_9851/nj/2022_USGS_NJ_18TWK8672_BareEarth_1mGrid.tif"
+    },
+    {
+      "file": "2022_8673.tif",
+      "sha256": "d52d6e077b5d4e5bfb0b3158266b672f14b16171ee8d71496bbeb95296f8da7f",
+      "nativeCellSizeMeters": 1,
+      "surveyYear": 2022,
+      "horizontalSourceCrs": "NAD83(2011) / UTM zone 18N",
+      "verticalDatum": "NAVD88",
+      "verticalUnits": "meters",
+      "originalFilename": "2022_USGS_NJ_18TWK8673_BareEarth_1mGrid.tif",
+      "downloadUrl": "https://noaa-nos-coastal-lidar-pds.s3.amazonaws.com/dem/USACE_NJ_NY_DEM_2022_9851/nj/2022_USGS_NJ_18TWK8673_BareEarth_1mGrid.tif"
+    }
+  ],
+  "priority": "2022 valid measurements; 2014 fills remaining cells",
+  "collectionDates2022": [
+    "2022-11-10",
+    "2022-11-11"
+  ],
+  "sourceCellSizeMeters": 1,
+  "sourceCellSizeFt": 3.280839895013123,
+  "sourceGridHorizontalUnits": "US survey feet",
+  "sourceGeoTransform": [
+    629945.0,
+    3.2808333333333337,
+    0,
+    575195.0,
+    0,
+    -3.2808333333333337
+  ],
+  "sourceWidth": 2250,
+  "sourceHeight": 2497,
+  "sourceCog": "HighlandsBorough_2022_2014_1m_NAVD88ft.tif",
+  "sourceCogSha256": "6abb86fde1447239d6a58d9af93615d43fe8883b4734fb85249fd3fab20b3a44",
+  "verticalDatum": "NAVD88",
+  "verticalUnits": "feet",
+  "metersToFeetFactor": 3.280839895013123,
+  "verticalGeoidTransformationApplied": false,
+  "validSourceCells": 2217507,
+  "cells2022": 901208,
+  "cells2014": 1316299,
+  "unfilledMunicipalCells": 0,
+  "overlap2022Minus2014Meters": {
+    "median": 0.04866170883178711,
+    "p05": -0.32036668062210083,
+    "p95": 0.37616029381752014
+  },
+  "output": "highlands_1ft.tif",
+  "outputSha256": "6434e43d0867bb13277793d32d4307dd1385fd52aa2debca9110bfb3c924a686",
+  "outputCellSizeFt": 1,
+  "renderCellSizeFt": 5,
+  "method": "bilinear horizontal reprojection to one-meter mosaic; cubic interpolation bounded to local 5x5 finite source extrema for one-foot calculations",
+  "cubicValuesClamped": 111977,
+  "municipalMask": "existing Highlands raster valid-data footprint; no legacy elevations reused",
+  "municipalMaskSha256": "4030e2b8f83ec591fbbaa3a716c6379a72c8b0202b5b8d7ad43a40267df5d3dd",
+  "accuracyStatement": "one-meter source raster; one-foot computational spacing; five-foot display pooling; interpolation adds no measured detail",
+  "sourceLinks": [
+    "https://www.fisheries.noaa.gov/inport/item/70179",
+    "https://www.nj.gov/njgin/edata/elevation/"
+  ]
+}

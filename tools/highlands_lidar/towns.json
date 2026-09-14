@@ -1,0 +1,19 @@
+{
+  "highlands": {
+    "town": "Highlands Borough",
+    "folder": "Highlands Borough",
+    "prefixDepth": "HighlandsBoroughDepth",
+    "prefixStage": "HighlandsBoroughStage",
+    "queryPrefix": "Highlands",
+    "thresholdsNavd88Ft": [
+      3.07,
+      4.07,
+      5.07
+    ],
+    "penaltiesFt": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  }
+}
