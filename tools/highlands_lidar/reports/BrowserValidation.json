@@ -1,0 +1,216 @@
+{
+  "status": "passed",
+  "url": "http://127.0.0.1:8174/",
+  "results": [
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "checks": {
+        "query": [
+          1476,
+          1638
+        ],
+        "developed": [
+          1476,
+          1638
+        ],
+        "records": [
+          {
+            "phase": "filling",
+            "mode": "depth",
+            "url": "http://127.0.0.1:8174/assets/hydraulic-connectivity-2022-2014-v3/DepthPNGs/Highlands%20Borough/filling/HighlandsBoroughDepthp051.png"
+          },
+          {
+            "phase": "filling",
+            "mode": "dynamic",
+            "url": "http://127.0.0.1:8174/assets/hydraulic-connectivity-2022-2014-v3/StagePNGs/Highlands%20Borough/filling/HighlandsBoroughStagep051.png"
+          },
+          {
+            "phase": "slack",
+            "mode": "depth",
+            "url": "http://127.0.0.1:8174/assets/hydraulic-connectivity-2022-2014-v3/DepthPNGs/Highlands%20Borough/HighlandsBoroughDepthp051.png"
+          },
+          {
+            "phase": "slack",
+            "mode": "dynamic",
+            "url": "http://127.0.0.1:8174/assets/hydraulic-connectivity-2022-2014-v3/StagePNGs/Highlands%20Borough/HighlandsBoroughStagep051.png"
+          },
+          {
+            "phase": "draining-release-15",
+            "mode": "depth",
+            "url": "http://127.0.0.1:8174/assets/hydraulic-connectivity-2022-2014-v3/DepthPNGs/Highlands%20Borough/draining-release-15/HighlandsBoroughDepthp051.png"
+          },
+          {
+            "phase": "draining-release-15",
+            "mode": "dynamic",
+            "url": "http://127.0.0.1:8174/assets/hydraulic-connectivity-2022-2014-v3/StagePNGs/Highlands%20Borough/draining-release-15/HighlandsBoroughStagep051.png"
+          },
+          {
+            "phase": "draining-release-30",
+            "mode": "depth",
+            "url": "http://127.0.0.1:8174/assets/hydraulic-connectivity-2022-2014-v3/DepthPNGs/Highlands%20Borough/draining-release-30/HighlandsBoroughDepthp051.png"
+          },
+          {
+            "phase": "draining-release-30",
+            "mode": "dynamic",
+            "url": "http://127.0.0.1:8174/assets/hydraulic-connectivity-2022-2014-v3/StagePNGs/Highlands%20Borough/draining-release-30/HighlandsBoroughStagep051.png"
+          },
+          {
+            "phase": "draining",
+            "mode": "depth",
+            "url": "http://127.0.0.1:8174/assets/hydraulic-connectivity-2022-2014-v3/DepthPNGs/Highlands%20Borough/draining/HighlandsBoroughDepthp051.png"
+          },
+          {
+            "phase": "draining",
+            "mode": "dynamic",
+            "url": "http://127.0.0.1:8174/assets/hydraulic-connectivity-2022-2014-v3/StagePNGs/Highlands%20Borough/draining/HighlandsBoroughStagep051.png"
+          }
+        ],
+        "cog": {
+          "width": 2250,
+          "height": 2497,
+          "ground": 5.290337085723877,
+          "point": {
+            "lat": 40.403,
+            "lon": -73.989
+          }
+        },
+        "stage": 2.76,
+        "release": "highlands-borough-2022-2014-1m-v3",
+        "title": "Highlands Flood Mapper"
+      },
+      "popup": "Forecast Water Depth\n0.00 ft",
+      "depthCases": [
+        {
+          "kind": "wet",
+          "lat": 40.41142290622711,
+          "lon": -74.00112205731708,
+          "ground": 0.2972556948661804,
+          "stage": 2.76,
+          "surface": 2.76,
+          "expectedDepth": 2.4627443051338194,
+          "displayedDepth": 2.46
+        },
+        {
+          "kind": "disconnected",
+          "lat": 40.40725438095238,
+          "lon": -73.9905420695122,
+          "ground": 1.3026293516159058,
+          "stage": 2.76,
+          "surface": 2.76,
+          "expectedDepth": 0,
+          "displayedDepth": 0
+        }
+      ],
+      "errors": [],
+      "assetFailures": []
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "checks": {
+        "query": [
+          1476,
+          1638
+        ],
+        "developed": [
+          1476,
+          1638
+        ],
+        "records": [
+          {
+            "phase": "filling",
+            "mode": "depth",
+            "url": "http://127.0.0.1:8174/assets/hydraulic-connectivity-2022-2014-v3/DepthPNGs/Highlands%20Borough/filling/HighlandsBoroughDepthp051.png"
+          },
+          {
+            "phase": "filling",
+            "mode": "dynamic",
+            "url": "http://127.0.0.1:8174/assets/hydraulic-connectivity-2022-2014-v3/StagePNGs/Highlands%20Borough/filling/HighlandsBoroughStagep051.png"
+          },
+          {
+            "phase": "slack",
+            "mode": "depth",
+            "url": "http://127.0.0.1:8174/assets/hydraulic-connectivity-2022-2014-v3/DepthPNGs/Highlands%20Borough/HighlandsBoroughDepthp051.png"
+          },
+          {
+            "phase": "slack",
+            "mode": "dynamic",
+            "url": "http://127.0.0.1:8174/assets/hydraulic-connectivity-2022-2014-v3/StagePNGs/Highlands%20Borough/HighlandsBoroughStagep051.png"
+          },
+          {
+            "phase": "draining-release-15",
+            "mode": "depth",
+            "url": "http://127.0.0.1:8174/assets/hydraulic-connectivity-2022-2014-v3/DepthPNGs/Highlands%20Borough/draining-release-15/HighlandsBoroughDepthp051.png"
+          },
+          {
+            "phase": "draining-release-15",
+            "mode": "dynamic",
+            "url": "http://127.0.0.1:8174/assets/hydraulic-connectivity-2022-2014-v3/StagePNGs/Highlands%20Borough/draining-release-15/HighlandsBoroughStagep051.png"
+          },
+          {
+            "phase": "draining-release-30",
+            "mode": "depth",
+            "url": "http://127.0.0.1:8174/assets/hydraulic-connectivity-2022-2014-v3/DepthPNGs/Highlands%20Borough/draining-release-30/HighlandsBoroughDepthp051.png"
+          },
+          {
+            "phase": "draining-release-30",
+            "mode": "dynamic",
+            "url": "http://127.0.0.1:8174/assets/hydraulic-connectivity-2022-2014-v3/StagePNGs/Highlands%20Borough/draining-release-30/HighlandsBoroughStagep051.png"
+          },
+          {
+            "phase": "draining",
+            "mode": "depth",
+            "url": "http://127.0.0.1:8174/assets/hydraulic-connectivity-2022-2014-v3/DepthPNGs/Highlands%20Borough/draining/HighlandsBoroughDepthp051.png"
+          },
+          {
+            "phase": "draining",
+            "mode": "dynamic",
+            "url": "http://127.0.0.1:8174/assets/hydraulic-connectivity-2022-2014-v3/StagePNGs/Highlands%20Borough/draining/HighlandsBoroughStagep051.png"
+          }
+        ],
+        "cog": {
+          "width": 2250,
+          "height": 2497,
+          "ground": 5.290337085723877,
+          "point": {
+            "lat": 40.403,
+            "lon": -73.989
+          }
+        },
+        "stage": 2.76,
+        "release": "highlands-borough-2022-2014-1m-v3",
+        "title": "Highlands Flood Mapper"
+      },
+      "popup": "Forecast Water Depth\n0.00 ft",
+      "depthCases": [
+        {
+          "kind": "wet",
+          "lat": 40.41142290622711,
+          "lon": -74.00112205731708,
+          "ground": 0.2972556948661804,
+          "stage": 2.76,
+          "surface": 2.76,
+          "expectedDepth": 2.4627443051338194,
+          "displayedDepth": 2.46
+        },
+        {
+          "kind": "disconnected",
+          "lat": 40.40725438095238,
+          "lon": -73.9905420695122,
+          "ground": 1.3026293516159058,
+          "stage": 2.76,
+          "surface": 2.76,
+          "expectedDepth": 0,
+          "displayedDepth": 0
+        }
+      ],
+      "errors": [],
+      "assetFailures": []
+    }
+  ]
+}
