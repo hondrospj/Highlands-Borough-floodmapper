@@ -14212,13 +14212,13 @@ html.win-compact-ui #timelineDock #hourSlider{
           </div>
           <div class="layer-list">
             <div class="layer-item">
-              <div id="boundaryToggle" class="toggle on" aria-hidden="true"></div>
+              <div id="boundaryToggle" class="toggle on" role="switch" tabindex="0" aria-label="Simulation Extent" aria-checked="true"></div>
               <div class="layer-meta">
                 <div class="layer-name">Simulation Extent</div>
               </div>
             </div>
             <div class="layer-item">
-              <div id="roadsToggle" class="toggle on" aria-hidden="true"></div>
+              <div id="roadsToggle" class="toggle on" role="switch" tabindex="0" aria-label="Road names" aria-checked="true"></div>
               <div class="layer-meta">
                 <div class="layer-name">Road names</div>
               </div>
@@ -14380,7 +14380,7 @@ html.win-compact-ui #timelineDock #hourSlider{
               <span>Start date and time</span>
               <div class="export-date-time-controls">
                 <div class="export-date-control">
-                  <input id="downloadStartDateText" class="export-date-text-input" type="text" inputmode="numeric" autocomplete="off" maxlength="10" value="MM/DD/YYYY" aria-label="Export start date in month day year format" spellcheck="false" />
+                  <input id="downloadStartDateText" class="export-date-text-input" type="text" inputmode="numeric" autocomplete="off" value="MM/DD/YYYY" aria-label="Export start date in month day year format" spellcheck="false" />
                   <button id="downloadStartCalendarBtn" class="export-calendar-button" type="button" aria-label="Open start date calendar">
                     <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true"><path d="M7 2v3M17 2v3M3.5 9h17M5.5 4h13a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2h-13a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
                   </button>
@@ -14394,7 +14394,7 @@ html.win-compact-ui #timelineDock #hourSlider{
               <span>End date and time</span>
               <div class="export-date-time-controls">
                 <div class="export-date-control">
-                  <input id="downloadEndDateText" class="export-date-text-input" type="text" inputmode="numeric" autocomplete="off" maxlength="10" value="MM/DD/YYYY" aria-label="Export end date in month day year format" spellcheck="false" />
+                  <input id="downloadEndDateText" class="export-date-text-input" type="text" inputmode="numeric" autocomplete="off" value="MM/DD/YYYY" aria-label="Export end date in month day year format" spellcheck="false" />
                   <button id="downloadEndCalendarBtn" class="export-calendar-button" type="button" aria-label="Open end date calendar">
                     <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true"><path d="M7 2v3M17 2v3M3.5 9h17M5.5 4h13a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2h-13a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
                   </button>
@@ -14880,6 +14880,7 @@ function cloneStyleObject(value) {
     let cityBoundaryMask = null;
     let cityBoundaryGuide = null;
     let townAddressMarker = null;
+    let townAddressRequest = null;
 
     let exportMap = null;
     let exportBasemapColorLayer = null;
@@ -15714,6 +15715,7 @@ function setDatumHelpOpen(isOpen) {
       btn.setAttribute("aria-expanded", String(isOpen));
 
       if (isOpen) {
+        stopPlayback();
         updateExportSegmentedUI();
         applyExportStageAspect(getDownloadAspectValue());
         syncDownloadRangeInputs(true);
@@ -16423,9 +16425,15 @@ function setDatumHelpOpen(isOpen) {
       if (overlayRecordCache.has(key)) return overlayRecordCache.get(key);
       const request = findWorkingOverlay(mode, rawStage, normalizedPhase);
       overlayRecordCache.set(key, request);
-      const record = await request;
-      overlayRecordCache.set(key, record);
-      return record;
+      try {
+        const record = await request;
+        throwIfExportCancelled();
+        overlayRecordCache.set(key, record);
+        return record;
+      } catch (error) {
+        overlayRecordCache.delete(key);
+        throw error;
+      }
     }
 
     function getHydraulicStageFraction(rawStageFt, lowerStageFt) {
@@ -16774,7 +16782,9 @@ function setDatumHelpOpen(isOpen) {
 
         ["depth", "dynamic"].forEach(mode => {
           getHydraulicOverlayRecord(mode, stage, phase, entry, currentSeriesHours).then(record => {
-            if (record?.url) preloadImage(record.url);
+            if (record?.url) return preloadImage(record.url);
+          }).catch(err => {
+            if (!isExportCancelledError(err)) console.warn("Could not preload flood overlay.", err);
           });
         });
       });
@@ -17585,7 +17595,10 @@ function normalizeBoundaryRingsFromArcGIS(rings, sourceWkid = 3857) {
     }
 
     function formatExportDateMask(value) {
-      const digits = String(value || "").replace(/\D/g, "").slice(0, 8);
+      const raw = String(value || "");
+      // Preserve empty positions when replacing or deleting individual date digits.
+      if (/^[\dM]{2}\/[\dD]{2}\/[\dY]{4}$/.test(raw)) return raw;
+      const digits = raw.replace(/\D/g, "").slice(0, 8);
       const chars = EXPORT_DATE_MASK.split("");
       EXPORT_DATE_MASK_POSITIONS.forEach((position, index) => {
         chars[position] = digits[index] || exportDateMaskPlaceholderAt(position);
@@ -17616,9 +17629,8 @@ function normalizeBoundaryRingsFromArcGIS(rings, sourceWkid = 3857) {
       if (!EXPORT_DATE_MASK_POSITIONS.includes(position) && position < EXPORT_DATE_MASK.length) {
         position = getNextExportDateMaskPosition(position, 1, true);
       }
-      requestAnimationFrame(() => {
-        try { input.setSelectionRange(position, position); } catch (e) {}
-      });
+      // Advance before the next input event, even when typing faster than a paint.
+      try { input.setSelectionRange(position, position); } catch (e) {}
     }
 
     function clearExportDateMaskRange(chars, start, end) {
@@ -18044,8 +18056,12 @@ function syncDownloadRangeInputs(force = false) {
         }
       }
 
-      syncExportDateTimeEditorFromCanonical("start");
-      syncExportDateTimeEditorFromCanonical("end");
+      ["start", "end"].forEach(prefix => {
+        const {dateText} = getExportDateEditorElements(prefix);
+        if (force || (document.activeElement !== dateText && dateText?.getAttribute("aria-invalid") !== "true")) {
+          syncExportDateTimeEditorFromCanonical(prefix);
+        }
+      });
       renderExportTimePicker(true);
     }
 
@@ -19713,7 +19729,9 @@ async function runExportLimited(items, limit, worker) {
           throwIfExportCancelled();
         }
       });
-      await Promise.all(runners);
+      const settled = await Promise.allSettled(runners);
+      const failed = settled.find(result => result.status === "rejected");
+      if (failed) throw failed.reason;
       return results;
     }
 
@@ -20157,7 +20175,10 @@ function getUniqueExportStages(frameItems) {
 
     async function downloadCurrentSelection() {
       if (exportInProgress) return;
-      syncDownloadRangeInputs(false);
+      if (!commitAllExportDateTimeEditors(true)) {
+        document.querySelector("#downloadRangeFields [aria-invalid='true']")?.focus();
+        return;
+      }
       const format = getDownloadFormatValue();
       const validation = validateDownloadRangeForExport();
       if (!validation.ok) {
@@ -20757,32 +20778,27 @@ function formatSelectedObservedDate(dateStr) {
     function parseTypedObservedDate(value) {
       const raw = String(value || "").trim();
       if (!raw) return null;
-
+      const dateKey = (year, month, day) => {
+        const date = new Date(0);
+        date.setUTCFullYear(year, month - 1, day);
+        return date.getUTCFullYear() === year && date.getUTCMonth() === month - 1 && date.getUTCDate() === day
+          ? `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}` : null;
+      };
       let match = raw.match(/^(\d{4})[-/](\d{1,2})[-/](\d{1,2})$/);
-      if (match) {
-        const y = Number(match[1]);
-        const m = Number(match[2]);
-        const d = Number(match[3]);
-        if (m >= 1 && m <= 12 && d >= 1 && d <= 31) return `${y}-${String(m).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
-      }
-
+      if (match) return dateKey(Number(match[1]), Number(match[2]), Number(match[3]));
       match = raw.match(/^(\d{1,2})[/-](\d{1,2})(?:[/-](\d{2,4}))?$/);
       if (match) {
-        const m = Number(match[1]);
-        const d = Number(match[2]);
-        let y = match[3] ? Number(match[3]) : (currentMonthKey ? Number(currentMonthKey.slice(0, 4)) : new Date().getFullYear());
-        if (y < 100) y += 2000;
-        if (m >= 1 && m <= 12 && d >= 1 && d <= 31) return `${y}-${String(m).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
+        let year = match[3] ? Number(match[3]) : (currentMonthKey ? Number(currentMonthKey.slice(0, 4)) : new Date().getFullYear());
+        if (year < 100) year += 2000;
+        return dateKey(year, Number(match[1]), Number(match[2]));
       }
-
-      const parsed = new Date(raw);
-      if (!Number.isNaN(parsed.getTime())) {
-        const y = parsed.getFullYear();
-        const m = parsed.getMonth() + 1;
-        const d = parsed.getDate();
-        return `${y}-${String(m).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
+      match = raw.match(/^([a-z]+)\.?\s+(\d{1,2}),?\s+(\d{4})$/i);
+      if (match) {
+        const months = ["january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december"];
+        const name = match[1].toLowerCase();
+        const month = months.findIndex(value => value === name || value.slice(0, 3) === name) + 1;
+        return month ? dateKey(Number(match[3]), month, Number(match[2])) : null;
       }
-
       return null;
     }
 
@@ -22160,8 +22176,15 @@ function startPlayback() {
         if (!el) return;
         el.addEventListener("click", () => {
           el.classList.toggle("on");
+          el.setAttribute("aria-checked", String(el.classList.contains("on")));
           if (id === "roadsToggle") updateRoadLayerAppearance();
           if (id === "boundaryToggle") applyTownBoundaryVisibility();
+        });
+        el.addEventListener("keydown", event => {
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            el.click();
+          }
         });
       });
     }
@@ -22403,6 +22426,10 @@ function startPlayback() {
     }
 
     function clearTownAddressLookup() {
+      townAddressRequest?.abort();
+      townAddressRequest = null;
+      const button = document.getElementById("townAddressSearchBtn");
+      if (button) button.disabled = false;
       const input = document.getElementById("townAddressInput");
       if (input) input.value = "";
       setTownAddressStatus("");
@@ -22601,7 +22628,7 @@ function startPlayback() {
       return normalized;
     }
 
-    async function fetchNominatimTownCandidates(clean) {
+    async function fetchNominatimTownCandidates(clean, signal) {
       const cfg = getTownAddressConfig();
       const city = cfg.city || TOWN_CONFIG?.site?.name || "";
       const state = cfg.state || "";
@@ -22619,14 +22646,15 @@ function startPlayback() {
         params.set("bounded", "1");
       }
       const response = await fetch(`https://nominatim.openstreetmap.org/search?${params.toString()}`, {
-        headers: { "Accept": "application/json" }
+        headers: { "Accept": "application/json" },
+        signal
       });
       if (!response.ok) return [];
       const results = await response.json();
       return Array.isArray(results) ? results.map(item => normalizeNominatimTownCandidate(item, clean)).filter(Boolean) : [];
     }
 
-    async function fetchArcgisTownCandidates(clean) {
+    async function fetchArcgisTownCandidates(clean, signal) {
       const cfg = getTownAddressConfig();
       const city = cfg.city || TOWN_CONFIG?.site?.name || "";
       const state = cfg.state || "";
@@ -22647,7 +22675,8 @@ function startPlayback() {
       }
       if (cfg.searchDistanceMeters) params.set("distance", String(cfg.searchDistanceMeters));
       const response = await fetch(`https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates?${params.toString()}`, {
-        headers: { "Accept": "application/json" }
+        headers: { "Accept": "application/json" },
+        signal
       });
       if (!response.ok) return [];
       const data = await response.json();
@@ -22711,10 +22740,16 @@ function startPlayback() {
     }
 
     async function searchTownAddress(rawValue) {
+      townAddressRequest?.abort();
+      const request = new AbortController();
+      townAddressRequest = request;
       const clean = normalizeTownAddressQuery(rawValue);
       const townName = getTownAddressDisplayName();
       if (!clean) {
-        setTownAddressStatus(`Enter a ${townName} address or street first.`, "error");
+        townAddressRequest = null;
+        const button = document.getElementById("townAddressSearchBtn");
+        if (button) button.disabled = false;
+        setTownAddressStatus(`Enter an address or street in ${townName} first.`, "error");
         return;
       }
       if (!map) ensureMap();
@@ -22725,9 +22760,10 @@ function startPlayback() {
 
       try {
         const candidateSets = await Promise.allSettled([
-          fetchArcgisTownCandidates(clean),
-          fetchNominatimTownCandidates(clean)
+          fetchArcgisTownCandidates(clean, request.signal),
+          fetchNominatimTownCandidates(clean, request.signal)
         ]);
+        if (townAddressRequest !== request || request.signal.aborted) return;
         const candidates = candidateSets.flatMap(result => result.status === "fulfilled" && Array.isArray(result.value) ? result.value : []);
         const match = pickBestTownAddressCandidate(candidates, clean);
         if (!match) {
@@ -22755,9 +22791,14 @@ function startPlayback() {
         map.setView(latLng, Math.max(map.getZoom(), 17), { animate: true });
         setTownAddressStatus(`Closest match: ${label}`, "success");
       } catch (err) {
-        setTownAddressStatus(err && err.message ? err.message : "Address lookup failed. Please try again.", "error");
+        if (townAddressRequest === request && !request.signal.aborted) {
+          setTownAddressStatus(err && err.message ? err.message : "Address lookup failed. Please try again.", "error");
+        }
       } finally {
-        if (button) button.disabled = false;
+        if (townAddressRequest === request) {
+          townAddressRequest = null;
+          if (button) button.disabled = false;
+        }
       }
     }
 
@@ -22848,46 +22889,13 @@ function startPlayback() {
         playButton.style.pointerEvents = "auto";
         updatePlayPauseButton();
 
-        const isInsidePlayButton = event => {
-          if (!event || typeof event.clientX !== "number" || typeof event.clientY !== "number") return false;
-          const rect = playButton.getBoundingClientRect();
-          if (!rect.width || !rect.height) return false;
-
-          const pad = 12;
-          const x = event.clientX;
-          const y = event.clientY;
-          return x >= rect.left - pad && x <= rect.right + pad && y >= rect.top - pad && y <= rect.bottom + pad;
-        };
-
-        const activatePlay = event => {
-          if (event) {
-            event.preventDefault();
-            event.stopPropagation();
-            if (typeof event.stopImmediatePropagation === "function") event.stopImmediatePropagation();
-          }
-
-
-          const now = performance.now ? performance.now() : Date.now();
-          const lockedUntil = Number(playButton.dataset.playLockedUntil || 0);
-          if (now < lockedUntil) return;
-          playButton.dataset.playLockedUntil = String(now + 240);
-
+        playButton.addEventListener("click", event => {
+          event.preventDefault();
+          event.stopPropagation();
           playButton.classList.add("just-pressed");
           window.setTimeout(() => playButton.classList.remove("just-pressed"), 160);
           togglePlayback(event);
-        };
-
-        playButton.addEventListener("pointerdown", activatePlay, { capture:true });
-        playButton.addEventListener("click", activatePlay, { capture:true });
-        playButton.addEventListener("keydown", event => {
-          if (event.key === "Enter" || event.key === " ") activatePlay(event);
         });
-
-
-        document.addEventListener("pointerdown", event => {
-          if (playButton.contains(event.target)) return;
-          if (isInsidePlayButton(event)) activatePlay(event);
-        }, { capture:true });
       }
       const stopBtn = document.getElementById("stopBtn");
       if (stopBtn) stopBtn.addEventListener("click", stopPlayback);
@@ -23319,10 +23327,13 @@ document.querySelectorAll("#downloadExtentControl button[data-extent]").forEach(
           if (!exportInProgress) setDownloadStatus("", false);
         });
         elements.dateText.addEventListener("keydown", event => {
+          if (event.key === "Backspace" || event.key === "Delete") elements.canonical.dataset.userEdited = "1";
           if (event.key === "Enter") {
             event.preventDefault();
-            if (commitExportDateTimeEditor(prefix, { markEdited: true, showError: true, normalize: true })) refresh();
-            elements.dateText.blur();
+            if (commitExportDateTimeEditor(prefix, { markEdited: true, showError: true, normalize: true })) {
+              refresh();
+              elements.dateText.blur();
+            }
           } else if (event.key === "Backspace") {
             event.preventDefault();
             deleteExportDateMaskDigits(elements.dateText, true);
@@ -23338,11 +23349,7 @@ document.querySelectorAll("#downloadExtentControl button[data-extent]").forEach(
           }
         });
         elements.dateText.addEventListener("blur", () => {
-          if (commitExportDateTimeEditor(prefix, { markEdited: true, showError: false, normalize: true })) {
-            refresh();
-          } else {
-            syncExportDateTimeEditorFromCanonical(prefix);
-          }
+          if (commitExportDateTimeEditor(prefix, { markEdited: true, showError: true, normalize: true })) refresh();
         });
         elements.timeSelect.addEventListener("change", () => {
           if (commitExportDateTimeEditor(prefix, { markEdited: true, showError: true, normalize: true })) refresh();
@@ -23382,6 +23389,8 @@ document.querySelectorAll("#downloadExtentControl button[data-extent]").forEach(
 
       document.addEventListener("keydown", e => {
         if (currentDataMode !== "observed" || !currentSeriesHours.length) return;
+        if (document.querySelector("#topTidesModal.open, #datumModal.open, #infoModal.open, #downloadModal.open, #calendarPopover.open, #exportOrderModal.open, #playbackStillThereModal.open")) return;
+        if (document.activeElement?.isContentEditable) return;
         const tag = String(document.activeElement?.tagName || "").toLowerCase();
         if (tag === "input" || tag === "select" || tag === "textarea") return;
         if (e.key === "ArrowRight") {
@@ -24493,13 +24502,7 @@ document.querySelectorAll("#downloadExtentControl button[data-extent]").forEach(
     if (!modal || !btn) return;
 
 
-    if (document.activeElement !== btn) {
-      btn.click();
-    } else {
-      modal.hidden = false;
-      modal.classList.add('open');
-      btn.setAttribute('aria-expanded', 'true');
-    }
+    btn.click();
   }
 
   function bindExportCardClick(){
@@ -24521,7 +24524,7 @@ document.querySelectorAll("#downloadExtentControl button[data-extent]").forEach(
     });
 
     card.addEventListener('keydown', function(event){
-      if (event.key === 'Enter' || event.key === ' ') {
+      if (event.target === card && (event.key === 'Enter' || event.key === ' ')) {
         event.preventDefault();
         openExportModalFromCard();
       }

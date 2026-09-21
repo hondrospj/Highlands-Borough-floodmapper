@@ -104,6 +104,10 @@ try{
   await touch.locator('#legendDock').tap();await touch.waitForTimeout(250);
   assert.equal(await touch.evaluate(()=>document.body.classList.contains('mobile-legend-open')),true);
   await touch.keyboard.press('Escape');
+  await touch.locator('#playBtn').tap();
+  assert.equal(await touch.evaluate(()=>Boolean(playTimer)),true,'Touch starts playback');
+  await touch.locator('#playBtn').tap();
+  assert.equal(await touch.evaluate(()=>Boolean(playTimer)),false,'Touch pauses playback');
   await touch.locator('#mobileControlsToggle').tap();await touch.locator('#mobileControlsClose').tap();
   assert.equal(await touch.evaluate(()=>document.body.classList.contains('mobile-controls-open')),false);
   await touch.close();
