@@ -14702,11 +14702,18 @@ html.win-compact-ui #timelineDock #hourSlider{
       timeZoneName: "short"
     });
 
+    // Depths stay in feet internally; only their display units change.
+    function formatWaterDepth(depth, feetDigits = 2) {
+      if (!Number.isFinite(depth)) return "N/A";
+      if (Math.abs(depth) < 1) return `${Number((depth * 12).toFixed(1))} in`;
+      return `${depth.toFixed(feetDigits)} ft`;
+    }
+
     const DEPTH_LEGEND = [
-      { label: "< 0.10 ft", color: "var(--depth-0)" },
-      { label: "0.10–0.25 ft", color: "var(--depth-1)" },
-      { label: "0.25–0.50 ft", color: "var(--depth-2)" },
-      { label: "0.50–1.00 ft", color: "var(--depth-3)" },
+      { label: "< 1.2 in", color: "var(--depth-0)" },
+      { label: "1.2–3 in", color: "var(--depth-1)" },
+      { label: "3–6 in", color: "var(--depth-2)" },
+      { label: "6–12 in", color: "var(--depth-3)" },
       { label: "1.00–1.50 ft", color: "var(--depth-4)" },
       { label: "1.50–2.00 ft", color: "var(--depth-5)" },
       { label: "2.00–2.50 ft", color: "var(--depth-6)" },
@@ -33719,7 +33726,7 @@ html body #mapTitleBadge #mapTitleLogo{
   }
 
   function v11PopupHtml(value, state){
-    const display = state === "loading" ? "…" : (Number.isFinite(value) ? value.toFixed(2) + " ft" : "N/A");
+    const display = state === "loading" ? "…" : formatWaterDepth(value);
     const note = state === "approximate" ? '<div class="shorely-v11-depth-note">Depth estimated from the displayed map class.</div>' : "";
     return '<div class="shorely-v11-depth-query" role="status" aria-live="polite">' +
       '<h3>' + v11Heading() + '</h3><div class="shorely-v11-depth-value">' + display + '</div>' + note + '</div>';
