@@ -2,6 +2,10 @@
 <!doctype html>
 <html lang="en">
 <head>
+<style>@layer avalon-mobile;</style>
+<link rel="stylesheet" href="assets/avalon-mobile.css?v=20260923-1">
+<script>document.documentElement.classList.add("avalon-mobile-ui");</script>
+
 <meta charset="utf-8" />
   <title>Highlands Flood Mapper</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
@@ -78,6 +82,7 @@
     const mobileLayoutInlineStyles = new Map();
     function setMobileLayoutStyle(el, property, value) {
       if (!el) return;
+      if (isCompactFloodmapperLayout() && document.documentElement.classList.contains("avalon-mobile-ui")) return;
       if (isCompactFloodmapperLayout()) {
         if (!mobileLayoutInlineStyles.has(el)) {
           mobileLayoutInlineStyles.forEach((_, node) => { if (!node.isConnected) mobileLayoutInlineStyles.delete(node); });
@@ -29479,6 +29484,7 @@ html.win-compact-ui body #timelineBubble .timeline-bubble-stage{
   }
 
   function applyTimelinePlayLane(){
+    if (document.documentElement.classList.contains("avalon-mobile-ui") && isCompactTimeline()) return;
     if (isCompactFloodmapperLayout()) return;
     var dock = document.getElementById("timelineDock");
     if (!dock) return;
@@ -31063,6 +31069,8 @@ html.platform-mac-template .export-simple-datetime-field input[type="datetime-lo
   "use strict";
 
 
+  if (document.documentElement.classList.contains("avalon-mobile-ui")) return;
+
   var queued = false;
 
   function syncMobileLegendOffset(){
@@ -31757,6 +31765,7 @@ html.platform-mac-template .export-simple-datetime-field input[type="datetime-lo
 
   function applyCompactMobileLayout(){
     queued = false;
+    if (document.documentElement.classList.contains("avalon-mobile-ui")) return;
     var body = document.body;
     if (!body) return;
     var mobile = isMobileLayout();
@@ -33354,6 +33363,7 @@ html body #mapTitleBadge #mapTitleLogo{
 <script id="shorely-mobile-slider-key-correction-script">
 (function(){
   "use strict";
+  if (document.documentElement.classList.contains("avalon-mobile-ui")) return;
 
   var queued = false;
   var observerStarted = false;
@@ -34155,5 +34165,6 @@ html body #mapTitleBadge #mapTitleLogo{
   #downloadModal .export-simple-datetime-field { min-width:0 !important; }
 </style>
 
+<script src="assets/avalon-mobile.js?v=20260923-1"></script>
 </body>
 </html>
