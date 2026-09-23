@@ -15773,6 +15773,9 @@ function setDatumHelpOpen(isOpen) {
 
     function renderLegend() {
       const list = document.getElementById("legendList");
+      // Avoid tearing down the key during unrelated map and boundary updates.
+      if (list.dataset.renderedLegendMode === currentOverlayMode && list.childElementCount) return;
+      list.dataset.renderedLegendMode = currentOverlayMode;
       const title = document.getElementById("legendTitle");
       const sub = document.getElementById("legendSub");
       const note = document.getElementById("legendNote");
@@ -16077,7 +16080,8 @@ function setDatumHelpOpen(isOpen) {
     }
 
     function getOverlayFilenameCandidates(mode, stageValue) {
-      return [getOverlayFilename(mode, stageValue)];
+      const png = getOverlayFilename(mode, stageValue);
+      return [png.replace(/\.png$/, ".webp"), png];
     }
 
     function getOverlayCandidates(mode, stageValue, phase = "slack") {
@@ -16199,10 +16203,16 @@ function setDatumHelpOpen(isOpen) {
       return promise;
     }
 
+    const RASTER_IMAGE_CACHE_LIMIT = isCompactFloodmapperLayout() ? 2 : 4;
     function getExportImageElement(url) {
       if (!url) return Promise.resolve(null);
       if (exportCancelRequested) return Promise.resolve(null);
-      if (exportImageElementCache.has(url)) return exportImageElementCache.get(url);
+      if (exportImageElementCache.has(url)) {
+        const cached = exportImageElementCache.get(url);
+        exportImageElementCache.delete(url);
+        exportImageElementCache.set(url, cached);
+        return cached;
+      }
       const promise = new Promise(resolve => {
         const img = new Image();
         let settled = false;
@@ -16233,6 +16243,9 @@ function setDatumHelpOpen(isOpen) {
         img.src = url;
       });
       exportImageElementCache.set(url, promise);
+      while (exportImageElementCache.size > RASTER_IMAGE_CACHE_LIMIT) {
+        exportImageElementCache.delete(exportImageElementCache.keys().next().value);
+      }
       return promise;
     }
 
@@ -16308,7 +16321,7 @@ function setDatumHelpOpen(isOpen) {
 
     function cacheFillingComposite(key, record) {
       fillingCompositeCache.set(key, record);
-      while (fillingCompositeCache.size > 48) {
+      while (fillingCompositeCache.size > 4) {
         const oldestKey = fillingCompositeCache.keys().next().value;
         const oldest = fillingCompositeCache.get(oldestKey);
         if (oldest?.url?.startsWith("blob:")) URL.revokeObjectURL(oldest.url);
@@ -16718,7 +16731,7 @@ function setDatumHelpOpen(isOpen) {
 
     function cacheDrainageComposite(key, record) {
       drainageCompositeCache.set(key, record);
-      while (drainageCompositeCache.size > 48) {
+      while (drainageCompositeCache.size > 4) {
         const oldestKey = drainageCompositeCache.keys().next().value;
         const oldest = drainageCompositeCache.get(oldestKey);
         if (oldest?.url?.startsWith("blob:")) URL.revokeObjectURL(oldest.url);
@@ -16779,23 +16792,7 @@ function setDatumHelpOpen(isOpen) {
     }
 
     function preloadAroundHour(index) {
-      if (!currentSeriesHours.length) return;
-      [0, 1, -1, 2, -2, 3, -3].forEach(offset => {
-        const i = index + offset;
-        if (i < 0 || i >= currentSeriesHours.length) return;
-        const entry = currentSeriesHours[i];
-        const stage = getStageValue(entry);
-        if (getOverlayStage(stage) == null) return;
-        const phase = getHydraulicPhaseForEntry(entry, i, currentSeriesHours);
-
-        ["depth", "dynamic"].forEach(mode => {
-          getHydraulicOverlayRecord(mode, stage, phase, entry, currentSeriesHours).then(record => {
-            if (record?.url) return preloadImage(record.url);
-          }).catch(err => {
-            if (!isExportCancelledError(err)) console.warn("Could not preload flood overlay.", err);
-          });
-        });
-      });
+      // Full-resolution composites are loaded only for the selected frame.
     }
 
     async function ensureOverlayBounds(sampleOverlayUrl) {
