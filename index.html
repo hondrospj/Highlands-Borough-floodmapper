@@ -272,6 +272,9 @@
     }
 
     #topBanner .banner-eyebrow{
+      display:flex;
+      align-items:center;
+      gap:10px;
       font-size:11px;
       letter-spacing:.12em;
       text-transform:uppercase;
@@ -14013,11 +14016,10 @@ html.win-compact-ui #timelineDock #hourSlider{
 <body>
   <div id="topBanner">
     <div class="banner-text">
-      <div class="banner-eyebrow">Flood alert</div>
+      <div class="banner-eyebrow">Flood alert <span id="bannerCount">0 active</span></div>
       <div id="bannerTitle" class="banner-title">Checking alerts</div>
       <div id="bannerMeta" class="banner-meta"></div>
     </div>
-    <div id="bannerCount" class="pill">0 active</div>
     <button id="topBannerCloseBtn" type="button" aria-label="Close flood alert">×</button>
   </div>
 
@@ -30276,8 +30278,7 @@ html body #timelineDock #hourSlider{
   html body #rightRail .pill,
   html body .section-kicker,
   html body .range-value,
-  html body .badge,
-  html body #bannerCount{
+  html body .badge{
     background:var(--pj-pill-bg) !important;
     border-color:var(--pj-pill-border) !important;
     color:var(--pj-pill-color) !important;
