@@ -14359,8 +14359,9 @@ html.win-compact-ui #timelineDock #hourSlider{
         </label>
         <label class="download-field">
           Aspect ratio
-          <div id="downloadAspectControl" class="export-segmented" role="tablist" aria-label="Export aspect ratio" style="--seg-cols:3">
-            <button id="exportAspectLandscapeBtn" type="button" class="active" data-aspect="16:9" aria-pressed="true">16:9</button>
+          <div id="downloadAspectControl" class="export-segmented" role="tablist" aria-label="Export aspect ratio" style="--seg-cols:4">
+            <button id="exportAspectViewportBtn" type="button" class="active" data-aspect="viewport" aria-pressed="true">Map view</button>
+            <button id="exportAspectLandscapeBtn" type="button" data-aspect="16:9" aria-pressed="false">16:9</button>
             <button id="exportAspectPortraitBtn" type="button" data-aspect="9:16" aria-pressed="false">9:16</button>
             <button id="exportAspectSquareBtn" type="button" data-aspect="1:1" aria-pressed="false">1:1</button>
           </div>
@@ -14408,7 +14409,7 @@ html.win-compact-ui #timelineDock #hourSlider{
         </section>
         <input id="downloadScopeSelect" type="hidden" value="range" />
             <input id="downloadFormatSelect" type="hidden" value="gif" />
-            <input id="downloadAspectSelect" type="hidden" value="16:9" />
+            <input id="downloadAspectSelect" type="hidden" value="viewport" />
             <input id="downloadExtentSelect" type="hidden" value="current" />
             <input id="downloadSpeedSelect" type="hidden" value="normal" />
             <div id="downloadSummary" class="download-summary" hidden aria-hidden="true"></div>
@@ -17887,8 +17888,8 @@ function normalizeBoundaryRingsFromArcGIS(rings, sourceWkid = 3857) {
     function getDownloadAspectValue() {
       const hiddenAspect = document.getElementById("downloadAspectSelect");
       const activeAspectButton = document.querySelector("#downloadAspectControl button[data-aspect].active");
-      const raw = hiddenAspect?.value || activeAspectButton?.dataset?.aspect || "16:9";
-      const normalized = EXPORT_GIF_ASPECTS[raw] ? raw : "16:9";
+      const raw = hiddenAspect?.value || activeAspectButton?.dataset?.aspect || "viewport";
+      const normalized = raw === "viewport" || EXPORT_GIF_ASPECTS[raw] ? raw : "viewport";
       if (hiddenAspect && hiddenAspect.value !== normalized) hiddenAspect.value = normalized;
       return normalized;
     }
@@ -17956,16 +17957,47 @@ function normalizeBoundaryRingsFromArcGIS(rings, sourceWkid = 3857) {
       return true;
     }
 
+    // Freeze the visible geographic area once for the entire export job.
+    let exportViewportBounds = null;
+
+    function getActiveMapBounds() {
+      const activeMap = window.NORTH_WILDWOOD_3D?.getMap?.();
+      const bounds = document.body.classList.contains("map-3d-ready") && activeMap
+        ? activeMap.getBounds() : map?.getBounds();
+      if (!bounds) return null;
+      const south = bounds.getSouth(), north = bounds.getNorth();
+      const west = bounds.getWest(), east = bounds.getEast();
+      if (![south, north, west, east].every(Number.isFinite) || north <= south || east <= west) return null;
+      return L.latLngBounds([[south, west], [north, east]]);
+    }
+
+    function getExportViewportAspect() {
+      const bounds = exportViewportBounds || getActiveMapBounds();
+      const nw = bounds && L.CRS.EPSG3857.latLngToPoint(bounds.getNorthWest(), 0);
+      const se = bounds && L.CRS.EPSG3857.latLngToPoint(bounds.getSouthEast(), 0);
+      const ratio = nw && se ? (se.x - nw.x) / (se.y - nw.y) : 16 / 9;
+      const longEdge = getDownloadFormatValue() === "png" ? 2160 : 1440;
+      const width = Math.max(2, Math.round(longEdge * Math.min(1, ratio)));
+      const height = Math.max(2, Math.round(longEdge / Math.max(1, ratio)));
+      return { value: "viewport", width, height, label: "Map view", resolutionLabel: `${width} × ${height}` };
+    }
+
     function fitExportMapToSelectedExtent(mapInstance) {
       if (!mapInstance) return;
       const mode = getDownloadExtentValue();
 
-      if (mode === "current" && map && typeof map.getCenter === "function" && typeof map.getZoom === "function") {
-        try {
-          mapInstance.setView(map.getCenter(), map.getZoom(), { animate: false });
-          return;
-        } catch (e) {
-        }
+      if (mode === "current") {
+        const visibleBounds = exportViewportBounds || getActiveMapBounds();
+        if (!visibleBounds) throw new Error("The current map view is not ready. Please try again.");
+        // Fractional zoom preserves the selected area at any output resolution.
+        // A chosen social aspect crops around its center instead of zooming out.
+        mapInstance.options.zoomSnap = 0;
+        const zoom = mapInstance.getBoundsZoom(visibleBounds, true);
+        const nw = mapInstance.project(visibleBounds.getNorthWest(), zoom);
+        const se = mapInstance.project(visibleBounds.getSouthEast(), zoom);
+        const center = mapInstance.unproject(nw.add(se).divideBy(2), zoom);
+        mapInstance.setView(center, zoom, { animate: false });
+        return;
       }
 
       let bounds = null;
@@ -17988,6 +18020,7 @@ function normalizeBoundaryRingsFromArcGIS(rings, sourceWkid = 3857) {
 
 
     function getExportAspectConfig(aspect = null) {
+      if ((aspect || getDownloadAspectValue()) === "viewport") return getExportViewportAspect();
       return EXPORT_GIF_ASPECTS[aspect || getDownloadAspectValue()] || EXPORT_GIF_ASPECTS["16:9"];
     }
 
@@ -19122,7 +19155,7 @@ function updateExportSegmentedUI() {
       };
 
       setHidden("downloadFormatSelect", "gif");
-      setHidden("downloadAspectSelect", "16:9");
+      setHidden("downloadAspectSelect", "viewport");
       setHidden("downloadSpeedSelect", "normal");
       setHidden("downloadScopeSelect", "range");
       setHidden("downloadExtentSelect", "current");
@@ -19131,15 +19164,17 @@ function updateExportSegmentedUI() {
       setDownloadStatus("", false);
       updateExportSegmentedUI();
       syncDownloadRangeInputs(true);
-      applyExportStageAspect("16:9");
+      applyExportStageAspect("viewport");
       updateDownloadSummary();
       setTimeout(() => document.getElementById("downloadResetBtn")?.blur(), 0);
     }
 
     function setDownloadBusy(isBusy, message = "") {
       if (isBusy) {
+        if (!exportInProgress) exportViewportBounds = getActiveMapBounds();
         exportCancelRequested = false;
       } else {
+        exportViewportBounds = null;
         exportCancelRequested = false;
         activeGifExport = null;
       }
@@ -19368,9 +19403,9 @@ function updateExportSegmentedUI() {
       exportMap = L.map("exportMap", {
         zoomControl: false,
         attributionControl: false,
-        minZoom: 11,
-        maxZoom: 19,
-        zoomSnap: 1,
+        minZoom: 0,
+        maxZoom: 24,
+        zoomSnap: 0,
         zoomDelta: 1,
         preferCanvas: true,
         zoomAnimation: false,
@@ -19398,8 +19433,9 @@ function updateExportSegmentedUI() {
           }
           exportBasemapColorLayer = L.tileLayer(FALLBACK_BASEMAP_URL, {
             attribution: "&copy; OpenStreetMap contributors &copy; CARTO",
-            minZoom: 11,
-            maxZoom: 19,
+            minZoom: 0,
+            maxZoom: 24,
+            maxNativeZoom: 19,
             subdomains: "abc",
             crossOrigin: true,
             updateWhenIdle: true,
@@ -19411,8 +19447,9 @@ function updateExportSegmentedUI() {
       } else {
         exportBasemapColorLayer = L.tileLayer(FALLBACK_BASEMAP_URL, {
           attribution: "&copy; OpenStreetMap contributors &copy; CARTO",
-          minZoom: 11,
-          maxZoom: 19,
+          minZoom: 0,
+          maxZoom: 24,
+          maxNativeZoom: 19,
           subdomains: "abc",
           crossOrigin: true,
           updateWhenIdle: true,
@@ -19424,8 +19461,9 @@ function updateExportSegmentedUI() {
 
       exportRoadsLayer = L.tileLayer(ROAD_LABELS_URL, {
         attribution: "&copy; OpenStreetMap contributors &copy; CARTO",
-        minZoom: 11,
-        maxZoom: 20,
+        minZoom: 0,
+        maxZoom: 24,
+        maxNativeZoom: 20,
         subdomains: "abcd",
         crossOrigin: true,
         opacity: 0,
@@ -19444,7 +19482,7 @@ function updateExportSegmentedUI() {
         lineJoin: "round"
       });
 
-      exportMap.fitBounds(getBoundaryDrivenOverlayBounds(), { padding: [20, 20] });
+      fitExportMapToSelectedExtent(exportMap);
       return exportMap;
     }
 
@@ -23124,7 +23162,7 @@ function startPlayback() {
           event.preventDefault();
           const input = document.getElementById("downloadAspectSelect");
           if (!input) return;
-          input.value = btn.dataset.aspect || "16:9";
+          input.value = btn.dataset.aspect || "viewport";
           if (!exportInProgress) setDownloadStatus("", false);
           applyExportStageAspect(input.value);
           updateExportSegmentedUI();
