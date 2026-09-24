@@ -34577,15 +34577,13 @@ html body #mapTitleBadge #mapTitleLogo{
     nodes.forEach(el => ro.observe(el));
     const mo = new MutationObserver(schedule);
     mo.observe(document.body, {attributes:true,attributeFilter:['class']});
-    nodes.forEach(el => mo.observe(el, {attributes:true,attributeFilter:['style','class'],childList:el.id==='rightRail'}));
+    // fit() writes inline styles on these panes. Watching those writes schedules
+    // fit() again every frame and makes the controls visibly blink.
+    nodes.forEach(el => mo.observe(el, {attributes:true,attributeFilter:['class'],childList:el.id==='rightRail'}));
     const legend = document.getElementById('legendDock');
-    if (legend) mo.observe(legend, {attributes:true,attributeFilter:['style','class']});
+    if (legend) mo.observe(legend, {attributes:true,attributeFilter:['class']});
     const banner = document.getElementById('topBanner');
-    if (banner) { ro.observe(banner); mo.observe(banner, {attributes:true,attributeFilter:['style','class']}); }
-    for (const selector of ['#timelineDock .timeline-top','#timelineDock .timeline-controls','#timelineFloodKey','#timelineDayTabs','#timelineDock .timeline-trackRow','#hourSlider','#playBtn']) {
-      const node = document.querySelector(selector);
-      if (node) mo.observe(node, {attributes:true,attributeFilter:['style']});
-    }
+    if (banner) { ro.observe(banner); mo.observe(banner, {attributes:true,attributeFilter:['class']}); }
     const app = document.getElementById('app');
     if (app) mo.observe(app, {childList:true});
     mo.observe(document.getElementById('leftPanel'), {childList:true});
