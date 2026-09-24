@@ -34575,7 +34575,22 @@ html body #mapTitleBadge #mapTitleLogo{
     addEventListener('orientationchange', schedule, {passive:true});
     const ro = new ResizeObserver(schedule);
     nodes.forEach(el => ro.observe(el));
-    const mo = new MutationObserver(schedule);
+    const lastClassValue = new WeakMap();
+    const mo = new MutationObserver(records => {
+      let layoutChanged = false;
+      for (const record of records) {
+        if (record.type !== 'attributes' || record.attributeName !== 'class') {
+          layoutChanged = true;
+          continue;
+        }
+        const value = record.target.getAttribute('class');
+        if (!lastClassValue.has(record.target) || lastClassValue.get(record.target) !== value) {
+          lastClassValue.set(record.target, value);
+          layoutChanged = true;
+        }
+      }
+      if (layoutChanged) schedule();
+    });
     mo.observe(document.body, {attributes:true,attributeFilter:['class']});
     // fit() writes inline styles on these panes. Watching those writes schedules
     // fit() again every frame and makes the controls visibly blink.
