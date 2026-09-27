@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-26T04:00:00Z",
+  "generatedAt": "2026-09-27T04:00:00Z",
   "schema": "single-zone-top-tides-v1",
   "town": "Highlands Borough",
   "toptides": [
@@ -126,6 +126,18 @@
       "rank": 7
     },
     {
+      "rank": 8,
+      "height_ft": 5.87,
+      "height_navd88_ft": 5.87,
+      "height_mllw_ft": 8.0,
+      "date": "2026-09-26",
+      "display_date": "Sep 26, 2026",
+      "zoneId": "default",
+      "zoneLabel": "Highlands Borough",
+      "gaugeName": "Sea Bright",
+      "source": "observed-archive"
+    },
+    {
       "height_ft": 5.82,
       "height_navd88_ft": 5.82,
       "height_mllw_ft": null,
@@ -143,7 +155,7 @@
       "officialCrestReportedTime": "",
       "officialCrestQualificationCodes": "1",
       "source_url": "https://nwis.waterdata.usgs.gov/nwis/peak?site_no=01407535&agency_cd=USGS&format=rdb",
-      "rank": 8
+      "rank": 9
     },
     {
       "height_ft": 5.66,
@@ -163,7 +175,7 @@
       "officialCrestReportedTime": "",
       "officialCrestQualificationCodes": "1",
       "source_url": "https://nwis.waterdata.usgs.gov/nwis/peak?site_no=01407535&agency_cd=USGS&format=rdb",
-      "rank": 9
+      "rank": 10
     },
     {
       "height_ft": 5.58,
@@ -183,7 +195,7 @@
       "officialCrestReportedTime": "",
       "officialCrestQualificationCodes": "1",
       "source_url": "https://nwis.waterdata.usgs.gov/nwis/peak?site_no=01407535&agency_cd=USGS&format=rdb",
-      "rank": 10
+      "rank": 11
     },
     {
       "height_ft": 5.42,
@@ -203,7 +215,7 @@
       "officialCrestReportedTime": "",
       "officialCrestQualificationCodes": "1",
       "source_url": "https://nwis.waterdata.usgs.gov/nwis/peak?site_no=01407535&agency_cd=USGS&format=rdb",
-      "rank": 11
+      "rank": 12
     },
     {
       "height_ft": 5.41,
@@ -223,7 +235,7 @@
       "officialCrestReportedTime": "",
       "officialCrestQualificationCodes": "1",
       "source_url": "https://nwis.waterdata.usgs.gov/nwis/peak?site_no=01407535&agency_cd=USGS&format=rdb",
-      "rank": 12
+      "rank": 13
     },
     {
       "height_ft": 5.41,
@@ -243,7 +255,7 @@
       "officialCrestReportedTime": "",
       "officialCrestQualificationCodes": "1",
       "source_url": "https://nwis.waterdata.usgs.gov/nwis/peak?site_no=01407535&agency_cd=USGS&format=rdb",
-      "rank": 13
+      "rank": 14
     },
     {
       "height_ft": 5.34,
@@ -263,7 +275,7 @@
       "officialCrestReportedTime": "",
       "officialCrestQualificationCodes": "1",
       "source_url": "https://nwis.waterdata.usgs.gov/nwis/peak?site_no=01407535&agency_cd=USGS&format=rdb",
-      "rank": 14
+      "rank": 15
     },
     {
       "height_ft": 5.24,
@@ -283,10 +295,10 @@
       "officialCrestReportedTime": "",
       "officialCrestQualificationCodes": "1",
       "source_url": "https://nwis.waterdata.usgs.gov/nwis/peak?site_no=01407535&agency_cd=USGS&format=rdb",
-      "rank": 15
+      "rank": 16
     },
     {
-      "rank": 16,
+      "rank": 17,
       "height_ft": 5.17,
       "height_navd88_ft": 5.17,
       "height_mllw_ft": 7.3,
@@ -315,7 +327,7 @@
       "officialCrestReportedTime": "",
       "officialCrestQualificationCodes": "1",
       "source_url": "https://nwis.waterdata.usgs.gov/nwis/peak?site_no=01407535&agency_cd=USGS&format=rdb",
-      "rank": 17
+      "rank": 18
     },
     {
       "height_ft": 5.12,
@@ -335,7 +347,7 @@
       "officialCrestReportedTime": "",
       "officialCrestQualificationCodes": "1",
       "source_url": "https://nwis.waterdata.usgs.gov/nwis/peak?site_no=01407535&agency_cd=USGS&format=rdb",
-      "rank": 18
+      "rank": 19
     },
     {
       "height_ft": 5.09,
@@ -355,10 +367,10 @@
       "officialCrestReportedTime": "",
       "officialCrestQualificationCodes": "1",
       "source_url": "https://nwis.waterdata.usgs.gov/nwis/peak?site_no=01407535&agency_cd=USGS&format=rdb",
-      "rank": 19
+      "rank": 20
     },
     {
-      "rank": 20,
+      "rank": 21,
       "height_ft": 5.05,
       "height_navd88_ft": 5.05,
       "height_mllw_ft": 7.18,
@@ -387,10 +399,10 @@
       "officialCrestReportedTime": "",
       "officialCrestQualificationCodes": "1",
       "source_url": "https://nwis.waterdata.usgs.gov/nwis/peak?site_no=01407535&agency_cd=USGS&format=rdb",
-      "rank": 21
+      "rank": 22
     },
     {
-      "rank": 22,
+      "rank": 23,
       "height_ft": 5.04,
       "height_navd88_ft": 5.04,
       "height_mllw_ft": 7.17,
@@ -419,7 +431,7 @@
       "officialCrestReportedTime": "",
       "officialCrestQualificationCodes": "1",
       "source_url": "https://nwis.waterdata.usgs.gov/nwis/peak?site_no=01407535&agency_cd=USGS&format=rdb",
-      "rank": 23
+      "rank": 24
     },
     {
       "height_ft": 4.98,
@@ -439,7 +451,7 @@
       "officialCrestReportedTime": "",
       "officialCrestQualificationCodes": "1",
       "source_url": "https://nwis.waterdata.usgs.gov/nwis/peak?site_no=01407535&agency_cd=USGS&format=rdb",
-      "rank": 24
+      "rank": 25
     },
     {
       "height_ft": 4.91,
@@ -459,10 +471,10 @@
       "officialCrestReportedTime": "",
       "officialCrestQualificationCodes": "1",
       "source_url": "https://nwis.waterdata.usgs.gov/nwis/peak?site_no=01407535&agency_cd=USGS&format=rdb",
-      "rank": 25
+      "rank": 26
     },
     {
-      "rank": 26,
+      "rank": 27,
       "height_ft": 4.87,
       "height_navd88_ft": 4.87,
       "height_mllw_ft": 7.0,
@@ -491,7 +503,7 @@
       "officialCrestReportedTime": "",
       "officialCrestQualificationCodes": "1",
       "source_url": "https://nwis.waterdata.usgs.gov/nwis/peak?site_no=01407535&agency_cd=USGS&format=rdb",
-      "rank": 27
+      "rank": 28
     },
     {
       "height_ft": 4.75,
@@ -511,7 +523,7 @@
       "officialCrestReportedTime": "",
       "officialCrestQualificationCodes": "1",
       "source_url": "https://nwis.waterdata.usgs.gov/nwis/peak?site_no=01407535&agency_cd=USGS&format=rdb",
-      "rank": 28
+      "rank": 29
     },
     {
       "height_ft": 4.63,
@@ -531,7 +543,7 @@
       "officialCrestReportedTime": "",
       "officialCrestQualificationCodes": "1",
       "source_url": "https://nwis.waterdata.usgs.gov/nwis/peak?site_no=01407535&agency_cd=USGS&format=rdb",
-      "rank": 29
+      "rank": 30
     },
     {
       "height_ft": 4.61,
@@ -551,7 +563,7 @@
       "officialCrestReportedTime": "",
       "officialCrestQualificationCodes": "1",
       "source_url": "https://nwis.waterdata.usgs.gov/nwis/peak?site_no=01407535&agency_cd=USGS&format=rdb",
-      "rank": 30
+      "rank": 31
     },
     {
       "height_ft": 4.58,
@@ -571,7 +583,7 @@
       "officialCrestReportedTime": "",
       "officialCrestQualificationCodes": "1",
       "source_url": "https://nwis.waterdata.usgs.gov/nwis/peak?site_no=01407535&agency_cd=USGS&format=rdb",
-      "rank": 31
+      "rank": 32
     },
     {
       "height_ft": 4.12,
@@ -591,7 +603,7 @@
       "officialCrestReportedTime": "",
       "officialCrestQualificationCodes": "1",
       "source_url": "https://nwis.waterdata.usgs.gov/nwis/peak?site_no=01407535&agency_cd=USGS&format=rdb",
-      "rank": 32
+      "rank": 33
     }
   ]
 }
