@@ -15081,13 +15081,16 @@ function cloneStyleObject(value) {
     }
 
     function normalizeStageValue(value) {
+      if (value == null || typeof value === "boolean" ||
+          (typeof value !== "number" && typeof value !== "string") ||
+          (typeof value === "string" && !value.trim())) return null;
       const n = Number(value);
       if (!Number.isFinite(n)) return null;
       return n;
     }
 
     function convertStageForDisplay(value) {
-      const n = Number(value);
+      const n = normalizeStageValue(value);
       if (!Number.isFinite(n)) return null;
       return n + (DATUM_OFFSETS[currentDatum] || 0);
     }
@@ -15574,6 +15577,13 @@ function parseStoredLocalNyToDate(timeEST) {
         value: stage,
         sourceResolutionMinutes: options.sourceResolutionMinutes ?? detectSeriesResolutionMinutes(options.sourceEntries || []),
         isInterpolatedTimelineFrame: true,
+        isMeasuredQuarterHourArchive: false,
+        observationQuality: "interpolated",
+        interpolationSpanSeconds: (afterItem.t - beforeItem.t) / 1000,
+        isMissingObservedHour: false,
+        isMissingTimelineFrame: false,
+        isFittedCrestFrame: false,
+        isOfficialCrestFrame: false,
         interpolationStartUtc: new Date(beforeItem.t).toISOString(),
         interpolationEndUtc: new Date(afterItem.t).toISOString()
       }, slotMs, intervalMinutes, options);
@@ -15653,10 +15663,25 @@ function parseStoredLocalNyToDate(timeEST) {
     }
 
     function buildObservedQuarterHourDisplaySeries(dayRecord, dateStr) {
-      const source = getObservedSourceHoursForDay(dayRecord);
+      let source = getObservedSourceHoursForDay(dayRecord);
       const start = parseStoredLocalNyToDate(`${dateStr}T00:00`);
       const end = parseStoredLocalNyToDate(`${dateStr}T23:45`);
       const sourceResolutionMinutes = detectSeriesResolutionMinutes(source);
+      // A real next-day midnight observation completes the last three frames.
+      // Never extrapolate or borrow an endpoint from a different gauge archive.
+      if (!dayRecord?.isLewesSurrogate) {
+        const nextDate = addDaysToDateKey(dateStr, 1);
+        const nextDay = getObservedDayRecord(nextDate);
+        const nextMidnight = parseStoredLocalNyToDate(`${nextDate}T00:00`);
+        if (nextDay && !nextDay.isLewesSurrogate && nextMidnight) {
+          const endpoint = getObservedSourceHoursForDay(nextDay).find(entry =>
+            !entry.isDailyPeakOnly && entry.observationInterval !== "daily"
+            && !entry.isMissingObservedHour && !entry.isMissingTimelineFrame
+            && entryTimeMs(entry) === nextMidnight.getTime()
+            && Number.isFinite(getStageValue(entry)));
+          if (endpoint) source = [...source, endpoint];
+        }
+      }
       const series = buildQuarterHourTimelineSeries(source, {
         kind: "observed",
         observedDate: dateStr,
@@ -15878,7 +15903,7 @@ function setDatumHelpOpen(isOpen) {
     }
 
     function getOverlayStage(value) {
-      const n = Number(value);
+      const n = normalizeStageValue(value);
       if (!Number.isFinite(n)) return null;
       const minimum = MIN_DEPTH_STAGE;
       const clamped = Math.max(minimum, Math.min(MAX_STAGE, n));
@@ -16092,6 +16117,7 @@ function setDatumHelpOpen(isOpen) {
 
     function getTimelineHourColor(entry) {
       const rawStage = getStageValue(entry);
+      if (!Number.isFinite(rawStage) || entry?.isMissingObservedHour || entry?.isMissingTimelineFrame) return "rgba(133,146,168,.90)";
       if (currentOverlayMode === "dynamic") {
         return getImpactTimelineColor(rawStage);
       }
@@ -20916,6 +20942,7 @@ function getEntryESTDate(entry) {
         const k = key.toLowerCase();
         if (!/(navd|stage|water|level|height)/.test(k)) continue;
         if (/(peak|max|min|hour|index|rank|date|time|class|source)/.test(k)) continue;
+        if (entry[key] == null || entry[key] === "") continue;
         const n = Number(entry[key]);
         if (Number.isFinite(n)) return n;
       }
