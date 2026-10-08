@@ -14079,7 +14079,7 @@ html body:not(.mobile-optimized) #rightRail > .layers-card:has(.shorelysafe-came
 .webcam-map-marker { box-sizing:border-box; width:36px; height:36px; padding:7px; background:#12495a; color:white; border:2px solid white; border-radius:50%; box-shadow:0 2px 7px #0006; cursor:pointer; }
 .webcam-map-marker svg { display:block; width:100%; height:100%; fill:none; stroke:currentColor; stroke-width:1.8; stroke-linejoin:round; }
 .webcam-map-marker:focus-visible, #webcamPanel button:focus-visible, #webcamPanel a:focus-visible, #webcamPanel select:focus-visible { outline:3px solid #e49b24; outline-offset:2px; }
-#webcamPanel { position:absolute; top:140px; left:50%; transform:translateX(-50%); z-index:9100; box-sizing:border-box; width:min(400px,calc(100% - 24px)); max-height:calc(100% - 270px); overflow:auto; overscroll-behavior:contain; border:1px solid #425069; border-radius:13px; background:#121d2d; color:#edf3ff; box-shadow:0 6px 24px #0006; padding:12px; font:12px/1.35 system-ui,sans-serif; text-align:left; cursor:default; }
+#webcamPanel { position:absolute; top:140px; left:50%; transform:translateX(-50%); z-index:9100; box-sizing:border-box; width:min(400px,calc(100% - 24px)); max-height:calc(100% - 270px); overflow:auto; overscroll-behavior:contain; border:1px solid #425069; border-radius:13px; background:#121d2d; color:#edf3ff; box-shadow:0 6px 24px #0006; padding:12px; font:12px/1.35 system-ui,sans-serif; text-align:left; cursor:default; pointer-events:auto !important; }
 #webcamPanel .webcam-heading { display:flex; align-items:flex-start; justify-content:space-between; gap:8px; }
 #webcamPanel h2 { margin:0; font-size:16px; line-height:1.25; }
 #webcamLocation { margin:5px 0 10px; font-size:11px; color:#b8cbe1; }
@@ -35428,7 +35428,10 @@ html body #mapTitleBadge #mapTitleLogo{
     choice.value = camera.id;
     mountPanel();
     panel.hidden = false;
-    if (document.body.classList.contains("mobile-controls-open")) document.getElementById("mobileControlsClose")?.click();
+    if (document.body.classList.contains("mobile-controls-open")) {
+      if (typeof setMobileControlsOpen === "function") setMobileControlsOpen(false);
+      else document.getElementById("mobileControlsToggle")?.click();
+    }
     loadPlayer(camera);
     requestAnimationFrame(() => { if (!panel.hidden) closeButton.focus({ preventScroll: true }); });
   }
