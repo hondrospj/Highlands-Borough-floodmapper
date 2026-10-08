@@ -14117,6 +14117,9 @@ html body #mobileRailMount .layers-card .layer-item.shorelysafe-camera-item {
 .shorelysafe-camera-item .layer-meta { display:flex !important; flex-wrap:wrap; align-items:center; gap:6px !important; }
 .shorelysafe-camera-item #webcamsBrowse { margin:0; padding:4px 6px; font-size:10px; min-height:24px; white-space:nowrap; }
 #webcamPanel .webcam-choices { flex-wrap:wrap; }
+/* Give the camera label and viewer button a full row in compact layer grids. */
+.shorelysafe-camera-item { grid-column:1 / -1 !important; }
+.shorelysafe-camera-item #webcamsBrowse { width:auto !important; min-width:0 !important; height:24px !important; min-height:24px !important; margin:0 !important; padding:2px 6px !important; font-size:10px !important; line-height:1.1 !important; white-space:nowrap !important; }
 </style>
 </head>
 <body data-shorelysafe-ui="20261008-v1">
