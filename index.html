@@ -14073,7 +14073,7 @@ html.win-compact-ui #timelineDock #hourSlider{
   
 <style id="shorelysafeWebcamsStyle">
 #webcamPanel[hidden], #webcamPanel [hidden] { display:none !important; }
-.shorelysafe-camera-item { grid-column:1 !important; }
+.shorelysafe-camera-item { grid-column:var(--webcam-column,1) !important; }
 .shorelysafe-camera-item .layer-meta { display:flex; align-items:center; }
 html body:not(.mobile-optimized) #rightRail > .layers-card:has(.shorelysafe-camera-item) { height:auto !important; min-height:0 !important; max-height:none !important; flex-shrink:0 !important; }
 .webcam-map-marker { box-sizing:border-box; width:36px; height:36px; padding:7px; background:#12495a; color:white; border:2px solid white; border-radius:50%; box-shadow:0 2px 7px #0006; cursor:pointer; }
@@ -14084,7 +14084,8 @@ html body:not(.mobile-optimized) #rightRail > .layers-card:has(.shorelysafe-came
 #webcamPanel h2 { margin:0; font-size:16px; line-height:1.25; }
 #webcamLocation { margin:5px 0 10px; font-size:11px; color:#b8cbe1; }
 #webcamPanel button, #webcamChoice { font:inherit; color:#d9eaff; background:#213047; border:1px solid #425069; border-radius:6px; cursor:pointer; }
-#webcamClose { flex:0 0 30px; width:30px; height:30px; font-size:23px !important; line-height:1; }
+#webcamPanel button { min-height:0 !important; padding:3px 6px !important; font-size:11px !important; }
+#webcamPanel #webcamClose { flex:0 0 32px; width:32px; height:32px; min-height:32px !important; padding:0 !important; font-size:23px !important; line-height:1; }
 #webcamChoice { width:100%; margin-bottom:9px; padding:6px; }
 #webcamPanel .webcam-frame { width:100%; aspect-ratio:16 / 9; background:#102535; border-radius:7px; overflow:hidden; }
 #webcamPanel iframe, #webcamPanel .webcam-frame img { display:block; width:100%; height:100%; border:0; object-fit:contain; }
@@ -14092,13 +14093,14 @@ html body:not(.mobile-optimized) #rightRail > .layers-card:has(.shorelysafe-came
 #webcamLocate { padding:3px 6px; }
 #webcamPanel .webcam-source { display:flex; align-items:center; flex-wrap:wrap; gap:6px; color:#b8cbe1; font-size:9px; }
 #webcamPanel a { color:#93c6ff; text-decoration:underline; }
-#webcamRetry { padding:0 4px; font-size:15px !important; }
+#webcamPanel #webcamRetry { padding:0 4px !important; font-size:15px !important; }
 #webcamOtherSources { margin-top:8px; font-size:10px; }
 #webcamOtherSources div { display:flex; gap:6px; flex-wrap:wrap; margin-top:5px; }
 #webcamPanel[data-player-state="unavailable"] #webcamStatus { color:#ffcb85; }
 @media (max-width:900px), (max-height:560px) and (pointer:coarse) {
   #webcamPanel { top:85px; width:min(400px,calc(100% - 16px)); max-height:calc(100dvh - 205px); padding:10px; }
-  #webcamClose { width:36px; height:36px; flex-basis:36px; }
+  #webcamPanel #webcamClose { width:44px; height:44px; min-height:44px !important; flex-basis:44px; }
+  #webcamPanel #webcamLocate, #webcamPanel #webcamRetry { min-height:36px !important; }
   #webcamChoice { min-height:36px; }
   #webcamPanel .webcam-frame { max-height:34dvh; }
 }
@@ -35364,7 +35366,7 @@ html body #mapTitleBadge #mapTitleLogo{
     player.onload = () => {
       if (frame !== player) return;
       panel.dataset.playerState = camera.kind === "image" ? "image-open" : "player-open";
-      status.textContent = camera.kind === "image" ? "Camera image · refreshes every 60s" : "Camera video · press Play if needed";
+      status.textContent = camera.kind === "image" ? "Camera image · refreshes every 60s" : "Camera player · availability shown by provider";
       // A cross-origin player load does not establish that its video is current.
     };
     frame = player;
@@ -35403,6 +35405,17 @@ html body #mapTitleBadge #mapTitleLogo{
     }
   }
 
+  function syncCameraRow() {
+    const row = toggle.closest(".layer-item");
+    const parcels = document.getElementById("parcelsToggle")?.closest(".layer-item");
+    if (!row) return;
+    const list = row.parentElement;
+    const listRect = list.getBoundingClientRect();
+    const parcelRect = parcels?.getBoundingClientRect();
+    const column = parcelRect && parcelRect.width > 0 && parcelRect.left >= listRect.left + listRect.width / 2 ? "2" : "1";
+    row.style.setProperty("--webcam-column", column);
+  }
+
   function showCamera(camera, trigger) {
     if (panel.hidden) returnFocus = trigger || toggle;
     selected = camera;
@@ -35431,6 +35444,7 @@ html body #mapTitleBadge #mapTitleLogo{
   }
 
   function syncMarkers() {
+    syncCameraRow();
     const currentMap = typeof map !== "undefined" ? map : null;
     const currentGl = window.NORTH_WILDWOOD_3D?.getMap?.();
     const useGl = Boolean(currentGl && document.body.classList.contains("map-3d-ready"));
@@ -35505,6 +35519,7 @@ html body #mapTitleBadge #mapTitleLogo{
   });
   new MutationObserver(syncMarkers).observe(document.body, { attributes: true, attributeFilter: ["class"] });
   window.addEventListener("load", syncMarkers);
+  window.addEventListener("resize", syncCameraRow);
   window.addEventListener("pagehide", () => setEnabled(false));
   window.addEventListener("pageshow", event => { if (event.persisted) setEnabled(false); });
   setEnabled(false);
