@@ -14122,7 +14122,7 @@ html body #mobileRailMount .layers-card .layer-item.shorelysafe-camera-item {
 .shorelysafe-camera-item #webcamsBrowse { width:auto !important; min-width:0 !important; height:24px !important; min-height:24px !important; margin:0 !important; padding:2px 6px !important; font-size:10px !important; line-height:1.1 !important; white-space:nowrap !important; }
 </style>
 </head>
-<body data-shorelysafe-ui="20261008-v1">
+<body data-flood-frame-swap="decode-before-swap-20261008" data-shorelysafe-ui="20261008-v1">
   <div id="topBanner">
     <div class="banner-text">
       <div class="banner-eyebrow">Flood alert <span id="bannerCount">0 active</span></div>
@@ -16322,12 +16322,15 @@ function setDatumHelpOpen(isOpen) {
         if (cancelIfRequested()) return;
         if (exportInProgress) cancelTimer = window.setInterval(cancelIfRequested, 80);
         img.decoding = "async";
-        img.onload = () => done(url);
+        img.onload = async () => done(await decodeFloodFrameImage(img) ? url : null);
         img.onerror = () => done(null);
         img.src = url;
       });
 
       preloadPromiseCache.set(url, promise);
+      promise.then(result => {
+        if (!result && preloadPromiseCache.get(url) === promise) preloadPromiseCache.delete(url);
+      });
       return promise;
     }
 
@@ -20795,6 +20798,14 @@ function getUniqueExportStages(frameItems) {
       }
     }
 
+    async function decodeFloodFrameImage(image) {
+      if (!image || !image.complete || !image.naturalWidth) return false;
+      if (typeof image.decode === "function") {
+        try { await image.decode(); } catch (_) { return false; }
+      }
+      return image.complete && image.naturalWidth > 0;
+    }
+
     function clearFloodLayer() {
       if (pendingFloodLayer && map && map.hasLayer(pendingFloodLayer)) {
         map.removeLayer(pendingFloodLayer);
@@ -21752,7 +21763,10 @@ function formatSelectedObservedDate(dateStr) {
       }
 
       const overlayUrl = match.url;
-      await preloadImage(overlayUrl);
+      if (!await preloadImage(overlayUrl)) {
+        if (token === lastRenderToken) clearFloodLayer();
+        return false;
+      }
       if (token !== lastRenderToken) return;
 
       try {
@@ -21784,34 +21798,54 @@ function formatSelectedObservedDate(dateStr) {
 
       pendingFloodLayer = nextLayer;
 
-      nextLayer.once("load", () => {
-        if (token !== lastRenderToken) {
+      return await new Promise(resolve => {
+        nextLayer.once("load", async () => {
+          if (token !== lastRenderToken) {
+            if (map.hasLayer(nextLayer)) map.removeLayer(nextLayer);
+            resolve(false);
+            return;
+          }
+  
+          // Keep the displayed frame until the replacement pixels are ready.
+          if (!await decodeFloodFrameImage(nextLayer.getElement()) || token !== lastRenderToken) {
+            if (map.hasLayer(nextLayer)) map.removeLayer(nextLayer);
+            if (pendingFloodLayer === nextLayer) pendingFloodLayer = null;
+            if (token === lastRenderToken) {
+              clearFloodLayer();
+              toast("The selected flood image could not load. Please try again.");
+              if (typeof markInitialFloodFrameFailed === "function") markInitialFloodFrameFailed();
+            }
+            resolve(false);
+            return;
+          }
+
+          nextLayer.setOpacity(overlayOpacity);
+          currentFloodLayer = nextLayer;
+          pendingFloodLayer = null;
+  
+          if (previousLayer && map.hasLayer(previousLayer)) {
+            map.removeLayer(previousLayer);
+          }
+  
+          if (!mapHasFit && floodLatLngBounds) {
+            map.fitBounds(floodLatLngBounds, { padding: [16, 16] });
+            mapHasFit = true;
+          }
+          resolve(true);
+        });
+  
+        nextLayer.on("error", () => {
+          if (token !== lastRenderToken) { resolve(false); return; }
           if (map.hasLayer(nextLayer)) map.removeLayer(nextLayer);
-          return;
-        }
-
-        nextLayer.setOpacity(overlayOpacity);
-        currentFloodLayer = nextLayer;
-        pendingFloodLayer = null;
-
-        if (previousLayer && map.hasLayer(previousLayer)) {
-          map.removeLayer(previousLayer);
-        }
-
-        if (!mapHasFit && floodLatLngBounds) {
-          map.fitBounds(floodLatLngBounds, { padding: [16, 16] });
-          mapHasFit = true;
-        }
+          pendingFloodLayer = null;
+          toast(`Leaflet could not draw ${match.filename}.`);
+          clearFloodLayer();
+          resolve(false);
+        });
+  
+        nextLayer.once("remove", () => resolve(false));
+        nextLayer.addTo(map);
       });
-
-      nextLayer.on("error", () => {
-        if (token !== lastRenderToken) return;
-        if (map.hasLayer(nextLayer)) map.removeLayer(nextLayer);
-        pendingFloodLayer = null;
-        toast(`Leaflet could not draw ${match.filename}.`);
-      });
-
-      nextLayer.addTo(map);
     }
 
     async function renderHour(index) {
@@ -21827,13 +21861,13 @@ function formatSelectedObservedDate(dateStr) {
       const displayStage = getOverlayStage(rawStage);
       const hydraulicPhase = getHydraulicPhaseForEntry(entry, index, currentSeriesHours);
 
-      renderSelectionMeta(entry, rawStage, displayStage);
-      renderTimelineMeta(entry);
 
       const slider = document.getElementById("hourSlider");
       slider.value = String(index);
 
       if (displayStage == null) {
+        renderSelectionMeta(entry, rawStage, displayStage);
+        renderTimelineMeta(entry);
         toast("No observed record for this time.");
         ++lastRenderToken;
         clearFloodLayer();
@@ -21844,7 +21878,11 @@ function formatSelectedObservedDate(dateStr) {
       toast(note);
 
       const token = ++lastRenderToken;
-      await setFloodLayer(currentOverlayMode, rawStage, hydraulicPhase, token, entry, currentSeriesHours);
+      const ready = await setFloodLayer(currentOverlayMode, rawStage, hydraulicPhase, token, entry, currentSeriesHours);
+      if (token !== lastRenderToken) return;
+      if (!ready) clearFloodLayer();
+      renderSelectionMeta(entry, rawStage, displayStage);
+      renderTimelineMeta(entry);
       preloadAroundHour(index);
     }
 
