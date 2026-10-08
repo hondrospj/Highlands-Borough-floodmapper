@@ -14109,7 +14109,7 @@ body.exporting .webcam-map-marker, body.exporting #webcamPanel, .export-stage .w
 
 </style>
 </head>
-<body data-flood-frame-swap="decode-before-swap-20261008" data-shorelysafe-ui="20261008-v1">
+<body data-flood-frame-cache="bounded-composites-20261008" data-flood-frame-swap="decode-before-swap-20261008" data-shorelysafe-ui="20261008-v1">
   <div id="topBanner">
     <div class="banner-text">
       <div class="banner-eyebrow">Flood alert <span id="bannerCount">0 active</span></div>
@@ -16320,6 +16320,12 @@ function setDatumHelpOpen(isOpen) {
       return promise;
     }
 
+    // Retain encoded composites for replay; decoded raster caches stay small.
+    const FLOOD_COMPOSITE_CACHE_COMPACT = Boolean(window.matchMedia?.("(max-width: 900px), (max-height: 560px)")?.matches);
+    const FLOOD_COMPOSITE_CACHE_ENTRY_LIMIT = FLOOD_COMPOSITE_CACHE_COMPACT ? 16 : 48;
+    const FLOOD_COMPOSITE_CACHE_BYTE_LIMIT = (FLOOD_COMPOSITE_CACHE_COMPACT ? 24 : 128) * 1024 * 1024;
+    const floodCompositeBlobSizes = new Map();
+
     const RASTER_IMAGE_CACHE_LIMIT = isCompactFloodmapperLayout() ? 2 : 4;
     function getExportImageElement(url) {
       if (!url) return Promise.resolve(null);
@@ -16437,14 +16443,29 @@ function setDatumHelpOpen(isOpen) {
             reject(new Error("The connectivity composite could not be encoded."));
             return;
           }
-          resolve(URL.createObjectURL(blob));
+          const url = URL.createObjectURL(blob);
+          floodCompositeBlobSizes.set(url, blob.size);
+          // Some palette converters also use this encoder; bound bookkeeping.
+          while (floodCompositeBlobSizes.size > 256) {
+            floodCompositeBlobSizes.delete(floodCompositeBlobSizes.keys().next().value);
+          }
+          resolve(url);
         }, "image/png");
       });
     }
 
     function cacheFillingComposite(key, record) {
+      if (typeof floodCompositeBlobSizes !== "undefined" && record?.url && floodCompositeBlobSizes.has(record.url)) {
+        record.compositeByteLength = floodCompositeBlobSizes.get(record.url);
+        floodCompositeBlobSizes.delete(record.url);
+      }
       fillingCompositeCache.set(key, record);
-      while (fillingCompositeCache.size > 4) {
+      while (
+        fillingCompositeCache.size > FLOOD_COMPOSITE_CACHE_ENTRY_LIMIT ||
+        (fillingCompositeCache.size > 1 &&
+          Array.from(fillingCompositeCache.values()).reduce((bytes, item) => bytes + (item?.compositeByteLength || 0), 0) >
+            (typeof FLOOD_COMPOSITE_CACHE_BYTE_LIMIT === "number" ? FLOOD_COMPOSITE_CACHE_BYTE_LIMIT : 128 * 1024 * 1024))
+      ) {
         const oldestKey = fillingCompositeCache.keys().next().value;
         const oldest = fillingCompositeCache.get(oldestKey);
         if (oldest?.url?.startsWith("blob:")) URL.revokeObjectURL(oldest.url);
@@ -16745,7 +16766,12 @@ function setDatumHelpOpen(isOpen) {
       const upperStageFt = roundToOneDecimal(Math.min(MAX_STAGE, lowerStageFt + STAGE_STEP));
       if (!(upperStageFt > lowerStageFt)) return lowerRecord;
       const key = ["continuous-filling", mode, normalizedPhase, Number(rawStageFt).toFixed(3), stageToCode(lowerStageFt), stageToCode(upperStageFt)].join("|");
-      if (fillingCompositeCache.has(key)) return fillingCompositeCache.get(key);
+      if (fillingCompositeCache.has(key)) {
+        const cached = fillingCompositeCache.get(key);
+        fillingCompositeCache.delete(key);
+        fillingCompositeCache.set(key, cached);
+        return cached;
+      }
       const request = (async () => {
         const upperRequest = getOverlayRecord(mode, upperStageFt, normalizedPhase);
         const depthRequest = mode === "depth" ? upperRequest : getOverlayRecord("depth", upperStageFt, normalizedPhase);
@@ -16853,8 +16879,17 @@ function setDatumHelpOpen(isOpen) {
     }
 
     function cacheDrainageComposite(key, record) {
+      if (typeof floodCompositeBlobSizes !== "undefined" && record?.url && floodCompositeBlobSizes.has(record.url)) {
+        record.compositeByteLength = floodCompositeBlobSizes.get(record.url);
+        floodCompositeBlobSizes.delete(record.url);
+      }
       drainageCompositeCache.set(key, record);
-      while (drainageCompositeCache.size > 4) {
+      while (
+        drainageCompositeCache.size > FLOOD_COMPOSITE_CACHE_ENTRY_LIMIT ||
+        (drainageCompositeCache.size > 1 &&
+          Array.from(drainageCompositeCache.values()).reduce((bytes, item) => bytes + (item?.compositeByteLength || 0), 0) >
+            (typeof FLOOD_COMPOSITE_CACHE_BYTE_LIMIT === "number" ? FLOOD_COMPOSITE_CACHE_BYTE_LIMIT : 128 * 1024 * 1024))
+      ) {
         const oldestKey = drainageCompositeCache.keys().next().value;
         const oldest = drainageCompositeCache.get(oldestKey);
         if (oldest?.url?.startsWith("blob:")) URL.revokeObjectURL(oldest.url);
@@ -16872,9 +16907,14 @@ function setDatumHelpOpen(isOpen) {
       baseRecord = await getFillingInterpolatedOverlayRecord(mode, lowerStage, phase, entry, baseRecord);
       const milestones = getDrainageRetentionMilestones(entry, series);
       if (!milestones.length) return baseRecord;
-      const key = ["history-drainage", mode, Number(rawStage).toFixed(3), normalizeHydraulicPhase(phase), entryTimeMs(entry),
-        ...milestones.map(item => `${entryTimeMs(item)}:${normalizeHydraulicPhase(item.hydraulicPhase)}:${stageToCode(getOverlayStage(getStageValue(item)))}`)].join("|");
-      if (drainageCompositeCache.has(key)) return drainageCompositeCache.get(key);
+      const key = ["history-drainage", mode, Number(rawStage).toFixed(3), normalizeHydraulicPhase(phase), entryTimeMs(entry), getStageValue(entry),
+        ...milestones.map(item => `${entryTimeMs(item)}:${normalizeHydraulicPhase(item.hydraulicPhase)}:${stageToCode(getOverlayStage(getStageValue(item)))}:${getStageValue(item)}`)].join("|");
+      if (drainageCompositeCache.has(key)) {
+        const cached = drainageCompositeCache.get(key);
+        drainageCompositeCache.delete(key);
+        drainageCompositeCache.set(key, cached);
+        return cached;
+      }
       const request = (async () => {
         const historicalRecords = (await Promise.all(milestones.map(item => {
           const itemStage = getOverlayStage(getStageValue(item));
