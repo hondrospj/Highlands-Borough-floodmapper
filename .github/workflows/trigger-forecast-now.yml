@@ -17,4 +17,5 @@ jobs:
       - name: Dispatch existing forecast workflow
         env:
           GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
         run: gh workflow run update-forecast.yml --ref main

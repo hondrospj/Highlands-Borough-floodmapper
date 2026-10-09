@@ -1,6 +1,6 @@
 /* Shared Avalon phone layout for all ShorelySafe floodmappers. */
 (() => {
-  const media = matchMedia('(max-width:900px), (max-height:560px) and (pointer:coarse)');
+  const media = floodmapperLayoutMedia;
   const panel = document.getElementById('leftPanel');
   const app = document.getElementById('app');
   const legend = document.getElementById('legendDock');
@@ -94,7 +94,7 @@
       }
       panel.inert = !open;
       panel.setAttribute('aria-label', 'Map controls');
-      if (open) { panel.setAttribute('role', 'dialog'); panel.setAttribute('aria-modal', 'true'); }
+      if (open && !document.body.classList.contains('tutorial-active')) { panel.setAttribute('role', 'dialog'); panel.setAttribute('aria-modal', 'true'); }
       else { panel.removeAttribute('role'); panel.removeAttribute('aria-modal'); }
       const map = document.getElementById('map3d') || document.getElementById('map');
       if (map) map.inert = open;
@@ -128,7 +128,7 @@
   window.addEventListener('load', schedule, {once:true});
   window.addEventListener('resize', schedule, {passive:true});
   document.addEventListener('keydown', event => {
-    if (event.key !== 'Tab' || !media.matches || !document.body.classList.contains('mobile-controls-open') || document.querySelector('#infoModal.open,#datumModal.open,#downloadModal.open,#topTidesModal.open')) return;
+    if (event.key !== 'Tab' || !media.matches || !document.body.classList.contains('mobile-controls-open') || document.querySelector('#infoModal.open,#datumModal.open,#downloadModal.open,#topTidesModal.open,#mapperTutorial:not([hidden])')) return;
     const items = [...panel.querySelectorAll('button,input,select,a[href],[tabindex="0"]')].filter(element => !element.disabled && !element.closest('[hidden]') && element.getClientRects().length);
     const first = items[0], last = items.at(-1);
     if (!first) return;

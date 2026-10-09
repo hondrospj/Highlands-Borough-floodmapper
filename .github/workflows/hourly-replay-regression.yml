@@ -4,11 +4,13 @@ on:
     paths:
       - index.html
       - tools/test_hourly_replay.mjs
+      - tools/test_control_ui.mjs
       - .github/workflows/hourly-replay-regression.yml
   pull_request:
     paths:
       - index.html
       - tools/test_hourly_replay.mjs
+      - tools/test_control_ui.mjs
       - .github/workflows/hourly-replay-regression.yml
   workflow_dispatch:
 permissions:
@@ -23,3 +25,4 @@ jobs:
         with:
           node-version: '22'
       - run: node tools/test_hourly_replay.mjs
+      - run: node tools/test_control_ui.mjs

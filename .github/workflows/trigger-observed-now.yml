@@ -17,4 +17,5 @@ jobs:
       - name: Dispatch existing observed workflow
         env:
           GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
         run: gh workflow run update-observed.yml --ref main
