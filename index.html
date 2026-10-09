@@ -14109,7 +14109,7 @@ body.exporting .webcam-map-marker, body.exporting #webcamPanel, .export-stage .w
 
 </style>
 </head>
-<body data-flood-frame-cache="bounded-composites-20261008" data-flood-frame-swap="decode-before-swap-20261008" data-shorelysafe-ui="20261008-v1">
+<body data-flood-depth-cache="bounded-palette-20261009" data-flood-frame-cache="bounded-composites-20261008" data-flood-frame-swap="decode-before-swap-20261008" data-shorelysafe-ui="20261008-v1">
   <div id="topBanner">
     <div class="banner-text">
       <div class="banner-eyebrow">Flood alert <span id="bannerCount">0 active</span></div>
@@ -16322,7 +16322,7 @@ function setDatumHelpOpen(isOpen) {
 
     // Retain encoded composites for replay; decoded raster caches stay small.
     const FLOOD_COMPOSITE_CACHE_COMPACT = Boolean(window.matchMedia?.("(max-width: 900px), (max-height: 560px)")?.matches);
-    const FLOOD_COMPOSITE_CACHE_ENTRY_LIMIT = FLOOD_COMPOSITE_CACHE_COMPACT ? 16 : 48;
+    const FLOOD_COMPOSITE_CACHE_ENTRY_LIMIT = FLOOD_COMPOSITE_CACHE_COMPACT ? 32 : 48;
     const FLOOD_COMPOSITE_CACHE_BYTE_LIMIT = (FLOOD_COMPOSITE_CACHE_COMPACT ? 24 : 128) * 1024 * 1024;
     const floodCompositeBlobSizes = new Map();
 
@@ -16962,7 +16962,9 @@ function setDatumHelpOpen(isOpen) {
       [19, 47, 132], [11, 30, 91], [5, 14, 51]
     ];
     const modernDepthOverlayCache = new Map();
-    const MODERN_DEPTH_CACHE_LIMIT = 6;
+    // Retain encoded palette images for replay; decoded image caches stay small.
+    const MODERN_DEPTH_CACHE_LIMIT = FLOOD_COMPOSITE_CACHE_COMPACT ? 64 : 96;
+    const MODERN_DEPTH_CACHE_BYTE_LIMIT = (FLOOD_COMPOSITE_CACHE_COMPACT ? 8 : 16) * 1024 * 1024;
 
     function applyModernDepthColors(pixels) {
       const uncertainty = getUncertaintyRasterColor();
@@ -17010,16 +17012,24 @@ function setDatumHelpOpen(isOpen) {
         applyModernDepthColors(imageData.data);
         context.putImageData(imageData, 0, 0);
         const url = await canvasToFillingObjectUrl(canvas);
-        return { ...record, url, isModernDepthPalette: true };
+        const paletteByteLength = floodCompositeBlobSizes.get(url) || 0;
+        floodCompositeBlobSizes.delete(url);
+        return { ...record, url, isModernDepthPalette: true, paletteByteLength };
       })();
       modernDepthOverlayCache.set(key, request);
       try {
         const result = await request;
         modernDepthOverlayCache.set(key, result);
-        while (modernDepthOverlayCache.size > MODERN_DEPTH_CACHE_LIMIT) {
-          const oldestKey = modernDepthOverlayCache.keys().next().value;
-          const oldest = modernDepthOverlayCache.get(oldestKey);
-          if (!oldest?.url) break;
+        // Pending requests still coalesce, but do not block eviction of finished images.
+        const completed = Array.from(modernDepthOverlayCache.entries()).filter(([, item]) => item?.url);
+        let bytes = completed.reduce((total, [, item]) => total + (item.paletteByteLength || 0), 0);
+        while (completed.length > MODERN_DEPTH_CACHE_LIMIT ||
+          (completed.length > 1 && bytes > MODERN_DEPTH_CACHE_BYTE_LIMIT)) {
+          // Keep this result usable even if a single image exceeds the byte budget.
+          const oldestIndex = completed.findIndex(([cachedKey]) => cachedKey !== key);
+          if (oldestIndex < 0) break;
+          const [oldestKey, oldest] = completed.splice(oldestIndex, 1)[0];
+          bytes -= oldest.paletteByteLength || 0;
           URL.revokeObjectURL(oldest.url);
           exportImageElementCache.delete(oldest.url);
           preloadPromiseCache.delete(oldest.url);
