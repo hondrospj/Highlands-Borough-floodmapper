@@ -114,7 +114,8 @@
         ['observedCalendarModal', 'observedCalendarCloseBtn'],
         ['calendarPopover', 'calendarPopoverCloseBtn'],
         ['exportOrderModal', 'exportOrderModalCloseBtn'],
-        ['playbackStillThereModal', 'playbackStillThereCloseBtn']
+        ['playbackStillThereModal', 'playbackStillThereCloseBtn'],
+        ['mapperTutorial', 'mapperTutorialClose']
       ].map(([id, close]) => ({modal:document.getElementById(id), close})).filter(({modal}) => modal && !modal.hidden && modal.classList.contains('open'));
       const top = dialogs[dialogs.length - 1];
       if (!top) {
@@ -22200,11 +22201,12 @@ html body #mapTitleBadge #mapTitleLogo{
 </style>
 <link rel="stylesheet" href="assets/highlands-loading.css?v=20261009-1">
 <link rel="stylesheet" href="assets/highlands-timeline.css?v=20261009-1">
-<link rel="stylesheet" href="assets/highlands-mobile.css?v=20261009-1">
+<link rel="stylesheet" href="assets/highlands-mobile.css?v=20261009-2">
 <link rel="stylesheet" href="assets/highlands-layers.css?v=20261009-1">
-<link rel="stylesheet" href="assets/highlands-controls.css?v=20261009-1">
+<link rel="stylesheet" href="assets/highlands-controls.css?v=20261009-2">
 <link rel="stylesheet" href="assets/highlands-calendar.css?v=20261009-1">
 <link rel="stylesheet" href="assets/highlands-type.css?v=20261009-1">
+<link rel="stylesheet" href="assets/highlands-tour.css?v=20261009-1">
 <script defer src="assets/highlands-loading.js?v=20261009-1"></script>
 </head>
 <body class="nw-app-loading" data-flood-depth-cache="bounded-palette-20261009" data-flood-frame-cache="bounded-composites-20261008" data-flood-frame-swap="decode-before-swap-20261008" data-shorelysafe-ui="20261008-v1">
@@ -22301,10 +22303,11 @@ html body #mapTitleBadge #mapTitleLogo{
         </div>
       </section>
 
-      <section id="timelineIntervalCard" class="panel-card compact-card"><div class="section-title"><h2>Interval</h2></div>
+      <section id="timelineIntervalCard" class="panel-card compact-card"><div class="section-title"><div class="title-with-help"><h2>Interval</h2><button id="intervalHelpBtn" class="help-btn" type="button" aria-expanded="false" aria-controls="infoModal" title="Explain timeline intervals">?</button></div></div>
             <div id="timelineIntervalToggle" class="timeline-interval-toggle" role="group" aria-label="Timeline interval">
               <button id="intervalHourBtn" class="active" type="button" data-interval-minutes="60" aria-pressed="true">Hourly</button>
               <button id="intervalQuarterBtn" type="button" data-interval-minutes="15" aria-pressed="false">15-Min</button>
+              <button id="intervalDailyBtn" type="button" data-interval-minutes="1440" aria-pressed="false">Daily Max</button>
             </div>
       </section>
         <section id="legendDock" class="rail-card legend-card left-lower-legend-card panel-card compact-card" data-user-moved="1" aria-label="Map key">
@@ -22384,6 +22387,10 @@ html body #mapTitleBadge #mapTitleLogo{
             </div>
           </div>
           <div class="layer-list">
+            <div class="layer-item">
+              <div id="satelliteToggle" class="toggle" role="switch" tabindex="0" aria-label="Satellite imagery" aria-checked="false"></div>
+              <div class="layer-meta"><div class="layer-name">Satellite</div></div>
+            </div>
 
             <div class="layer-item">
               <div id="roadsToggle" class="toggle on" role="switch" tabindex="0" aria-label="Road names" aria-checked="true"></div>
@@ -22436,6 +22443,7 @@ html body #mapTitleBadge #mapTitleLogo{
           </form>
           <div id="townAddressStatus" class="town-address-status" role="status" aria-live="polite"></div>
         </section>
+        <button id="mapperTutorialBtn" class="mapper-tutorial-launch mapper-tutorial-launch-rail" type="button" aria-haspopup="dialog" aria-controls="mapperTutorial" aria-expanded="false">Take the Floodmapper tour</button>
 </aside>
 
       <div id="topTidesModal" class="top-tides-modal" hidden aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="topTidesModalTitle">
@@ -22549,6 +22557,14 @@ html body #mapTitleBadge #mapTitleLogo{
     </section>
   </div>
 
+  <div id="mapperTutorial" class="mapper-tutorial" hidden aria-hidden="true">
+    <div id="mapperTutorialSpotlight" class="mapper-tutorial-spotlight" aria-hidden="true"></div>
+    <section id="mapperTutorialCard" class="mapper-tutorial-card" role="dialog" aria-modal="true" aria-labelledby="mapperTutorialTitle" aria-describedby="mapperTutorialBody">
+      <div class="mapper-tutorial-head"><span id="mapperTutorialProgress" aria-live="polite"></span><button id="mapperTutorialClose" type="button" aria-label="Close tutorial">×</button></div>
+      <h2 id="mapperTutorialTitle"></h2><p id="mapperTutorialBody"></p>
+      <div class="mapper-tutorial-actions"><button id="mapperTutorialBack" type="button">Back</button><button id="mapperTutorialNext" type="button">Next</button></div>
+    </section>
+  </div>
   <div id="infoModal" class="datum-modal" hidden>
     <div class="datum-modal-card info-modal-card" role="dialog" aria-modal="true" aria-labelledby="infoModalTitle">
       <div class="datum-modal-head">
@@ -23095,6 +23111,7 @@ function cloneStyleObject(value) {
     let map = null;
     let basemapGrayLayer = null;
     let basemapColorLayer = null;
+    let satelliteLayer = null;
     let roadsLayer = null;
     let cityBoundaryOutline = null;
     let cityBoundaryMask = null;
@@ -23104,6 +23121,7 @@ function cloneStyleObject(value) {
 
     let exportMap = null;
     let exportBasemapColorLayer = null;
+    let exportSatelliteLayer = null;
     let exportRoadsLayer = null;
     let exportBoundaryOutline = null;
     let exportBoundaryMask = null;
@@ -23118,9 +23136,9 @@ function cloneStyleObject(value) {
     let forecastData = null;
     let currentForecastScenario = "mean";
     const FORECAST_SCENARIOS = {
-      lowEnd: { label: "Minimum", percentile: "Estimated 1st percentile", buttonId: "forecastLowBtn" },
+      lowEnd: { label: "Lower end", percentile: "Estimated 1st percentile", buttonId: "forecastLowBtn" },
       mean: { label: "Mean", percentile: "Estimated 25th percentile", buttonId: "forecastMeanBtn" },
-      highEnd: { label: "Maximum", percentile: "Estimated 50th percentile", buttonId: "forecastHighBtn" }
+      highEnd: { label: "Upper end", percentile: "Estimated 50th percentile", buttonId: "forecastHighBtn" }
     };
     let observedData = null;
     let observedDaysCache = null;
@@ -23283,11 +23301,11 @@ function cloneStyleObject(value) {
     }
 
     function getTimelineIntervalMinutes() {
-      return currentTimelineIntervalMinutes === 15 ? 15 : 60;
+      return [15, 1440].includes(currentTimelineIntervalMinutes) ? currentTimelineIntervalMinutes : 60;
     }
 
     function getTimelineIntervalLabel(minutes = getTimelineIntervalMinutes()) {
-      return minutes === 15 ? "15 min" : "1 hour";
+      return minutes === 1440 ? "Daily Max" : minutes === 15 ? "15 min" : "1 hour";
     }
 
     function updateTimelineIntervalUI() {
@@ -23307,6 +23325,11 @@ function cloneStyleObject(value) {
         quarterBtn.setAttribute("aria-pressed", String(active));
       }
 
+      const dailyBtn = document.getElementById("intervalDailyBtn");
+      if (dailyBtn) {
+        dailyBtn.classList.toggle("active", minutes === 1440);
+        dailyBtn.setAttribute("aria-pressed", String(minutes === 1440));
+      }
       const dock = document.getElementById("timelineDock");
       if (dock) dock.dataset.timelineInterval = String(minutes);
     }
@@ -23535,6 +23558,10 @@ function parseStoredLocalNyToDate(timeEST) {
     }
 
     function buildObservedDayDisplaySeries(dayRecord, dateStr) {
+      if (getTimelineIntervalMinutes() === 1440) {
+        return buildDailyMaximumSeries(getObservedSourceHoursForDay(dayRecord), "observed")
+          .filter(entry => entry.observedDate === dateStr);
+      }
       if (getTimelineIntervalMinutes() === 15) {
         return buildObservedQuarterHourDisplaySeries(dayRecord, dateStr);
       }
@@ -23809,8 +23836,36 @@ function parseStoredLocalNyToDate(timeEST) {
       return out;
     }
 
+    // Select the highest available water level within each New York calendar day.
+    // Annotate the full chronological series first so daily sampling cannot change
+    // the selected frame's filling/draining phase or crest-release timing.
+    function buildDailyMaximumSeries(entries = [], kind = "observed") {
+      const source = (Array.isArray(entries) ? entries : [])
+        .filter(entry => Number.isFinite(entryTimeMs(entry)))
+        .map(entry => entry.isMissingObservedHour || entry.isMissingTimelineFrame
+          ? {timeUtc: new Date(entryTimeMs(entry)).toISOString(), navd88StageFt: null, isMissingTimelineFrame: true}
+          : entry)
+        .sort((a, b) => entryTimeMs(a) - entryTimeMs(b));
+      const bestByDate = new Map();
+      for (const entry of annotateHydraulicSeries(source)) {
+        if (entry.isMissingObservedHour || entry.isMissingTimelineFrame) continue;
+        const stage = getStageValue(entry);
+        const date = getEntryESTDate(entry);
+        const parts = date && getNyParts(date);
+        if (!parts || !Number.isFinite(stage)) continue;
+        const key = `${parts.year}-${parts.month}-${parts.day}`;
+        const previous = bestByDate.get(key);
+        if (!previous || stage > getStageValue(previous)) bestByDate.set(key, entry);
+      }
+      return [...bestByDate].map(([date, entry]) => ({
+        ...entry, observedDate: date, observationInterval: "daily",
+        timelineIntervalMinutes: 1440, isDailyMaximum: true, dailyMaximumKind: kind
+      }));
+    }
+
     function buildForecastDisplaySeries(entries = currentRawSeriesHours) {
       const source = Array.isArray(entries) ? entries : [];
+      if (getTimelineIntervalMinutes() === 1440) return buildDailyMaximumSeries(source, "forecast");
       if (getTimelineIntervalMinutes() !== 15) {
         return source.map(entry => ({
           ...entry,
@@ -23883,14 +23938,18 @@ function setDatumHelpOpen(isOpen) {
         title: "Data source",
         body: `
           <p><strong>Forecast</strong> uses model guidance to estimate future water levels.</p>
-          <p><strong>Observed</strong> uses measured tide-gauge data when it is available. Continuous gauge records can show the hourly evolution of a storm, while historical crest records may only preserve the maximum water level reached during an event.</p>
+          <p><strong>Past</strong> uses measured tide-gauge data when it is available. Continuous gauge records can show the hourly evolution of a storm, while historical crest records may only preserve the maximum water level reached during an event.</p>
         `
       },
       forecastType: {
         title: "Forecast type",
         body: `
-          <p>These settings are estimates derived from NOAA PETSS station guidance: Minimum is the 1st percentile, Mean is the 25th, and Maximum is the 50th. They are not published NOAA percentiles. “Maximum” is the highest of these three settings, not the highest water level possible.</p>
+          <p>These settings are estimates derived from NOAA PETSS station guidance: Lower end is the 1st percentile, Mean is the 25th, and Upper end is the 50th. They are not published NOAA percentiles. “Upper end” is the highest of these three settings, not the highest water level possible.</p>
         `
+      },
+      interval: {
+        title: "Timeline intervals",
+        body: `<p><strong>Hourly</strong> steps through hourly water levels. <strong>15-Min</strong> shows available readings or interpolates between nearby readings; it does not fill long data gaps.</p><p><strong>Daily Max</strong> selects the highest available water level for each New York calendar day and retains its actual timestamp. In Past, use the date arrows or Choose date to move between daily peaks. A partial day shows the highest reading available so far.</p><p>The map shows the selected peak-water-level frame, rather than combining every location’s maximum depth throughout the day.</p>`
       },
       overlay: {
         title: "Overlay",
@@ -25670,6 +25729,30 @@ function normalizeBoundaryRingsFromArcGIS(rings, sourceWkid = 3857) {
       scheduleMapTitleFit();
     }
 
+    const ESRI_WORLD_IMAGERY_URL = "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}";
+    function makeSatelliteLayer(forExport = false) {
+      return L.tileLayer(ESRI_WORLD_IMAGERY_URL, {
+        attribution: "Tiles &copy; Esri", minZoom: forExport ? 0 : 11,
+        maxZoom: forExport ? 24 : 19, maxNativeZoom: 19,
+        crossOrigin: true, updateWhenIdle: true, keepBuffer: 1, pane: "satellitePane"
+      });
+    }
+    function updateExportSatelliteLayer() {
+      if (!exportMap || !exportSatelliteLayer) return;
+      const enabled = document.getElementById("satelliteToggle")?.classList.contains("on");
+      if (enabled && !exportMap.hasLayer(exportSatelliteLayer)) exportSatelliteLayer.addTo(exportMap);
+      else if (!enabled && exportMap.hasLayer(exportSatelliteLayer)) exportMap.removeLayer(exportSatelliteLayer);
+    }
+    function setSatelliteEnabled(enabled) {
+      const toggle = document.getElementById("satelliteToggle");
+      toggle?.classList.toggle("on", Boolean(enabled));
+      toggle?.setAttribute("aria-checked", String(Boolean(enabled)));
+      if (!map) ensureMap();
+      if (enabled && !map.hasLayer(satelliteLayer)) satelliteLayer.addTo(map);
+      else if (!enabled && map.hasLayer(satelliteLayer)) map.removeLayer(satelliteLayer);
+      updateExportSatelliteLayer();
+    }
+
     function ensureMap() {
       if (map) return;
 
@@ -25684,12 +25767,14 @@ function normalizeBoundaryRingsFromArcGIS(rings, sourceWkid = 3857) {
 
       map.createPane("basemapGrayPane");
       map.createPane("basemapColorPane");
+      map.createPane("satellitePane");
       map.createPane("boundaryPane");
       map.createPane("floodPane");
       map.createPane("roadsPane");
       map.createPane("maskPane");
       map.getPane("basemapGrayPane").style.zIndex = 180;
       map.getPane("basemapColorPane").style.zIndex = 190;
+      map.getPane("satellitePane").style.zIndex = 200;
       map.getPane("boundaryPane").style.zIndex = 640;
       map.getPane("floodPane").style.zIndex = 500;
       map.getPane("roadsPane").style.zIndex = 620;
@@ -25730,6 +25815,7 @@ function normalizeBoundaryRingsFromArcGIS(rings, sourceWkid = 3857) {
         }).addTo(map);
       }
 
+      satelliteLayer = makeSatelliteLayer();
       roadsLayer = createRoadLabelLayer(ROAD_LABELS_URL, {
         attribution: "Esri, HERE, Garmin, USGS, &copy; OpenStreetMap contributors",
         minZoom: 11,
@@ -28161,11 +28247,13 @@ function updateExportSegmentedUI() {
       });
 
       exportMap.createPane("basemapColorPane");
+      exportMap.createPane("satellitePane");
       exportMap.createPane("boundaryPane");
       exportMap.createPane("floodPane");
       exportMap.createPane("roadsPane");
       exportMap.createPane("maskPane");
       exportMap.getPane("basemapColorPane").style.zIndex = 190;
+      exportMap.getPane("satellitePane").style.zIndex = 200;
       exportMap.getPane("boundaryPane").style.zIndex = 640;
       exportMap.getPane("floodPane").style.zIndex = 500;
       exportMap.getPane("roadsPane").style.zIndex = 620;
@@ -28206,6 +28294,8 @@ function updateExportSegmentedUI() {
         }).addTo(exportMap);
       }
 
+      exportSatelliteLayer = makeSatelliteLayer(true);
+      updateExportSatelliteLayer();
       exportRoadsLayer = createRoadLabelLayer(ROAD_LABELS_URL, {
         attribution: "Esri, HERE, Garmin, USGS, &copy; OpenStreetMap contributors",
         minZoom: 0,
@@ -29137,13 +29227,16 @@ function getEntryESTDate(entry) {
       slider.setAttribute("aria-valuetext", document.getElementById("timelineBubble")?.textContent || "No time available");
       slider.style.setProperty("--nww-stage-gradient", buildTimelineGroupGradient(first, last) || "linear-gradient(#94a3b8,#94a3b8)");
       dock.dataset.singleTimelineTime = String(first === last);
-      const step = getTimelineIntervalMinutes() === 15 ? "15m" : "1h";
+      const step = getTimelineIntervalMinutes() === 1440 ? "1d" : getTimelineIntervalMinutes() === 15 ? "15m" : "1h";
       for (const [id, delta, label] of [["timelineStepBack", -1, "Previous"], ["timelineStepForward", 1, "Next"]]) {
         const button = document.getElementById(id);
         if (!button) continue;
         button.disabled = !currentSeriesHours.length || selected + delta < 0 || selected + delta >= currentSeriesHours.length;
         button.textContent = `${delta < 0 ? "−" : "+"}${step}`;
-        button.setAttribute("aria-label", `${label} ${getTimelineIntervalMinutes() === 15 ? "15 minutes" : "hour"}`);
+        if (getTimelineIntervalMinutes() === 1440 && currentViewType === "observed-day" && selectedObservedDate) {
+          button.disabled = !getNeighborObservedDate(selectedObservedDate, delta);
+        }
+        button.setAttribute("aria-label", `${label} ${getTimelineIntervalMinutes() === 1440 ? "day" : getTimelineIntervalMinutes() === 15 ? "15 minutes" : "hour"}`);
       }
       for (const [id, index] of [["timelineFirstTime", first], ["timelineLastTime", last]]) {
         const label = document.getElementById(id);
@@ -30149,7 +30242,8 @@ function formatSelectedObservedDate(dateStr) {
       forecastData = await fetchJson(withFreshJsonUrl(FORECAST_URL));
       clearExportAvailabilityCache();
       currentRawSeriesHours = getActiveForecastHours();
-      currentSeriesHours = annotateHydraulicSeries(buildForecastDisplaySeries(currentRawSeriesHours));
+      const displaySeries = buildForecastDisplaySeries(currentRawSeriesHours);
+      currentSeriesHours = getTimelineIntervalMinutes() === 1440 ? displaySeries : annotateHydraulicSeries(displaySeries);
       currentViewType = "forecast";
       currentTopTideIndex = null;
       currentSelectedLabel = getForecastScenarioLabel();
@@ -30159,7 +30253,9 @@ function formatSelectedObservedDate(dateStr) {
         : getForecastScenarioLabel();
 
       syncSliderBounds();
-      currentHourIndex = preferredEntry ? findClosestEntryIndex(currentSeriesHours, preferredEntry) : getPeakHourIndex(currentSeriesHours);
+      const sameDayIndex = preferredEntry && getTimelineIntervalMinutes() === 1440
+        ? currentSeriesHours.findIndex(entry => sameEntryESTDay(entry, preferredEntry)) : -1;
+      currentHourIndex = sameDayIndex >= 0 ? sameDayIndex : preferredEntry ? findClosestEntryIndex(currentSeriesHours, preferredEntry) : getPeakHourIndex(currentSeriesHours);
       document.getElementById("hourSlider").value = String(currentHourIndex);
     }
 
@@ -30639,7 +30735,8 @@ function populateCalendarSelectors() {
       selectedObservedDate = dateStr;
       currentMonthKey = dateStr.slice(0, 7);
       currentRawSeriesHours = getObservedSourceHoursForDay(dayRecord);
-      currentSeriesHours = annotateHydraulicSeries(buildObservedDayDisplaySeries(dayRecord, dateStr));
+      const displaySeries = buildObservedDayDisplaySeries(dayRecord, dateStr);
+      currentSeriesHours = getTimelineIntervalMinutes() === 1440 ? displaySeries : annotateHydraulicSeries(displaySeries);
       currentViewType = "observed-day";
       currentTopTideIndex = null;
       currentSelectedLabel = dateStr;
@@ -30693,12 +30790,12 @@ function populateCalendarSelectors() {
         observationInterval: isCrestOnly ? "crest" : (entry.observationInterval || "1hour"),
         isHistoricalTopTide: Boolean(entry.isHistoricalTopTide || event.sourceType === "historical")
       }));
-      currentSeriesHours = annotateHydraulicSeries(
-        isCrestOnly ? currentRawSeriesHours.slice(0, 1) : currentRawSeriesHours
-      );
+      currentSeriesHours = !isCrestOnly && getTimelineIntervalMinutes() === 1440
+        ? buildDailyMaximumSeries(currentRawSeriesHours, "observed")
+        : annotateHydraulicSeries(isCrestOnly ? currentRawSeriesHours.slice(0, 1) : currentRawSeriesHours);
 
       syncSliderBounds();
-      currentHourIndex = isCrestOnly ? 0 : Math.max(0, Math.min(event.peakLocalIndex || 0, currentSeriesHours.length - 1));
+      currentHourIndex = isCrestOnly ? 0 : preferredEntry ? findClosestEntryIndex(currentSeriesHours, preferredEntry) : getPeakHourIndex(currentSeriesHours);
       document.getElementById("hourSlider").value = String(currentHourIndex);
 
       await renderCalendar();
@@ -30707,7 +30804,7 @@ function populateCalendarSelectors() {
     }
 
     async function setTimelineIntervalMinutes(minutes) {
-      const nextMinutes = Number(minutes) === 15 ? 15 : 60;
+      const nextMinutes = [15, 1440].includes(Number(minutes)) ? Number(minutes) : 60;
       if (nextMinutes === getTimelineIntervalMinutes()) return;
 
       const referenceEntry = currentSeriesHours[currentHourIndex] || null;
@@ -31028,13 +31125,14 @@ function startPlayback() {
     }
 
     function wireLayerToggles() {
-      ["roadsToggle"].forEach(id => {
+      ["roadsToggle", "satelliteToggle"].forEach(id => {
         const el = document.getElementById(id);
         if (!el) return;
         el.addEventListener("click", () => {
           el.classList.toggle("on");
           el.setAttribute("aria-checked", String(el.classList.contains("on")));
           if (id === "roadsToggle") updateRoadLayerAppearance();
+          if (id === "satelliteToggle") setSatelliteEnabled(el.classList.contains("on"));
         });
         el.addEventListener("keydown", event => {
           if (event.key === "Enter" || event.key === " ") {
@@ -31667,7 +31765,7 @@ function startPlayback() {
       for (const [id, delta] of [["timelineStepBack", -1], ["timelineStepForward", 1]]) {
         document.getElementById(id).addEventListener("click", () => {
           stopPlayback();
-          renderHour(Math.max(0, Math.min(currentSeriesHours.length - 1, currentHourIndex + delta))).catch(error => toast(error.message));
+          stepSeriesBy(delta).catch(error => toast(error.message));
         });
       }
       document.getElementById("hourSlider").addEventListener("input", async e => {
@@ -31684,6 +31782,11 @@ function startPlayback() {
       document.getElementById("intervalQuarterBtn")?.addEventListener("click", () => {
         setTimelineIntervalMinutes(15).catch(err => toast(err.message));
       });
+
+      document.getElementById("intervalDailyBtn")?.addEventListener("click", () => {
+        setTimelineIntervalMinutes(1440).catch(err => toast(err.message));
+      });
+      document.getElementById("intervalHelpBtn")?.addEventListener("click", () => showInfoModal("interval"));
 
       document.getElementById("opacitySlider").addEventListener("input", e => {
         overlayOpacity = Number(e.target.value) / 100;
@@ -33256,6 +33359,7 @@ main().catch(err => {
 
 <script defer src="assets/highlands-layout.js?v=20261009-1"></script>
 <script defer src="assets/highlands-mobile.js?v=20261009-1"></script>
+<script defer src="assets/highlands-tour.js?v=20261009-1"></script>
 <script id="shorelysafe-fleet-ui-controller-20261008">
 (() => {
   function normalizeMapperUi() {

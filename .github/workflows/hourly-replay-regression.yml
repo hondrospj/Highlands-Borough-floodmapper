@@ -3,14 +3,18 @@ on:
   push:
     paths:
       - index.html
+      - assets/highlands-tour.js
       - tools/test_hourly_replay.mjs
       - tools/test_control_ui.mjs
+      - tools/test_daily_max.mjs
       - .github/workflows/hourly-replay-regression.yml
   pull_request:
     paths:
       - index.html
+      - assets/highlands-tour.js
       - tools/test_hourly_replay.mjs
       - tools/test_control_ui.mjs
+      - tools/test_daily_max.mjs
       - .github/workflows/hourly-replay-regression.yml
   workflow_dispatch:
 permissions:
@@ -26,3 +30,5 @@ jobs:
           node-version: '22'
       - run: node tools/test_hourly_replay.mjs
       - run: node tools/test_control_ui.mjs
+      - run: node tools/test_daily_max.mjs
+      - run: node --check assets/highlands-tour.js

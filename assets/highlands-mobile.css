@@ -123,7 +123,7 @@
     html[data-nww-mobile-layout] body #leftPanel #observedDateInput { box-sizing:border-box !important; height:44px !important; min-height:44px !important; max-height:44px !important; padding:6px !important; font:600 16px/1.2 system-ui !important; }
     html[data-nww-mobile-layout] body #leftPanel #timelineIntervalToggle { display:flex !important; position:static !important; width:100% !important; height:44px !important; min-height:44px !important; max-height:none !important; padding:0 !important; gap:6px !important; overflow:visible !important; border:0 !important; background:none !important; }
     html[data-nww-mobile-layout] body #leftPanel #timelineIntervalToggle button { position:static !important; flex:1 1 0 !important; min-width:0 !important; height:44px !important; margin:0 !important; padding:4px !important; border-radius:10px !important; font-size:14px !important; }
-    html[data-nww-mobile-layout] body:not(.tutorial-active) #leftPanel .snapshot-card { display:none !important; }
+    html[data-nww-mobile-layout] body #leftPanel .snapshot-card { display:none !important; }
     html[data-nww-mobile-layout] body #leftPanel .datum-card .segmented-control { display:grid !important; grid-template-columns:repeat(2,minmax(0,1fr)) !important; gap:6px !important; height:auto !important; padding:0 !important; background:none !important; border:0 !important; }
     html[data-nww-mobile-layout] body #leftPanel .datum-card .segmented-control button { width:100% !important; border-radius:10px !important; }
     html[data-nww-mobile-layout] body #leftPanel #opacityText { display:inline-flex !important; }
@@ -295,6 +295,7 @@ html { --nw-ui-blue:#60a5fa; --nw-ui-blue-rgb:96,165,250; }
     html[data-nww-mobile-layout] body #leftPanel[data-nww-section="map"] #mobileRailMount .layers-card { visibility:visible !important; opacity:1 !important; pointer-events:auto !important; }
     html[data-nww-mobile-layout] body #leftPanel #calendarCard { order:3 !important; }
     html[data-nww-mobile-layout] body #leftPanel :is(.segmented-control,#timelineIntervalToggle) { display:grid !important; grid-template-columns:repeat(2,minmax(0,1fr)) !important; gap:8px !important; padding:0 !important; border:0 !important; border-radius:0 !important; background:none !important; overflow:visible !important; }
+    html[data-nww-mobile-layout] body #leftPanel #timelineIntervalCard #timelineIntervalToggle { grid-template-columns:repeat(3,minmax(0,1fr)) !important; }
     html[data-nww-mobile-layout] body #leftPanel :is(.segmented-control,#timelineIntervalToggle) button { min-height:48px !important; height:auto !important; padding:8px !important; border:1px solid var(--line) !important; border-radius:12px !important; background:rgba(255,255,255,.05) !important; color:var(--text) !important; }
     html[data-nww-mobile-layout] body #leftPanel :is(.segmented-control,#timelineIntervalToggle) button.active { border-color:var(--nw-ui-blue) !important; color:var(--nw-ui-blue) !important; background:var(--accent-soft) !important; }
   }

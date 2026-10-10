@@ -1,0 +1,21 @@
+@layer shorelysafe-pane-fit {
+  html body #mapperTutorial[hidden] { display:none !important; }
+  html body #mapperTutorial { position:fixed; inset:0; z-index:20000; pointer-events:auto; }
+  html body #mapperTutorialSpotlight { position:fixed; border:2px solid #60a5fa; border-radius:16px; box-shadow:0 0 0 200vmax rgba(4,10,22,.72); pointer-events:none; }
+  html body #mapperTutorialCard { position:fixed; box-sizing:border-box; width:min(360px,calc(100vw - 24px)); max-height:calc(100dvh - 24px); overflow:auto; padding:20px; background:#171e2b; color:#e6edfc; border:1px solid #516074; border-radius:18px; box-shadow:0 12px 36px #0005; font:400 15px/1.5 system-ui,sans-serif; }
+  html body #mapperTutorialCard .mapper-tutorial-head,
+  html body #mapperTutorialCard .mapper-tutorial-actions { display:flex; align-items:center; justify-content:space-between; gap:12px; }
+  html body #mapperTutorialProgress { color:#9ac6ff; font-size:13px; font-weight:600; }
+  html body #mapperTutorialTitle { margin:12px 0 8px; font-size:21px; line-height:1.2; }
+  html body #mapperTutorialBody { margin:0; color:#c6d2e6; }
+  html body #mapperTutorialCard .mapper-tutorial-actions { margin-top:20px; }
+  html body #mapperTutorialCard button { min-height:44px; min-width:80px; padding:8px 16px; border:1px solid #516074; border-radius:10px; background:#252e3e; color:#e6edfc; font:600 15px/1.2 system-ui,sans-serif; cursor:pointer; }
+  html body #mapperTutorialCard #mapperTutorialNext { background:#22456d; border-color:#60a5fa; }
+  html body #mapperTutorialCard #mapperTutorialClose { min-width:44px; padding:0; font-size:24px; }
+  html body #mapperTutorialCard button:disabled { opacity:.4; cursor:default; }
+  html body #mapperTutorialCard button:focus-visible { outline:2px solid #9ac6ff; outline-offset:3px; }
+  @media(max-width:900px) {
+    html body #mapperTutorialCard { padding:16px; font-size:14px; }
+    html body #mapperTutorialTitle { font-size:19px; }
+  }
+}
