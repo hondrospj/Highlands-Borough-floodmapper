@@ -54,7 +54,7 @@ if (html.includes('function v11PopupHtml(')) {
     assert.ok(context.v11PopupHtml(depth, 'ready').includes(`>${text}</div>`));
   }
   assert.ok(context.v11PopupHtml(0.5, 'loading').includes('>…</div>'));
-  assert.ok(context.v11PopupHtml(0.5, 'approximate').includes('Depth estimated from the displayed map class.'));
+  assert.equal(context.v11PopupHtml(0.5, 'approximate'), context.v11PopupHtml(0.5, 'ready'));
 } else {
   const isV2 = html.includes('function formatDepthQueryValue(');
   if (isV2) load('formatDepthQueryValue');

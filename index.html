@@ -32899,9 +32899,8 @@ main().catch(err => {
 
   function v11PopupHtml(value, state){
     const display = state === "loading" ? "…" : formatWaterDepth(value);
-    const note = state === "approximate" ? '<div class="shorely-v11-depth-note">Depth estimated from the displayed map class.</div>' : "";
     return '<div class="shorely-v11-depth-query" role="status" aria-live="polite">' +
-      '<h3>' + v11Heading() + '</h3><div class="shorely-v11-depth-value">' + display + '</div>' + note + '</div>';
+      '<h3>' + v11Heading() + '</h3><div class="shorely-v11-depth-value">' + display + '</div></div>';
   }
 
   function v11OpenPopup(latlng){
