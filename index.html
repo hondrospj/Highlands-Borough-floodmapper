@@ -22216,7 +22216,7 @@ html body #mapTitleBadge #mapTitleLogo{
 <link rel="stylesheet" href="assets/highlands-tour.css?v=20261009-1">
 <script defer src="assets/highlands-loading.js?v=20261009-1"></script>
 </head>
-<body class="nw-app-loading" data-flood-depth-cache="bounded-palette-20261009" data-flood-frame-cache="bounded-composites-20261008" data-flood-frame-swap="decode-before-swap-20261008" data-shorelysafe-ui="20261008-v1">
+<body data-flood-frame-resilience="retain-retry-20261013" class="nw-app-loading" data-flood-depth-cache="bounded-palette-20261009" data-flood-frame-cache="bounded-composites-20261008" data-flood-frame-swap="decode-before-swap-20261008" data-shorelysafe-ui="20261008-v1">
   <div id="topBanner">
     <div class="banner-text">
       <div class="banner-eyebrow">Flood alert <span id="bannerCount">0 active</span></div>
@@ -24452,10 +24452,15 @@ function setDatumHelpOpen(isOpen) {
         const img = new Image();
         let settled = false;
         let cancelTimer = null;
+        let timeoutTimer = null;
         const done = value => {
           if (settled) return;
           settled = true;
           if (cancelTimer) window.clearInterval(cancelTimer);
+          if (timeoutTimer) window.clearTimeout(timeoutTimer);
+          img.onload = null;
+          img.onerror = null;
+          if (!value) { try { img.src = ""; } catch (_) {} }
           resolve(value);
         };
         const cancelIfRequested = () => {
@@ -24472,6 +24477,7 @@ function setDatumHelpOpen(isOpen) {
         img.decoding = "async";
         img.onload = async () => done(await decodeFloodFrameImage(img) ? url : null);
         img.onerror = () => done(null);
+        timeoutTimer = window.setTimeout(() => done(null), 20000);
         img.src = url;
       });
 
@@ -29121,6 +29127,79 @@ function getUniqueExportStages(frameItems) {
       return image.complete && image.naturalWidth > 0;
     }
 
+    async function renderFloodFrameWithRetry(renderFrame, token) {
+      for (let attempt = 0; attempt < 2; attempt += 1) {
+        if (token !== lastRenderToken) return false;
+        try {
+          if (await renderFrame()) return token === lastRenderToken;
+        } catch (error) {
+          if (token !== lastRenderToken) return false;
+          if (attempt === 1) console.warn("The selected flood frame could not load.", error);
+        }
+        if (token !== lastRenderToken) return false;
+        if (attempt === 0) {
+          document.body.dataset.floodFrameRecovery = "retrying";
+          await new Promise(resolve => window.setTimeout(resolve, 250));
+        }
+      }
+      return false;
+    }
+
+    function reportFloodFrameFailure() {
+      const retained = Boolean(currentFloodLayer && map?.hasLayer(currentFloodLayer));
+      const message = retained
+        ? "Could not load the selected flood image. The previous image and time are still shown. Select a time to retry."
+        : "The flood image could not load. Select a time to retry.";
+      if (typeof floodFrameState !== "undefined") floodFrameState = "failed";
+      document.body.dataset.floodFrame = "failed";
+      document.body.dataset.floodFrameRecovery = "failed";
+      if (typeof setFloodFrameStatus === "function") setFloodFrameStatus(message, "error");
+      toast(message);
+      if (!retained && typeof markInitialFloodFrameFailed === "function") markInitialFloodFrameFailed();
+      if (typeof stopPlayback === "function") stopPlayback();
+    }
+
+    function waitForRecoveryFloodLayer(layer, token, onReady) {
+      return new Promise(resolve => {
+        let settled = false;
+        let timeout = null;
+        const finish = ready => {
+          if (settled) return;
+          settled = true;
+          window.clearTimeout(timeout);
+          layer.off("load", handleLoad);
+          layer.off("error", handleError);
+          layer.off("remove", handleRemove);
+          if (!ready) {
+            if (pendingFloodLayer === layer) pendingFloodLayer = null;
+            preloadPromiseCache.delete(layer._url);
+            if (typeof disposeFloodLayer === "function") disposeFloodLayer(layer);
+            else {
+              if (map.hasLayer(layer)) map.removeLayer(layer);
+              const image = layer.getElement();
+              if (image) image.src = "";
+            }
+          }
+          resolve(ready);
+        };
+        const handleLoad = async () => {
+          if (settled || token !== lastRenderToken) return finish(false);
+          if (!await decodeFloodFrameImage(layer.getElement())) return finish(false);
+          await new Promise(requestAnimationFrame);
+          if (settled || token !== lastRenderToken || !map.hasLayer(layer)) return finish(false);
+          try { onReady(); finish(true); }
+          catch (error) { console.warn("The flood image could not be displayed.", error); finish(false); }
+        };
+        const handleError = () => finish(false);
+        const handleRemove = () => { if (currentFloodLayer !== layer) finish(false); };
+        layer.on("load", handleLoad);
+        layer.on("error", handleError);
+        layer.on("remove", handleRemove);
+        timeout = window.setTimeout(() => finish(false), 20000);
+        try { layer.addTo(map); } catch (_) { finish(false); }
+      });
+    }
+
     function clearFloodLayer() {
       if (pendingFloodLayer && map && map.hasLayer(pendingFloodLayer)) {
         map.removeLayer(pendingFloodLayer);
@@ -30116,7 +30195,6 @@ function formatSelectedObservedDate(dateStr) {
 
       const overlayUrl = match.url;
       if (!await preloadImage(overlayUrl)) {
-        if (token === lastRenderToken) clearFloodLayer();
         return false;
       }
       if (token !== lastRenderToken) return;
@@ -30150,53 +30228,19 @@ function formatSelectedObservedDate(dateStr) {
 
       pendingFloodLayer = nextLayer;
 
-      return await new Promise(resolve => {
-        nextLayer.once("load", async () => {
-          if (token !== lastRenderToken) {
-            if (map.hasLayer(nextLayer)) map.removeLayer(nextLayer);
-            resolve(false);
-            return;
-          }
+      return await waitForRecoveryFloodLayer(nextLayer, token, () => {
+        nextLayer.setOpacity(overlayOpacity);
+        currentFloodLayer = nextLayer;
+        pendingFloodLayer = null;
 
-          // Keep the displayed frame until the replacement pixels are ready.
-          if (!await decodeFloodFrameImage(nextLayer.getElement()) || token !== lastRenderToken) {
-            if (map.hasLayer(nextLayer)) map.removeLayer(nextLayer);
-            if (pendingFloodLayer === nextLayer) pendingFloodLayer = null;
-            if (token === lastRenderToken) {
-              clearFloodLayer();
-              toast("The selected flood image could not load. Please try again.");
-              if (typeof markInitialFloodFrameFailed === "function") markInitialFloodFrameFailed();
-            }
-            resolve(false);
-            return;
-          }
+        if (previousLayer && map.hasLayer(previousLayer)) {
+          map.removeLayer(previousLayer);
+        }
 
-          nextLayer.setOpacity(overlayOpacity);
-          currentFloodLayer = nextLayer;
-          pendingFloodLayer = null;
-
-          if (previousLayer && map.hasLayer(previousLayer)) {
-            map.removeLayer(previousLayer);
-          }
-
-          if (!mapHasFit && floodLatLngBounds) {
-            map.fitBounds(floodLatLngBounds, { padding: [16, 16] });
-            mapHasFit = true;
-          }
-          resolve(true);
-        });
-
-        nextLayer.on("error", () => {
-          if (token !== lastRenderToken) { resolve(false); return; }
-          if (map.hasLayer(nextLayer)) map.removeLayer(nextLayer);
-          pendingFloodLayer = null;
-          toast(`Leaflet could not draw ${match.filename}.`);
-          clearFloodLayer();
-          resolve(false);
-        });
-
-        nextLayer.once("remove", () => resolve(false));
-        nextLayer.addTo(map);
+        if (!mapHasFit && floodLatLngBounds) {
+          map.fitBounds(floodLatLngBounds, { padding: [16, 16] });
+          mapHasFit = true;
+        }
       });
     }
 
@@ -30207,7 +30251,8 @@ function formatSelectedObservedDate(dateStr) {
       const entry = currentSeriesHours[index];
       if (!entry) return;
 
-      currentHourIndex = index;
+      const previousHourIndex = currentHourIndex;
+      const requestedSeries = currentSeriesHours;
 
       const rawStage = getStageValue(entry);
       const displayStage = getOverlayStage(rawStage);
@@ -30218,6 +30263,7 @@ function formatSelectedObservedDate(dateStr) {
       slider.value = String(index);
 
       if (displayStage == null) {
+        currentHourIndex = index;
         renderSelectionMeta(entry, rawStage, displayStage);
         renderTimelineMeta(entry);
         toast("No observed record for this time.");
@@ -30230,9 +30276,17 @@ function formatSelectedObservedDate(dateStr) {
       toast(note);
 
       const token = ++lastRenderToken;
-      const ready = await setFloodLayer(currentOverlayMode, rawStage, hydraulicPhase, token, entry, currentSeriesHours);
-      if (token !== lastRenderToken) return;
-      if (!ready) clearFloodLayer();
+      const ready = await renderFloodFrameWithRetry(() => setFloodLayer(currentOverlayMode, rawStage, hydraulicPhase, token, entry, currentSeriesHours), token);
+      if (token !== lastRenderToken || requestedSeries !== currentSeriesHours) return false;
+      if (!ready) {
+        currentHourIndex = previousHourIndex;
+        slider.value = String(previousHourIndex);
+        if (typeof updateSliderProgress === "function") updateSliderProgress();
+        reportFloodFrameFailure();
+        return false;
+      }
+      currentHourIndex = index;
+      document.body.dataset.floodFrameRecovery = "ready";
       renderSelectionMeta(entry, rawStage, displayStage);
       renderTimelineMeta(entry);
       preloadAroundHour(index);
