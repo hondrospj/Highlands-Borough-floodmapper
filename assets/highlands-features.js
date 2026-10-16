@@ -147,11 +147,13 @@ function buildReturnIntervalDisplaySeries(entries = currentRawSeriesHours) {
     }
 async function loadReturnInterval(preferredEntry = null, options = {}) {
       const generation = options.generation ?? ++selectionGeneration;
+      const selectionToken = options.selectionToken ?? lastRenderToken;
       if (!returnIntervalData || options.forceRefresh) {
         const payload = await fetchJson(withFreshJsonUrl(RETURN_INTERVALS_URL));
-        if (generation !== selectionGeneration) return;
+        if (generation !== selectionGeneration || selectionToken !== lastRenderToken) return false;
         returnIntervalData = payload;
       }
+      if (selectionToken !== lastRenderToken) return false;
       const record = getReturnIntervalRecord();
       if (!record || !Array.isArray(record.series15min) || !record.series15min.length) {
         throw new Error(`${getReturnIntervalLabel()} synthetic storm is unavailable.`);
@@ -188,8 +190,8 @@ async function switchReturnInterval(years) {
       currentDataMode = "return-interval";
       currentViewType = "return-interval";
       updateDataModeButtons();
-      clearFloodLayer();
-      await loadReturnInterval();
+      cancelPendingFloodFrame();
+      if (await loadReturnInterval() === false) return;
       await renderHour(currentHourIndex);
     }
 function formatExpectedFloodCount(value) {
@@ -494,7 +496,7 @@ function wireFloodHistoryPane() {
     }
 function getSelectedStageNavd88() {
       const entry = currentSeriesHours[currentHourIndex];
-      const stage = normalizeStageValue(getStageValue(entry));
+      const stage = normalizeStageValue(currentFloodLayer?._highlandsFrame?.stage ?? getStageValue(entry));
       return Number.isFinite(stage) ? stage : null;
     }
 function finiteStructureNumber(value) {
@@ -1170,7 +1172,7 @@ function initializeHighlandsFeatures() {
   const oldInterval=setTimelineIntervalMinutes;
   setTimelineIntervalMinutes=async function(minutes){
     if(currentDataMode!=='return-interval')return oldInterval.apply(this,arguments);
-    const reference=currentSeriesHours[currentHourIndex];stopPlayback();currentTimelineIntervalMinutes=[15,1440].includes(Number(minutes))?Number(minutes):60;updateTimelineIntervalUI();await loadReturnInterval(reference);await renderHour(currentHourIndex);
+    const reference=currentSeriesHours[currentHourIndex];stopPlayback();cancelPendingFloodFrame();currentTimelineIntervalMinutes=[15,1440].includes(Number(minutes))?Number(minutes):60;updateTimelineIntervalUI();if(await loadReturnInterval(reference)===false)return;await renderHour(currentHourIndex);
   };
   const oldRender=renderHour;
   renderHour=async function(){const result=await oldRender.apply(this,arguments);updateNsiStructureImpactLayer();await updatePersistentDepthQueryPopup();return result;};

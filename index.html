@@ -25997,8 +25997,8 @@ function cloneStyleObject(value) {
       currentTopTideIndex = null;
       updateForecastScenarioButtons();
       updateDataModeButtons();
-      clearFloodLayer();
-      await loadForecast();
+      cancelPendingFloodFrame();
+      if (await loadForecast() === false) return;
       renderTopTides();
       await renderHour(currentHourIndex);
     }
@@ -31801,6 +31801,14 @@ function getUniqueExportStages(frameItems) {
       });
     }
 
+    function cancelPendingFloodFrame() {
+      // Supersede a selection without blanking the last complete map image.
+      const token = ++lastRenderToken;
+      if (pendingFloodLayer && map?.hasLayer(pendingFloodLayer)) map.removeLayer(pendingFloodLayer);
+      pendingFloodLayer = null;
+      return token;
+    }
+
     function clearFloodLayer() {
       if (pendingFloodLayer && map && map.hasLayer(pendingFloodLayer)) {
         map.removeLayer(pendingFloodLayer);
@@ -32827,6 +32835,8 @@ function formatSelectedObservedDate(dateStr) {
         }
       );
 
+      // Bind presentation metadata to the decoded image, not a pending slider selection.
+      nextLayer._highlandsFrame = { entry, series, stage: stageValue, phase, mode, dataMode: currentDataMode };
       pendingFloodLayer = nextLayer;
 
       return await waitForRecoveryFloodLayer(nextLayer, token, () => {
@@ -32900,8 +32910,10 @@ function formatSelectedObservedDate(dateStr) {
       slider.value = String(Math.min(currentHourIndex, currentSeriesHours.length - 1));
     }
 
-    async function loadForecast(preferredEntry = null) {
-      forecastData = await fetchJson(withFreshJsonUrl(FORECAST_URL));
+    async function loadForecast(preferredEntry = null, selectionToken = lastRenderToken) {
+      const payload = await fetchJson(withFreshJsonUrl(FORECAST_URL));
+      if (selectionToken !== lastRenderToken) return false;
+      forecastData = payload;
       clearExportAvailabilityCache();
       currentRawSeriesHours = getActiveForecastHours();
       const displaySeries = buildForecastDisplaySeries(currentRawSeriesHours);
@@ -33389,6 +33401,7 @@ function populateCalendarSelectors() {
       const dayRecord = getObservedDayRecord(dateStr);
       if (!dayRecord) throw new Error(`Observed day not found: ${dateStr}`);
 
+      const selectionToken = cancelPendingFloodFrame();
       const preservePlayback = Boolean(options && options.preservePlayback);
       if (!preservePlayback) stopPlayback();
       currentDataMode = "observed";
@@ -33421,6 +33434,7 @@ function populateCalendarSelectors() {
       document.getElementById("hourSlider").value = String(currentHourIndex);
 
       await renderCalendar();
+      if (selectionToken !== lastRenderToken) return;
       await renderHour(currentHourIndex);
       renderTopTides();
     }
@@ -33429,6 +33443,7 @@ function populateCalendarSelectors() {
       if (!topTideEvents[index]) throw new Error("Top 10 flood crest not available.");
       stopPlayback();
 
+      const selectionToken = cancelPendingFloodFrame();
       currentBaseModeBeforeTopTide = currentDataMode;
       currentDataMode = "observed";
       updateDataModeButtons();
@@ -33461,6 +33476,7 @@ function populateCalendarSelectors() {
       document.getElementById("hourSlider").value = String(currentHourIndex);
 
       await renderCalendar();
+      if (selectionToken !== lastRenderToken) return;
       await renderHour(currentHourIndex);
       renderTopTides();
     }
@@ -33474,13 +33490,13 @@ function populateCalendarSelectors() {
       toast("");
       currentTimelineIntervalMinutes = nextMinutes;
       updateTimelineIntervalUI();
-      clearFloodLayer();
+      cancelPendingFloodFrame();
 
       if (currentViewType === "forecast" || currentDataMode === "forecast") {
         currentDataMode = "forecast";
         currentViewType = "forecast";
         updateDataModeButtons();
-        await loadForecast(referenceEntry);
+        if (await loadForecast(referenceEntry) === false) return;
         renderTopTides();
         await renderHour(currentHourIndex);
         return;
@@ -33518,11 +33534,12 @@ function populateCalendarSelectors() {
       if (mode === currentDataMode && currentViewType !== "top-tide") return;
       stopPlayback();
       toast("");
+      const selectionToken = cancelPendingFloodFrame();
 
       if (mode === "forecast") {
         currentDataMode = "forecast";
         updateDataModeButtons();
-        await loadForecast();
+        if (await loadForecast() === false) return;
         renderTopTides();
         await renderHour(currentHourIndex);
         return;
@@ -33531,7 +33548,9 @@ function populateCalendarSelectors() {
       currentDataMode = "observed";
       updateDataModeButtons();
       await loadObserved();
+      if (selectionToken !== lastRenderToken) return;
       await renderCalendar();
+      if (selectionToken !== lastRenderToken) return;
 
       const defaultDate = getBestObservedDate(currentViewType === "top-tide" ? null : selectedObservedDate);
       if (defaultDate) {
@@ -33543,7 +33562,7 @@ function populateCalendarSelectors() {
 
     async function reloadAll() {
       stopPlayback();
-      clearFloodLayer();
+      const selectionToken = cancelPendingFloodFrame();
       toast("");
       imageExistsCache = new Map();
 
@@ -33560,18 +33579,18 @@ function populateCalendarSelectors() {
 
       if (currentDataMode === "observed") {
         await loadObserved();
-        const defaultDate = getBestObservedDate(currentViewType === "top-tide" ? null : selectedObservedDate);
-        if (defaultDate) {
-          await loadObservedDay(defaultDate);
-        } else {
-          currentDataMode = "forecast";
-          updateDataModeButtons();
-          await loadForecast();
-          await renderHour(currentHourIndex);
+        if (selectionToken === lastRenderToken) {
+          const defaultDate = getBestObservedDate(currentViewType === "top-tide" ? null : selectedObservedDate);
+          if (defaultDate) {
+            await loadObservedDay(defaultDate);
+          } else {
+            currentDataMode = "forecast";
+            updateDataModeButtons();
+            if (await loadForecast() !== false) await renderHour(currentHourIndex);
+          }
         }
       } else {
-        await loadForecast();
-        await renderHour(currentHourIndex);
+        if (await loadForecast() !== false) await renderHour(currentHourIndex);
       }
 
       window.floodmapperAfterFirstFrame(() => document.body.classList.add("nw-app-ready"));
@@ -35332,7 +35351,7 @@ document.querySelectorAll("#downloadExtentControl button[data-extent]").forEach(
      Town-specific gauges, alert zones, assets, overlays,
      boundary settings, map center, and address lookup live here.
 ========================================================== -->
-<script src="assets/highlands-features.js?v=20261016-3"></script>
+<script src="assets/highlands-features.js?v=20261016-stability"></script>
 <script>
 const BUNNY_STORAGE_ZONE_ID = "5907481";
 const BUNNY_CDN_BASE_URL = "https://floodmapperv1.b-cdn.net";
@@ -35502,8 +35521,8 @@ main().catch(err => {
 
 
 
-<script src="assets/highlands-3d.js?v=20261016-depthpill"></script>
-<script src="assets/highlands-road-impacts.js?v=20261016-3"></script>
+<script src="assets/highlands-3d.js?v=20261016-stability"></script>
+<script src="assets/highlands-road-impacts.js?v=20261016-stability"></script>
 <script id="floodmapper-v11-depth-query">
 (function(){
   "use strict";
@@ -35542,7 +35561,7 @@ main().catch(err => {
 
   function v11Stage(){
     try {
-      const raw = getStageValue(currentSeriesHours[currentHourIndex]);
+      const raw = currentFloodLayer?._highlandsFrame?.stage ?? getStageValue(currentSeriesHours[currentHourIndex]);
       if (!Number.isFinite(raw)) return null;
       return Number(raw);
     } catch (_) { return null; }
@@ -35550,6 +35569,7 @@ main().catch(err => {
 
   function v11Phase(){
     try {
+      if (currentFloodLayer?._highlandsFrame) return currentFloodLayer._highlandsFrame.phase;
       const entry = currentSeriesHours[currentHourIndex];
       return getHydraulicPhaseForEntry(entry,currentHourIndex,currentSeriesHours);
     } catch (_) { return "slack"; }
@@ -35557,8 +35577,10 @@ main().catch(err => {
 
   function v11Heading(){
     try {
-      if (currentDataMode === "forecast") return "Forecast Water Depth";
-      if (currentDataMode === "observed") return "Water Depth";
+      const mode = typeof currentFloodLayer === "undefined" ? currentDataMode :
+        (currentFloodLayer?._highlandsFrame?.dataMode || currentDataMode);
+      if (mode === "forecast") return "Forecast Water Depth";
+      if (mode === "observed") return "Water Depth";
     } catch (_) {}
     return "Modeled Water Depth";
   }

@@ -55,8 +55,9 @@
   function syncLayers() {
     const gl = window.NORTH_WILDWOOD_3D?.getMap?.();
     const useGl = Boolean(gl && document.body.classList.contains("map-3d-ready"));
-    if (map && leafletLayer && map.hasLayer(leafletLayer)) map.removeLayer(leafletLayer);
-    if (map && enabled && !useGl && renderedData.features.length) {
+    const showLeaflet = Boolean(map && enabled && !useGl && renderedData.features.length);
+    if (map && leafletLayer && !showLeaflet && map.hasLayer(leafletLayer)) map.removeLayer(leafletLayer);
+    if (showLeaflet) {
       if (!map.getPane("roadImpactsPane")) {
         map.createPane("roadImpactsPane");
         map.getPane("roadImpactsPane").style.zIndex = "705";
@@ -69,7 +70,7 @@
           style: { color: COLOR, weight: 4, opacity: 1, lineCap: "round", lineJoin: "round" }
         });
       }
-      leafletLayer.addTo(map);
+      if (!map.hasLayer(leafletLayer)) leafletLayer.addTo(map);
     }
     if (!useGl) return;
     if (glInstance !== gl) { glInstance = gl; glDataVersion = -1; }

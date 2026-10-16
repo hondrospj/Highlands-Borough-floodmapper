@@ -1,0 +1,31 @@
+name: Highlands rendering stability
+on:
+  push:
+    paths: ['index.html', 'assets/highlands-*.js', 'tools/test_highlands*.mjs', '.github/workflows/highlands-stability.yml']
+  pull_request:
+    paths: ['index.html', 'assets/highlands-*.js', 'tools/test_highlands*.mjs', '.github/workflows/highlands-stability.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  stability:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            index.html
+            assets/highlands-*.js
+            tools/test_highlands*.mjs
+          sparse-checkout-cone-mode: false
+          lfs: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify committed frames, texture recovery and stable layer reuse
+        run: |
+          node --check assets/highlands-3d.js
+          node --check assets/highlands-features.js
+          node --check assets/highlands-road-impacts.js
+          node tools/test_highlands_stability.mjs
+          node tools/test_highlands_features.mjs
