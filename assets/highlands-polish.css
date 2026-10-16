@@ -1,0 +1,20 @@
+@layer highlands-joins {
+/* Highlands-specific joins between the shared UI and retained mapper engine. */
+.modeled-flood-notice{font:11px/1.45 system-ui;color:#cbd5e1;margin:10px 0 0;}
+#roadImpactsKey{font:11px/1.4 system-ui;margin-top:7px;color:#fca5a5;}
+#structuresImpactKey{font:11px/1.4 system-ui;margin-top:7px;color:#d7e3f2;}
+#structuresImpactKey b{display:inline-block;width:8px;height:8px;border-radius:50%;margin:0 3px 0 5px;}
+@media(max-width:900px),(max-height:560px) and (pointer:coarse){
+  html body[data-highlands-modern][data-highlands-modern].mobile-controls-open #mobileControlsToggle#mobileControlsToggle{display:none!important;}
+  html body[data-highlands-modern][data-highlands-modern].mobile-optimized #mobileControlsClose#mobileControlsClose{position:fixed!important;top:calc(var(--cm-top,8px) + 12px)!important;right:calc(var(--cm-right,8px) + 12px)!important;left:auto!important;bottom:auto!important;inset-inline-start:auto!important;inset-inline-end:20px!important;margin:0!important;transform:none!important;z-index:100005!important;}
+  html body[data-highlands-modern][data-highlands-modern] #leftPanel#leftPanel #nwwMobileControlHeader{top:0!important;margin:0!important;padding:14px 12px 12px!important;}
+  html body[data-highlands-modern][data-highlands-modern] #nwwMobileControlHeader#nwwMobileControlHeader .nww-drawer-heading{padding-right:52px!important;}
+  html body[data-highlands-modern][data-highlands-modern] #leftPanel#leftPanel .data-source-options{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:6px!important;}
+  html body[data-highlands-modern][data-highlands-modern] #timelineDock#timelineDock #timelineBubble#timelineBubble{left:62px!important;right:106px!important;width:auto!important;min-width:0!important;max-width:none!important;height:44px!important;min-height:44px!important;padding:0 3px!important;display:flex!important;flex-direction:row!important;flex-wrap:nowrap!important;align-items:center!important;justify-content:center!important;gap:5px!important;overflow:hidden!important;}
+  html body[data-highlands-modern][data-highlands-modern] #timelineDock#timelineDock #timelineBubble .timeline-bubble-current{flex:0 1 auto!important;min-width:0!important;display:block!important;white-space:normal!important;text-align:center!important;font-size:12px!important;line-height:15px!important;}
+  html body[data-highlands-modern][data-highlands-modern] #timelineDock#timelineDock #timelineBubble .timeline-bubble-stage{flex:0 0 auto!important;font-size:12px!important;line-height:16px!important;padding:3px 5px!important;margin:0!important;}
+  html body[data-highlands-modern][data-highlands-modern] #timelineDock#timelineDock #timelineStepBack#timelineStepBack{left:auto!important;right:54px!important;top:8px!important;width:38px!important;height:44px!important;}
+  html body[data-highlands-modern][data-highlands-modern] #timelineDock#timelineDock #timelineStepForward#timelineStepForward{left:auto!important;right:8px!important;top:8px!important;width:38px!important;height:44px!important;}
+}
+
+}
