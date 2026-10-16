@@ -2132,8 +2132,8 @@
   };
 
   var originalUpdatePersistentDepthQueryPopup = updatePersistentDepthQueryPopup;
-  updatePersistentDepthQueryPopup = function () {
-    var result = originalUpdatePersistentDepthQueryPopup.apply(this, arguments);
+  updatePersistentDepthQueryPopup = async function () {
+    var result = await originalUpdatePersistentDepthQueryPopup.apply(this, arguments);
     if (glPopup && persistentFloodPopup && typeof persistentFloodPopup.getContent === "function") {
       var html = String(persistentFloodPopup.getContent() || "");
       if (html !== lastGlPopupHtml) {
