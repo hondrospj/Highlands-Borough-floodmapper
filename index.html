@@ -172,7 +172,7 @@
   }
 }
 </style>
-<style id="floodmapper-unified-ui-20261017" data-ui-sha256="0a920d86cc5c1c77d23eeb9e55cb50a53a134fcb8e6b71b0a71ae5746701f15f">@layer floodmapper-unified-polish,floodmapper-unified-base-polish,floodmapper-unified-base;
+<style id="floodmapper-unified-ui-20261017" data-ui-sha256="1876a86c2a869e56d39518238f2143d02d00ddb025bb2ec54025be95868de605">@layer floodmapper-unified-polish,floodmapper-unified-base-polish,floodmapper-unified-base;
 @layer floodmapper-unified-base-polish,floodmapper-unified-base;
 
 @layer floodmapper-unified-base {
@@ -1742,6 +1742,12 @@ html body[data-floodmapper-reference] #timelineBubble :is(.timeline-bubble-start
 }
 /* One ordering and one set of dimensions for every renderer. */
 @layer floodmapper-unified-polish {
+ html body[data-floodmapper-unified] #nativeRoadNamesHint {display:none!important;}
+ html body[data-floodmapper-unified] #roadImpactsKey[hidden] {display:none!important;}
+ html body[data-floodmapper-unified] .top-tide-more-btn .unified-more-plus {color:#60a5fa!important;background:transparent!important;border:0!important;box-shadow:none!important;width:auto!important;height:auto!important;}
+ html body[data-floodmapper-unified] #legendCollapseBtn {display:none!important;}
+ html body[data-floodmapper-unified].return-interval-mode #forecastScenarioCard {display:none!important;}
+ html body[data-floodmapper-unified].return-interval-mode #returnIntervalCard {display:flex!important;}
  html body[data-floodmapper-unified] :is(#leftPanel,#rightRail,#mobileRailMount) > :is(.panel-card,.rail-card,#legendDock) {background:#171e2a!important;backdrop-filter:none!important;isolation:isolate;}
  html body[data-floodmapper-unified] #leftPanel>.data-source-card {order:10!important;}
  html body[data-floodmapper-unified] #leftPanel>#forecastScenarioCard {order:20!important;}
@@ -1764,11 +1770,6 @@ html body[data-floodmapper-reference] #timelineBubble :is(.timeline-bubble-start
  html body[data-floodmapper-unified] .layers-card .layer-meta {grid-column:1!important;grid-row:1!important;}
  html body[data-floodmapper-unified] .layers-card .toggle {grid-column:2!important;grid-row:1!important;justify-self:end!important;}
  html body[data-floodmapper-unified] .layers-card .layer-name {font-size:14px!important;line-height:1.2!important;overflow-wrap:normal!important;}
- html body[data-floodmapper-unified] .layers-card .ui-unavailable .toggle {opacity:.45!important;cursor:default!important;}
- html body[data-floodmapper-unified] .layers-card .ui-unavailable .layer-name {color:#b0bccc!important;}
- html body[data-floodmapper-unified] .layers-card .ui-locked .toggle {opacity:.65!important;cursor:default!important;}
- html body[data-floodmapper-unified] .unified-layer-note {display:block!important;color:#94a8bf!important;font:500 10px/1.2 system-ui!important;margin-top:2px!important;}
- html body[data-floodmapper-unified] .unified-layer-note[hidden],html body[data-floodmapper-unified] #nativeRoadNamesHint {display:none!important;}
  html body[data-floodmapper-unified] .layers-card [aria-disabled="true"]:focus-visible {outline:2px solid #94a8bf!important;outline-offset:3px!important;}
  html body[data-floodmapper-unified] #exportPartnerLogo[src]:not([src=""]) {display:block!important;}
  html body[data-floodmapper-unified] :is(#leftPanel,#rightRail) {scroll-behavior:auto!important;}
@@ -26430,7 +26431,7 @@ html body[data-county-viewport].top-tides-modal-open #mapTitleBadge{visibility:h
 <link rel="stylesheet" href="assets/highlands-modern-map-status.css?v=20261016-3">
 <link rel="stylesheet" href="assets/highlands-polish.css?v=20261016-3">
 </head>
-<body data-county-viewport="20261017" data-county-mobile="20261015" data-county-fix="20261015" class="nw-app-loading" data-flood-depth-cache="bounded-palette-20261009" data-flood-frame-cache="bounded-composites-20261008" data-flood-frame-swap="decode-before-swap-20261008" data-shorelysafe-ui="20261017" data-flood-frame-resilience="retain-retry-20261013" data-floodmapper-reference="20261017" data-fleet-viewport-existing="true" data-floodmapper-unified="20261017.2"><div id="roadImpactsKey" hidden><span>Roads: modeled depth &gt; 0.5 ft</span><span id="roadImpactsStatus" role="status"></span></div><div id="floodHistoryBackdrop" class="flood-history-backdrop" hidden aria-hidden="true">
+<body data-county-viewport="20261017" data-county-mobile="20261015" data-county-fix="20261015" class="nw-app-loading" data-flood-depth-cache="bounded-palette-20261009" data-flood-frame-cache="bounded-composites-20261008" data-flood-frame-swap="decode-before-swap-20261008" data-shorelysafe-ui="20261017" data-flood-frame-resilience="retain-retry-20261013" data-floodmapper-reference="20261017" data-fleet-viewport-existing="true" data-floodmapper-unified="20261017.3"><div id="roadImpactsKey" hidden><span>Roads: modeled depth &gt; 0.5 ft</span><span id="roadImpactsStatus" role="status"></span></div><div id="floodHistoryBackdrop" class="flood-history-backdrop" hidden aria-hidden="true">
     <aside id="floodHistoryPane" class="flood-history-pane" role="dialog" aria-modal="true" aria-labelledby="floodHistoryTitle">
       <header class="flood-history-head">
         <div>
@@ -37203,7 +37204,7 @@ main().catch(err => {
 
 
 
-<script src="assets/highlands-3d.js?v=20261016-stability&stability=20261017.2"></script>
+<script src="assets/highlands-3d.js?v=20261016-stability&stability=20261017.3"></script>
 <script src="assets/highlands-road-impacts.js?v=20261016-stability"></script>
 <script id="floodmapper-v11-depth-query">
 (function(){
@@ -37976,20 +37977,20 @@ window.HighlandsDepthQuery = { sample:v11DepthAt, html:v11PopupHtml };
 </script>
 
 
-<script id="floodmapper-unified-controller-20261017" data-ui-sha256="4ffe020a70a4135bc99191f137006cc173dd60423c7d2c2e60649f0b8ab62be4">/* Shared FloodMapper presentation. Each town retains its own model and data handlers. */
+<script src="assets/town-native-feature-data.js?v=20261017.3"></script><script id="floodmapper-unified-controller-20261017" data-ui-sha256="f8de02c388997e4dc49b6ce79070453e47e7461c774d3b681cf2b4ed37e5959f">/* Shared FloodMapper presentation. Each town retains its own model and data handlers. */
 (() => {
  'use strict';
- const VERSION='20261017.2',body=document.body,root=document.documentElement;
+ const VERSION='20261017.3',body=document.body,root=document.documentElement;
  const panel=document.getElementById('leftPanel'),rail=document.getElementById('rightRail'),timeline=document.getElementById('timelineDock'),app=document.getElementById('app');
  if(!panel||!rail||!timeline||body.dataset.unifiedUiReady===VERSION)return;
  body.dataset.unifiedUiReady=VERSION;body.dataset.floodmapperUnified=VERSION;body.dataset.countyViewport=VERSION;
  const mobile=matchMedia('(max-width:900px), (max-height:560px) and (pointer:coarse)');
- const owned=new WeakMap(),bound=new WeakSet(),nativeLayers=new Map(),satelliteMaps=new WeakMap(),satelliteExportLayers=new WeakMap();
+ const owned=new WeakMap(),bound=new WeakSet();
  const layerOrder=[['satelliteToggle','Satellite'],['roadImpactsToggle','Road Impacts'],['buildingsToggle','Buildings'],['parcelsToggle','Parcels'],['nsiStructuresToggle','Structural Impacts'],['roadsToggle','Road names'],['webcamsToggle','Cameras']];
  const groups={forecast:'.data-source-card,#forecastScenarioCard,#returnIntervalCard,#timelineIntervalCard,#calendarCard,.mobile-top-tides-card,.top-tides-card',map:'.overlay-card,.datum-card,.opacity-card,.layers-card',tools:'#townAddressCard,#downloadCard,#mapperTutorialBtn,#avalonTourBtn'};
  const safeProbe=document.createElement('div');safeProbe.id='unifiedSafeAreaProbe';safeProbe.setAttribute('aria-hidden','true');safeProbe.style.cssText='position:fixed;visibility:hidden;pointer-events:none;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)';body.append(safeProbe);
  let chosenSection=panel.dataset.nwwSection||'forecast';
- let frame=0,layoutPasses=0,satelliteLayer=null,satelliteEnabled=false,drawerOpener=null,exportSatelliteHooked=false;
+ let frame=0,layoutPasses=0,drawerOpener=null;
  const visible=e=>!!e&&e.getClientRects().length>0&&getComputedStyle(e).visibility!=='hidden'&&getComputedStyle(e).display!=='none';
  function set(e,key,value){if(e&&e.style.getPropertyValue(key)!==value)e.style.setProperty(key,value,'important');else if(e&&e.style.getPropertyPriority(key)!=='important')e.style.setProperty(key,value,'important');}
  function saveStyle(e){if(e)owned.set(e,e.getAttribute('style'));}
@@ -38030,79 +38031,20 @@ window.HighlandsDepthQuery = { sample:v11DepthAt, html:v11PopupHtml };
    if(!bound.has(button)){button.addEventListener('click',event=>{event.preventDefault();event.stopImmediatePropagation();const current=[...days.querySelectorAll('.timeline-day')],i=current.findIndex(e=>e.classList.contains('active')||e.getAttribute('aria-current')==='date');current[Math.max(0,i)+delta]?.click();},true);bound.add(button);}
   }
  }
- function syncAddedSatelliteExport(){
-  if(typeof exportMap==='undefined'||!exportMap?.getPane||!window.L)return;
-  let layer=satelliteExportLayers.get(exportMap);
-  if(satelliteEnabled&&!layer){
-   if(!exportMap.getPane('unifiedSatellitePane')){exportMap.createPane('unifiedSatellitePane');exportMap.getPane('unifiedSatellitePane').style.zIndex='200';}
-   layer=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{pane:'unifiedSatellitePane',maxNativeZoom:19,maxZoom:24,crossOrigin:true,attribution:'Imagery © Esri and contributors'});
-   satelliteExportLayers.set(exportMap,layer);
-  }
-  // The existing export-readiness helper waits for this optional raster layer.
-  window.exportSatelliteLayer=layer||null;
-  if(layer){if(satelliteEnabled&&!exportMap.hasLayer(layer))layer.addTo(exportMap);else if(!satelliteEnabled&&exportMap.hasLayer(layer))exportMap.removeLayer(layer);}
- }
- function hookAddedSatelliteExport(){
-  if(exportSatelliteHooked||document.getElementById('satelliteToggle')?.dataset.uiAdded!=='true'||typeof ensureExportMap!=='function')return;
-  const original=ensureExportMap;
-  ensureExportMap=function(){const result=original.apply(this,arguments);if(result?.then)return result.then(value=>{syncAddedSatelliteExport();return value;});syncAddedSatelliteExport();return result;};
-  exportSatelliteHooked=true;
- }
- function syncSatellite3d(){
-  const gl=standalone();if(!gl)return;if(!gl.isStyleLoaded?.()){if(!gl.__unifiedSatelliteWaiting){gl.__unifiedSatelliteWaiting=true;gl.once('idle',()=>{gl.__unifiedSatelliteWaiting=false;syncSatellite3d();});}return;}
-  let state=satelliteMaps.get(gl);
-  if(!state){state={visibility:new Map()};satelliteMaps.set(gl,state);}
-  const id='unified-satellite';
-  if(satelliteEnabled&&!gl.getSource(id)){
-   gl.addSource(id,{type:'raster',tiles:['https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'],tileSize:256,maxzoom:19,attribution:'Imagery © Esri and contributors'});
-   gl.addLayer({id,type:'raster',source:id,paint:{'raster-fade-duration':0}},gl.getStyle().layers?.[0]?.id);
-  }
-  for(const layer of gl.getStyle().layers||[]){if((layer.source==='esri'&&layer.type!=='symbol')||layer.type==='background'){
-   if(satelliteEnabled){if(!state.visibility.has(layer.id))state.visibility.set(layer.id,gl.getLayoutProperty(layer.id,'visibility')||'visible');if(gl.getLayoutProperty(layer.id,'visibility')!=='none')gl.setLayoutProperty(layer.id,'visibility','none');}
-   else if(state.visibility.has(layer.id)){gl.setLayoutProperty(layer.id,'visibility',state.visibility.get(layer.id));state.visibility.delete(layer.id);}
-  }}
-  if(gl.getLayer(id))gl.setLayoutProperty(id,'visibility',satelliteEnabled?'visible':'none');
- }
- async function setAddedSatellite(value){
-  const toggle=document.getElementById('satelliteToggle');
-  try{
-   let target=leaflet();if(!target&&typeof ensureMap==='function'){ensureMap();target=leaflet();}
-   if(!target||!window.L)throw Error('The map is still loading. Please try again.');
-   satelliteEnabled=!!value;
-   if(!satelliteLayer){if(!target.getPane('unifiedSatellitePane')){target.createPane('unifiedSatellitePane');target.getPane('unifiedSatellitePane').style.zIndex='200';}satelliteLayer=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{pane:'unifiedSatellitePane',maxNativeZoom:19,maxZoom:24,crossOrigin:true,updateWhenIdle:true,keepBuffer:1,attribution:'Imagery © Esri and contributors'});}
-   if(satelliteEnabled&&!target.hasLayer(satelliteLayer))satelliteLayer.addTo(target);if(!satelliteEnabled&&target.hasLayer(satelliteLayer))target.removeLayer(satelliteLayer);
-   flag(toggle,'on',satelliteEnabled);attr(toggle,'aria-checked',String(satelliteEnabled));body.dataset.unifiedSatellite=satelliteEnabled?'on':'off';syncSatellite3d();syncAddedSatelliteExport();schedule();
-  }catch(error){satelliteEnabled=false;const target=leaflet();if(satelliteLayer&&target?.hasLayer(satelliteLayer))target.removeLayer(satelliteLayer);body.dataset.unifiedSatellite='off';try{syncAddedSatelliteExport();}catch(_){}flag(toggle,'on',false);attr(toggle,'aria-checked','false');schedule();if(typeof toast==='function')toast(error.message);}
- }
- function layerAvailability(id,native){
-  if(id==='satelliteToggle')return {available:native||!!window.L};
-  if(id==='parcelsToggle')return {available:native&&typeof PARCELS_URL!=='undefined'&&!!PARCELS_URL};
-  if(id==='nsiStructuresToggle')return {available:native&&typeof NSI_STRUCTURES_URL!=='undefined'&&!!NSI_STRUCTURES_URL};
-  if(id==='roadsToggle'&&body.classList.contains('basemap-includes-labels')&&!body.classList.contains('county-standalone-3d'))return satelliteEnabled?{available:false,reason:'Street labels are unavailable on satellite imagery for this town.'}:{available:false,locked:true,reason:'Road names are part of this town’s basemap.'};
-  return {available:native};
- }
  function ensureLayers(){
   const card=document.querySelector('.layers-card');if(!card)return;flag(card,'nww-layers-card',true);
   let list=card.querySelector('.layer-list');if(!list){list=document.createElement('div');list.className='layer-list';card.append(list);}
+  const desired=[];
   for(const [id,label]of layerOrder){
-   let toggle=document.getElementById(id),row=toggle?.closest('.layer-item');
-   if(!nativeLayers.has(id))nativeLayers.set(id,!!toggle&&toggle.dataset.uiAdded!=='true');
-   if(!toggle){row=document.createElement('div');row.className='layer-item';toggle=document.createElement('div');toggle.id=id;toggle.className='toggle';toggle.dataset.uiAdded='true';toggle.setAttribute('role','switch');toggle.tabIndex=0;toggle.setAttribute('aria-checked','false');const meta=document.createElement('div');meta.className='layer-meta';const name=document.createElement('div');name.className='layer-name';name.textContent=label;meta.append(name);row.append(toggle,meta);list.append(row);}
-   if(row.parentElement!==list)list.append(row);
+   // Feature modules own capability, state, loading, errors and activation.
+   // Presentation never fabricates switches or disables a native handler.
+   const toggle=document.getElementById(id),row=toggle?.closest('.layer-item');if(!row)continue;
    text(row.querySelector('.layer-name'),label);attr(toggle,'aria-label','Show '+label.toLowerCase());
-   const status=layerAvailability(id,nativeLayers.get(id)),disabled=!status.available;
-   attr(toggle,'aria-disabled',String(disabled));flag(row,'ui-unavailable',disabled&&!status.locked);flag(row,'ui-locked',!!status.locked);
-   const noteId=id+'Availability';let note=row.querySelector('.unified-layer-note');if(!note){note=document.createElement('small');note.id=noteId;note.className='unified-layer-note';row.querySelector('.layer-meta').append(note);}
-   const reason=status.reason||label+' data is not available for this town.';
-   if(note.hidden!==!disabled)note.hidden=!disabled;text(note,status.locked?'Always shown':'Unavailable');
-   if(disabled){attr(toggle,'aria-describedby',noteId);attr(row,'title',reason);attr(note,'title',reason);if(status.locked){flag(toggle,'on',true);attr(toggle,'aria-checked','true');}else{flag(toggle,'on',false);attr(toggle,'aria-checked','false');}}
-   else {if(toggle.getAttribute('aria-describedby')===noteId)toggle.removeAttribute('aria-describedby');if(row.getAttribute('title')===reason)row.removeAttribute('title');}
-   if(!bound.has(toggle)){
-    toggle.addEventListener('click',event=>{if(toggle.getAttribute('aria-disabled')==='true'){event.preventDefault();event.stopImmediatePropagation();return;}if(id==='satelliteToggle'&&toggle.dataset.uiAdded==='true'){event.preventDefault();event.stopImmediatePropagation();setAddedSatellite(!satelliteEnabled);}},true);
-    toggle.addEventListener('keydown',event=>{if(event.key!=='Enter'&&event.key!==' ')return;if(toggle.getAttribute('aria-disabled')==='true'||(id==='satelliteToggle'&&toggle.dataset.uiAdded==='true')){event.preventDefault();event.stopImmediatePropagation();if(toggle.getAttribute('aria-disabled')!=='true')setAddedSatellite(!satelliteEnabled);}},true);bound.add(toggle);
-   }
+   const note=row.querySelector('.unified-layer-note');
+   if(note){if(toggle.getAttribute('aria-describedby')===note.id)toggle.removeAttribute('aria-describedby');note.remove();toggle.removeAttribute('aria-disabled');row.removeAttribute('title');}
+   flag(row,'ui-unavailable',false);flag(row,'ui-locked',false);desired.push(row);
   }
-  const desired=layerOrder.map(([id])=>document.getElementById(id)?.closest('.layer-item')).filter(Boolean);for(let i=0;i<desired.length;i++)if(list.children[i]!==desired[i])list.insertBefore(desired[i],list.children[i]||null);
+  for(let i=0;i<desired.length;i++)if(list.children[i]!==desired[i])list.insertBefore(desired[i],list.children[i]||null);
   const hint=document.getElementById('nativeRoadNamesHint');if(hint&&!hint.hidden)hint.hidden=true;
  }
  function setDrawer(open,returnFocus=true){
@@ -38123,11 +38065,13 @@ window.HighlandsDepthQuery = { sample:v11DepthAt, html:v11PopupHtml };
   attr(document.getElementById('mobileControlsToggle'),'aria-expanded',String(open));
  }
  function normalize(){
-  ensureControlButtons();ensureHeader();ensureDays();ensureLayers();hookAddedSatelliteExport();
+  ensureControlButtons();ensureHeader();ensureDays();ensureLayers();
   const title=panel.querySelector('.data-source-card h2');text(title,'Flood Data');
+  const downloadCard=document.getElementById('downloadCard');if(downloadCard?.getAttribute('role')==='button'){downloadCard.removeAttribute('role');downloadCard.removeAttribute('tabindex');downloadCard.removeAttribute('aria-label');}
   for(const [id,label]of [['forecastDataBtn','Forecast'],['observedDataBtn','Past'],['returnIntervalDataBtn','Modeled Floods'],['forecastLowBtn','Lower end'],['forecastMeanBtn','Mean'],['forecastHighBtn','Upper end'],['openDownloadModalBtn','Export Map']])text(document.getElementById(id),label);
   text(panel.querySelector('#forecastScenarioCard h2'),'Forecast range');
   for(const id of ['mapperTutorialBtn','avalonTourBtn'])text(document.getElementById(id),'Take the FloodMapper tour');
+  for(const button of document.querySelectorAll('.top-tide-more-btn')){if(button.dataset.unifiedMore!=='true'){const plus=document.createElement('span');plus.className='unified-more-plus';plus.textContent='+';const label=document.createElement('span');label.textContent='Show more';button.replaceChildren(plus,label);button.dataset.unifiedMore='true';}}
   const opacity=panel.querySelector('.opacity-card .control-row'),opacityText=document.getElementById('opacityText');if(opacity&&opacityText&&opacityText.parentElement!==opacity)opacity.append(opacityText);
   attr(document.getElementById('opacitySlider'),'aria-label','Flood overlay opacity');attr(document.getElementById('hourSlider'),'aria-label',body.classList.contains('observed-mode')?'Observed flood time':body.classList.contains('return-interval-mode')?'Modeled flood time':'Flood forecast time');
   Object.entries(groups).forEach(([group,selector])=>document.querySelectorAll(selector).forEach(e=>{if(e.dataset.nwwGroup!==group)e.dataset.nwwGroup=group;}));
@@ -38175,7 +38119,6 @@ window.HighlandsDepthQuery = { sample:v11DepthAt, html:v11PopupHtml };
   }
   for(const e of [panel,rail,timeline,document.getElementById('mapTitleBadge')])saveStyle(e);
   body.dataset.unifiedLayoutPasses=String(layoutPasses);body.dataset.unifiedLayout=compact?'mobile':'desktop';
-  if(document.getElementById('satelliteToggle')?.dataset.uiAdded==='true')syncSatellite3d();
  }
  function schedule(){if(!frame)frame=requestAnimationFrame(layout);}
  document.addEventListener('click',event=>{
