@@ -26415,7 +26415,7 @@ html body[data-county-viewport].top-tides-modal-open #mapTitleBadge{visibility:h
 <link rel="stylesheet" href="assets/highlands-modern-map-status.css?v=20261016-3">
 <link rel="stylesheet" href="assets/highlands-polish.css?v=20261016-3">
 </head>
-<body data-county-viewport="20261017" data-county-mobile="20261015" data-county-fix="20261015" class="nw-app-loading" data-flood-depth-cache="bounded-palette-20261009" data-flood-frame-cache="bounded-composites-20261008" data-flood-frame-swap="decode-before-swap-20261008" data-shorelysafe-ui="20261017" data-flood-frame-resilience="retain-retry-20261013" data-floodmapper-reference="20261017" data-fleet-viewport-existing="true" data-floodmapper-unified="20261017.1"><div id="roadImpactsKey" hidden><span>Roads: modeled depth &gt; 0.5 ft</span><span id="roadImpactsStatus" role="status"></span></div><div id="floodHistoryBackdrop" class="flood-history-backdrop" hidden aria-hidden="true">
+<body data-county-viewport="20261017" data-county-mobile="20261015" data-county-fix="20261015" class="nw-app-loading" data-flood-depth-cache="bounded-palette-20261009" data-flood-frame-cache="bounded-composites-20261008" data-flood-frame-swap="decode-before-swap-20261008" data-shorelysafe-ui="20261017" data-flood-frame-resilience="retain-retry-20261013" data-floodmapper-reference="20261017" data-fleet-viewport-existing="true" data-floodmapper-unified="20261017.2"><div id="roadImpactsKey" hidden><span>Roads: modeled depth &gt; 0.5 ft</span><span id="roadImpactsStatus" role="status"></span></div><div id="floodHistoryBackdrop" class="flood-history-backdrop" hidden aria-hidden="true">
     <aside id="floodHistoryPane" class="flood-history-pane" role="dialog" aria-modal="true" aria-labelledby="floodHistoryTitle">
       <header class="flood-history-head">
         <div>
@@ -37188,7 +37188,7 @@ main().catch(err => {
 
 
 
-<script src="assets/highlands-3d.js?v=20261016-stability&stability=20261017.1"></script>
+<script src="assets/highlands-3d.js?v=20261016-stability&stability=20261017.2"></script>
 <script src="assets/highlands-road-impacts.js?v=20261016-stability"></script>
 <script id="floodmapper-v11-depth-query">
 (function(){
@@ -37961,10 +37961,10 @@ window.HighlandsDepthQuery = { sample:v11DepthAt, html:v11PopupHtml };
 </script>
 
 
-<script id="floodmapper-unified-controller-20261017" data-ui-sha256="6d7ce6d41ffce500860d32e4fdc5bb644dcf10847208ba7dbbf2cb5ded0376a0">/* Shared FloodMapper presentation. Each town retains its own model and data handlers. */
+<script id="floodmapper-unified-controller-20261017" data-ui-sha256="2c922fe25e65f506c02d331ab31a8723cf8a0f4a6fd174d61bb3428d1777077a">/* Shared FloodMapper presentation. Each town retains its own model and data handlers. */
 (() => {
  'use strict';
- const VERSION='20261017.1',body=document.body,root=document.documentElement;
+ const VERSION='20261017.2',body=document.body,root=document.documentElement;
  const panel=document.getElementById('leftPanel'),rail=document.getElementById('rightRail'),timeline=document.getElementById('timelineDock'),app=document.getElementById('app');
  if(!panel||!rail||!timeline||body.dataset.unifiedUiReady===VERSION)return;
  body.dataset.unifiedUiReady=VERSION;body.dataset.floodmapperUnified=VERSION;body.dataset.countyViewport=VERSION;
@@ -38130,7 +38130,9 @@ window.HighlandsDepthQuery = { sample:v11DepthAt, html:v11PopupHtml };
   }else{
    for(const key of ['top','left','right','bottom','height'])body.style.removeProperty('--cm-'+key);
    set(timeline,'position','fixed');set(timeline,'left','16px');set(timeline,'right','16px');set(timeline,'bottom','16px');set(timeline,'height','112px');set(timeline,'min-height','112px');set(timeline,'max-height','112px');
-   const available=Math.max(180,timeline.getBoundingClientRect().top-28);
+   const bubbleRect=document.getElementById('timelineBubble')?.getBoundingClientRect();
+   const controlsBottom=Math.min(timeline.getBoundingClientRect().top-28,bubbleRect?.height?bubbleRect.top-12:Infinity);
+   const available=Math.max(100,controlsBottom-16);
    for(const [pane,width]of [[panel,300],[rail,280]])for(const [key,value]of Object.entries({position:'absolute',top:'16px',bottom:'auto',left:pane===panel?'16px':'auto',right:pane===rail?'16px':'auto',width:width+'px','max-width':width+'px',height:'auto','max-height':available+'px','min-height':'0px','overflow-y':'auto','overflow-x':'hidden',display:'flex'}))set(pane,key,value);
    const navWidth=document.getElementById('nwDefaultNavControl')?.getBoundingClientRect().width||document.getElementById('countyStandaloneView')?.getBoundingClientRect().width||48;
    const title=document.getElementById('mapTitleBadge'),l=panel.getBoundingClientRect().right+20,r=rail.getBoundingClientRect().left-navWidth-28;if(title){set(title,'left',((l+r)/2)+'px');set(title,'right','auto');set(title,'top','16px');set(title,'max-width',Math.max(100,r-l)+'px');set(title,'transform','translateX(-50%)');}
