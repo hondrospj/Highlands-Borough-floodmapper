@@ -37976,7 +37976,7 @@ window.HighlandsDepthQuery = { sample:v11DepthAt, html:v11PopupHtml };
 </script>
 
 
-<script id="floodmapper-unified-controller-20261017" data-ui-sha256="d16567fb8d90522b873fcbd5816bc0a79cca1c55780e9f8941858a0e95273c28">/* Shared FloodMapper presentation. Each town retains its own model and data handlers. */
+<script id="floodmapper-unified-controller-20261017" data-ui-sha256="ca0f860c7c978347820816edca2c6398a62c54126fc399fce6c283bada8f5d77">/* Shared FloodMapper presentation. Each town retains its own model and data handlers. */
 (() => {
  'use strict';
  const VERSION='20261017.2',body=document.body,root=document.documentElement;
@@ -38111,7 +38111,7 @@ window.HighlandsDepthQuery = { sample:v11DepthAt, html:v11PopupHtml };
   text(panel.querySelector('#forecastScenarioCard h2'),'Forecast range');
   for(const id of ['mapperTutorialBtn','avalonTourBtn'])text(document.getElementById(id),'Take the FloodMapper tour');
   const opacity=panel.querySelector('.opacity-card .control-row'),opacityText=document.getElementById('opacityText');if(opacity&&opacityText&&opacityText.parentElement!==opacity)opacity.append(opacityText);
-  attr(document.getElementById('opacitySlider'),'aria-label','Flood overlay opacity');attr(document.getElementById('hourSlider'),'aria-label','Flood forecast time');
+  attr(document.getElementById('opacitySlider'),'aria-label','Flood overlay opacity');attr(document.getElementById('hourSlider'),'aria-label',body.classList.contains('observed-mode')?'Observed flood time':body.classList.contains('return-interval-mode')?'Modeled flood time':'Flood forecast time');
   Object.entries(groups).forEach(([group,selector])=>document.querySelectorAll(selector).forEach(e=>{if(e.dataset.nwwGroup!==group)e.dataset.nwwGroup=group;}));
   for(const item of timeline.querySelectorAll('.timeline-key-item'))for(const node of [...item.childNodes])if(node.nodeType===Node.TEXT_NODE&&node.textContent.trim()){const span=document.createElement('span');span.className='timeline-key-label';span.textContent=node.textContent.trim().replace(/^No flooding$/i,'No Flooding').replace(/^(Minor|Moderate|Major) flooding$/i,'$1');node.replaceWith(span);}
   const bubble=document.getElementById('timelineBubble');if(bubble&&bubble.style.getPropertyValue('translate')!=='none')set(bubble,'translate','none');
