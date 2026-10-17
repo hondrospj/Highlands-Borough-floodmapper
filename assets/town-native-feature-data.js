@@ -4,15 +4,17 @@
  if(window.SHORELYSAFE_NATIVE_FEATURE_DATA)return;
  const needNsi=typeof NSI_STRUCTURES_URL!=='undefined'&&!NSI_STRUCTURES_URL,needParcels=typeof PARCELS_URL!=='undefined'&&!PARCELS_URL;
  if(!needNsi&&!needParcels)return;
- const sourceFetch=fetchJson,cache=new Map();
+ const sourceFetch=fetchJson,cache=new Map();let clipFeature=null,clipPromise=null;
  const nsiUrl=new URL('assets/native-structure-data.json',APP_BASE).href,parcelUrl=new URL('assets/native-parcel-data.json',APP_BASE).href;
- function boundary(){return typeof municipalBoundaryFeature!=='undefined'?municipalBoundaryFeature:null;}
+ function boundary(){return clipFeature||(typeof municipalBoundaryFeature!=='undefined'?municipalBoundaryFeature:null);}
+ async function ensureBoundary(){if(boundary())return;if(!clipPromise)clipPromise=json(new URL(TOWN_CONFIG.boundary?.boundaryUrl||'',APP_BASE).href).then(data=>{if(!data.type)throw Error('The municipal clipping boundary could not load.');clipFeature=data;}).catch(error=>{clipPromise=null;throw error;});return clipPromise;}
  function within(lon,lat){const f=boundary();if(!f)return false;const features=f.type==='FeatureCollection'?f.features:[f.type==='Feature'?f:{type:'Feature',geometry:f}];return features.some(feature=>pointInParcelFeature(feature,lat,lon));}
  function bounds(){const b=getBoundaryDrivenOverlayBounds();return[b.getWest(),b.getSouth(),b.getEast(),b.getNorth()];}
  async function json(url){const response=await fetch(url,{mode:'cors',credentials:'omit',cache:'force-cache'});if(!response.ok)throw Error('Public town feature data returned HTTP '+response.status);const data=await response.json();if(data.error)throw Error(data.error.message||'Public feature query failed.');return data;}
  function once(key,build){if(!cache.has(key))cache.set(key,build().catch(error=>{cache.delete(key);throw error;}));return cache.get(key);}
  async function structures(){return once('nsi',async()=>{
-  const[w,s,e,n]=bounds(),polygon=[w,s,e,s,e,n,w,n,w,s].join(','),payload=await json('https://nsi.sec.usace.army.mil/nsiapi/structures?fmt=fc&bbox='+encodeURIComponent(polygon));
+  await ensureBoundary();
+  const payload=await json(new URL('assets/native-nsi-points.geojson',APP_BASE).href);
   const features=[],seen=new Set();let count=0;
   for(const feature of payload.features||[]){
    const [lon,lat]=feature.geometry?.coordinates||[],p=feature.properties||{},height=Number(p.found_ht),key=String(p.ftprntid||p.fd_id);
@@ -26,6 +28,7 @@
   return{type:'FeatureCollection',metadata:{schema:'nsi-2026-first-floor-v1',source:'USACE NSI API plus native town terrain',screeningOnly:true},features};
  });}
  async function parcels(){return once('parcels',async()=>{
+  await ensureBoundary();
   const[w,s,e,n]=bounds(),town=String(TOWN_CONFIG.site?.municipalityName||TOWN_CONFIG.site?.name||'').replace(/\s+(?:Borough|Township|Village|City)$/i,'').toUpperCase().replace(/'/g,"''");
   const query=new URLSearchParams({f:'geojson',where:`MUN_NAME LIKE '${town}%'`,geometry:[w,s,e,n].join(','),geometryType:'esriGeometryEnvelope',spatialRel:'esriSpatialRelIntersects',inSR:'4326',outSR:'4326',outFields:'OBJECTID,PAMS_PIN,PCL_MUN,MUN_NAME,PCLBLOCK,PCLLOT,PROP_LOC',returnGeometry:'true',resultRecordCount:'2000',orderByFields:'OBJECTID',geometryPrecision:'7'}),features=[];let offset=0;
   while(true){query.set('resultOffset',String(offset));const page=await json('https://services2.arcgis.com/XVOqAjTOJ5P6ngMu/arcgis/rest/services/Parcels_Composite_NJ_WM/FeatureServer/0/query?'+query);const batch=page.features||[];
