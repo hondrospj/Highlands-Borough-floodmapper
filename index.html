@@ -27313,9 +27313,9 @@ function cloneStyleObject(value) {
     let forecastData = null;
     let currentForecastScenario = "mean";
     const FORECAST_SCENARIOS = {
-      lowEnd: { label: "Lower end", percentile: "Estimated 1st percentile", buttonId: "forecastLowBtn" },
-      mean: { label: "Mean", percentile: "Estimated 25th percentile", buttonId: "forecastMeanBtn" },
-      highEnd: { label: "Upper end", percentile: "Estimated 50th percentile", buttonId: "forecastHighBtn" }
+      lowEnd: { label: "Lower end", percentile: "90p / e90", buttonId: "forecastLowBtn" },
+      mean: { label: "Mean", percentile: "Mean", buttonId: "forecastMeanBtn" },
+      highEnd: { label: "Upper end", percentile: "10p / e10", buttonId: "forecastHighBtn" }
     };
     let observedData = null;
     let observedDaysCache = null;
