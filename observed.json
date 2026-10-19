@@ -7,9 +7,9 @@
   "datum": "NAVD88",
   "timeZone": "America/New_York",
   "method": "hourly_max_operational_record_incremental_v3",
-  "lastProcessedISO": "2026-10-18T04:00:00Z",
+  "lastProcessedISO": "2026-10-19T04:00:00Z",
   "archiveStartDate": "2007-10-01",
-  "archiveEndDate": "2026-10-18",
+  "archiveEndDate": "2026-10-19",
   "navd88OffsetFromMllwFt": -2.13,
   "thresholdsMLLW": {
     "minorLow": 5.2,
@@ -1359680,8 +1359680,8 @@
     {
       "date": "2026-10-18",
       "classification": "none",
-      "peakNAVD88": 0.54,
-      "peakMLLW": 2.67,
+      "peakNAVD88": 2.15,
+      "peakMLLW": 4.28,
       "hours": [
         {
           "hourIndex": 0,
@@ -1359689,13 +1359689,237 @@
           "timeLocal": "2026-10-18T00:00",
           "timeEST": "2026-10-18T00:00",
           "displayTimeEST": "2026-10-18T00:00",
-          "navd88StageFt": 0.54,
-          "mllwStageFt": 2.67
+          "navd88StageFt": 1.15,
+          "mllwStageFt": 3.28
+        },
+        {
+          "hourIndex": 1,
+          "timeUtc": "2026-10-18T05:00:00Z",
+          "timeLocal": "2026-10-18T01:00",
+          "timeEST": "2026-10-18T01:00",
+          "displayTimeEST": "2026-10-18T01:00",
+          "navd88StageFt": 1.59,
+          "mllwStageFt": 3.72
+        },
+        {
+          "hourIndex": 2,
+          "timeUtc": "2026-10-18T06:00:00Z",
+          "timeLocal": "2026-10-18T02:00",
+          "timeEST": "2026-10-18T02:00",
+          "displayTimeEST": "2026-10-18T02:00",
+          "navd88StageFt": 1.76,
+          "mllwStageFt": 3.89
+        },
+        {
+          "hourIndex": 3,
+          "timeUtc": "2026-10-18T07:00:00Z",
+          "timeLocal": "2026-10-18T03:00",
+          "timeEST": "2026-10-18T03:00",
+          "displayTimeEST": "2026-10-18T03:00",
+          "navd88StageFt": 1.74,
+          "mllwStageFt": 3.87
+        },
+        {
+          "hourIndex": 4,
+          "timeUtc": "2026-10-18T08:00:00Z",
+          "timeLocal": "2026-10-18T04:00",
+          "timeEST": "2026-10-18T04:00",
+          "displayTimeEST": "2026-10-18T04:00",
+          "navd88StageFt": 1.38,
+          "mllwStageFt": 3.51
+        },
+        {
+          "hourIndex": 5,
+          "timeUtc": "2026-10-18T09:00:00Z",
+          "timeLocal": "2026-10-18T05:00",
+          "timeEST": "2026-10-18T05:00",
+          "displayTimeEST": "2026-10-18T05:00",
+          "navd88StageFt": 0.86,
+          "mllwStageFt": 2.99
+        },
+        {
+          "hourIndex": 6,
+          "timeUtc": "2026-10-18T10:00:00Z",
+          "timeLocal": "2026-10-18T06:00",
+          "timeEST": "2026-10-18T06:00",
+          "displayTimeEST": "2026-10-18T06:00",
+          "navd88StageFt": 0.47,
+          "mllwStageFt": 2.6
+        },
+        {
+          "hourIndex": 7,
+          "timeUtc": "2026-10-18T11:00:00Z",
+          "timeLocal": "2026-10-18T07:00",
+          "timeEST": "2026-10-18T07:00",
+          "displayTimeEST": "2026-10-18T07:00",
+          "navd88StageFt": 0.08,
+          "mllwStageFt": 2.21
+        },
+        {
+          "hourIndex": 8,
+          "timeUtc": "2026-10-18T12:00:00Z",
+          "timeLocal": "2026-10-18T08:00",
+          "timeEST": "2026-10-18T08:00",
+          "displayTimeEST": "2026-10-18T08:00",
+          "navd88StageFt": -0.24,
+          "mllwStageFt": 1.89
+        },
+        {
+          "hourIndex": 9,
+          "timeUtc": "2026-10-18T13:00:00Z",
+          "timeLocal": "2026-10-18T09:00",
+          "timeEST": "2026-10-18T09:00",
+          "displayTimeEST": "2026-10-18T09:00",
+          "navd88StageFt": -0.12,
+          "mllwStageFt": 2.01
+        },
+        {
+          "hourIndex": 10,
+          "timeUtc": "2026-10-18T14:00:00Z",
+          "timeLocal": "2026-10-18T10:00",
+          "timeEST": "2026-10-18T10:00",
+          "displayTimeEST": "2026-10-18T10:00",
+          "navd88StageFt": 0.41,
+          "mllwStageFt": 2.54
+        },
+        {
+          "hourIndex": 11,
+          "timeUtc": "2026-10-18T15:00:00Z",
+          "timeLocal": "2026-10-18T11:00",
+          "timeEST": "2026-10-18T11:00",
+          "displayTimeEST": "2026-10-18T11:00",
+          "navd88StageFt": 1.0,
+          "mllwStageFt": 3.13
+        },
+        {
+          "hourIndex": 12,
+          "timeUtc": "2026-10-18T16:00:00Z",
+          "timeLocal": "2026-10-18T12:00",
+          "timeEST": "2026-10-18T12:00",
+          "displayTimeEST": "2026-10-18T12:00",
+          "navd88StageFt": 1.51,
+          "mllwStageFt": 3.64
+        },
+        {
+          "hourIndex": 13,
+          "timeUtc": "2026-10-18T17:00:00Z",
+          "timeLocal": "2026-10-18T13:00",
+          "timeEST": "2026-10-18T13:00",
+          "displayTimeEST": "2026-10-18T13:00",
+          "navd88StageFt": 1.91,
+          "mllwStageFt": 4.04
+        },
+        {
+          "hourIndex": 14,
+          "timeUtc": "2026-10-18T18:00:00Z",
+          "timeLocal": "2026-10-18T14:00",
+          "timeEST": "2026-10-18T14:00",
+          "displayTimeEST": "2026-10-18T14:00",
+          "navd88StageFt": 2.15,
+          "mllwStageFt": 4.28
+        },
+        {
+          "hourIndex": 15,
+          "timeUtc": "2026-10-18T19:00:00Z",
+          "timeLocal": "2026-10-18T15:00",
+          "timeEST": "2026-10-18T15:00",
+          "displayTimeEST": "2026-10-18T15:00",
+          "navd88StageFt": 2.15,
+          "mllwStageFt": 4.28
+        },
+        {
+          "hourIndex": 16,
+          "timeUtc": "2026-10-18T20:00:00Z",
+          "timeLocal": "2026-10-18T16:00",
+          "timeEST": "2026-10-18T16:00",
+          "displayTimeEST": "2026-10-18T16:00",
+          "navd88StageFt": 1.92,
+          "mllwStageFt": 4.05
+        },
+        {
+          "hourIndex": 17,
+          "timeUtc": "2026-10-18T21:00:00Z",
+          "timeLocal": "2026-10-18T17:00",
+          "timeEST": "2026-10-18T17:00",
+          "displayTimeEST": "2026-10-18T17:00",
+          "navd88StageFt": 1.3,
+          "mllwStageFt": 3.43
+        },
+        {
+          "hourIndex": 18,
+          "timeUtc": "2026-10-18T22:00:00Z",
+          "timeLocal": "2026-10-18T18:00",
+          "timeEST": "2026-10-18T18:00",
+          "displayTimeEST": "2026-10-18T18:00",
+          "navd88StageFt": 0.74,
+          "mllwStageFt": 2.87
+        },
+        {
+          "hourIndex": 19,
+          "timeUtc": "2026-10-18T23:00:00Z",
+          "timeLocal": "2026-10-18T19:00",
+          "timeEST": "2026-10-18T19:00",
+          "displayTimeEST": "2026-10-18T19:00",
+          "navd88StageFt": 0.24,
+          "mllwStageFt": 2.37
+        },
+        {
+          "hourIndex": 20,
+          "timeUtc": "2026-10-19T00:00:00Z",
+          "timeLocal": "2026-10-18T20:00",
+          "timeEST": "2026-10-18T20:00",
+          "displayTimeEST": "2026-10-18T20:00",
+          "navd88StageFt": -0.18,
+          "mllwStageFt": 1.95
+        },
+        {
+          "hourIndex": 21,
+          "timeUtc": "2026-10-19T01:00:00Z",
+          "timeLocal": "2026-10-18T21:00",
+          "timeEST": "2026-10-18T21:00",
+          "displayTimeEST": "2026-10-18T21:00",
+          "navd88StageFt": -0.51,
+          "mllwStageFt": 1.62
+        },
+        {
+          "hourIndex": 22,
+          "timeUtc": "2026-10-19T02:00:00Z",
+          "timeLocal": "2026-10-18T22:00",
+          "timeEST": "2026-10-18T22:00",
+          "displayTimeEST": "2026-10-18T22:00",
+          "navd88StageFt": -0.44,
+          "mllwStageFt": 1.69
+        },
+        {
+          "hourIndex": 23,
+          "timeUtc": "2026-10-19T03:00:00Z",
+          "timeLocal": "2026-10-18T23:00",
+          "timeEST": "2026-10-18T23:00",
+          "displayTimeEST": "2026-10-18T23:00",
+          "navd88StageFt": 0.04,
+          "mllwStageFt": 2.17
+        }
+      ]
+    },
+    {
+      "date": "2026-10-19",
+      "classification": "none",
+      "peakNAVD88": 0.1,
+      "peakMLLW": 2.23,
+      "hours": [
+        {
+          "hourIndex": 0,
+          "timeUtc": "2026-10-19T04:00:00Z",
+          "timeLocal": "2026-10-19T00:00",
+          "timeEST": "2026-10-19T00:00",
+          "displayTimeEST": "2026-10-19T00:00",
+          "navd88StageFt": 0.1,
+          "mllwStageFt": 2.23
         }
       ]
     }
   ],
-  "fullArchiveBuiltISO": "2026-10-18T04:45:25Z",
-  "sourceUrlTemplate": "https://waterservices.usgs.gov/nwis/iv/?format=json&sites=01407600&parameterCd=72279&startDT=2026-10-17T04%3A00%3A00Z&endDT=2026-10-18T04%3A00%3A00Z&siteStatus=all",
-  "lastIncrementalUpdateISO": "2026-10-18T04:00:00Z"
+  "fullArchiveBuiltISO": "2026-10-19T04:50:28Z",
+  "sourceUrlTemplate": "https://waterservices.usgs.gov/nwis/iv/?format=json&sites=01407600&parameterCd=72279&startDT=2026-10-18T04%3A00%3A00Z&endDT=2026-10-19T04%3A00%3A00Z&siteStatus=all",
+  "lastIncrementalUpdateISO": "2026-10-19T04:00:00Z"
 }
