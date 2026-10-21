@@ -26510,6 +26510,21 @@ html body.observed-mode[data-floodmapper-unified] #leftPanel > #calendarCard .se
   }
 }
 </style>
+<style id="northwild-title-containment-20261021">
+@layer floodmapper-unified-polish {
+  html body[data-floodmapper-unified] #mapTitleBadge#mapTitleBadge #mapTitleText {
+    flex:1 1 auto !important;
+    min-width:0 !important;
+    max-width:100% !important;
+    overflow-wrap:anywhere !important;
+  }
+  @media (max-width:900px), (max-height:560px) and (pointer:coarse) {
+    html body[data-floodmapper-unified].mobile-optimized #leftPanel[data-nww-section]:not([data-nww-section="forecast"]) #calendarCard.calendar-card.active {
+      display:none !important;
+    }
+  }
+}
+</style>
 </head>
 <body data-county-viewport="20261017" data-county-mobile="20261015" data-county-fix="20261015" class="nw-app-loading" data-flood-depth-cache="bounded-palette-20261009" data-flood-frame-cache="bounded-composites-20261008" data-flood-frame-swap="decode-before-swap-20261008" data-shorelysafe-ui="20261017" data-flood-frame-resilience="retain-retry-20261013" data-floodmapper-reference="20261017" data-fleet-viewport-existing="true" data-floodmapper-unified="20261017.3"><div id="roadImpactsKey" hidden><span>Roads: modeled depth &gt; 0.5 ft</span><span id="roadImpactsStatus" role="status"></span></div><div id="floodHistoryBackdrop" class="flood-history-backdrop" hidden aria-hidden="true">
     <aside id="floodHistoryPane" class="flood-history-pane" role="dialog" aria-modal="true" aria-labelledby="floodHistoryTitle">
