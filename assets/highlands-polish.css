@@ -4,7 +4,7 @@
 #roadImpactsKey{font:11px/1.4 system-ui;margin-top:7px;color:#fca5a5;}
 #structuresImpactKey{font:11px/1.4 system-ui;margin-top:7px;color:#d7e3f2;}
 #structuresImpactKey b{display:inline-block;width:8px;height:8px;border-radius:50%;margin:0 3px 0 5px;}
-@media(max-width:900px),(max-height:560px) and (pointer:coarse){
+@media(max-width:900px), (max-width:1366px) and (any-pointer:coarse), (max-height:560px) and (pointer:coarse) {
   html body[data-highlands-modern][data-highlands-modern].mobile-controls-open #mobileControlsToggle#mobileControlsToggle{display:none!important;}
   html body[data-highlands-modern][data-highlands-modern].mobile-optimized #mobileControlsClose#mobileControlsClose{position:fixed!important;top:calc(var(--cm-top,8px) + 12px)!important;right:calc(var(--cm-right,8px) + 12px)!important;left:auto!important;bottom:auto!important;inset-inline-start:auto!important;inset-inline-end:20px!important;margin:0!important;transform:none!important;z-index:100005!important;}
   html body[data-highlands-modern][data-highlands-modern] #leftPanel#leftPanel #nwwMobileControlHeader{top:0!important;margin:0!important;padding:14px 12px 12px!important;}

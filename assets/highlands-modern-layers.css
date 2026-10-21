@@ -87,13 +87,13 @@
     outline:2px solid #bfdbfe !important;
     outline-offset:3px !important;
   }
-  @media (min-width:901px) and (min-height:561px) and (max-height:760px), (min-width:901px) and (pointer:fine) and (max-height:760px), (min-width:901px) and (pointer:none) and (max-height:760px) {
+  @media (min-width:901px) and (min-height:561px) and (max-height:760px) and (not (any-pointer:coarse)), (min-width:1367px) and (min-height:561px) and (max-height:760px), (min-width:901px) and (pointer:fine) and (max-height:760px) and (not (any-pointer:coarse)), (min-width:1367px) and (pointer:fine) and (max-height:760px), (min-width:901px) and (pointer:none) and (max-height:760px) and (not (any-pointer:coarse)), (min-width:1367px) and (pointer:none) and (max-height:760px) {
     html body[data-shorelysafe-ui] :is(#rightRail,#mobileRailMount,#leftPanel) section.nww-layers-card.layers-card { padding:9px !important; }
     html body[data-shorelysafe-ui] :is(#rightRail,#mobileRailMount,#leftPanel) section.nww-layers-card.layers-card .layer-item { min-height:26px !important; padding:1px 6px !important; }
     html body[data-shorelysafe-ui] :is(#rightRail,#mobileRailMount,#leftPanel) section.nww-layers-card.layers-card .layer-name { font-size:11px !important; }
     html body[data-shorelysafe-ui] :is(#rightRail,#mobileRailMount,#leftPanel) section.nww-layers-card.layers-card .toggle::before { inset:-2px -6px; }
   }
-  @media (max-width:900px), (max-height:560px) and (pointer:coarse) {
+  @media (max-width:900px), (max-width:1366px) and (any-pointer:coarse), (max-height:560px) and (pointer:coarse) {
     html[data-nww-mobile-layout] body[data-shorelysafe-ui] #leftPanel section.nww-layers-card.layers-card { padding:12px !important; }
     html[data-nww-mobile-layout] body[data-shorelysafe-ui] #leftPanel section.nww-layers-card.layers-card .layer-item { min-height:48px !important; padding:8px 6px !important; }
     html[data-nww-mobile-layout] body[data-shorelysafe-ui] #leftPanel section.nww-layers-card.layers-card .layer-name { font-size:15px !important; }

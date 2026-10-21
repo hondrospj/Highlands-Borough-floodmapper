@@ -10,7 +10,7 @@ html {
 @media (min-width:1800px) {
   html { --nww-pane-font:16px; --nww-pane-heading:17px; --nww-pane-detail:15px; }
 }
-@media (max-width:900px), (max-height:560px) and (pointer:coarse) {
+@media (max-width:900px), (max-width:1366px) and (any-pointer:coarse), (max-height:560px) and (pointer:coarse) {
   html { --nww-pane-font:15px; --nww-pane-heading:16px; --nww-pane-detail:14px; }
 }
 
@@ -87,7 +87,7 @@ html {
     font-size:var(--nww-pane-font) !important;
     line-height:1.25 !important;
   }
-  @media (min-width:901px) and (min-height:561px), (min-width:901px) and (pointer:fine), (min-width:901px) and (pointer:none) {
+  @media (min-width:901px) and (min-height:561px) and (not (any-pointer:coarse)), (min-width:1367px) and (min-height:561px), (min-width:901px) and (pointer:fine) and (not (any-pointer:coarse)), (min-width:1367px) and (pointer:fine), (min-width:901px) and (pointer:none) and (not (any-pointer:coarse)), (min-width:1367px) and (pointer:none) {
     html body[data-shorelysafe-ui] #rightRail#rightRail section.nww-layers-card.layers-card .layer-list { gap:0 !important; }
     html body[data-shorelysafe-ui] #rightRail#rightRail section.nww-layers-card.layers-card .layer-item {
       min-height:34px !important;
@@ -117,7 +117,7 @@ html {
       line-height:1.25 !important;
     }
   }
-  @media (max-width:900px), (max-height:560px) and (pointer:coarse) {
+  @media (max-width:900px), (max-width:1366px) and (any-pointer:coarse), (max-height:560px) and (pointer:coarse) {
     html body[data-shorelysafe-ui] #leftPanel#leftPanel > :is(.data-source-card,.forecast-scenario-card,.overlay-card,.datum-card,#timelineIntervalCard) > :is(.button-grid-2,.button-grid-3,.segmented-control,#timelineIntervalToggle) > button {
       height:auto !important;
       min-height:48px !important;

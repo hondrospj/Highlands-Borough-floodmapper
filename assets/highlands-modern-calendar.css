@@ -148,7 +148,7 @@
     font-size:var(--nww-pane-detail) !important;
     white-space:nowrap !important;
   }
-  @media (max-width:900px), (max-height:560px) and (pointer:coarse) {
+  @media (max-width:900px), (max-width:1366px) and (any-pointer:coarse), (max-height:560px) and (pointer:coarse) {
     html body[data-shorelysafe-ui] #leftPanel #calendarCard.calendar-card { order:2 !important; }
     html body[data-shorelysafe-ui] #leftPanel #calendarCard .day-nav {
       grid-template-columns:44px minmax(0,1fr) 44px !important;

@@ -92,7 +92,7 @@
   html[data-nww-avalon-timeline] body #timelineDock #timelineEnd,
   html[data-nww-avalon-timeline] body #timelineDock #pjBlueSliderExactTrackLine { display:none !important; }
   html[data-nww-avalon-timeline] body #timelineDock #timelineTimeBounds { display:none !important; }
-  @media (max-width:900px), (max-height:560px) and (pointer:coarse) {
+  @media (max-width:900px), (max-width:1366px) and (any-pointer:coarse), (max-height:560px) and (pointer:coarse) {
     html[data-nww-avalon-timeline] body #timelineDock {
       left:8px !important; right:8px !important; bottom:calc(8px + env(safe-area-inset-bottom)) !important;
       height:188px !important; min-height:188px !important; max-height:188px !important;
