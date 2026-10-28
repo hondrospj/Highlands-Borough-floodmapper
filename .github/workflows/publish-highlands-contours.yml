@@ -1,0 +1,49 @@
+name: Publish Highlands elevation contours
+on:
+  workflow_dispatch:
+    inputs:
+      source_commit:
+        description: Reviewed source commit (full 40-character SHA)
+        type: string
+        required: true
+      expected_index_sha256:
+        description: SHA-256 of the currently published Highlands index
+        type: string
+        required: true
+permissions:
+  contents: read
+concurrency:
+  group: shorelysafe-publish
+  cancel-in-progress: false
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ inputs.source_commit }}
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            .shorelysafe/
+            index.html
+            assets/highlands-contours.js
+            data/highlands-elevation-contours.json
+          persist-credentials: false
+      - name: Verify contour script syntax
+        run: node --check assets/highlands-contours.js
+      - name: Publish only the reviewed contour UI and preserve other live files
+        env:
+          SHORELYSAFE_TOKEN: ${{ secrets.SHORELYSAFE_PUBLISH_TOKEN }}
+          SHORELYSAFE_UI_SOURCE_COMMIT: ${{ inputs.source_commit }}
+          SHORELYSAFE_EXPECTED_INDEX_SHA256: ${{ inputs.expected_index_sha256 }}
+        run: python3 .shorelysafe/publish_ui_overlay.py --expected-index-sha256 "$SHORELYSAFE_EXPECTED_INDEX_SHA256"
+      - name: Preserve publication and rollback records
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: highlands-contours-publication-receipt
+          path: |
+            highlands-contours-publication-receipt.json
+            highlands-contours-base-manifest.json
+          if-no-files-found: ignore
