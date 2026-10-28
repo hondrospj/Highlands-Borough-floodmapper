@@ -7,7 +7,7 @@
   "datum": "NAVD88",
   "timeZone": "America/New_York",
   "method": "hourly_max_operational_record_incremental_v3",
-  "lastProcessedISO": "2026-10-28T15:00:00Z",
+  "lastProcessedISO": "2026-10-28T17:00:00Z",
   "archiveStartDate": "2007-10-01",
   "archiveEndDate": "2026-10-28",
   "navd88OffsetFromMllwFt": -2.13,
@@ -1361920,8 +1361920,8 @@
     {
       "date": "2026-10-28",
       "classification": "minor",
-      "peakNAVD88": 3.16,
-      "peakMLLW": 5.29,
+      "peakNAVD88": 3.19,
+      "peakMLLW": 5.32,
       "hours": [
         {
           "hourIndex": 0,
@@ -1362028,13 +1362028,31 @@
           "timeLocal": "2026-10-28T11:00",
           "timeEST": "2026-10-28T11:00",
           "displayTimeEST": "2026-10-28T11:00",
-          "navd88StageFt": 3.16,
-          "mllwStageFt": 5.29
+          "navd88StageFt": 3.19,
+          "mllwStageFt": 5.32
+        },
+        {
+          "hourIndex": 12,
+          "timeUtc": "2026-10-28T16:00:00Z",
+          "timeLocal": "2026-10-28T12:00",
+          "timeEST": "2026-10-28T12:00",
+          "displayTimeEST": "2026-10-28T12:00",
+          "navd88StageFt": 2.92,
+          "mllwStageFt": 5.05
+        },
+        {
+          "hourIndex": 13,
+          "timeUtc": "2026-10-28T17:00:00Z",
+          "timeLocal": "2026-10-28T13:00",
+          "timeEST": "2026-10-28T13:00",
+          "displayTimeEST": "2026-10-28T13:00",
+          "navd88StageFt": 1.95,
+          "mllwStageFt": 4.08
         }
       ]
     }
   ],
-  "fullArchiveBuiltISO": "2026-10-28T15:53:55Z",
-  "sourceUrlTemplate": "https://waterservices.usgs.gov/nwis/iv/?format=json&sites=01407600&parameterCd=72279&startDT=2026-10-28T04%3A00%3A00Z&endDT=2026-10-28T15%3A00%3A00Z&siteStatus=all",
-  "lastIncrementalUpdateISO": "2026-10-28T15:00:00Z"
+  "fullArchiveBuiltISO": "2026-10-28T17:54:15Z",
+  "sourceUrlTemplate": "https://waterservices.usgs.gov/nwis/iv/?format=json&sites=01407600&parameterCd=72279&startDT=2026-10-28T04%3A00%3A00Z&endDT=2026-10-28T17%3A00%3A00Z&siteStatus=all",
+  "lastIncrementalUpdateISO": "2026-10-28T17:00:00Z"
 }
