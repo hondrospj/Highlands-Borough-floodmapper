@@ -7,7 +7,7 @@ on:
     paths:
       - .github/workflows/update-observed.yml
   schedule:
-    - cron: "37 4,5 * * *"
+    - cron: "25 2,8,14,20 * * *"
   workflow_dispatch:
 
 permissions:
@@ -28,6 +28,9 @@ jobs:
         with:
           ref: main
           fetch-depth: 0
+
+      - name: Verify source freshness and UI-preserving publication guards
+        run: python3 -m unittest discover -s tests -p 'test_refresh*.py'
 
       - name: Build observed archives
         shell: bash
@@ -563,9 +566,6 @@ jobs:
 
           def main():
               now_utc = datetime.now(timezone.utc).replace(minute=0, second=0, microsecond=0)
-              if os.environ.get("GITHUB_EVENT_NAME") == "schedule" and now_utc.astimezone(LOCAL_ZONE).hour != 0:
-                  print("Not midnight in local time; no observed update needed.")
-                  return
               if not IS_SPLIT:
                   zone = ZONES[0]
                   payload = zone_payload(zone, now_utc)
@@ -605,12 +605,16 @@ jobs:
               main()
           PY
 
+      - name: Validate measured source times and record input digests
+        run: python3 tools/refresh_contract.py --profile mapper --part observed
+
       - name: Commit updated observed archive
         shell: bash
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add observed.json observedoverflow.json toptides.json 2>/dev/null || git add observed.json toptides.json
+          git add data/refresh_status.json
           git diff --staged --quiet || git commit -m "Update Highlands Borough observed"
           for attempt in 1 2 3 4 5; do
             git pull --rebase --autostash origin main
@@ -623,3 +627,8 @@ jobs:
             fi
             sleep $((attempt * 2))
           done
+
+  publish-fresh-data:
+    needs: update-observed
+    uses: ./.github/workflows/publish-cupajoe.yml
+    secrets: inherit

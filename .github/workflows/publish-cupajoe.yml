@@ -3,6 +3,10 @@ on:
   push:
     branches: ["main"]
   workflow_dispatch:
+  workflow_call:
+    secrets:
+      SHORELYSAFE_PUBLISH_TOKEN:
+        required: true
   workflow_run:
     workflows: ["Trigger forecast update now", "Trigger observed update now", "Update Highlands Borough forecast", "Update Highlands Borough observed", "pages-build-deployment"]
     types: [completed]
@@ -22,7 +26,17 @@ jobs:
         with:
           ref: "main"
           path: "sources/Highlands-Borough-floodmapper"
-          lfs: true
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            .shorelysafe/
+            tools/
+            data/
+            forecast.json
+            forecasts.json
+            observed.json
+            observedoverflow.json
+            toptides.json
+            flood_stats.json
           persist-credentials: false
       - name: Publish application files
         working-directory: "sources/Highlands-Borough-floodmapper"
@@ -30,17 +44,11 @@ jobs:
           SHORELYSAFE_TOKEN: ${{ secrets.SHORELYSAFE_PUBLISH_TOKEN }}
           SHORELYSAFE_SITE: "https://cupajoe.live"
           SHORELYSAFE_APP: "floodmapper--highlands"
-        run: |
-          python3 - <<'PY'
-          import json, os
-          from pathlib import Path
-          import sys
-          sys.path.insert(0, ".shorelysafe")
-          import publish
-          token=os.environ["SHORELYSAFE_TOKEN"]
-          if not token: raise SystemExit("SHORELYSAFE_PUBLISH_TOKEN is not configured")
-          apps=json.loads(Path(".shorelysafe/apps.json").read_text())
-          app=next(a for a in apps if a["id"]==os.environ["SHORELYSAFE_APP"])
-          connection={"site":os.environ["SHORELYSAFE_SITE"],"tokens":{app["id"]:token}}
-          print(json.dumps(publish.publish(app,Path.cwd(),apps,connection)))
-          PY
+        run: python3 .shorelysafe/publish_data_overlay.py --app "$SHORELYSAFE_APP"
+      - name: Preserve publication verification receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: highlands-data-publication-receipt
+          path: sources/Highlands-Borough-floodmapper/data-overlay-publication-receipt.json
+          if-no-files-found: ignore
