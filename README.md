@@ -15,8 +15,9 @@ North Wildwood's modeled return-period floods, road/structural impacts, parcel i
 
 ## Six-hour source refresh
 
-The primary refresh runs at `25 2,8,14,20 * * *` UTC; existing more frequent
-source jobs remain enabled. Source jobs use `contents: write`, commit only
+Both forecast and observed refreshes run at `25 2,8,14,20 * * *` UTC.
+They share a serialized update group; the optional hourly forecast trigger is
+omitted so it cannot displace a queued six-hour observation update. Source jobs use `contents: write`, commit only
 validated generated data, and call the publisher directly after the commit.
 The publisher overlays generated data on the currently hosted manifest and
 preserves every deployed UI/terrain blob. Hosting rejections fail publication
