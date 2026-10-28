@@ -27,5 +27,6 @@ jobs:
           node --check assets/highlands-3d.js
           node --check assets/highlands-features.js
           node --check assets/highlands-road-impacts.js
+          node --check assets/highlands-contours.js
           node tools/test_highlands_stability.mjs
           node tools/test_highlands_features.mjs

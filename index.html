@@ -26803,6 +26803,13 @@ html body.observed-mode[data-floodmapper-unified] #leftPanel > #calendarCard .se
                 <div class="layer-name">Cameras</div>
               </div>
             </div>
+            <div class="layer-item">
+              <div id="contoursToggle" class="toggle" role="switch" tabindex="0" aria-label="Ground Elevation Contours" aria-checked="false" aria-describedby="contoursStatus"></div>
+              <div class="layer-meta">
+                <div class="layer-name">Ground Elevation Contours</div>
+                <span id="contoursStatus" class="highlands-contour-status" role="status" aria-live="polite"></span>
+              </div>
+            </div>
           </div>
         </section>
 
@@ -38396,5 +38403,6 @@ window.HighlandsDepthQuery = { sample:v11DepthAt, html:v11PopupHtml };
  layout();
 })();
 </script>
+<script src="assets/highlands-contours.js?v=20261028-contours-1ft-v2" defer></script>
 </body>
 </html>

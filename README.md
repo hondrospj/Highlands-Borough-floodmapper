@@ -13,6 +13,36 @@ Satellite imagery is available in the live map and PNG/GIF exports. The Highland
 North Wildwood's modeled return-period floods, road/structural impacts, parcel inspection, and 3D controls are not enabled: Highlands has no corresponding configured local datasets in this repository. They require Highlands data and validation before being exposed in the UI.
 
 
+## Ground Elevation Contours
+
+The interactive 2D map's Layers card has an off-by-default
+**Ground Elevation Contours** switch.
+Contours use 5-foot intervals, with labeled 25-foot index contours, in feet
+NAVD88. They remain in that land datum when the water-level display changes
+to MLLW. Turning the layer off removes both lines and labels; the setting is
+not persisted.
+
+The optional layer uses the documented one-foot calculation DEM, created by
+bounded cubic resampling of the one-meter 2022/2014 bare-earth LiDAR mosaic.
+Valid 2022 measurements take priority; 2014 measurements fill gaps. NoData
+is masked. Contour geometry uses a 0.1-foot horizontal simplification tolerance
+and a one-foot minimum input-line length, with Leaflet line simplification
+disabled. The original measurements remain one-meter resolution; resampling
+adds calculation detail without establishing one-foot survey accuracy.
+These terrain contours are independent of flood connectivity, depth rasters,
+forecast inputs, and the flood model's terrain configuration. The asset records
+source links and SHA-256 hashes for both the source and resampled DEMs.
+The separate 3D view and PNG/GIF export renderer do not include this layer.
+
+To regenerate with numpy, Pillow, and contourpy installed:
+
+```sh
+python3 tools/build_highlands_contours.py \
+  --dem /path/to/HighlandsBorough_2022_2014_1m_NAVD88ft.tif \
+  --manifest /path/to/SourceResamplingManifest.json \
+  --calculation-dem /path/to/highlands_1ft.tif
+```
+
 ## Six-hour source refresh
 
 Both forecast and observed refreshes run at `25 2,8,14,20 * * *` UTC.
