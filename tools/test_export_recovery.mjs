@@ -25,6 +25,7 @@ for (const failurePoint of ['waitForExportMapReady', 'captureExportCanvas']) {
     applyExportStageAspect:noop,getDownloadAspectValue:()=> 'viewport',
     updateExportLegend:noop,updateExportBoundaryVisibility:noop,updateExportParcelsLayer:noop,
     updateExportRoadLayerAppearance:noop,fitExportMapToSelectedExtent:noop,exportFloodLayer:null,
+    exportUsesScalableRoadLabels:()=>true,throwIfExportCancelled:noop,
     waitForExportMapReady:noop,waitForStableRender:noop,captureExportCanvas:()=>({}),
     captureExportMapForegroundCanvas:noop,captureExportRoadLabelsCanvas:noop,captureExportChromeCanvas:noop,
     updateExportTimestampLabel:noop,getExportOverlayRect:()=>({}),
@@ -117,6 +118,7 @@ fallback.useExportFallbackBasemap(pendingVector);
 assert.equal(fallbackCount,1,'Late errors from the abandoned vector layer must not replace the fallback');
 
 const mapReady = context('waitForExportMapReady', {
+  exportUsesScalableRoadLabels:()=>false,
   exportMap:{invalidateSize:noop},exportBasemapColorLayer:pendingVector,
   exportRoadsLayer:null,exportSatelliteLayer:null,exportBuildingsLayer:null,
   requestAnimationFrame:fn=>fn(), wait:async()=>{}, waitForTileLayerReady:async()=>{},
