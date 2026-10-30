@@ -181,9 +181,9 @@
             maxzoom: 22,
             attribution: "&copy; OpenStreetMap contributors, Esri"
           };
-          return typeof styleEsriBuildingBasemap === "function"
-            ? styleEsriBuildingBasemap(style)
-            : style;
+          const geometryStyle = typeof styleEsriBuildingBasemap === "function" ? styleEsriBuildingBasemap(style) : style;
+          if (!window.ShorelyRoadLabels) throw new Error("The road-label renderer could not load.");
+          return window.ShorelyRoadLabels.styleBasemap(geometryStyle); // shorely-road-labels-3d-v1
         })
         .catch(function (error) {
           mapStylePromise = null;
@@ -895,8 +895,14 @@
   }
 
   function syncRoadLabels3d() {
-    if (!glMap || !glStyleReady || !glMap.getLayer("nw-road-labels")) return;
-    glMap.setLayoutProperty("nw-road-labels", "visibility", visibility(layerVisible("roadsToggle", true)));
+    if (!glMap || !glStyleReady) return;
+    const roadVisibility = visibility(layerVisible("roadsToggle", true));
+    for (const layer of glMap.getStyle().layers || []) {
+      if (layer.type === "symbol" && /^road(?:\s|\/)/i.test(layer["source-layer"] || "")) {
+        glMap.setLayoutProperty(layer.id, "visibility", roadVisibility);
+        glMap.moveLayer(layer.id);
+      }
+    }
   }
 
   function boundaryGeoJson() {
@@ -1539,26 +1545,7 @@
     document.body.dataset.buildings3dCoverage = "highlands-only";
     document.body.dataset.buildings3dClippedToMunicipality = "true";
 
-    glMap.addSource("nw-road-labels-source", {
-      type: "raster",
-      tiles: [ROAD_LABELS_URL.replace("{s}", "a")],
-      tileSize: 256,
-      minzoom: 11,
-      maxzoom: 20,
-      attribution: "&copy; OpenStreetMap contributors &copy; CARTO"
-    });
-    glMap.addLayer({
-      id: "nw-road-labels",
-      type: "raster",
-      source: "nw-road-labels-source",
-      minzoom: ROAD_LABEL_ZOOM,
-      layout: { visibility: visibility(layerVisible("roadsToggle", true)) },
-      paint: {
-        "raster-opacity": 0.98, "raster-fade-duration": 0,
-        "raster-saturation": -1,
-        "raster-brightness-min": 0.3375, "raster-brightness-max": 1
-      }
-    });
+    // Road symbols come from the shared scalable vector style.
   }
 
   function syncTerrainForView(pitched) {

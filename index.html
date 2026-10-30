@@ -27136,6 +27136,7 @@ html body.observed-mode[data-floodmapper-unified] #leftPanel > #calendarCard .se
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="https://unpkg.com/esri-leaflet@3.0.19/dist/esri-leaflet.js"></script>
   <script src="https://unpkg.com/esri-leaflet-vector@4.3.2/dist/esri-leaflet-vector.js"></script>
+  <script src="assets/road-labels.js?v=20261030-road-labels-v1"></script>
   <script src="https://unpkg.com/proj4@2.11.0/dist/proj4.js"></script>
   <script src="https://unpkg.com/proj4leaflet@1.0.2/src/proj4leaflet.js"></script>
 
@@ -27432,7 +27433,7 @@ html body.observed-mode[data-floodmapper-unified] #leftPanel > #calendarCard .se
 
     const ESRI_API_KEY = window.ESRI_API_KEY || "";
     const ESRI_OSM_VECTOR_TILE_URL = "https://basemaps.arcgis.com/arcgis/rest/services/OpenStreetMap_v2/VectorTileServer";
-    const FALLBACK_BASEMAP_URL = "https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}";
+    const FALLBACK_BASEMAP_URL = "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}";
     const ROAD_LABELS_URL = "https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Transportation/MapServer/tile/{z}/{y}/{x}";
 
     const MONTH_NAMES = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
@@ -30290,34 +30291,11 @@ function normalizeBoundaryRingsFromArcGIS(rings, sourceWkid = 3857) {
     // Render the road reference tiles in soft gray once. Canvas tiles keep the
     // same appearance in the live map and in PNG/GIF captures.
     function createRoadLabelLayer(url, options) {
-      const SoftRoadLayer = L.TileLayer.extend({
-        createTile(coords, done) {
-          const tile = document.createElement("canvas");
-          const size = this.getTileSize();
-          tile.width = size.x; tile.height = size.y;
-          tile.complete = false; tile.naturalWidth = 0;
-          const image = new Image();
-          image.crossOrigin = "anonymous";
-          image.onload = () => {
-            try {
-              const context = tile.getContext("2d");
-              if (!context) throw new Error("The road label canvas is unavailable.");
-              context.filter = "grayscale(1) contrast(.5) brightness(1.35)";
-              context.drawImage(image, 0, 0, size.x, size.y);
-              context.filter = "none";
-              tile.complete = true; tile.naturalWidth = size.x;
-              done(null, tile);
-            } catch (error) { tile.complete = true; done(error, tile); }
-          };
-          image.onerror = () => {
-            tile.complete = true;
-            done(new Error("The road reference tile could not load."), tile);
-          };
-          image.src = this.getTileUrl(coords);
-          return tile;
-        }
+      if (!window.ShorelyRoadLabels) throw new Error("The road-label renderer could not load.");
+      return window.ShorelyRoadLabels.createLayer({
+        ...options,
+        exportMode: Number(options?.minZoom) === 0
       });
-      return new SoftRoadLayer(url, options);
     }
 
     function updateRoadLayerAppearance() {
@@ -32354,30 +32332,25 @@ function updateExportSegmentedUI() {
       if (!exportMap) return;
       exportMap.invalidateSize(false);
       await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+      const vectorRoads = exportUsesScalableRoadLabels();
       const waits = [];
       if (exportBasemapColorLayer) waits.push(waitForTileLayerReady(exportBasemapColorLayer));
-      if (exportRoadsLayer && Number(exportRoadsLayer.options?.opacity || 0) > 0) waits.push(waitForTileLayerReady(exportRoadsLayer));
-      await Promise.race([
-        Promise.all(waits),
-        wait(3800)
-      ]).catch(() => null);
-      // Esri's vector layer load event precedes the underlying WebGL render.
-      // Capturing then can produce an empty canvas, especially on phones.
+      if (!vectorRoads && exportRoadsLayer && Number(exportRoadsLayer.options?.opacity || 0) > 0) waits.push(waitForTileLayerReady(exportRoadsLayer));
+      await Promise.race([Promise.all(waits), wait(3800)]).catch(() => null);
       const vectorBasemap = exportBasemapColorLayer;
       try {
         await waitForExportVectorLayerReady(vectorBasemap);
       } catch (error) {
         if (isExportCancelledError(error)) throw error;
-        // A stalled vector worker is equivalent to the vector layer's error
-        // event. Use the existing raster fallback and verify its actual tiles.
         useExportFallbackBasemap(vectorBasemap);
       }
       await Promise.all([
         waitForExportRasterLayerReady(exportBasemapColorLayer),
         typeof exportSatelliteLayer !== "undefined" && exportSatelliteLayer && exportMap.hasLayer(exportSatelliteLayer)
           ? waitForExportRasterLayerReady(exportSatelliteLayer) : null,
-        exportRoadsLayer && Number(exportRoadsLayer.options?.opacity || 0) > 0
-          ? waitForExportRasterLayerReady(exportRoadsLayer) : null,
+        vectorRoads ? waitForExportRoadLabelsReady()
+          : exportRoadsLayer && Number(exportRoadsLayer.options?.opacity || 0) > 0
+            ? waitForExportRasterLayerReady(exportRoadsLayer) : null,
         typeof exportBuildingsLayer !== "undefined" && exportBuildingsLayer && exportMap.hasLayer(exportBuildingsLayer)
           ? waitForExportVectorLayerReady(exportBuildingsLayer) : null
       ]);
@@ -32828,11 +32801,130 @@ function updateExportSegmentedUI() {
       });
     }
 
+    /* Shorely scalable road-label export integration v1. */
+    function exportUsesScalableRoadLabels() {
+      if (typeof export3dView !== "undefined" && export3dView) return false;
+      return !!(exportRoadsLayer && window.ShorelyRoadLabels?.isLayer(exportRoadsLayer));
+    }
+
+    function exportScalableRoadLabelsEnabled() {
+      return exportUsesScalableRoadLabels()
+        && document.getElementById("roadsToggle")?.classList.contains("on")
+        && Number(exportRoadsLayer.options?.opacity || 0) > 0;
+    }
+
+    async function waitForExportRoadLabelsReady() {
+      if (!exportScalableRoadLabelsEnabled()) return;
+      throwIfExportCancelled();
+      const controller = new AbortController();
+      let cancelTimer;
+      const cancelled = new Promise((resolve, reject) => {
+        cancelTimer = setInterval(() => {
+          try { throwIfExportCancelled(); }
+          catch (error) { controller.abort(); reject(error); }
+        }, 80);
+      });
+      try {
+        await Promise.race([
+          window.ShorelyRoadLabels.whenReady(exportRoadsLayer, {
+            timeoutMs: 20000, signal: controller.signal, retry: true
+          }),
+          cancelled
+        ]);
+        throwIfExportCancelled();
+      } finally {
+        clearInterval(cancelTimer);
+        controller.abort();
+      }
+    }
+
+    async function captureExportRoadLabelsCanvas(referenceCanvas = null) {
+      if (!exportScalableRoadLabelsEnabled()) return null;
+      await waitForExportRoadLabelsReady();
+      throwIfExportCancelled();
+      const stage = document.getElementById("exportStageFrame");
+      const mapNode = exportMap?.getContainer();
+      if (!stage || !mapNode) throw new Error("The export road-name stage is unavailable.");
+      const stageRect = stage.getBoundingClientRect(), mapRect = mapNode.getBoundingClientRect();
+      if (![stageRect.width, stageRect.height, mapRect.width, mapRect.height].every(value => Number.isFinite(value) && value > 0)) {
+        throw new Error("The export road-name area has no drawable size.");
+      }
+      let snapshot = null, canvas = null, completed = false;
+      try {
+        snapshot = await window.ShorelyRoadLabels.captureCanvas(exportRoadsLayer, {
+          scale: getExportCaptureScale()
+        });
+        throwIfExportCancelled();
+        if (!snapshot || !snapshot.width || !snapshot.height) throw new Error("The export road names are not ready.");
+        canvas = document.createElement("canvas");
+        canvas.width = referenceCanvas?.width || Math.round(stageRect.width * getExportCaptureScale());
+        canvas.height = referenceCanvas?.height || Math.round(stageRect.height * getExportCaptureScale());
+        const context = canvas.getContext("2d");
+        if (!context) throw new Error("The export road-name canvas is unavailable.");
+        const sx = canvas.width / stageRect.width, sy = canvas.height / stageRect.height;
+        const left = (mapRect.left - stageRect.left) * sx, top = (mapRect.top - stageRect.top) * sy;
+        context.save();
+        context.beginPath();
+        context.rect(left, top, mapRect.width * sx, mapRect.height * sy);
+        context.clip();
+        context.globalAlpha = 1; // The label snapshot already includes layer opacity.
+        context.drawImage(snapshot, left, top, mapRect.width * sx, mapRect.height * sy);
+        context.restore();
+        // Match the reference layer's position below the outside-town tint.
+        // Source-atop tints existing label pixels without dimming the already
+        // masked base again, or changing the labels' opacity.
+        const roadsPaneZ = Number(exportMap.getPane("roadsPane")?.style?.zIndex || 620);
+        const maskPaneZ = Number(exportMap.getPane("maskPane")?.style?.zIndex || 630);
+        if (roadsPaneZ < maskPaneZ && exportBoundaryMask && exportMap.hasLayer(exportBoundaryMask)
+            && typeof exportBoundaryMask.getLatLngs === "function") {
+          const opacity = Number(exportBoundaryMask.options?.fillOpacity || 0);
+          const color = exportBoundaryMask.options?.fillColor;
+          if (opacity > 0 && color) {
+            const pointIsLatLng = point => Array.isArray(point)
+              ? Number.isFinite(point[0]) && Number.isFinite(point[1])
+              : Number.isFinite(point?.lat) && Number.isFinite(point?.lng);
+            const appendRings = node => {
+              if (!Array.isArray(node) || !node.length) return;
+              if (!node.every(pointIsLatLng)) { node.forEach(appendRings); return; }
+              node.forEach((latlng, index) => {
+                const point = exportMap.latLngToContainerPoint(latlng);
+                const x = left + point.x * sx, y = top + point.y * sy;
+                if (index) context.lineTo(x, y); else context.moveTo(x, y);
+              });
+              context.closePath();
+            };
+            context.save();
+            context.globalCompositeOperation = "source-atop";
+            context.globalAlpha = Math.min(1, opacity);
+            context.fillStyle = color;
+            context.beginPath();
+            appendRings(exportBoundaryMask.getLatLngs());
+            context.fill("evenodd");
+            context.restore();
+          }
+        }
+        throwIfExportCancelled();
+        completed = true;
+        return canvas;
+      } finally {
+        if (snapshot) snapshot.width = snapshot.height = 1;
+        if (canvas && !completed) canvas.width = canvas.height = 1;
+      }
+    }
+
     function updateExportRoadLayerAppearance() {
       if (!exportMap || !exportRoadsLayer) return;
       const roadsEnabled = document.getElementById("roadsToggle")?.classList.contains("on");
       const zoom = exportMap.getZoom() || 0;
       const showLabels = roadsEnabled && zoom >= ROAD_LABEL_ZOOM;
+      if (exportUsesScalableRoadLabels()) {
+        const aspect = getExportAspectConfig();
+        const shortEdge = Math.min(Number(aspect.width), Number(aspect.height));
+        const unit = Number.isFinite(shortEdge) && shortEdge > 0 ? shortEdge / 1080 : 1;
+        exportRoadsLayer.setExportUnit(unit);
+        // A town-specific legacy renderer must not duplicate the vector labels.
+        window.NORTH_WILDWOOD_EXPORT_ROADS?.redraw(exportMap, { enabled: false });
+      }
       exportRoadsLayer.setOpacity(showLabels ? 0.98 : 0);
       const pane = exportMap.getPane("roadsPane");
       if (pane) pane.classList.toggle("roads-dark", showLabels);
@@ -32951,24 +33043,23 @@ function updateExportSegmentedUI() {
       await waitForStableRender();
     }
 
-    async function captureExportCanvas() {
+    async function captureExportCanvas(options = {}) {
       await floodmapperLoadLibrary("html2canvas");
-      if (typeof html2canvas !== "function") {
-        throw new Error("html2canvas did not load, so map export is unavailable.");
-      }
+      if (typeof html2canvas !== "function") throw new Error("html2canvas did not load, so map export is unavailable.");
       const stage = document.getElementById("exportStageFrame");
       if (!stage) throw new Error("Export stage is unavailable.");
+      await waitForExportRoadLabelsReady();
       await waitForExportChromeReady();
-      const captureScale = getExportCaptureScale();
+      throwIfExportCancelled();
+      const captureScale = Number.isFinite(options.scale) && options.scale > 0
+        ? Math.min(options.scale, getExportCaptureScale()) : getExportCaptureScale();
+      const roadPane = exportMap?.getPane("roadsPane");
       return await html2canvas(stage, {
-        backgroundColor: null,
-        useCORS: true,
-        allowTaint: false,
-        logging: false,
-        removeContainer: true,
-        foreignObjectRendering: false,
-        imageTimeout: 20000,
-        ignoreElements: isOutsideExportStage,
+        backgroundColor: null, useCORS: true, allowTaint: false, logging: false,
+        removeContainer: true, foreignObjectRendering: false, imageTimeout: 20000,
+        ignoreElements: element => isOutsideExportStage(element)
+          || (options.omitRoadLabels === true && element === roadPane)
+          || (options.omitAttribution === true && element.id === "exportMapAttribution"),
         scale: captureScale
       });
     }
@@ -33298,41 +33389,35 @@ function getUniqueExportStages(frameItems) {
       updateExportBoundaryVisibility();
       updateExportRoadLayerAppearance();
       fitExportMapToSelectedExtent(mapInstance);
-
-      if (exportFloodLayer && mapInstance.hasLayer(exportFloodLayer)) {
-        mapInstance.removeLayer(exportFloodLayer);
-      }
+      if (exportFloodLayer && mapInstance.hasLayer(exportFloodLayer)) mapInstance.removeLayer(exportFloodLayer);
       const timestamp = document.getElementById("exportTimestampLabel");
       const legend = document.getElementById("exportLegendDock");
       const logoStrip = document.getElementById("exportLogoStrip");
       const previousTimestampVisibility = timestamp?.style.visibility || "";
       const previousLegendVisibility = legend?.style.visibility || "";
       const previousLogoVisibility = logoStrip?.style.visibility || "";
-      let baseCanvas;
+      let baseCanvas = null, mapForegroundCanvas = null, roadLabelsCanvas = null, chromeCanvas = null;
       try {
-        if (timestamp) timestamp.style.visibility = "hidden";
-        if (legend) legend.style.visibility = "hidden";
-        if (logoStrip) logoStrip.style.visibility = "hidden";
-        await waitForExportMapReady(80);
-        await waitForStableRender();
-        baseCanvas = await captureExportCanvas();
-      } finally {
-        // A cancelled/failed capture must not hide chrome in later exports.
-        if (timestamp) timestamp.style.visibility = previousTimestampVisibility;
-        if (legend) legend.style.visibility = previousLegendVisibility;
-        if (logoStrip) logoStrip.style.visibility = previousLogoVisibility;
-      }
-      let mapForegroundCanvas, roadLabelsCanvas, chromeCanvas;
-      try {
-        mapForegroundCanvas = null;
-        roadLabelsCanvas = null;
+        try {
+          if (timestamp) timestamp.style.visibility = "hidden";
+          if (legend) legend.style.visibility = "hidden";
+          if (logoStrip) logoStrip.style.visibility = "hidden";
+          await waitForExportMapReady(80);
+          await waitForStableRender();
+          baseCanvas = await captureExportCanvas({ omitRoadLabels: exportUsesScalableRoadLabels() });
+        } finally {
+          if (timestamp) timestamp.style.visibility = previousTimestampVisibility;
+          if (legend) legend.style.visibility = previousLegendVisibility;
+          if (logoStrip) logoStrip.style.visibility = previousLogoVisibility;
+        }
+        throwIfExportCancelled();
+        roadLabelsCanvas = await captureExportRoadLabelsCanvas(baseCanvas);
         chromeCanvas = await captureExportChromeCanvas();
         updateExportTimestampLabel(firstItem?.entry || null);
         return { baseCanvas, overlayRect: getExportOverlayRect(mapInstance), mapForegroundCanvas, roadLabelsCanvas, chromeCanvas };
       } catch (error) {
         [baseCanvas, mapForegroundCanvas, roadLabelsCanvas, chromeCanvas].filter(Boolean).forEach(canvas => {
-          canvas.width = 1;
-          canvas.height = 1;
+          canvas.width = 1; canvas.height = 1;
         });
         throw error;
       }
@@ -37460,7 +37545,7 @@ main().catch(err => {
 
 
 
-<script src="assets/highlands-3d.js?v=20261016-stability&stability=20261017.3"></script>
+<script src="assets/highlands-3d.js?v=20261016-stability&stability=20261017.3&roadlabels=20261030-v1"></script>
 <script src="assets/highlands-road-impacts.js?v=20261016-stability"></script>
 <script id="floodmapper-v11-depth-query">
 (function(){
@@ -38175,6 +38260,8 @@ window.HighlandsDepthQuery = { sample:v11DepthAt, html:v11PopupHtml };
       const style=await response.json(),base=response.url;
       for(const key of ['sprite','glyphs'])if(style[key])style[key]=new URL(style[key],base).href.replace(/%7B/g,'{').replace(/%7D/g,'}');
       style.sources={esri:{type:'vector',tiles:['https://basemaps.arcgis.com/arcgis/rest/services/OpenStreetMap_v2/VectorTileServer/tile/{z}/{y}/{x}.pbf'],maxzoom:22,attribution:'© Esri · © OpenStreetMap contributors'}};
+      if(!window.ShorelyRoadLabels)throw Error('The road-label renderer could not load.');
+      Object.assign(style,window.ShorelyRoadLabels.styleBasemap(style)); // shorely-road-labels-3d-v1
       const mobile=matchMedia('(pointer:coarse), (max-width:900px)').matches;
       standaloneMap=new maplibregl.Map({container:host,style,center:[center.lng,center.lat],zoom:14,pitch:60,maxZoom:22,attributionControl:true,pixelRatio:mobile?1:Math.min(devicePixelRatio||1,2),antialias:!mobile,maxTileCacheSize:mobile?64:256,maxTileCacheZoomLevels:mobile?3:8,powerPreference:mobile?'low-power':'default',canvasContextAttributes:{antialias:!mobile}});
       document.body.dataset.countyStandalonePixelRatio=String(standaloneMap.getPixelRatio());
@@ -38190,7 +38277,7 @@ window.HighlandsDepthQuery = { sample:v11DepthAt, html:v11PopupHtml };
       standaloneMap.on('moveend',()=>{if(standaloneActive&&!moving){moving=true;try{const c=standaloneMap.getCenter();leaflet().setView([c.lat,c.lng],standaloneMap.getZoom(),{animate:false});}finally{moving=false;}}});
       leaflet().on('moveend',()=>{if(standaloneActive&&!moving){moving=true;try{const c=leaflet().getCenter();standaloneMap.jumpTo({center:[c.lng,c.lat],zoom:leaflet().getZoom()});}finally{moving=false;}}});
       const roads=document.getElementById('roadsToggle');
-      const syncRoads=()=>{const enabled=!roads||roads.classList.contains('on');for(const layer of standaloneMap.getStyle().layers||[])if(layer.type==='symbol'&&/road|street|transport/i.test(layer.id+' '+(layer['source-layer']||'')))standaloneMap.setLayoutProperty(layer.id,'visibility',enabled?'visible':'none');};
+      const syncRoads=()=>{const enabled=!roads||roads.classList.contains('on');for(const layer of standaloneMap.getStyle().layers||[])if(layer.type==='symbol'&&/^road(?:\s|\/)/i.test(layer['source-layer']||'')){standaloneMap.setLayoutProperty(layer.id,'visibility',enabled?'visible':'none');standaloneMap.moveLayer(layer.id);}};
       if(roads)new MutationObserver(syncRoads).observe(roads,{attributes:true,attributeFilter:['class']});syncRoads();
       return standaloneMap;
     })().catch(error=>{try{standaloneMap?.remove();}catch(_){}standaloneMap=null;standalonePromise=null;document.getElementById('countyStandalone3d')?.remove();throw error;});
