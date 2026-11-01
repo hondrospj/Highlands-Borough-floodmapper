@@ -6,9 +6,13 @@ on:
       - main
     paths:
       - .github/workflows/update-observed.yml
-  schedule:
-    - cron: "25 2,8,14,20 * * *"
   workflow_dispatch:
+  workflow_call:
+    inputs:
+      defer_publication:
+        description: Refresh data without publishing until the coordinated refresh finishes.
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -629,6 +633,7 @@ jobs:
           done
 
   publish-fresh-data:
+    if: ${{ !inputs.defer_publication }}
     needs: update-observed
     uses: ./.github/workflows/publish-cupajoe.yml
     secrets: inherit

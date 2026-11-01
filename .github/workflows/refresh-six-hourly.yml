@@ -1,0 +1,34 @@
+name: Refresh Highlands data every six hours
+
+on:
+  schedule:
+    - cron: "25 2,8,14,20 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+# This group must differ from the reusable producers' shared lock: the
+# coordinator waits for those workflows, so holding their lock would deadlock.
+concurrency:
+  group: highlands-borough-six-hour-refresh-v1
+  cancel-in-progress: false
+
+jobs:
+  update-observed:
+    uses: ./.github/workflows/update-observed.yml
+    with:
+      defer_publication: true
+    secrets: inherit
+
+  update-forecast:
+    needs: update-observed
+    uses: ./.github/workflows/update-forecast.yml
+    with:
+      defer_publication: true
+    secrets: inherit
+
+  publish-fresh-data:
+    needs: update-forecast
+    uses: ./.github/workflows/publish-cupajoe.yml
+    secrets: inherit

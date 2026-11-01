@@ -7,10 +7,6 @@ on:
     secrets:
       SHORELYSAFE_PUBLISH_TOKEN:
         required: true
-  workflow_run:
-    workflows: ["Trigger forecast update now", "Trigger observed update now", "Update Highlands Borough forecast", "Update Highlands Borough observed", "pages-build-deployment"]
-    types: [completed]
-    branches: ["main"]
 permissions:
   contents: read
 concurrency:
@@ -18,7 +14,6 @@ concurrency:
   cancel-in-progress: false
 jobs:
   publish:
-    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     timeout-minutes: 90
     steps:
