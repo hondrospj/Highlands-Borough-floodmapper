@@ -1,6 +1,6 @@
 {
   "profile": "mapper",
-  "checkedAtUtc": "2026-11-01T21:51:56.818248Z",
+  "checkedAtUtc": "2026-11-01T21:52:15.837565Z",
   "station": "8531804",
   "observationStation": "01407600",
   "datum": "NAVD88",
@@ -21,7 +21,7 @@
       "bytes": 22019
     },
     "data/experimental_petss_guidance.json": {
-      "sha256": "f151626f87c7b4f6400df86926ea40e166fec42efaed162b20cf6efe380e86c1",
+      "sha256": "4b228cc6e37952fe7660930c30571eb0a127f5bf6041669c1fe1b73ed99fcaf1",
       "bytes": 37426
     }
   }
