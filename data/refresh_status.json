@@ -1,16 +1,16 @@
 {
   "profile": "mapper",
-  "checkedAtUtc": "2026-11-03T14:27:05.209565Z",
+  "checkedAtUtc": "2026-11-03T14:27:33.423033Z",
   "station": "8531804",
   "observationStation": "01407600",
   "datum": "NAVD88",
   "latestObservationUtc": "2026-11-03T14:00:00Z",
-  "latestUpstreamCycleUtc": "2026-11-03T00:00:00Z",
-  "forecastEndUtc": "2026-11-06T20:00:00Z",
+  "latestUpstreamCycleUtc": "2026-11-03T06:00:00Z",
+  "forecastEndUtc": "2026-11-07T02:00:00Z",
   "files": {
     "forecast.json": {
-      "sha256": "e6f81506a901a4d0ea9fb9b5378863123bfa5bef818748d9924c3600467056d5",
-      "bytes": 338843
+      "sha256": "31f2ad0981d8bdb0ce91a07d3c1e80fc912632475eb78bf603d2f4bb2075fc3b",
+      "bytes": 338736
     },
     "observed.json": {
       "sha256": "538c38ca3e85700f7b5c3f7d8be6adfb1933de4a862aea06ba139f6af8ae2fa3",
@@ -21,8 +21,8 @@
       "bytes": 22019
     },
     "data/experimental_petss_guidance.json": {
-      "sha256": "460ad849fc7198e79282bafd0b2f74cca847d233e8260157d4031e83d0fec506",
-      "bytes": 37429
+      "sha256": "777ad368ccdc54640c146d59d49aac37529e7104d981c144aa3b7be4ba04a6f6",
+      "bytes": 37424
     }
   }
 }
