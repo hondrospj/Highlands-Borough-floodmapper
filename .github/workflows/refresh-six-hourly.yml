@@ -1,8 +1,8 @@
-name: Refresh Highlands data every six hours
+name: Refresh Highlands data daily
 
 on:
   schedule:
-    - cron: "25 2,8,14,20 * * *"
+    - cron: "30 14 * * *"
   workflow_dispatch:
 
 permissions:
@@ -11,7 +11,7 @@ permissions:
 # This group must differ from the reusable producers' shared lock: the
 # coordinator waits for those workflows, so holding their lock would deadlock.
 concurrency:
-  group: highlands-borough-six-hour-refresh-v1
+  group: highlands-borough-daily-refresh-v1
   cancel-in-progress: false
 
 jobs:

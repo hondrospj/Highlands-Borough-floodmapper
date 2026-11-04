@@ -1,11 +1,6 @@
 name: Update Highlands Borough forecast
 
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - .github/workflows/update-forecast.yml
   workflow_dispatch:
   workflow_call:
     inputs:
@@ -13,6 +8,7 @@ on:
         description: Refresh data without publishing until the coordinated refresh finishes.
         type: boolean
         default: false
+
 
 permissions:
   contents: write
