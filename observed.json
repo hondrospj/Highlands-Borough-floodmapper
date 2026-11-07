@@ -1364256,7 +1364256,7 @@
       ]
     }
   ],
-  "fullArchiveBuiltISO": "2026-11-07T14:10:31Z",
-  "sourceUrlTemplate": "https://waterservices.usgs.gov/nwis/iv/?format=json&sites=01407600&parameterCd=72279&startDT=2026-11-04T05%3A00%3A00Z&endDT=2026-11-07T14%3A00%3A00Z&siteStatus=all",
+  "fullArchiveBuiltISO": "2026-11-07T14:28:24Z",
+  "sourceUrlTemplate": "https://waterservices.usgs.gov/nwis/iv/?format=json&sites=01407600&parameterCd=72279&startDT=2026-11-07T05%3A00%3A00Z&endDT=2026-11-07T14%3A00%3A00Z&siteStatus=all",
   "lastIncrementalUpdateISO": "2026-11-07T14:00:00Z"
 }
