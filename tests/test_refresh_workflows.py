@@ -67,7 +67,8 @@ class CoordinatedRefreshTests(unittest.TestCase):
             self.assertEqual(scalar(publish, 'if', 4), '${{ !inputs.defer_publication }}')
         trigger = block(self.publisher, 'on')
         self.assertNotIn('workflow_run:', trigger)
-        for entry in ('push:', 'workflow_dispatch:', 'workflow_call:'):
+        self.assertNotIn('push:', trigger)
+        for entry in ('workflow_dispatch:', 'workflow_call:'):
             self.assertIn(entry, trigger)
 
     def test_coordinator_does_not_hold_a_callee_lock(self):
