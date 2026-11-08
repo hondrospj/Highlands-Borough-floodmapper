@@ -1,10 +1,10 @@
 {
   "profile": "mapper",
-  "checkedAtUtc": "2026-11-08T02:30:20.164122Z",
+  "checkedAtUtc": "2026-11-08T08:28:39.078570Z",
   "station": "8531804",
   "observationStation": "01407600",
   "datum": "NAVD88",
-  "latestObservationUtc": "2026-11-08T02:00:00Z",
+  "latestObservationUtc": "2026-11-08T08:00:00Z",
   "latestUpstreamCycleUtc": "2026-11-07T18:00:00Z",
   "forecastEndUtc": "2026-11-11T14:00:00Z",
   "files": {
@@ -13,11 +13,11 @@
       "bytes": 339100
     },
     "observed.json": {
-      "sha256": "4962b997b527ae57843782092577de22c17b834744cb228928114f6a9da181d5",
-      "bytes": 42957731
+      "sha256": "d3e490debe657613ce3bcbc1351a68baf7dff3ccb25e3ebf6fbd22f3ac632488",
+      "bytes": 42959605
     },
     "toptides.json": {
-      "sha256": "d5d048a5cd35e394f4cb65e92b61fadfadd63d188d6582ae9ac082a6e8782bfb",
+      "sha256": "60bd5fea466e1d84ae20644cbc9a90fb371caabebb6b6c249ef1a8b4ade039b5",
       "bytes": 22019
     },
     "data/experimental_petss_guidance.json": {
