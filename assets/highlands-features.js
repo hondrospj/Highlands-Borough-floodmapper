@@ -8,6 +8,8 @@ let houseAlertCdfData = null;
 let houseAlertCdfPromise = null;
 let parcelLoadPromise = null;
 let nsiStructureLoadPromise = null;
+let certifiedFirstFloorsPromise = null;
+let certifiedHistoricBaseline = null;
 let parcelLayerGeneration = 0;
 let nsiLayerGeneration = 0;
 let nsiStructureRenderer = null;
@@ -318,15 +320,15 @@ function closeFloodHistoryPane() {
     }
 function findProjectionElevationIndex(feature, data) {
       const grid = Array.isArray(data?.elevationGridFtNavd88) ? data.elevationGridFtNavd88 : [];
-      const preferred = Number(
-        feature?.properties?.nsi2026ModelElevationIndex ?? feature?.properties?.modelElevationIndex
-      );
-      if (Number.isInteger(preferred) && preferred >= 0 && preferred < grid.length) return preferred;
-      const elevation = Number(
-        feature?.properties?.nsi2026ModelElevationNavd88Ft ??
-        feature?.properties?.nsi2026ModeledFirstFloorNavd88Ft ??
-        feature?.properties?.modelElevationNavd88Ft ??
-        feature?.properties?.elevationNavd88Ft
+      const p = feature?.properties || {};
+      const certified = p.certifiedFirstFloorNavd88Ft;
+      if (!Number.isFinite(certified)) {
+        const preferred = Number(p.nsi2026ModelElevationIndex ?? p.modelElevationIndex);
+        if (Number.isInteger(preferred) && preferred >= 0 && preferred < grid.length) return preferred;
+      }
+      const elevation = Number.isFinite(certified) ? certified : Number(
+        p.nsi2026ModelElevationNavd88Ft ?? p.nsi2026ModeledFirstFloorNavd88Ft ??
+        p.modelElevationNavd88Ft ?? p.elevationNavd88Ft
       );
       let bestIndex = 0;
       let bestDifference = Infinity;
@@ -387,9 +389,13 @@ function renderFloodHistoryProjection(feature, data) {
       const elevationIndex = findProjectionElevationIndex(feature, data);
       const firstFloor = getNsiFirstOccupiedFloorNavd88(p);
       const hasModeledFloor = Number.isFinite(firstFloor);
-      const historic = Number(hasModeledFloor
-        ? p.nsi2026HistoricFirstFloorExceedanceCount
-        : p.historicFloodEventCount);
+      let historicCount = hasModeledFloor ? p.nsi2026HistoricFirstFloorExceedanceCount : p.historicFloodEventCount;
+      if (Number.isFinite(p.certifiedFirstFloorNavd88Ft)) {
+        historicCount = certifiedHistoricBaseline === data.generatedUtc
+          ? p.certifiedHistoricFirstFloorExceedanceCount
+          : data.historicFloodEventCountByElevation?.[elevationIndex];
+      }
+      const historic = Number(historicCount);
       const defaultYearIndex = Math.max(0, years.indexOf(2050));
       const scenarioKey = data.annualFloodEventCount?.[selectedFloodProjectionScenario]
         ? selectedFloodProjectionScenario
@@ -506,6 +512,7 @@ function finiteStructureNumber(value) {
     }
 function getNsiFirstOccupiedFloorNavd88(properties) {
       const p = properties || {};
+      if (Number.isFinite(p.certifiedFirstFloorNavd88Ft)) return p.certifiedFirstFloorNavd88Ft;
       const localGround = finiteStructureNumber(p.localGroundNavd88Ft ?? p.nsi2026LocalGroundNavd88Ft);
       const riseToOccupiedFloor = finiteStructureNumber(p.foundationHeightFt ?? p.nsi2026FoundationHeightFt);
       if (localGround != null && riseToOccupiedFloor != null) {
@@ -578,12 +585,15 @@ async function ensureNsiStructureAssets() {
       if (nsiStructuresLayer) return nsiStructuresLayer;
       if (!NSI_STRUCTURES_URL) throw new Error("USACE NSI structures are not configured.");
       if (!nsiStructureLoadPromise) {
-        nsiStructureLoadPromise = fetchJson(NSI_STRUCTURES_URL, { cache: "force-cache" })
-          .then(payload => {
+        nsiStructureLoadPromise = Promise.all([
+          fetchJson(NSI_STRUCTURES_URL, { cache: "force-cache" }),
+          loadCertifiedFirstFloors()
+        ]).then(([payload, certified]) => {
             if (!/highlands-structure-floor-v1$/.test(String(payload?.metadata?.schema || ""))) {
               throw new Error("The USACE NSI structure asset needs to be refreshed.");
             }
             nsiStructureFeatures = Array.isArray(payload.features) ? payload.features : [];
+            applyCertifiedFirstFloors(nsiStructureFeatures, certified);
             nsiStructureRenderer = nsiStructureRenderer || L.canvas({ pane: "structuresPane", padding: 0.5, tolerance: 7 });
             nsiStructuresLayer = L.geoJSON(payload, {
               pane: "structuresPane",
@@ -1080,6 +1090,7 @@ function resetExportPanelToDefaults() {
 const PARCELS_URL = new URL('assets/highlands-data/parcels.geojson', APP_BASE).href;
 const PARCEL_BOUNDARY_PNG_URL = new URL('assets/highlands-data/parcel-boundaries.png', APP_BASE).href;
 const NSI_STRUCTURES_URL = new URL('assets/highlands-data/structures.geojson', APP_BASE).href;
+const CERTIFIED_FIRST_FLOORS_URL = new URL('assets/highlands-data/certified-first-floors.json', APP_BASE).href;
 const HOUSE_ALERT_CDF_URL = new URL('assets/highlands-data/flood-projections.json', APP_BASE).href;
 const RETURN_INTERVALS_URL = new URL('assets/highlands-data/return-intervals.json', APP_BASE).href;
 function getActiveFloodOverlayCoordinates() {
@@ -1106,8 +1117,12 @@ function updateExportParcelsLayer() {
 async function ensureParcelAssets() {
   if(parcelsLayer)return parcelsLayer;
   if(!parcelLoadPromise)parcelLoadPromise=(async()=>{
-    const geojson=await fetchJson(PARCELS_URL,{cache:'force-cache'});
+    const [geojson, certified] = await Promise.all([
+      fetchJson(PARCELS_URL, { cache: "force-cache" }),
+      loadCertifiedFirstFloors()
+    ]);
     parcelFeatures=geojson.features||[];
+    applyCertifiedFirstFloors(parcelFeatures, certified);
     if(!map.getPane('parcelsPane'))map.createPane('parcelsPane');
     map.getPane('parcelsPane').style.zIndex='610';
     parcelsLayer=L.geoJSON(geojson,{pane:'parcelsPane',style:{color:'#f87171',weight:1.2,fillOpacity:0},onEachFeature:(feature,layer)=>{
@@ -1117,14 +1132,56 @@ async function ensureParcelAssets() {
   })().catch(error=>{parcelLoadPromise=null;throw error;});
   return parcelLoadPromise;
 }
+function loadCertifiedFirstFloors() {
+  if (!certifiedFirstFloorsPromise) {
+    certifiedFirstFloorsPromise = fetchJson(CERTIFIED_FIRST_FLOORS_URL, {
+      signal: globalThis.AbortSignal?.timeout?.(5000)
+    }).then(payload => {
+      if (payload?.schema !== "highlands-certified-first-floors-v1" ||
+          !payload.buildings || typeof payload.buildings !== "object" || Array.isArray(payload.buildings)) {
+        throw new Error("Invalid Highlands certificate data.");
+      }
+      certifiedHistoricBaseline = payload.historicBaselineGeneratedUtc;
+      return new Map(Object.entries(payload.buildings));
+    }).catch(error => {
+      console.warn("Certified first floors unavailable. Using modeled elevations.", error);
+      return new Map();
+    });
+  }
+  return certifiedFirstFloorsPromise;
+}
+function applyCertifiedFirstFloors(features, certified) {
+  for (const { properties: p } of features) {
+    const entry = certified.get(p?.footprintId);
+    if (!Number.isFinite(entry?.firstFloorNavd88Ft) || (p.parcelId && p.parcelId !== entry.parcelId)) continue;
+    p.certifiedFirstFloorNavd88Ft = entry.firstFloorNavd88Ft;
+    p.certifiedHistoricFirstFloorExceedanceCount = entry.historicFloodEventCount;
+    p.certifiedStructurePoint = entry.structurePoint;
+  }
+}
+function featureForCertifiedFootprint(feature, footprintId) {
+  const p = feature?.properties;
+  if (footprintId === undefined || !Number.isFinite(p?.certifiedFirstFloorNavd88Ft) || p.footprintId === footprintId) {
+    return feature;
+  }
+  return { ...feature, properties: { ...p, certifiedFirstFloorNavd88Ft: undefined } };
+}
 async function handleDepthQueryClick(event) {
   if(!event?.latlng||event.originalEvent?._parcelHandled)return;
   if(parcelInfoInteractionEnabled()&&mapClickMode==='building'){
     try{
       const feature=await findParcelFeatureForLocation(event.latlng.lat,event.latlng.lng,{allowNearest:false});
-      if(feature){openParcelFloodPrompt(feature,event.latlng);return;}
+      if(feature){
+        openParcelFloodPrompt(featureForCertifiedFootprint(feature, event.structureFootprintId), event.latlng);
+        return;
+      }
       const structure=findNsiStructureFeatureForLocation(event.latlng.lat,event.latlng.lng,16);
-      if(structure){openPersistentFloodPopup(event.latlng,buildNsiStructurePopup(structure),360);return;}
+      if(structure){
+        openPersistentFloodPopup(
+          event.latlng, buildNsiStructurePopup(featureForCertifiedFootprint(structure, event.structureFootprintId)), 360
+        );
+        return;
+      }
     }catch(error){console.warn('Building information unavailable',error);}
   }
   const popup=openPersistentFloodPopup(event.latlng,'<div class="depth-query-popup">Loading modeled depth…</div>',360);

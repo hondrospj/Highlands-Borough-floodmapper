@@ -979,9 +979,11 @@
         opacity: 0.42
       };
     }
-    var floor = ["+",
-      ["to-number", ["get", "localGroundNavd88Ft"], -9999],
-      ["max", 0, ["to-number", ["get", "foundationHeightFt"], 0]]
+    var floor = ["number", ["get", "certifiedFirstFloorNavd88Ft"],
+      ["+",
+        ["to-number", ["get", "localGroundNavd88Ft"], -9999],
+        ["max", 0, ["to-number", ["get", "foundationHeightFt"], 0]]
+      ]
     ];
     var difference = ["-", stage, floor];
     return {
@@ -1390,6 +1392,22 @@
       '</div>';
   }
 
+  function parcelForRenderedBuilding(parcel, building) {
+    var p = parcel?.properties;
+    if (!Number.isFinite(p?.certifiedFirstFloorNavd88Ft)) return parcel;
+    var [lon, lat] = p.certifiedStructurePoint || [];
+    var matches = Number.isFinite(lon) && Number.isFinite(lat) && pointInParcelFeature(building, lat, lon);
+    return featureForCertifiedFootprint(parcel, matches ? p.footprintId : null);
+  }
+
+  function clickedStructureFootprint(point) {
+    if (!layerVisible("nsiStructuresToggle", false) || !glMap.getLayer("nw-nsi-points")) return undefined;
+    var hits = glMap.queryRenderedFeatures(point, { layers: ["nw-nsi-points"] });
+    if (!hits.length) return undefined;
+    var id = hits[0].properties?.footprintId;
+    return id && hits.every(hit => hit.properties?.footprintId === id) ? id : null;
+  }
+
   function closeGlPopup() {
     if (!glPopup) return;
     var popup = glPopup;
@@ -1575,6 +1593,7 @@
       });
     });
     glMap.on("click", async function (event) {
+      var structureFootprintId = mapClickMode === "building" ? clickedStructureFootprint(event.point) : undefined;
       var buildingsEnabled = layerVisible("buildingsToggle", false);
       if (buildingsEnabled && mapClickMode === "building" && glMap.getLayer("nw-3d-buildings")) {
         var buildingQueryLayers = ["nw-3d-buildings"].filter(function (layerId) {
@@ -1589,7 +1608,12 @@
               { allowNearest: false }
             );
             if (parcelFeature) {
-              openParcelFloodPrompt(parcelFeature, L.latLng(event.lngLat.lat, event.lngLat.lng));
+              openParcelFloodPrompt(
+                structureFootprintId === undefined
+                  ? parcelForRenderedBuilding(parcelFeature, rendered[0])
+                  : featureForCertifiedFootprint(parcelFeature, structureFootprintId),
+                L.latLng(event.lngLat.lat, event.lngLat.lng)
+              );
               return;
             }
           } catch (_) {}
@@ -1603,7 +1627,8 @@
       }
       handleDepthQueryClick({
         latlng: L.latLng(event.lngLat.lat, event.lngLat.lng),
-        originalEvent: event.originalEvent || {}
+        originalEvent: event.originalEvent || {},
+        structureFootprintId: structureFootprintId
       });
     });
     window.addEventListener("resize", function () {

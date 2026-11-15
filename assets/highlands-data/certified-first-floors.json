@@ -1,0 +1,367 @@
+{
+  "schema": "highlands-certified-first-floors-v1",
+  "source": "https://highlandsboroughnj.withforerunner.com/elevation-certificates",
+  "historicBaselineGeneratedUtc": "2026-10-16T20:25:09Z",
+  "buildings": {
+    "34025_103288": {
+      "parcelId": "1319_59_8",
+      "structurePoint": [
+        -73.987015,
+        40.401283
+      ],
+      "firstFloorNavd88Ft": 13.2,
+      "certificateId": "39bb2b9f-21fa-4557-b73d-0c0439dfae03",
+      "certificateDate": "2026-06-23",
+      "firstFloorField": "C2.b",
+      "historicFloodEventCount": 0
+    },
+    "34025_103411": {
+      "parcelId": "1319_76_8",
+      "structurePoint": [
+        -73.990344,
+        40.405564
+      ],
+      "firstFloorNavd88Ft": 14.6,
+      "certificateId": "adc61a3d-9db2-4ebe-bac6-60547ce449ef",
+      "certificateDate": "2024-04-02",
+      "firstFloorField": "C2.b",
+      "historicFloodEventCount": 0
+    },
+    "34025_103416": {
+      "parcelId": "1319_76_7.11",
+      "structurePoint": [
+        -73.990403,
+        40.405481
+      ],
+      "firstFloorNavd88Ft": 14.4,
+      "certificateId": "671c33e5-54be-4cde-b598-885bf33be894",
+      "certificateDate": "2024-09-11",
+      "firstFloorField": "C2.b",
+      "historicFloodEventCount": 0
+    },
+    "34025_159294": {
+      "parcelId": "1319_54_5",
+      "structurePoint": [
+        -73.985864,
+        40.401497
+      ],
+      "firstFloorNavd88Ft": 14.64,
+      "certificateId": "218b8fcb-5966-4eff-bd5c-e75bcb4c18fd",
+      "certificateDate": "2017-03-21",
+      "firstFloorField": "C2.a",
+      "historicFloodEventCount": 0
+    },
+    "34025_160211": {
+      "parcelId": "1319_100_26_C0021",
+      "structurePoint": [
+        -73.995949,
+        40.407093
+      ],
+      "firstFloorNavd88Ft": 15.9,
+      "certificateId": "936b94d2-51c6-47bc-8cb9-42811d988ef9",
+      "certificateDate": "2018-07-18",
+      "firstFloorField": "C2.b",
+      "historicFloodEventCount": 0
+    },
+    "34025_160212": {
+      "parcelId": "1319_100_26_C0011",
+      "structurePoint": [
+        -73.99637,
+        40.406531
+      ],
+      "firstFloorNavd88Ft": 16.2,
+      "certificateId": "044ba968-d3a4-4ce2-a13b-7fe96ea46cff",
+      "certificateDate": "2016-09-10",
+      "firstFloorField": "C2.b",
+      "historicFloodEventCount": 0
+    },
+    "34025_160273": {
+      "parcelId": "1319_100_26_C0022",
+      "structurePoint": [
+        -73.99591,
+        40.407162
+      ],
+      "firstFloorNavd88Ft": 16.0,
+      "certificateId": "21e2d1e3-18a0-43ac-b662-ed6e0d7067d4",
+      "certificateDate": "2017-05-31",
+      "firstFloorField": "C2.b",
+      "historicFloodEventCount": 0
+    },
+    "34025_17492": {
+      "parcelId": "1319_72_25",
+      "structurePoint": [
+        -73.990264,
+        40.405091
+      ],
+      "firstFloorNavd88Ft": 15.2,
+      "certificateId": "7b52c306-c526-46f8-a00a-5cb0a2703aa0",
+      "certificateDate": "2025-11-06",
+      "firstFloorField": "C2.b",
+      "historicFloodEventCount": 0
+    },
+    "34025_18673": {
+      "parcelId": "1319_64_11",
+      "structurePoint": [
+        -73.988378,
+        40.403076
+      ],
+      "firstFloorNavd88Ft": 15.8,
+      "certificateId": "3bfc0276-2bff-460c-9857-cd42775cf1c6",
+      "certificateDate": "2015-06-01",
+      "firstFloorField": "C2.b",
+      "historicFloodEventCount": 0
+    },
+    "34025_19562": {
+      "parcelId": "1319_81_7",
+      "structurePoint": [
+        -73.99271,
+        40.403857
+      ],
+      "firstFloorNavd88Ft": 15.4,
+      "certificateId": "01dcc1ad-142c-4e1e-8ed0-d4fddc442698",
+      "certificateDate": "2018-12-18",
+      "firstFloorField": "C2.b",
+      "historicFloodEventCount": 0
+    },
+    "34025_207121": {
+      "parcelId": "1319_52_6",
+      "structurePoint": [
+        -73.985501,
+        40.401443
+      ],
+      "firstFloorNavd88Ft": 14.5,
+      "certificateId": "7f146cb3-858e-4d94-abe1-6b2ce1d95f5c",
+      "certificateDate": "2016-03-11",
+      "firstFloorField": "C2.b",
+      "historicFloodEventCount": 0
+    },
+    "34025_21499": {
+      "parcelId": "1319_103_8",
+      "structurePoint": [
+        -74.000939,
+        40.408058
+      ],
+      "firstFloorNavd88Ft": 16.03,
+      "certificateId": "d243f407-d3d1-4d30-aba5-f8f0155bf7d8",
+      "certificateDate": "2024-03-18",
+      "firstFloorField": "C2.b",
+      "historicFloodEventCount": 0
+    },
+    "34025_21502": {
+      "parcelId": "1319_103_3",
+      "structurePoint": [
+        -74.000752,
+        40.407634
+      ],
+      "firstFloorNavd88Ft": 13.3,
+      "certificateId": "486d2419-2678-4b7e-b8e5-06934d5700c7",
+      "certificateDate": "2024-04-04",
+      "firstFloorField": "C2.b",
+      "historicFloodEventCount": 0
+    },
+    "34025_292286": {
+      "parcelId": "1319_44_7",
+      "structurePoint": [
+        -73.983648,
+        40.401049
+      ],
+      "firstFloorNavd88Ft": 14.3,
+      "certificateId": "685f3e4b-9d62-4ce8-b0a3-7d048044ca59",
+      "certificateDate": "2024-06-17",
+      "firstFloorField": "C2.b",
+      "historicFloodEventCount": 0
+    },
+    "34025_292324": {
+      "parcelId": "1319_47_6",
+      "structurePoint": [
+        -73.985604,
+        40.400968
+      ],
+      "firstFloorNavd88Ft": 5.0,
+      "certificateId": "bb903f5d-4eba-4c33-9c04-cd960329abf9",
+      "certificateDate": "2024-06-03",
+      "firstFloorField": "C2.a",
+      "historicFloodEventCount": 8
+    },
+    "34025_292541": {
+      "parcelId": "1319_78_9.03",
+      "structurePoint": [
+        -73.990541,
+        40.40687
+      ],
+      "firstFloorNavd88Ft": 15.1,
+      "certificateId": "87b84887-3e04-4554-8d5b-cb2f2624d981",
+      "certificateDate": "2019-06-25",
+      "firstFloorField": "C2.b",
+      "historicFloodEventCount": 0
+    },
+    "34025_311207": {
+      "parcelId": "1319_93_8",
+      "structurePoint": [
+        -73.992769,
+        40.40668
+      ],
+      "firstFloorNavd88Ft": 14.3,
+      "certificateId": "9e94ef00-df86-497e-ba59-219b9018a03a",
+      "certificateDate": "2016-05-11",
+      "firstFloorField": "C2.b",
+      "historicFloodEventCount": 0
+    },
+    "34025_342263": {
+      "parcelId": "1319_42_1",
+      "structurePoint": [
+        -73.983297,
+        40.399418
+      ],
+      "firstFloorNavd88Ft": 8.4,
+      "certificateId": "7e3c47dd-5ecf-4f8d-b26a-8c5b06354fb5",
+      "certificateDate": "2018-03-08",
+      "firstFloorField": "C2.b",
+      "historicFloodEventCount": 0
+    },
+    "34025_342503": {
+      "parcelId": "1319_63_5",
+      "structurePoint": [
+        -73.988188,
+        40.402132
+      ],
+      "firstFloorNavd88Ft": 15.0,
+      "certificateId": "843d0db1-3f82-429a-b14c-070dff2c6b8d",
+      "certificateDate": "2018-08-10",
+      "firstFloorField": "C2.b",
+      "historicFloodEventCount": 0
+    },
+    "34025_342875": {
+      "parcelId": "1319_100_26_C0013",
+      "structurePoint": [
+        -73.995944,
+        40.406653
+      ],
+      "firstFloorNavd88Ft": 16.6,
+      "certificateId": "03ade404-a9bb-4ff4-88ca-adeae42d400b",
+      "certificateDate": "2020-07-08",
+      "firstFloorField": "C2.b",
+      "historicFloodEventCount": 0
+    },
+    "34025_355125": {
+      "parcelId": "1319_58_9",
+      "structurePoint": [
+        -73.986698,
+        40.402124
+      ],
+      "firstFloorNavd88Ft": 15.1,
+      "certificateId": "1e1eeaa9-81e5-4b3c-bede-b54e9c764ad4",
+      "certificateDate": "2021-08-31",
+      "firstFloorField": "C2.b",
+      "historicFloodEventCount": 0
+    },
+    "34025_355260": {
+      "parcelId": "1319_91_10",
+      "structurePoint": [
+        -73.992066,
+        40.407139
+      ],
+      "firstFloorNavd88Ft": 14.3,
+      "certificateId": "4f9efb2d-2f82-4c24-b174-e05d69695f5a",
+      "certificateDate": "2026-02-16",
+      "firstFloorField": "C2.b",
+      "historicFloodEventCount": 0
+    },
+    "34025_399687": {
+      "parcelId": "1319_92_11",
+      "structurePoint": [
+        -73.992874,
+        40.407087
+      ],
+      "firstFloorNavd88Ft": 14.1,
+      "certificateId": "2b3cf190-7575-4ae4-b5b7-b76e0f4526c4",
+      "certificateDate": "2015-07-07",
+      "firstFloorField": "C2.b",
+      "historicFloodEventCount": 0
+    },
+    "34025_399688": {
+      "parcelId": "1319_92_4.02",
+      "structurePoint": [
+        -73.992241,
+        40.407479
+      ],
+      "firstFloorNavd88Ft": 13.6,
+      "certificateId": "fd37dc3a-ac10-4f7a-ac76-05e93a0cfc2f",
+      "certificateDate": "2021-02-16",
+      "firstFloorField": "C2.b",
+      "historicFloodEventCount": 0
+    },
+    "34025_419455": {
+      "parcelId": "1319_90_13",
+      "structurePoint": [
+        -73.992674,
+        40.406251
+      ],
+      "firstFloorNavd88Ft": 12.7,
+      "certificateId": "00042174-af5c-412b-a4f1-6a83e1df55fb",
+      "certificateDate": "2025-07-10",
+      "firstFloorField": "C2.b",
+      "historicFloodEventCount": 0
+    },
+    "34025_423836": {
+      "parcelId": "1319_62_3",
+      "structurePoint": [
+        -73.988973,
+        40.401795
+      ],
+      "firstFloorNavd88Ft": 15.1,
+      "certificateId": "30184922-0ef4-4323-b412-15e9548e1a5a",
+      "certificateDate": "2018-08-31",
+      "firstFloorField": "C2.b",
+      "historicFloodEventCount": 0
+    },
+    "34025_432884": {
+      "parcelId": "1319_75_12",
+      "structurePoint": [
+        -73.991348,
+        40.404629
+      ],
+      "firstFloorNavd88Ft": 14.8,
+      "certificateId": "2d197a2c-850c-456d-8771-f95907c763d3",
+      "certificateDate": "2023-01-24",
+      "firstFloorField": "C2.b",
+      "historicFloodEventCount": 0
+    },
+    "34025_462954": {
+      "parcelId": "1319_45_1",
+      "structurePoint": [
+        -73.984344,
+        40.40044
+      ],
+      "firstFloorNavd88Ft": 13.7,
+      "certificateId": "2f573898-511f-4753-9eed-042794c1fd4b",
+      "certificateDate": "2018-11-27",
+      "firstFloorField": "C2.b",
+      "historicFloodEventCount": 0
+    },
+    "34025_467947": {
+      "parcelId": "1319_41_3",
+      "structurePoint": [
+        -73.983549,
+        40.39919
+      ],
+      "firstFloorNavd88Ft": 14.2,
+      "certificateId": "ca56a7b0-8d5a-47ee-85f3-fa43126490c2",
+      "certificateDate": "2015-03-18",
+      "firstFloorField": "C2.b",
+      "historicFloodEventCount": 0
+    },
+    "34025_514017": {
+      "parcelId": "1319_73_5",
+      "structurePoint": [
+        -73.991618,
+        40.403175
+      ],
+      "firstFloorNavd88Ft": 18.5,
+      "certificateId": "cfc6ecd9-15a1-4137-9703-cd530baf5153",
+      "certificateDate": "2026-01-27",
+      "firstFloorField": "C2.b",
+      "historicFloodEventCount": 0
+    }
+  }
+}
