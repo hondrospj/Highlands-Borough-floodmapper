@@ -1,4 +1,5 @@
 (function () {
+  const { getHydraulicQueryGrid, getPenalizedWaterSurfaceStage, getUncertaintyRasterColor, isWetRasterPixel } = priorityTownHydraulics;
   "use strict";
 
   const EMPTY = { type: "FeatureCollection", features: [] };

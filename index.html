@@ -5984,7 +5984,7 @@ function normalizeBoundaryRingsFromArcGIS(rings, sourceWkid = 3857) {
       return window.ShorelyRoadLabels.createLayer({
         ...options,
         exportMode: Number(options?.minZoom) === 0,
-        includeNames: Number(options?.minZoom) !== 0
+        includeNames: Number(options?.minZoom) !== 0 || !window.NORTH_WILDWOOD_EXPORT_ROADS?.hasLocalNames?.()
       });
     }
 
@@ -8409,6 +8409,13 @@ function updateExportSegmentedUI() {
       const roadsEnabled = document.getElementById("roadsToggle")?.classList.contains("on");
       const zoom = exportMap.getZoom() || 0;
       const showLabels = roadsEnabled && zoom >= ROAD_LABEL_ZOOM;
+      const attribution = document.getElementById("exportMapAttribution");
+      if (attribution) {
+        const localSource = showLabels && window.NORTH_WILDWOOD_EXPORT_ROADS?.getAttribution?.();
+        const baseAttribution = "Map: Esri, HERE, Garmin, USGS, © OpenStreetMap contributors";
+        attribution.textContent = localSource && localSource !== "OpenStreetMap contributors"
+          ? `${baseAttribution} · Local road names: ${localSource}` : baseAttribution;
+      }
       // A hidden road pane needs no WebGL context. Keep an initialized layer
       // for later frames and retries once the selected extent can show it.
       if (showLabels && !exportRoadsLayer) mountExportRoadLayer();
@@ -13473,7 +13480,10 @@ function startPlayback() {
       if (!nsiStructureLoadPromise) {
         nsiStructureLoadPromise = fetchJson(NSI_STRUCTURES_URL, { cache: "force-cache" })
           .then(payload => {
-            if (!/nsi-2026-first-floor-v1$/.test(String(payload?.metadata?.schema || ""))) {
+            const schema = String(payload?.metadata?.schema || "");
+            const highlandsStructures = schema === "highlands-structure-floor-v1" &&
+              payload.type === "FeatureCollection" && Array.isArray(payload.features);
+            if (!/nsi-2026-first-floor-v1$/.test(schema) && !highlandsStructures) {
               throw new Error("The USACE NSI 2026 structure asset needs to be refreshed.");
             }
             nsiStructureFeatures = Array.isArray(payload.features) ? payload.features : [];
@@ -17224,7 +17234,7 @@ document.querySelectorAll("#downloadExtentControl button[data-extent]").forEach(
       return null;
     }
 
-    return { getHydraulicOverlayRecord, getOverlayStage, getHydraulicPhaseForEntry, annotateHydraulicSeries, stageToCode, sample: sampleTownCog, townDepth };
+    return { getHydraulicOverlayRecord, getOverlayStage, getHydraulicPhaseForEntry, annotateHydraulicSeries, stageToCode, sample: sampleTownCog, townDepth, getHydraulicQueryGrid, getPenalizedWaterSurfaceStage, getUncertaintyRasterColor, isWetRasterPixel };
     })();
     getHydraulicOverlayRecord = priorityTownHydraulics.getHydraulicOverlayRecord;
     getOverlayStage = priorityTownHydraulics.getOverlayStage;
@@ -17331,7 +17341,7 @@ document.querySelectorAll("#downloadExtentControl button[data-extent]").forEach(
 
 <script src="./assets/mapper-ui/3d/north-wildwood-3d.js?v=20261009-conflicts-1&roads=20261002-soft-gray&county=20261015&stability=20261027-lines1&roadlabels=20261030-v1&deep=5981109965ae919a"></script>
 
-<script defer src="./assets/mapper-ui/export-road-labels.js?v=b3e11134ba8bcb33"></script>
+<script defer src="./assets/mapper-ui/export-road-labels.js?v=6607c25337ec2aa8"></script>
 
 <script defer src="./assets/mapper-ui/modal-focus.js?v=77c8d9e9efcb920b"></script>
 <script data-nww-script="script-007">
@@ -17573,7 +17583,7 @@ preloadNorthWildwoodExperience(window.floodmapperMapDependenciesReady ? main() :
 </script>
 
 
-<script src="assets/highlands-road-impacts.js?v=20261016-stability"></script>
+<script src="assets/highlands-road-impacts.js?v=20261116-native-hydraulics"></script>
 <script src="./assets/mapper-ui/avalon-mobile.js?v=20261026-holistic1"></script>
 
 
