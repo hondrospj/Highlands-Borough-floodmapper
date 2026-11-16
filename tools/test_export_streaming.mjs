@@ -88,6 +88,7 @@ const requests=[];
 const imageContext=vm.createContext({
  currentOverlayMode:'depth',getStageValue:e=>e.stage,getOverlayStage:s=>Math.floor(s*10)/10,
  getHydraulicPhaseForEntry:e=>e.phase,
+ getPhysicsAssetForEntry:()=>null,getPhysicsDisplayRecord:()=>null,
  getOverlayRecord:async(mode,stage,phase)=>({url:`${stage}:${phase}`}),
  getHydraulicOverlayRecord:async(mode,stage,phase)=>({url:`${stage}:${phase}`}),
  getExportImageElement:async url=>{requests.push(url);return {src:url};},throwIfExportCancelled(){},
