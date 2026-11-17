@@ -7,7 +7,7 @@
   "datum": "NAVD88",
   "timeZone": "America/New_York",
   "method": "hourly_max_operational_record_incremental_v3",
-  "lastProcessedISO": "2026-11-17T15:00:00Z",
+  "lastProcessedISO": "2026-11-17T20:00:00Z",
   "archiveStartDate": "2007-10-01",
   "archiveEndDate": "2026-11-17",
   "navd88OffsetFromMllwFt": -2.13,
@@ -1366400,8 +1366400,8 @@
     {
       "date": "2026-11-17",
       "classification": "none",
-      "peakNAVD88": 1.38,
-      "peakMLLW": 3.51,
+      "peakNAVD88": 1.52,
+      "peakMLLW": 3.65,
       "hours": [
         {
           "hourIndex": 0,
@@ -1366499,13 +1366499,58 @@
           "timeLocal": "2026-11-17T10:00",
           "timeEST": "2026-11-17T10:00",
           "displayTimeEST": "2026-11-17T10:00",
-          "navd88StageFt": -0.22,
-          "mllwStageFt": 1.91
+          "navd88StageFt": 0.29,
+          "mllwStageFt": 2.42
+        },
+        {
+          "hourIndex": 11,
+          "timeUtc": "2026-11-17T16:00:00Z",
+          "timeLocal": "2026-11-17T11:00",
+          "timeEST": "2026-11-17T11:00",
+          "displayTimeEST": "2026-11-17T11:00",
+          "navd88StageFt": 0.76,
+          "mllwStageFt": 2.89
+        },
+        {
+          "hourIndex": 12,
+          "timeUtc": "2026-11-17T17:00:00Z",
+          "timeLocal": "2026-11-17T12:00",
+          "timeEST": "2026-11-17T12:00",
+          "displayTimeEST": "2026-11-17T12:00",
+          "navd88StageFt": 1.19,
+          "mllwStageFt": 3.32
+        },
+        {
+          "hourIndex": 13,
+          "timeUtc": "2026-11-17T18:00:00Z",
+          "timeLocal": "2026-11-17T13:00",
+          "timeEST": "2026-11-17T13:00",
+          "displayTimeEST": "2026-11-17T13:00",
+          "navd88StageFt": 1.49,
+          "mllwStageFt": 3.62
+        },
+        {
+          "hourIndex": 14,
+          "timeUtc": "2026-11-17T19:00:00Z",
+          "timeLocal": "2026-11-17T14:00",
+          "timeEST": "2026-11-17T14:00",
+          "displayTimeEST": "2026-11-17T14:00",
+          "navd88StageFt": 1.52,
+          "mllwStageFt": 3.65
+        },
+        {
+          "hourIndex": 15,
+          "timeUtc": "2026-11-17T20:00:00Z",
+          "timeLocal": "2026-11-17T15:00",
+          "timeEST": "2026-11-17T15:00",
+          "displayTimeEST": "2026-11-17T15:00",
+          "navd88StageFt": 1.42,
+          "mllwStageFt": 3.55
         }
       ]
     }
   ],
-  "fullArchiveBuiltISO": "2026-11-17T15:29:24Z",
-  "sourceUrlTemplate": "https://waterservices.usgs.gov/nwis/iv/?format=json&sites=01407600&parameterCd=72279&startDT=2026-11-17T05%3A00%3A00Z&endDT=2026-11-17T15%3A00%3A00Z&siteStatus=all",
-  "lastIncrementalUpdateISO": "2026-11-17T15:00:00Z"
+  "fullArchiveBuiltISO": "2026-11-17T20:28:42Z",
+  "sourceUrlTemplate": "https://waterservices.usgs.gov/nwis/iv/?format=json&sites=01407600&parameterCd=72279&startDT=2026-11-17T05%3A00%3A00Z&endDT=2026-11-17T20%3A00%3A00Z&siteStatus=all",
+  "lastIncrementalUpdateISO": "2026-11-17T20:00:00Z"
 }
