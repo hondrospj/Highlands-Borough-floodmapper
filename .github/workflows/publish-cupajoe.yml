@@ -1,48 +1,32 @@
-name: Publish ShorelySafe to Cup A Joe
+name: Publish reviewed expired-notice delta
 on:
   workflow_dispatch:
-  workflow_call:
-    secrets:
-      SHORELYSAFE_PUBLISH_TOKEN:
-        required: true
-
 permissions:
   contents: read
 concurrency:
   group: shorelysafe-publish
   cancel-in-progress: false
 jobs:
-  publish:
+  publish-reviewed-delta:
     runs-on: ubuntu-latest
-    timeout-minutes: 90
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
-          ref: "main"
-          path: "sources/Highlands-Borough-floodmapper"
-          sparse-checkout-cone-mode: false
-          sparse-checkout: |
-            .shorelysafe/
-            tools/
-            data/
-            forecast.json
-            forecasts.json
-            observed.json
-            observedoverflow.json
-            toptides.json
-            flood_stats.json
+          fetch-depth: 1
           persist-credentials: false
-      - name: Publish application files
-        working-directory: "sources/Highlands-Borough-floodmapper"
+          sparse-checkout-cone-mode: false
+          sparse-checkout: tools/remove_expired_notice_delta.py
+      - name: Patch only the reviewed live notice and preserve deployment data
         env:
-          SHORELYSAFE_TOKEN: ${{ secrets.SHORELYSAFE_PUBLISH_TOKEN }}
-          SHORELYSAFE_SITE: "https://cupajoe.live"
-          SHORELYSAFE_APP: "floodmapper--highlands"
-        run: python3 .shorelysafe/publish_data_overlay.py --app "$SHORELYSAFE_APP"
-      - name: Preserve publication verification receipt
-        if: always()
-        uses: actions/upload-artifact@v4
+          SHORELYSAFE_PUBLISH_TOKEN: ${{ secrets.SHORELYSAFE_PUBLISH_TOKEN }}
+          APP_ID: floodmapper--highlands
+          APP_ROUTE: /shorelysafe/floodmapper/highlands/
+          MAPPER_NAME: Highlands-Borough-floodmapper
+          SOURCE_COMMIT: 04ed4126cc69c9587bc7a19240a4f69bd826e6c0
+        run: python tools/remove_expired_notice_delta.py
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: highlands-data-publication-receipt
-          path: sources/Highlands-Borough-floodmapper/data-overlay-publication-receipt.json
-          if-no-files-found: ignore
+          name: expired-notice-publication-receipt
+          path: publication-receipt.json
+          if-no-files-found: error
