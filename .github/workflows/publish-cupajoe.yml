@@ -1,48 +1,34 @@
-name: Publish ShorelySafe to Cup A Joe
+name: Publish reviewed loading-UI delta
 on:
   workflow_dispatch:
-  workflow_call:
-    secrets:
-      SHORELYSAFE_PUBLISH_TOKEN:
-        required: true
-
 permissions:
   contents: read
 concurrency:
   group: shorelysafe-publish
   cancel-in-progress: false
 jobs:
-  publish:
+  publish-reviewed-delta:
     runs-on: ubuntu-latest
-    timeout-minutes: 90
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
-          ref: "main"
-          path: "sources/Highlands-Borough-floodmapper"
+          fetch-depth: 1
+          persist-credentials: false
           sparse-checkout-cone-mode: false
           sparse-checkout: |
-            .shorelysafe/
-            tools/
-            data/
-            forecast.json
-            forecasts.json
-            observed.json
-            observedoverflow.json
-            toptides.json
-            flood_stats.json
-          persist-credentials: false
-      - name: Publish application files
-        working-directory: "sources/Highlands-Borough-floodmapper"
+            tools/remove_loading_delta.py
+            tools/patch_loading.py
+      - name: Apply reviewed loading UI changes and preserve current data
         env:
-          SHORELYSAFE_TOKEN: ${{ secrets.SHORELYSAFE_PUBLISH_TOKEN }}
-          SHORELYSAFE_SITE: "https://cupajoe.live"
-          SHORELYSAFE_APP: "floodmapper--highlands"
-        run: python3 .shorelysafe/publish_data_overlay.py --app "$SHORELYSAFE_APP"
-      - name: Preserve publication verification receipt
-        if: always()
-        uses: actions/upload-artifact@v4
+          SHORELYSAFE_PUBLISH_TOKEN: ${{ secrets.SHORELYSAFE_PUBLISH_TOKEN }}
+          APP_ID: floodmapper--highlands
+          APP_ROUTE: /shorelysafe/floodmapper/highlands/
+          MAPPER_NAME: Highlands-Borough-floodmapper
+          SOURCE_COMMIT: 4abdf12549d2f78eaa2f9783b8953e94cb1e3d1d
+        run: python tools/remove_loading_delta.py
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: highlands-data-publication-receipt
-          path: sources/Highlands-Borough-floodmapper/data-overlay-publication-receipt.json
-          if-no-files-found: ignore
+          name: loading-ui-publication-receipt
+          path: publication-receipt.json
+          if-no-files-found: error
