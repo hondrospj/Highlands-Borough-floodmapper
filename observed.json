@@ -7,7 +7,7 @@
   "datum": "NAVD88",
   "timeZone": "America/New_York",
   "method": "hourly_max_operational_record_incremental_v3",
-  "lastProcessedISO": "2026-11-19T21:00:00Z",
+  "lastProcessedISO": "2026-11-19T22:00:00Z",
   "archiveStartDate": "2007-10-01",
   "archiveEndDate": "2026-11-19",
   "navd88OffsetFromMllwFt": -2.13,
@@ -1366848,8 +1366848,8 @@
     {
       "date": "2026-11-19",
       "classification": "none",
-      "peakNAVD88": 1.49,
-      "peakMLLW": 3.62,
+      "peakNAVD88": 1.51,
+      "peakMLLW": 3.64,
       "hours": [
         {
           "hourIndex": 0,
@@ -1367001,13 +1367001,22 @@
           "timeLocal": "2026-11-19T16:00",
           "timeEST": "2026-11-19T16:00",
           "displayTimeEST": "2026-11-19T16:00",
-          "navd88StageFt": 1.49,
-          "mllwStageFt": 3.62
+          "navd88StageFt": 1.51,
+          "mllwStageFt": 3.64
+        },
+        {
+          "hourIndex": 17,
+          "timeUtc": "2026-11-19T22:00:00Z",
+          "timeLocal": "2026-11-19T17:00",
+          "timeEST": "2026-11-19T17:00",
+          "displayTimeEST": "2026-11-19T17:00",
+          "navd88StageFt": 1.42,
+          "mllwStageFt": 3.55
         }
       ]
     }
   ],
-  "fullArchiveBuiltISO": "2026-11-19T21:53:01Z",
-  "sourceUrlTemplate": "https://waterservices.usgs.gov/nwis/iv/?format=json&sites=01407600&parameterCd=72279&startDT=2026-11-19T05%3A00%3A00Z&endDT=2026-11-19T21%3A00%3A00Z&siteStatus=all",
-  "lastIncrementalUpdateISO": "2026-11-19T21:00:00Z"
+  "fullArchiveBuiltISO": "2026-11-19T22:51:24Z",
+  "sourceUrlTemplate": "https://waterservices.usgs.gov/nwis/iv/?format=json&sites=01407600&parameterCd=72279&startDT=2026-11-19T05%3A00%3A00Z&endDT=2026-11-19T22%3A00%3A00Z&siteStatus=all",
+  "lastIncrementalUpdateISO": "2026-11-19T22:00:00Z"
 }
