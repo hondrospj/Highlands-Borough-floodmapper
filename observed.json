@@ -1366985,11 +1366985,20 @@
           "displayTimeEST": "2026-11-19T14:00",
           "navd88StageFt": 1.2,
           "mllwStageFt": 3.33
+        },
+        {
+          "hourIndex": 15,
+          "timeUtc": "2026-11-19T20:00:00Z",
+          "timeLocal": "2026-11-19T15:00",
+          "timeEST": "2026-11-19T15:00",
+          "displayTimeEST": "2026-11-19T15:00",
+          "navd88StageFt": 1.2,
+          "mllwStageFt": 3.33
         }
       ]
     }
   ],
-  "fullArchiveBuiltISO": "2026-11-19T20:06:53Z",
+  "fullArchiveBuiltISO": "2026-11-19T20:28:43Z",
   "sourceUrlTemplate": "https://waterservices.usgs.gov/nwis/iv/?format=json&sites=01407600&parameterCd=72279&startDT=2026-11-19T05%3A00%3A00Z&endDT=2026-11-19T20%3A00%3A00Z&siteStatus=all",
   "lastIncrementalUpdateISO": "2026-11-19T20:00:00Z"
 }
