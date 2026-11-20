@@ -17129,22 +17129,25 @@ document.querySelectorAll("#downloadExtentControl button[data-extent]").forEach(
       return cacheDrainageComposite(key, record);
     }
 
-    // The Highlands catalog uses its original colors. Composited pixels can
-    // already use the shared UI palette. Both palettes are ordered shallow to deep.
+    // The Highlands catalog uses older colors. Composited pixels can already
+    // use the shared palette. Each pair of palettes uses the same band order.
     const HIGHLANDS_CATALOG_DEPTH_COLORS = [
       [207, 239, 255], [39, 105, 219], [91, 95, 214], [95, 45, 168],
       [124, 66, 196], [167, 63, 161], [224, 90, 174], [177, 54, 123],
       [165, 36, 64], [63, 0, 10], [58, 0, 8]
     ];
+    const HIGHLANDS_CATALOG_STAGE_COLORS = [[213, 138, 0], [216, 75, 103], [124, 92, 224]];
     const HIGHLANDS_CATALOG_UNCERTAINTY_COLOR = [121, 221, 90];
-    const modernDepthOverlayCache = new Map();
+    const displayOverlayCache = new Map();
     // Retain encoded palette images for replay; decoded image caches stay small.
-    const MODERN_DEPTH_CACHE_LIMIT = FLOOD_COMPOSITE_CACHE_COMPACT ? 64 : 96;
-    const MODERN_DEPTH_CACHE_BYTE_LIMIT = (FLOOD_COMPOSITE_CACHE_COMPACT ? 8 : 16) * 1024 * 1024;
+    const DISPLAY_OVERLAY_CACHE_LIMIT = FLOOD_COMPOSITE_CACHE_COMPACT ? 64 : 96;
+    const DISPLAY_OVERLAY_CACHE_BYTE_LIMIT = (FLOOD_COMPOSITE_CACHE_COMPACT ? 8 : 16) * 1024 * 1024;
 
-    function applyModernDepthColors(pixels) {
+    function applyOverlayDisplayColors(pixels, mode) {
       const uncertainty = getUncertaintyRasterColor();
-      const sourcePalettes = [HIGHLANDS_CATALOG_DEPTH_COLORS, DRAINAGE_DEPTH_COLORS];
+      const displayPalette = mode === "depth" ? DRAINAGE_DEPTH_COLORS : DRAINAGE_STAGE_COLORS;
+      const catalogPalette = mode === "depth" ? HIGHLANDS_CATALOG_DEPTH_COLORS : HIGHLANDS_CATALOG_STAGE_COLORS;
+      const sourcePalettes = [catalogPalette, displayPalette];
       const colors = new Map();
       for (let offset = 0; offset < pixels.length; offset += 4) {
         if (pixels[offset + 3] <= 8 || isUncertaintyRasterPixel(pixels, offset, uncertainty)) continue;
@@ -17168,7 +17171,7 @@ document.querySelectorAll("#downloadExtentControl button[data-extent]").forEach(
                 }
               }
             }
-            color = DRAINAGE_DEPTH_COLORS[bestIndex];
+            color = displayPalette[bestIndex];
           }
           colors.set(key, color);
         }
@@ -17177,41 +17180,41 @@ document.querySelectorAll("#downloadExtentControl button[data-extent]").forEach(
       return pixels;
     }
 
-    async function getModernDepthOverlayRecord(record) {
-      if (!record?.url || record.isModernDepthPalette) return record;
-      const key = record.url;
-      if (modernDepthOverlayCache.has(key)) {
-        const cached = modernDepthOverlayCache.get(key);
-        modernDepthOverlayCache.delete(key);
-        modernDepthOverlayCache.set(key, cached);
+    async function getDisplayOverlayRecord(record, mode) {
+      if (!record?.url || record.displayPaletteMode === mode) return record;
+      const key = `${mode}:${record.url}`;
+      if (displayOverlayCache.has(key)) {
+        const cached = displayOverlayCache.get(key);
+        displayOverlayCache.delete(key);
+        displayOverlayCache.set(key, cached);
         return cached;
       }
       const request = (async () => {
         const image = await getExportImageElement(record.url);
         throwIfExportCancelled();
-        if (!image) throw new Error("The flood depth image could not load.");
+        if (!image) throw new Error("The flood overlay image could not load.");
         const canvas = document.createElement("canvas");
         canvas.width = image.naturalWidth; canvas.height = image.naturalHeight;
         const context = canvas.getContext("2d", { willReadFrequently: true });
-        if (!context) throw new Error("The flood depth canvas is unavailable.");
+        if (!context) throw new Error("The flood overlay canvas is unavailable.");
         context.drawImage(image, 0, 0);
         const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
-        applyModernDepthColors(imageData.data);
+        applyOverlayDisplayColors(imageData.data, mode);
         context.putImageData(imageData, 0, 0);
         const url = await canvasToFillingObjectUrl(canvas);
         const paletteByteLength = floodCompositeBlobSizes.get(url) || 0;
         floodCompositeBlobSizes.delete(url);
-        return { ...record, url, isModernDepthPalette: true, paletteByteLength };
+        return { ...record, url, displayPaletteMode: mode, paletteByteLength };
       })();
-      modernDepthOverlayCache.set(key, request);
+      displayOverlayCache.set(key, request);
       try {
         const result = await request;
-        modernDepthOverlayCache.set(key, result);
+        displayOverlayCache.set(key, result);
         // Pending requests still coalesce, but do not block eviction of finished images.
-        const completed = Array.from(modernDepthOverlayCache.entries()).filter(([, item]) => item?.url);
+        const completed = Array.from(displayOverlayCache.entries()).filter(([, item]) => item?.url);
         let bytes = completed.reduce((total, [, item]) => total + (item.paletteByteLength || 0), 0);
-        while (completed.length > MODERN_DEPTH_CACHE_LIMIT ||
-          (completed.length > 1 && bytes > MODERN_DEPTH_CACHE_BYTE_LIMIT)) {
+        while (completed.length > DISPLAY_OVERLAY_CACHE_LIMIT ||
+          (completed.length > 1 && bytes > DISPLAY_OVERLAY_CACHE_BYTE_LIMIT)) {
           // Keep this result usable even if a single image exceeds the byte budget.
           const oldestIndex = completed.findIndex(([cachedKey]) => cachedKey !== key);
           if (oldestIndex < 0) break;
@@ -17220,18 +17223,18 @@ document.querySelectorAll("#downloadExtentControl button[data-extent]").forEach(
           URL.revokeObjectURL(oldest.url);
           exportImageElementCache.delete(oldest.url);
           preloadPromiseCache.delete(oldest.url);
-          modernDepthOverlayCache.delete(oldestKey);
+          displayOverlayCache.delete(oldestKey);
         }
         return result;
       } catch (error) {
-        modernDepthOverlayCache.delete(key);
+        displayOverlayCache.delete(key);
         throw error;
       }
     }
 
     async function getHydraulicOverlayRecord(mode, stageValue, phase = "slack", entry = null, series = currentSeriesHours) {
       const record = await getSourceHydraulicOverlayRecord(mode, stageValue, phase, entry, series);
-      return mode === "depth" ? getModernDepthOverlayRecord(record) : record;
+      return getDisplayOverlayRecord(record, mode);
     }
 
 

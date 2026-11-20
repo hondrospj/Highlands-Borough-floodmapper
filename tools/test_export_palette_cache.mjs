@@ -3,13 +3,13 @@ import vm from 'node:vm';
 import assert from 'node:assert/strict';
 const after=fs.readFileSync(new URL('../index.html',import.meta.url),'utf8');
 const fn=(s,name)=>{const m=s.match(new RegExp('^    (?:async )?function '+name+'\\([\\s\\S]+?\\n    }','m'));assert(m,name);return m[0];};
-assert(after.includes('const FLOOD_COMPOSITE_CACHE_ENTRY_LIMIT = FLOOD_COMPOSITE_CACHE_COMPACT ? 32 : 48;'));
+assert(after.includes('const FLOOD_COMPOSITE_CACHE_ENTRY_LIMIT = FLOOD_COMPOSITE_CACHE_COMPACT ? 16 : 48;'));
 const checks=[];
 function harness(compact=false){
  const revoked=[],loads=new Map(),sizes=new Map(),waits=new Map(),failures=new Set();let serial=0,conversions=0;
- const context={FLOOD_COMPOSITE_CACHE_COMPACT:compact,URL:{revokeObjectURL:url=>revoked.push(url)},exportImageElementCache:new Map(),preloadPromiseCache:new Map(),floodCompositeBlobSizes:new Map(),throwIfExportCancelled:()=>{},applyModernDepthColors:()=>{conversions++;},getExportImageElement:async source=>{loads.set(source,(loads.get(source)||0)+1);if(failures.delete(source))throw Error('load failed');if(waits.has(source))await waits.get(source).promise;return {naturalWidth:1,naturalHeight:1,source};},document:{createElement:()=>{const canvas={};canvas.getContext=()=>({drawImage:image=>{canvas.source=image.source;},getImageData:()=>({data:new Uint8ClampedArray([1,2,3,225])}),putImageData:()=>{}});return canvas;}},canvasToFillingObjectUrl:async canvas=>{const url='blob:palette-'+(++serial);context.floodCompositeBlobSizes.set(url,sizes.get(canvas.source)||1);return url;}};
+ const context={FLOOD_COMPOSITE_CACHE_COMPACT:compact,URL:{revokeObjectURL:url=>revoked.push(url)},exportImageElementCache:new Map(),preloadPromiseCache:new Map(),floodCompositeBlobSizes:new Map(),throwIfExportCancelled:()=>{},applyOverlayDisplayColors:()=>{conversions++;},getExportImageElement:async source=>{loads.set(source,(loads.get(source)||0)+1);if(failures.delete(source))throw Error('load failed');if(waits.has(source))await waits.get(source).promise;return {naturalWidth:1,naturalHeight:1,source};},document:{createElement:()=>{const canvas={};canvas.getContext=()=>({drawImage:image=>{canvas.source=image.source;},getImageData:()=>({data:new Uint8ClampedArray([1,2,3,225])}),putImageData:()=>{}});return canvas;}},canvasToFillingObjectUrl:async canvas=>{const url='blob:palette-'+(++serial);context.floodCompositeBlobSizes.set(url,sizes.get(canvas.source)||1);return url;}};
  vm.createContext(context);
- vm.runInContext(['const modernDepthOverlayCache = new Map();',...after.match(/    const MODERN_DEPTH_CACHE_(?:LIMIT|BYTE_LIMIT) =[^\n]+;/g),fn(after,'getModernDepthOverlayRecord'),'globalThis.audit={cache:modernDepthOverlayCache,entryLimit:MODERN_DEPTH_CACHE_LIMIT,byteLimit:MODERN_DEPTH_CACHE_BYTE_LIMIT,get:getModernDepthOverlayRecord};'].join('\n'),context);
+ vm.runInContext(['const displayOverlayCache = new Map();',...after.match(/    const DISPLAY_OVERLAY_CACHE_(?:LIMIT|BYTE_LIMIT) =[^\n]+;/g),fn(after,'getDisplayOverlayRecord'),'globalThis.audit={cache:displayOverlayCache,entryLimit:DISPLAY_OVERLAY_CACHE_LIMIT,byteLimit:DISPLAY_OVERLAY_CACHE_BYTE_LIMIT,get:(record,mode="depth")=>getDisplayOverlayRecord(record,mode)};'].join('\n'),context);
  const pause=key=>{let resolve;const promise=new Promise(r=>resolve=r);waits.set(key,{promise,resolve});return ()=>{waits.get(key).resolve();waits.delete(key);};};
  return {...context.audit,context,revoked,loads,sizes,pause,failures,conversions:()=>conversions};
 }
@@ -17,7 +17,7 @@ for(const compact of [false,true]){
  const h=harness(compact);assert.equal(h.entryLimit,compact?64:96);assert.equal(h.byteLimit,(compact?8:16)*1024*1024);
  const records=[];for(let i=0;i<h.entryLimit;i++){const result=await h.get({url:'frame-'+i,compositeByteLength:10000,stage:i});records.push(result);h.context.exportImageElementCache.set(result.url,{});h.context.preloadPromiseCache.set(result.url,{});assert.equal(result.paletteByteLength,1);}
  const reused=await h.get({url:'frame-0'});assert.equal(reused,records[0]);assert.equal(h.conversions(),h.entryLimit);
- await h.get({url:'extra'});assert.equal(h.cache.size,h.entryLimit);assert(h.cache.has('frame-0'));assert(!h.cache.has('frame-1'));assert(h.revoked.includes(records[1].url));assert(!h.context.exportImageElementCache.has(records[1].url));assert(!h.context.preloadPromiseCache.has(records[1].url));assert.equal(h.context.floodCompositeBlobSizes.size,0);
+ await h.get({url:'extra'});assert.equal(h.cache.size,h.entryLimit);assert(h.cache.has('depth:frame-0'));assert(!h.cache.has('depth:frame-1'));assert(h.revoked.includes(records[1].url));assert(!h.context.exportImageElementCache.has(records[1].url));assert(!h.context.preloadPromiseCache.has(records[1].url));assert.equal(h.context.floodCompositeBlobSizes.size,0);
  checks.push((compact?'compact':'desktop')+' entry budget, LRU, encoded byte bookkeeping and URL cleanup');
 }
 {
@@ -28,15 +28,27 @@ for(const compact of [false,true]){
 }
 {
  const h=harness();const resume=h.pause('pending');const first=h.get({url:'pending'}),second=h.get({url:'pending'});assert.equal(h.loads.get('pending'),1);resume();const [a,b]=await Promise.all([first,second]);assert.equal(a,b);assert.equal(h.conversions(),1);
- h.failures.add('retry');await assert.rejects(h.get({url:'retry'}),/load failed/);assert(!h.cache.has('retry'));assert((await h.get({url:'retry'})).url);assert.equal(h.loads.get('retry'),2);
- const modern={url:'existing',isModernDepthPalette:true};assert.equal(await h.get(modern),modern);assert.equal(await h.get(null),null);
+ h.failures.add('retry');await assert.rejects(h.get({url:'retry'}),/load failed/);assert(!h.cache.has('depth:retry'));assert((await h.get({url:'retry'})).url);assert.equal(h.loads.get('retry'),2);
+ const modern={url:'existing',displayPaletteMode:"depth"};assert.equal(await h.get(modern),modern);assert.equal(await h.get(null),null);
  checks.push('concurrent request reuse, failed load retry and already-colored passthrough');
 }
 {
  const h=harness(true);const resume=h.pause('slow');const pending=h.get({url:'slow'});
  for(let i=0;i<h.entryLimit+4;i++)await h.get({url:'ready-'+i});
- assert.equal([...h.cache.values()].filter(r=>r?.url).length,h.entryLimit);assert(h.cache.has('slow'));resume();const slow=await pending;assert.equal(h.cache.size,h.entryLimit);assert(!h.revoked.includes(slow.url));
+ assert.equal([...h.cache.values()].filter(r=>r?.url).length,h.entryLimit);assert(h.cache.has('depth:slow'));resume();const slow=await pending;assert.equal(h.cache.size,h.entryLimit);assert(!h.revoked.includes(slow.url));
  checks.push('pending requests do not block eviction; completing result remains usable');
+}
+{
+ const h = harness();
+ const source = { url: 'shared-source' };
+ const depth = await h.get(source, 'depth');
+ const stages = await h.get(source, 'dynamic');
+ assert.notEqual(depth.url, stages.url);
+ assert.equal(depth.displayPaletteMode, 'depth');
+ assert.equal(stages.displayPaletteMode, 'dynamic');
+ assert.equal(await h.get(source, 'dynamic'), stages);
+ assert.equal(h.conversions(), 2);
+ checks.push('depth and flood stages keep separate palette entries');
 }
 const result={repository:'hondrospj/Highlands-Borough-floodmapper',passed:true,checks};
 console.log(JSON.stringify(result,null,2));
