@@ -10869,9 +10869,7 @@ function formatSelectedObservedDate(dateStr) {
         toast("");
         ensureMap();
 
-        const match = document.body.dataset.initialFloodFrame === "loading" && mode === "depth"
-          ? await getOverlayRecord(mode, stageValue, phase)
-          : await getHydraulicOverlayRecord(mode, stageValue, phase, entry, series);
+        const match = await getHydraulicOverlayRecord(mode, stageValue, phase, entry, series);
         if (token !== lastRenderToken) return;
 
         if (!match) {
@@ -17131,13 +17129,14 @@ document.querySelectorAll("#downloadExtentControl button[data-extent]").forEach(
       return cacheDrainageComposite(key, record);
     }
 
-    // Apply the display palette after the hydraulic model has finished so
-    // changing colors never changes flood extent, transparency or depth bands.
-    const MODERN_DEPTH_COLORS = [
-      [125, 249, 255], [93, 231, 255], [56, 211, 255], [27, 183, 245],
-      [22, 140, 235], [21, 107, 224], [24, 83, 198], [23, 62, 168],
-      [19, 47, 132], [11, 30, 91], [5, 14, 51]
+    // The Highlands catalog uses its original colors. Composited pixels can
+    // already use the shared UI palette. Both palettes are ordered shallow to deep.
+    const HIGHLANDS_CATALOG_DEPTH_COLORS = [
+      [207, 239, 255], [39, 105, 219], [91, 95, 214], [95, 45, 168],
+      [124, 66, 196], [167, 63, 161], [224, 90, 174], [177, 54, 123],
+      [165, 36, 64], [63, 0, 10], [58, 0, 8]
     ];
+    const HIGHLANDS_CATALOG_UNCERTAINTY_COLOR = [121, 221, 90];
     const modernDepthOverlayCache = new Map();
     // Retain encoded palette images for replay; decoded image caches stay small.
     const MODERN_DEPTH_CACHE_LIMIT = FLOOD_COMPOSITE_CACHE_COMPACT ? 64 : 96;
@@ -17145,21 +17144,32 @@ document.querySelectorAll("#downloadExtentControl button[data-extent]").forEach(
 
     function applyModernDepthColors(pixels) {
       const uncertainty = getUncertaintyRasterColor();
+      const sourcePalettes = [HIGHLANDS_CATALOG_DEPTH_COLORS, DRAINAGE_DEPTH_COLORS];
       const colors = new Map();
       for (let offset = 0; offset < pixels.length; offset += 4) {
         if (pixels[offset + 3] <= 8 || isUncertaintyRasterPixel(pixels, offset, uncertainty)) continue;
-        const key = (pixels[offset] << 16) | (pixels[offset + 1] << 8) | pixels[offset + 2];
+        const red = pixels[offset];
+        const green = pixels[offset + 1];
+        const blue = pixels[offset + 2];
+        const key = (red << 16) | (green << 8) | blue;
         let color = colors.get(key);
         if (!color) {
-          let bestDistance = Infinity;
-          let bestIndex = 0;
-          for (let index = 0; index < DRAINAGE_DEPTH_COLORS.length; index += 1) {
-            const source = DRAINAGE_DEPTH_COLORS[index];
-            const distance = (pixels[offset] - source[0]) ** 2 +
-              (pixels[offset + 1] - source[1]) ** 2 + (pixels[offset + 2] - source[2]) ** 2;
-            if (distance < bestDistance) { bestDistance = distance; bestIndex = index; }
+          if (isUncertaintyRasterPixel(pixels, offset, HIGHLANDS_CATALOG_UNCERTAINTY_COLOR)) {
+            color = uncertainty;
+          } else {
+            let bestDistance = Infinity;
+            let bestIndex = 0;
+            for (const palette of sourcePalettes) {
+              for (const [index, [r, g, b]] of palette.entries()) {
+                const distance = (red - r) ** 2 + (green - g) ** 2 + (blue - b) ** 2;
+                if (distance < bestDistance) {
+                  bestDistance = distance;
+                  bestIndex = index;
+                }
+              }
+            }
+            color = DRAINAGE_DEPTH_COLORS[bestIndex];
           }
-          color = MODERN_DEPTH_COLORS[bestIndex];
           colors.set(key, color);
         }
         pixels[offset] = color[0]; pixels[offset + 1] = color[1]; pixels[offset + 2] = color[2];
