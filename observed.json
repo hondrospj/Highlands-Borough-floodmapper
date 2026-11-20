@@ -1367052,7 +1367052,7 @@
       ]
     }
   ],
-  "fullArchiveBuiltISO": "2026-11-20T02:11:41Z",
+  "fullArchiveBuiltISO": "2026-11-20T02:29:40Z",
   "sourceUrlTemplate": "https://waterservices.usgs.gov/nwis/iv/?format=json&sites=01407600&parameterCd=72279&startDT=2026-11-19T05%3A00%3A00Z&endDT=2026-11-20T02%3A00%3A00Z&siteStatus=all",
   "lastIncrementalUpdateISO": "2026-11-20T02:00:00Z"
 }
