@@ -424,13 +424,6 @@ body:has(#contoursToggle[aria-busy="true"]) #contoursStatus{display:none!importa
                 <button class="help-btn" type="button" data-layer-help="cameras" aria-label="About Cameras" aria-haspopup="dialog" aria-controls="infoModal">?</button>
               </div>
             </div>
-            <div class="layer-item" hidden style="display:none!important">
-              <div id="contoursToggle" class="toggle" role="switch" tabindex="0" aria-label="Ground Elevation Contours" aria-checked="false" aria-describedby="contoursStatus"></div>
-              <div class="layer-meta">
-                <div class="layer-name">Ground Elevation Contours</div>
-                <span id="contoursStatus" class="highlands-contour-status" role="status" aria-live="polite"></span>
-              </div>
-            </div>
           </div>
         </section>
 
@@ -842,5 +835,14 @@ body:has(#contoursToggle[aria-busy="true"]) #contoursStatus{display:none!importa
 <!-- nww:script:script-011 -->
 <script src="https://unpkg.com/proj4@2.11.0/dist/proj4.js" defer></script>
 <script src="./assets/3d/elevation-contours.js?v=shared" defer></script>
+<template id="elevationContoursTemplate">
+            <div class="layer-item">
+              <div id="contoursToggle" class="toggle" role="switch" tabindex="0" aria-label="Ground Elevation Contours" aria-checked="false" aria-describedby="contoursStatus"></div>
+              <div class="layer-meta">
+                <div class="layer-name">Ground Elevation Contours</div>
+                <span id="contoursStatus" class="highlands-contour-status" role="status" aria-live="polite"></span>
+              </div>
+            </div>
+</template>
 </body>
 </html>

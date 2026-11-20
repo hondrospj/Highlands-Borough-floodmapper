@@ -4,13 +4,15 @@
 
   const contourPath = TOWN_CONFIG.assets?.elevationContoursPath;
   if (!contourPath) return;
+  const template = document.getElementById("elevationContoursTemplate");
+  const layerList = document.querySelector(".layers-card .layer-list");
+  if (!template || !layerList) return;
+  layerList.appendChild(template.content.cloneNode(true));
   const toggle = document.getElementById("contoursToggle");
   const status = document.getElementById("contoursStatus");
   if (!toggle || toggle.dataset.contoursBound === "true") return;
   toggle.dataset.contoursBound = "true";
-  const row = toggle.closest(".layer-item");
-  row.hidden = false;
-  row.style.removeProperty("display");
+  template.remove();
 
   const paneName = "highlandsContourPane";
   const labelPaneName = "highlandsContourLabelPane";

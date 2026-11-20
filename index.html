@@ -424,13 +424,6 @@ body:has(#contoursToggle[aria-busy="true"]) #contoursStatus{display:none!importa
                 <button class="help-btn" type="button" data-layer-help="cameras" aria-label="About Cameras" aria-haspopup="dialog" aria-controls="infoModal">?</button>
               </div>
             </div>
-            <div class="layer-item" hidden style="display:none!important">
-              <div id="contoursToggle" class="toggle" role="switch" tabindex="0" aria-label="Ground Elevation Contours" aria-checked="false" aria-describedby="contoursStatus"></div>
-              <div class="layer-meta">
-                <div class="layer-name">Ground Elevation Contours</div>
-                <span id="contoursStatus" class="highlands-contour-status" role="status" aria-live="polite"></span>
-              </div>
-            </div>
           </div>
         </section>
 
@@ -841,6 +834,15 @@ body:has(#contoursToggle[aria-busy="true"]) #contoursStatus{display:none!importa
 
 <script id="floodmapper-unified-controller-20261017" data-ui-sha256="3668b4912f612ae595cb1ee4e11fdf9aa7a80ccfbdbfff78d243e7714470baf7" data-nww-script="script-011" src="./assets/app/unified-controller.js?v=e967d7ca203af59f"></script>
 <script src="https://unpkg.com/proj4@2.11.0/dist/proj4.js" defer></script>
-<script src="./assets/3d/elevation-contours.js?v=e0fdd1e96497010c" defer></script>
+<script src="./assets/3d/elevation-contours.js?v=46d73b0d18324cf2" defer></script>
+<template id="elevationContoursTemplate">
+            <div class="layer-item">
+              <div id="contoursToggle" class="toggle" role="switch" tabindex="0" aria-label="Ground Elevation Contours" aria-checked="false" aria-describedby="contoursStatus"></div>
+              <div class="layer-meta">
+                <div class="layer-name">Ground Elevation Contours</div>
+                <span id="contoursStatus" class="highlands-contour-status" role="status" aria-live="polite"></span>
+              </div>
+            </div>
+</template>
 </body>
 </html>
