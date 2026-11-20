@@ -1,0 +1,74 @@
+
+
+@media (min-width:901px) and (min-height:561px) and (not (any-pointer:coarse)), (min-width:1367px) and (min-height:561px), (min-width:901px) and (pointer:fine) and (not (any-pointer:coarse)), (min-width:1367px) and (pointer:fine), (min-width:901px) and (pointer:none) and (not (any-pointer:coarse)), (min-width:1367px) and (pointer:none) {
+  :root{
+    --pj-logo-rail-width-final:260px;
+    --pj-logo-rail-right-final:16px;
+    --pj-zoom-logo-gap-final:14px;
+    --pj-zoom-top-final:64px;
+  }
+
+  .leaflet-top.leaflet-right{
+    top:0 !important;
+    right:0 !important;
+    z-index:1600 !important;
+    pointer-events:none !important;
+  }
+
+  .leaflet-top.leaflet-right .leaflet-control-zoom,
+  html.os-mac .leaflet-top.leaflet-right .leaflet-control-zoom,
+  html.os-windows .leaflet-top.leaflet-right .leaflet-control-zoom,
+  html.win-compact-ui .leaflet-top.leaflet-right .leaflet-control-zoom{
+    position:fixed !important;
+    top:var(--pj-zoom-top-final) !important;
+    right:calc(var(--pj-logo-rail-right-final) + var(--pj-logo-rail-width-final) + var(--pj-zoom-logo-gap-final)) !important;
+    left:auto !important;
+    bottom:auto !important;
+    margin:0 !important;
+    transform:none !important;
+    zoom:1 !important;
+    z-index:1601 !important;
+    pointer-events:auto !important;
+    border-radius:17px !important;
+    overflow:hidden !important;
+    box-shadow:0 16px 32px rgba(15,23,42,.22) !important;
+  }
+
+  .leaflet-top.leaflet-right .leaflet-control-zoom a,
+  html.os-mac .leaflet-top.leaflet-right .leaflet-control-zoom a,
+  html.os-windows .leaflet-top.leaflet-right .leaflet-control-zoom a,
+  html.win-compact-ui .leaflet-top.leaflet-right .leaflet-control-zoom a{
+    width:43px !important;
+    height:43px !important;
+    line-height:43px !important;
+    font-size:23px !important;
+  }
+}
+
+@media (min-width:901px) and (min-height:561px) and (max-width:1320px) and (not (any-pointer:coarse)), (min-width:1367px) and (min-height:561px) and (max-width:1320px), (min-width:901px) and (pointer:fine) and (max-width:1320px) and (not (any-pointer:coarse)), (min-width:1367px) and (pointer:fine) and (max-width:1320px), (min-width:901px) and (pointer:none) and (max-width:1320px) and (not (any-pointer:coarse)), (min-width:1367px) and (pointer:none) and (max-width:1320px) {
+  :root{
+    --pj-logo-rail-width-final:246px;
+    --pj-zoom-logo-gap-final:12px;
+  }
+}
+
+@media (max-width:900px), (max-width:1366px) and (any-pointer:coarse), (max-height:560px) and (pointer:coarse) {
+  body.mobile-optimized .leaflet-top.leaflet-right{
+    top:0 !important;
+    right:0 !important;
+    pointer-events:none !important;
+  }
+
+  body.mobile-optimized .leaflet-top.leaflet-right .leaflet-control-zoom{
+    position:fixed !important;
+    top:72px !important;
+    right:10px !important;
+    left:auto !important;
+    bottom:auto !important;
+    margin:0 !important;
+    transform:none !important;
+    zoom:1 !important;
+    z-index:1601 !important;
+    pointer-events:auto !important;
+  }
+}

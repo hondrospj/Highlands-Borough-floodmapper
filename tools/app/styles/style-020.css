@@ -1,0 +1,79 @@
+
+
+:root{
+  --pj-equal-left-pane-width:var(--pj-final-left-width, 340px);
+}
+
+@media (min-width:901px) and (min-height:561px) and (not (any-pointer:coarse)), (min-width:1367px) and (min-height:561px), (min-width:901px) and (pointer:fine) and (not (any-pointer:coarse)), (min-width:1367px) and (pointer:fine), (min-width:901px) and (pointer:none) and (not (any-pointer:coarse)), (min-width:1367px) and (pointer:none) {
+  #leftPanel,
+  body.observed-mode #leftPanel,
+  body:not(.observed-mode) #leftPanel,
+  body.calendar-picker-open #leftPanel,
+  body.observed-mode.calendar-picker-open #leftPanel,
+  body.observed-tight #leftPanel,
+  body.observed-ultra-tight #leftPanel,
+  body.observed-fit-tight #leftPanel,
+  body.observed-fit-ultra #leftPanel,
+  html.os-mac #leftPanel,
+  html.os-windows #leftPanel,
+  html.win-compact-ui #leftPanel{
+    left:16px !important;
+    width:var(--pj-equal-left-pane-width) !important;
+    min-width:var(--pj-equal-left-pane-width) !important;
+    max-width:var(--pj-equal-left-pane-width) !important;
+    box-sizing:border-box !important;
+    display:flex !important;
+    flex-direction:column !important;
+    grid-template-columns:none !important;
+    align-items:stretch !important;
+    align-content:stretch !important;
+    gap:11px !important;
+    padding:0 4px 4px 0 !important;
+    overflow-x:hidden !important;
+    transform:none !important;
+    scale:1 !important;
+    zoom:1 !important;
+  }
+
+  #leftPanel > .panel-card,
+  #leftPanel > .compact-card,
+  #leftPanel > .calendar-card,
+  #leftPanel > .calendar-card.active,
+  #leftPanel > .datum-card,
+  #leftPanel > .opacity-card,
+  #leftPanel > .data-source-card,
+  #leftPanel > .forecast-scenario-card,
+  #leftPanel > .overlay-card{
+    width:100% !important;
+    min-width:0 !important;
+    max-width:100% !important;
+    box-sizing:border-box !important;
+    margin-left:0 !important;
+    margin-right:0 !important;
+  }
+
+
+  #leftPanel > .snapshot-card{
+    display:none !important;
+    visibility:hidden !important;
+    height:0 !important;
+    min-height:0 !important;
+    max-height:0 !important;
+    padding:0 !important;
+    margin:0 !important;
+    border:0 !important;
+    overflow:hidden !important;
+  }
+
+  #legendDock,
+  body.observed-mode #legendDock,
+  body:not(.observed-mode) #legendDock,
+  body.calendar-picker-open #legendDock,
+  body.observed-mode.calendar-picker-open #legendDock{
+    left:calc(16px + var(--pj-equal-left-pane-width) + 16px) !important;
+  }
+}
+
+@media (min-width:761px) and (max-width:1320px){
+  :root{ --pj-equal-left-pane-width:var(--pj-final-left-width, 340px); }
+}

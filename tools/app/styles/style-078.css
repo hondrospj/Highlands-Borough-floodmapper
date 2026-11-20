@@ -1,0 +1,18 @@
+
+@layer floodmapper-unified-polish {
+
+  @media (min-width:1367px) and (any-pointer:coarse) {
+    html body[data-floodmapper-unified] :is(#leftPanel#leftPanel,#rightRail#rightRail) :is(h2,h3,.section-title) {font-size:16px!important;line-height:1.2!important;}
+    html body[data-floodmapper-unified] :is(#leftPanel#leftPanel,#rightRail#rightRail) button:not(.help-btn):not(.calendar-day):not(.calendar-nav-btn) {font-size:16px!important;line-height:1.15!important;min-height:44px!important;padding:6px!important;}
+    html body[data-floodmapper-unified] #rightRail#rightRail .layer-list {display:flex!important;flex-direction:column!important;grid-template-columns:minmax(0,1fr)!important;}
+    html body[data-floodmapper-unified] #rightRail#rightRail .layer-item {min-height:44px!important;padding:6px 0!important;grid-template-columns:minmax(0,1fr) 40px!important;gap:10px!important;}
+    html body[data-floodmapper-unified] #rightRail#rightRail .layer-name {font-size:14px!important;line-height:1.2!important;overflow-wrap:normal!important;}
+    html body[data-floodmapper-unified] #rightRail#rightRail .toggle {width:40px!important;min-width:40px!important;height:24px!important;}
+    html body[data-floodmapper-unified] #rightRail#rightRail .toggle::after {width:18px!important;height:18px!important;top:3px!important;left:3px!important;}
+    html body[data-floodmapper-unified] #rightRail#rightRail .toggle.on::after {left:19px!important;}
+    html body[data-floodmapper-unified] #rightRail#rightRail .top-tide-item {min-height:40px!important;padding:7px 8px!important;}
+    html body[data-floodmapper-unified] #rightRail#rightRail .top-tide-item > * {font-size:14px!important;line-height:1.2!important;}
+    html body[data-floodmapper-unified] :is(#leftPanel#leftPanel,#rightRail#rightRail) input {font-size:16px!important;min-height:44px!important;height:44px!important;}
+    html body[data-floodmapper-unified] #townAddressForm label {font-size:14px!important;line-height:1.2!important;}
+  }
+}

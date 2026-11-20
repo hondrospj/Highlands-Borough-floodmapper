@@ -1,0 +1,92 @@
+
+  html body #leftPanel .data-source-options{
+    grid-template-columns:repeat(3, minmax(0, 1fr)) !important;
+    gap:5px !important;
+  }
+
+  html body #leftPanel .data-source-options button{
+    min-width:0 !important;
+    padding:7px 3px !important;
+    font-size:10.5px !important;
+    line-height:1 !important;
+    white-space:nowrap !important;
+  }
+
+  html body #leftPanel > .return-interval-card{
+    order:3 !important;
+    display:none !important;
+    min-height:0 !important;
+    height:auto !important;
+    max-height:none !important;
+  }
+
+  html body.return-interval-mode #leftPanel > .return-interval-card{
+    display:flex !important;
+  }
+
+  html body.return-interval-mode #leftPanel > .forecast-scenario-card,
+  html body.return-interval-mode #leftPanel > #calendarCard,
+  html body.return-interval-mode #leftPanel > .mobile-top-tides-card{
+    display:none !important;
+  }
+
+  html body.return-interval-mode #leftPanel > #timelineIntervalCard{order:1 !important}
+  html body.return-interval-mode #leftPanel > .data-source-card{order:2 !important}
+  html body.return-interval-mode #leftPanel > .overlay-card{order:4 !important}
+  html body.return-interval-mode #leftPanel > .datum-card{order:5 !important}
+  html body.return-interval-mode #leftPanel > .opacity-card{order:6 !important}
+  html body.return-interval-mode #leftPanel > #legendDock{order:7 !important}
+  html body.return-interval-mode #leftPanel > .snapshot-card{order:8 !important}
+
+  html body.return-interval-mode #returnIntervalCard .return-interval-grid{
+    grid-template-columns:repeat(5, minmax(0, 1fr)) !important;
+    gap:5px !important;
+  }
+
+  html body.return-interval-mode #leftPanel{
+    overflow-y:auto !important;
+    overflow-x:hidden !important;
+    scrollbar-width:thin !important;
+  }
+
+  html body.return-interval-mode #returnIntervalCard .return-interval-grid button{
+    min-width:0 !important;
+    min-height:33px !important;
+    height:33px !important;
+    padding:4px 2px !important;
+    font-size:10px !important;
+    line-height:1 !important;
+  }
+  html body.return-interval-mode #returnIntervalCard #return2000Btn{
+    grid-column:2;
+  }
+
+  @media (max-width:900px), (max-width:1366px) and (any-pointer:coarse), (max-height:560px) and (pointer:coarse) {
+    html body.mobile-optimized #leftPanel .data-source-options button{
+      min-height:34px !important;
+      height:34px !important;
+      font-size:9.5px !important;
+    }
+
+    html body.mobile-optimized.return-interval-mode #leftPanel > .return-interval-card{
+      order:3 !important;
+      flex:0 0 auto !important;
+      padding:9px 12px !important;
+    }
+
+    html body.mobile-optimized.return-interval-mode #returnIntervalCard .return-interval-grid{
+      grid-template-columns:repeat(5, minmax(0, 1fr)) !important;
+    }
+
+    html body.mobile-optimized.return-interval-mode #leftPanel > .overlay-card .button-grid-2,
+    html body.mobile-optimized.return-interval-mode #leftPanel > .datum-card .segmented-control{
+      grid-template-columns:repeat(2, minmax(0, 1fr)) !important;
+    }
+
+    html body.mobile-optimized.return-interval-mode #leftPanel > #timelineIntervalCard{order:1 !important}
+    html body.mobile-optimized.return-interval-mode #leftPanel > .data-source-card{order:2 !important}
+    html body.mobile-optimized.return-interval-mode #leftPanel > .overlay-card{order:4 !important}
+    html body.mobile-optimized.return-interval-mode #leftPanel > .datum-card{order:5 !important}
+    html body.mobile-optimized.return-interval-mode #leftPanel > .opacity-card{order:6 !important}
+    html body.mobile-optimized.return-interval-mode #leftPanel > .snapshot-card{order:7 !important}
+  }

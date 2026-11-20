@@ -1,0 +1,80 @@
+
+
+    @media (min-width:901px) and (min-height:561px) and (not (any-pointer:coarse)), (min-width:1367px) and (min-height:561px), (min-width:901px) and (pointer:fine) and (not (any-pointer:coarse)), (min-width:1367px) and (pointer:fine), (min-width:901px) and (pointer:none) and (not (any-pointer:coarse)), (min-width:1367px) and (pointer:none) {
+      :root{
+        --pj-equal-left-width:356px;
+        --pj-equal-right-width:260px;
+        --pj-equal-side-gap:16px;
+        --pj-equal-bottom-reserve:188px;
+        --pj-equal-card-h:92px;
+        --pj-equal-opacity-h:62px;
+        --pj-equal-legend-min-h:144px;
+      }
+
+      html body #leftPanel,
+      html body.forecast-mode #leftPanel,
+      html body.observed-mode #leftPanel,
+      html.os-mac body #leftPanel,
+      html.os-windows body #leftPanel,
+      html.win-compact-ui body #leftPanel{
+        position:fixed !important;
+        top:16px !important;
+        left:var(--pj-equal-side-gap) !important;
+        right:auto !important;
+        bottom:var(--pj-equal-bottom-reserve) !important;
+        width:var(--pj-equal-left-width) !important;
+        min-width:var(--pj-equal-left-width) !important;
+        max-width:var(--pj-equal-left-width) !important;
+        height:auto !important;
+        max-height:calc(100vh - 16px - var(--pj-equal-bottom-reserve)) !important;
+        display:flex !important;
+        flex-direction:column !important;
+        gap:6px !important;
+        padding:0 4px 0 0 !important;
+        margin:0 !important;
+        overflow:hidden !important;
+        overflow-y:hidden !important;
+        overflow-x:hidden !important;
+        scrollbar-gutter:auto !important;
+        transform:none !important;
+        transition:none !important;
+        animation:none !important;
+        box-sizing:border-box !important;
+      }
+    }
+
+    @media (min-width:901px) and (min-height:561px) and (max-width:1320px) and (not (any-pointer:coarse)), (min-width:1367px) and (min-height:561px) and (max-width:1320px), (min-width:901px) and (pointer:fine) and (max-width:1320px) and (not (any-pointer:coarse)), (min-width:1367px) and (pointer:fine) and (max-width:1320px), (min-width:901px) and (pointer:none) and (max-width:1320px) and (not (any-pointer:coarse)), (min-width:1367px) and (pointer:none) and (max-width:1320px) {
+      :root{
+        --pj-equal-left-width:340px;
+        --pj-equal-right-width:244px;
+      }
+    }
+
+    @media (min-width:901px) and (min-height:561px) and (max-width:1120px) and (not (any-pointer:coarse)), (min-width:1367px) and (min-height:561px) and (max-width:1120px), (min-width:901px) and (pointer:fine) and (max-width:1120px) and (not (any-pointer:coarse)), (min-width:1367px) and (pointer:fine) and (max-width:1120px), (min-width:901px) and (pointer:none) and (max-width:1120px) and (not (any-pointer:coarse)), (min-width:1367px) and (pointer:none) and (max-width:1120px) {
+      :root{
+        --pj-equal-left-width:320px;
+        --pj-equal-right-width:228px;
+        --pj-equal-card-h:88px;
+        --pj-equal-legend-min-h:138px;
+      }
+    }
+
+    @media (min-width:901px) and (min-height:561px) and (max-height:940px) and (not (any-pointer:coarse)), (min-width:1367px) and (min-height:561px) and (max-height:940px), (min-width:901px) and (pointer:fine) and (max-height:940px) and (not (any-pointer:coarse)), (min-width:1367px) and (pointer:fine) and (max-height:940px), (min-width:901px) and (pointer:none) and (max-height:940px) and (not (any-pointer:coarse)), (min-width:1367px) and (pointer:none) and (max-height:940px) {
+      :root{
+        --pj-equal-bottom-reserve:128px;
+        --pj-equal-card-h:82px;
+        --pj-equal-opacity-h:56px;
+        --pj-equal-legend-min-h:132px;
+      }
+
+      html body #leftPanel,
+      html body.forecast-mode #leftPanel,
+      html body.observed-mode #leftPanel,
+      html.os-mac body #leftPanel,
+      html.os-windows body #leftPanel,
+      html.win-compact-ui body #leftPanel{
+        gap:4px !important;
+        max-height:calc(100vh - 16px - var(--pj-equal-bottom-reserve)) !important;
+      }
+    }
+  

@@ -1,0 +1,8 @@
+
+/* Desktop day bands share the native slider's frame positions. Mobile keeps
+   its existing selected-day layout; the variable switches on resize. */
+@media (min-width:901px) and (not (any-pointer:coarse)), (min-width:1367px) {
+  html body #timelineDayTabs .timeline-day {
+    --shorely-timeline-day-flex:var(--shorely-timeline-frame-weight,1);
+  }
+}

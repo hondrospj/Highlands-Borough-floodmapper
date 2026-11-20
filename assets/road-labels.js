@@ -70,7 +70,7 @@
     const labels = [];
     for (const layer of next.layers) {
       const role = roadRole(layer);
-      if (!role) continue;
+      if (!role || (settings.includeNames === false && !role.shield)) continue;
       const textSize = role.shield ? (exported ? 30 : 20) : role.major ? (exported ? 20 : 18) : (exported ? 20 : 16);
       const liveNameSize = role.major ? [[0, 18], [14, 18], [16, 19], [19, 20], [24, 20]] : [[0, 16], [14, 16], [16, 18], [19, 20], [24, 20]];
       layer.minzoom = role.shield ? 8 : role.major ? 10 : 12;
@@ -172,7 +172,7 @@
   function createLayer(options = {}) {
     const L = root.L;
     if (!L?.esri?.Vector?.vectorTileLayer) throw new Error("The road-label renderer is unavailable.");
-    const settings = { exportMode: options.exportMode === true, unit: unitValue(options.unit) };
+    const settings = { exportMode: options.exportMode === true, unit: unitValue(options.unit), includeNames: options.includeNames !== false };
     let layer;
     const styled = original => {
       let result;
@@ -199,6 +199,7 @@
     layer._shorelyRoadLabels = true;
     layer._roadSettings = settings;
     layer._roadStyled = false; layer._roadReady = false; layer._roadMounted = false; layer._roadError = null;
+    layer._roadBootstrapFailed = false;
     layer.options.opacity = Math.max(0, Math.min(1, requestedOpacity));
     layer.setOpacity = function (opacity) {
       const value = Number(opacity);
@@ -223,7 +224,15 @@
     layer.whenReady = async function ({ timeoutMs = 25000, signal, retry = false } = {}) {
       signalError(signal);
       if (!this._roadMounted || !this._map) throw new Error("The road-label layer is not on the map.");
-      if (retry && this._roadError && this._roadStyled) {
+      if (retry && this._roadBootstrapFailed) {
+        // Esri's load-error fires before its child renderer exists. Re-run
+        // the adapter's metadata/style bootstrap while keeping this wrapper
+        // and its map listeners attached.
+        this._roadBootstrapFailed = false;
+        this._roadError = null;
+        try { this._createLayer(); }
+        catch (error) { this._roadBootstrapFailed = true; this._roadError = error; }
+      } else if (retry && this._roadError && this._roadStyled) {
         const gl = glMap(this);
         if (gl) {
           // An explicit new preview/export attempt retries failed transport on
@@ -278,7 +287,7 @@
         this._asyncAdd(); hookRenderer(this); syncOpacity(this);
       };
       if (this._ready) this._roadOnReady(); else this.once("ready", this._roadOnReady);
-      this.whenReady().catch(() => {});
+      this.whenReady({ retry: true }).catch(() => {});
     };
     layer.onRemove = function (map) {
       this._roadMounted = false; this._roadReady = false;
@@ -286,7 +295,12 @@
       if (this._maplibreGL && map.hasLayer(this._maplibreGL)) map.removeLayer(this._maplibreGL);
       syncOpacity(this);
     };
-    layer.on("load-error", event => { layer._roadError = event?.value || new Error("Road labels could not load."); layer._roadReady = false; syncOpacity(layer); });
+    layer.on("load-error", event => {
+      layer._roadBootstrapFailed = true;
+      layer._roadError = event?.value || new Error("Road labels could not load.");
+      layer._roadReady = false;
+      syncOpacity(layer);
+    });
     return layer;
   }
   return Object.freeze({ VERSION, SOURCE, styleRoadLabels, styleBasemap, abbreviatedName, createLayer, isLayer,

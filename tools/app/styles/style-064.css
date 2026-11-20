@@ -1,0 +1,396 @@
+
+  /* A complete MapLibre frame should be the only live map surface. */
+  html body.map-3d-ready #map3d{
+    transition:none !important;
+    transform:none !important;
+    -webkit-backface-visibility:visible !important;
+    backface-visibility:visible !important;
+  }
+  html body.map-3d-ready #map3d canvas,
+  html body.map-3d-ready #map3d .maplibregl-canvas-container{
+    transform:none !important;
+    will-change:auto !important;
+    -webkit-backface-visibility:visible !important;
+    backface-visibility:visible !important;
+  }
+
+  /* Do not promote every fixed pane to a competing GPU texture. Opaque navy
+     surfaces retain the established palette and cannot reveal invalidated
+     WebGL strips while the 3D camera is moving. */
+  html body[data-map-view-mode="3d"] #leftPanel,
+  html body[data-map-view-mode="3d"] #rightRail,
+  html body[data-map-view-mode="3d"] #timelineDock,
+  html body[data-map-view-mode="3d"] #timelineBubble,
+  html body[data-map-view-mode="3d"] #topBanner,
+  html body[data-map-view-mode="3d"] #mapTitleBadge,
+  html body[data-map-view-mode="3d"] #mapClickModeControl,
+  html body[data-map-view-mode="3d"] #nwDefaultNavControl{
+    isolation:auto !important;
+    will-change:auto !important;
+    translate:none !important;
+    -webkit-backface-visibility:visible !important;
+    backface-visibility:visible !important;
+  }
+  html body[data-map-view-mode="3d"] #leftPanel,
+  html body[data-map-view-mode="3d"] #rightRail,
+  html body[data-map-view-mode="3d"] #timelineDock,
+  html body[data-map-view-mode="3d"] #timelineBubble,
+  html body[data-map-view-mode="3d"] #nwDefaultNavControl{
+    transform:none !important;
+  }
+  html body[data-map-view-mode="3d"] #topBanner,
+  html body[data-map-view-mode="3d"] #mapTitleBadge,
+  html body[data-map-view-mode="3d"] #mapClickModeControl{
+    transform:translateX(-50%) !important;
+  }
+  html body[data-map-view-mode="3d"] #leftPanel > .panel-card,
+  html body[data-map-view-mode="3d"] #rightRail > .rail-card,
+  html body[data-map-view-mode="3d"] #timelineDock,
+  html body[data-map-view-mode="3d"] #timelineBubble,
+  html body[data-map-view-mode="3d"] #mapTitleBadge,
+  html body[data-map-view-mode="3d"] #mapClickModeControl{
+    background:#0b1424 !important;
+  }
+
+  /* Navigation uses the same navy, blue, and cool-white scheme as the panes. */
+  html body .nw-simple-control{
+    color:#7db7ff !important;
+    filter:drop-shadow(0 7px 14px rgba(2,6,23,.34)) !important;
+    contain:layout style !important;
+    transform:none !important;
+    will-change:auto !important;
+  }
+  html body .nw-direction-wheel{
+    border-color:#334963 !important;
+    background:radial-gradient(circle at 50% 46%,#1d4d83 0 22%,#13233a 23% 69%,#0b1424 70% 100%) !important;
+    box-shadow:inset 0 0 0 3px rgba(125,183,255,.18),0 8px 20px rgba(2,6,23,.42) !important;
+    contain:layout paint !important;
+    transform:none !important;
+    will-change:auto !important;
+  }
+  html body .nw-wheel-cardinal{
+    color:#eaf2ff !important;
+    text-shadow:0 1px 3px rgba(0,0,0,.76) !important;
+  }
+  html body .nw-wheel-knob{
+    border-color:#8ec5ff !important;
+    background:#172a43 !important;
+    color:#63a8f5 !important;
+    box-shadow:0 3px 9px rgba(2,6,23,.48),inset 0 1px 0 rgba(255,255,255,.08) !important;
+  }
+  html body .nw-simple-control button{
+    border-color:#334963 !important;
+    background:#13233a !important;
+    color:#7db7ff !important;
+    box-shadow:0 6px 14px rgba(2,6,23,.32) !important;
+  }
+  html body .nw-simple-view[aria-pressed="true"]{
+    border-color:#60a5fa !important;
+    background:#18385f !important;
+    color:#eaf4ff !important;
+    box-shadow:0 0 0 2px rgba(96,165,250,.36),0 6px 14px rgba(2,6,23,.34) !important;
+  }
+  html body .nw-simple-zoom{
+    border:1px solid #334963 !important;
+    background:#13233a !important;
+    box-shadow:0 6px 14px rgba(2,6,23,.32) !important;
+  }
+  html body .nw-simple-zoom-button{
+    border:0 !important;
+    background:#13233a !important;
+    color:#7db7ff !important;
+    box-shadow:none !important;
+  }
+  html body .nw-simple-zoom-out{border-top:1px solid #334963 !important}
+
+  html body #nwMapCredits{display:none !important}
+  html body.persistent-flood-popup-open #mapClickModeControl{
+    display:none !important;
+  }
+
+  /* The primary timeline action is blue, including the play glyph. */
+  html body #timelineDock .playFab{
+    border-color:#7db7ff !important;
+    background:linear-gradient(180deg,#3b8df0,#2468bc) !important;
+    color:#fff !important;
+    box-shadow:0 7px 18px rgba(19,74,140,.34),inset 0 1px 0 rgba(255,255,255,.28) !important;
+  }
+  html body #timelineDock .playFab:hover:not(:disabled){
+    background:linear-gradient(180deg,#55a0f5,#2d76cf) !important;
+  }
+  html body #timelineDock #playBtn .playTriangle{
+    border-left-color:#fff !important;
+  }
+  html body #timelineDock #playBtn .pauseIcon::before,
+  html body #timelineDock #playBtn .pauseIcon::after{
+    background:#fff !important;
+  }
+
+  /* Larger, calmer building card. */
+  html body .shorely-flood-popup .leaflet-popup-content,
+  html body #map3d .maplibregl-popup-content{
+    margin:0 !important;
+    border:1px solid rgba(96,165,250,.34) !important;
+    border-radius:18px !important;
+    background:#0b1424 !important;
+  }
+  html body .building-info-card{
+    box-sizing:border-box;
+    width:min(420px,calc(100vw - 72px));
+    min-width:min(390px,calc(100vw - 72px));
+    max-width:420px;
+    padding:18px;
+  }
+  html body .building-info-card .house-alert-kicker{
+    margin:0 44px 5px 0 !important;
+    color:#7db7ff !important;
+    font-size:11px !important;
+    letter-spacing:.12em !important;
+  }
+  html body .building-info-card h3{
+    margin:0 44px 14px 0 !important;
+    color:#fff !important;
+    font-size:23px !important;
+    line-height:1.08 !important;
+  }
+  html body .building-info-facts{
+    display:grid;
+    gap:10px;
+    padding:12px 13px;
+    border:1px solid rgba(125,183,255,.18);
+    border-radius:13px;
+    background:#101e32;
+  }
+  html body .building-info-facts > div{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:14px;
+  }
+  html body .building-info-facts span{
+    color:#a9bad3;
+    font-size:13px;
+    font-weight:750;
+  }
+  html body .building-info-facts strong{
+    color:#fff;
+    font-size:16px;
+    white-space:nowrap;
+  }
+  html body .building-info-facts p{
+    margin:0;
+    padding-top:10px;
+    border-top:1px solid rgba(148,163,184,.14);
+    color:#dce8f8;
+    font-size:13px;
+    font-weight:800;
+    line-height:1.35;
+  }
+  html body .building-info-card .house-alert-cta{
+    min-height:46px !important;
+    margin-top:12px;
+    border-color:rgba(96,165,250,.48) !important;
+    border-radius:12px !important;
+    background:#18385f !important;
+    color:#eef6ff !important;
+    font-size:13px !important;
+  }
+
+  /* Simpler, larger history dialog with two clear facts and one chart. */
+  html body .flood-history-pane{
+    width:min(840px,calc(100vw - 44px)) !important;
+    max-height:min(88dvh,780px) !important;
+    border-radius:22px !important;
+    background:#081323 !important;
+  }
+  html body .flood-history-head{
+    padding:20px 22px 17px !important;
+    background:#0b1628 !important;
+  }
+  html body .flood-history-head h2{font-size:28px !important}
+  html body .flood-history-head p{font-size:13px !important}
+  html body .flood-history-body{padding:18px 22px 22px !important}
+  html body .flood-history-summary{
+    display:grid !important;
+    grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+    gap:12px !important;
+    padding:0 !important;
+    border:0 !important;
+    background:transparent !important;
+  }
+  html body .flood-summary-item{
+    display:flex !important;
+    flex-direction:column !important;
+    align-items:flex-start !important;
+    gap:6px !important;
+    padding:15px 17px !important;
+    border:1px solid rgba(96,165,250,.22);
+    border-radius:14px;
+    background:#101e32;
+  }
+  html body .flood-summary-item span{
+    color:#9eb1ca !important;
+    font-size:14px !important;
+    font-weight:800 !important;
+    white-space:normal !important;
+  }
+  html body .flood-summary-item strong{
+    color:#fff !important;
+    font-size:31px !important;
+    line-height:1 !important;
+  }
+  html body .flood-summary-item strong small{
+    color:#9eb1ca;
+    font-size:12px;
+    font-weight:800;
+  }
+  html body .flood-history-section{
+    margin-top:12px !important;
+    padding:17px 18px 16px !important;
+    border-radius:16px !important;
+    background:#0d1a2e !important;
+  }
+  html body .flood-history-section h3{font-size:19px !important}
+  html body .flood-scenario-field{flex-basis:196px !important;font-size:11px !important}
+  html body .flood-scenario-select{height:38px !important;font-size:14px !important}
+  html body .flood-projection-chart{height:clamp(118px,30dvh,230px) !important}
+  html body .flood-chart-axis{font-size:12px !important}
+  html body .flood-year-control{grid-template-columns:minmax(0,1fr) 180px !important;gap:16px !important}
+  html body .flood-year-readout{padding:10px 12px !important}
+  html body .flood-year-readout span{font-size:13px !important}
+  html body .flood-year-readout strong{font-size:19px !important}
+  html body .flood-year-readout small{font-size:11px !important}
+
+  /* Flood-stage labels need to read as a primary key, not footnotes. */
+  html body #leftPanel #legendDock[data-legend-mode="dynamic"] .legend-row,
+  html body #legendDock[data-legend-mode="dynamic"] .legend-row{
+    grid-template-columns:15px minmax(0,1fr) !important;
+    gap:7px !important;
+    font-size:16px !important;
+    font-weight:850 !important;
+  }
+  html body #leftPanel #legendDock[data-legend-mode="dynamic"] .legend-swatch,
+  html body #legendDock[data-legend-mode="dynamic"] .legend-swatch{
+    width:14px !important;
+    height:14px !important;
+  }
+  html body #leftPanel #legendDock[data-legend-mode="dynamic"] .legend-label,
+  html body #legendDock[data-legend-mode="dynamic"] .legend-label{
+    font-size:12.5px !important;
+    line-height:1.05 !important;
+  }
+
+  @media (min-width:901px) and (min-height:561px) and (max-height:760px) and (not (any-pointer:coarse)), (min-width:1367px) and (min-height:561px) and (max-height:760px), (min-width:901px) and (pointer:fine) and (max-height:760px) and (not (any-pointer:coarse)), (min-width:1367px) and (pointer:fine) and (max-height:760px), (min-width:901px) and (pointer:none) and (max-height:760px) and (not (any-pointer:coarse)), (min-width:1367px) and (pointer:none) and (max-height:760px) {
+    :root{
+      --pj-equal-card-h:72px;
+      --pj-equal-opacity-h:52px;
+    }
+    html body #leftPanel > .return-interval-card{
+      padding:6px 12px 7px !important;
+    }
+    html body #leftPanel > .return-interval-card .section-title{
+      margin-bottom:4px !important;
+    }
+    html body #leftPanel > .return-interval-card .return-interval-grid{
+      gap:3px 5px !important;
+    }
+    html body #leftPanel > .return-interval-card .return-interval-grid button{
+      min-height:26px !important;
+      height:26px !important;
+      padding:2px 3px !important;
+      font-size:9.5px !important;
+    }
+  }
+
+  @media (max-width:720px){
+    html body .building-info-card{
+      width:min(360px,calc(100vw - 54px));
+      min-width:min(320px,calc(100vw - 54px));
+      padding:15px;
+    }
+    html body .building-info-card h3{font-size:20px !important}
+    html body .flood-history-pane{
+      width:calc(100vw - 20px) !important;
+      max-height:calc(100dvh - 20px) !important;
+    }
+    html body .flood-history-head{padding:15px 16px 13px !important}
+    html body .flood-history-head h2{font-size:20px !important}
+    html body .flood-history-body{padding:13px 14px 16px !important}
+    html body .flood-history-summary{gap:8px !important}
+    html body .flood-history-section-head{align-items:center !important;flex-wrap:wrap}
+    html body .flood-scenario-field{flex-basis:auto !important}
+    html body .flood-projection-chart{height:clamp(118px,25dvh,190px) !important}
+    html body .flood-year-control{grid-template-columns:minmax(0,1fr) minmax(104px,auto) !important}
+  }
+
+  .flood-history-head-actions{display:flex;align-items:center;gap:7px;flex:0 0 auto}
+  .flood-history-head-actions .property-help{position:relative}
+  .property-help summary{
+    display:grid;place-items:center;width:34px;height:34px;border-radius:10px;
+    background:rgba(255,255,255,.06);border:1px solid rgba(191,219,254,.28);
+    color:#eaf0ff;cursor:pointer;font-size:16px;font-weight:800;list-style:none;
+  }
+  .property-help summary::-webkit-details-marker{display:none}
+  .property-help summary:focus-visible{outline:2px solid #7dd3fc;outline-offset:2px}
+  html body .property-help p{
+    position:absolute;z-index:5;top:100%;right:-34px;width:min(260px,calc(100vw - 66px));
+    max-width:none;margin:5px 0 0;padding:9px 10px;border-radius:9px;overflow-wrap:anywhere;
+    white-space:normal;color:#eaf0ff;background:#18283c;border:1px solid rgba(191,219,254,.28);
+    font-size:13px !important;line-height:1.35;
+  }
+  .nsi-structure-popup .property-help{
+    position:absolute;top:var(--nww-popup-close-edge,8px);
+    right:calc(var(--nww-popup-close-edge,8px) + var(--nww-popup-close-size,36px) + 6px);z-index:2;
+  }
+  html body .nsi-structure-popup{
+    box-sizing:border-box;width:min(356px,calc(100vw - 72px));max-width:356px;padding:12px;
+  }
+  html body .nsi-structure-popup .house-alert-kicker{padding-right:calc(var(--nww-popup-close-size,36px) + 44px);font-size:12px;line-height:1.25}
+  html body .nsi-structure-popup h3{padding-right:42px;overflow-wrap:anywhere}
+  html body .nsi-structure-popup .nsi-impact-status{font-size:13px;margin-bottom:8px}
+  html body .nsi-structure-popup .nsi-structure-grid{font-size:12px;margin-bottom:4px}
+  html body .nsi-structure-popup .house-alert-note{margin:0;font-size:11px}
+  .flood-projection-layout{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:8px}
+  .flood-projection-key{display:grid;gap:8px;padding:0;margin:0;list-style:none;color:#c1d0e5;font-size:13px}
+  .flood-projection-key li{display:flex;gap:6px;align-items:center}
+  .projection-key-line,.projection-key-band{width:15px;height:4px;background:var(--scenario-color,#facc15);flex:none;border-radius:2px}
+  .projection-key-band{height:10px;opacity:.36}
+  .parcel-flood-facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:0 0 8px}
+  .parcel-flood-facts > div{
+    display:grid;gap:4px;padding:9px 10px;border:1px solid rgba(191,219,254,.20);
+    border-radius:10px;background:#101e32;color:#eaf0ff;
+  }
+  .parcel-flood-facts span{font-size:12px;color:#b7c7dc}
+  .parcel-flood-facts strong{font-size:16px;line-height:1.2}
+  #structuralImpactsKey{
+    position:absolute;bottom:calc(100% + 8px);right:0;z-index:12;width:max-content;max-width:100%;
+    padding:8px 40px 8px 11px;color:#eaf0ff;background:#101925;
+    border:1px solid rgba(191,219,254,.38);border-radius:9px;box-shadow:0 8px 24px #0005;
+    text-align:left;font-size:12px;line-height:1.35;pointer-events:auto;
+  }
+  #structuralImpactsKey[hidden]{display:none !important}
+  #structuralImpactsKey > button{position:absolute !important;top:4px;right:4px;width:32px;height:32px}
+  #structuralImpactsKey ul{display:flex;flex-wrap:wrap;gap:4px 12px;padding:0;margin:4px 0;list-style:none}
+  #structuralImpactsKey li{display:flex;align-items:center;gap:5px}
+  #structuralImpactsKey i{width:8px;height:8px;border-radius:50%;flex:none}
+  #structuralImpactsKey .structure-key-above{background:#fb7185}
+  #structuralImpactsKey .structure-key-close{background:#fbbf24}
+  #structuralImpactsKey .structure-key-below{background:#22d3ee}
+  #structuralImpactsKey > span{color:#bccce1}
+  html body.mobile-optimized #mapClickModeControl.map-click-mode-control{
+    grid-template-columns:none !important;grid-auto-columns:minmax(0,auto);
+  }
+  html body.mobile-optimized #mapClickModeControl button::after{content:none !important}
+  html body.mobile-optimized #mapClickModeControl button{font-size:10px !important}
+
+  @media (max-height:650px), (max-width:720px){
+    html body .flood-history-head{padding:11px 14px !important}
+    html body .flood-history-body{padding:10px 12px !important}
+    html body .flood-summary-item{gap:3px !important;padding:8px 10px !important}
+    html body .flood-summary-item strong{font-size:24px !important}
+    html body .flood-summary-item span{font-size:12px !important}
+    html body .flood-history-section{margin-top:8px !important;padding:10px !important}
+    html body .flood-history-section h3{font-size:16px !important}
+    .flood-projection-key{font-size:11px}
+    html body .flood-year-readout{padding:7px 8px !important}
+  }

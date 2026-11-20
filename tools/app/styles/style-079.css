@@ -1,0 +1,97 @@
+
+@layer floodmapper-unified-polish {
+  /* Keep the measured title lane and the existing compact layout. */
+  @media (min-width:901px) and (not (any-pointer:coarse)), (min-width:1367px) {
+    html body[data-floodmapper-unified] #mapTitleBadge#mapTitleBadge {
+      padding:8px 12px !important;
+      gap:8px !important;
+      min-height:0 !important;
+    }
+    html body[data-floodmapper-unified] #mapTitleBadge#mapTitleBadge #mapTitleText {
+      font-size:clamp(26px,2.6vw,40px) !important;
+      line-height:1.15 !important;
+      letter-spacing:-.5px !important;
+    }
+    html body[data-floodmapper-unified] #mapTitleBadge#mapTitleBadge #mapTitlePartnerLogo {
+      width:80px !important;
+      min-width:80px !important;
+      max-width:80px !important;
+      flex:0 0 80px !important;
+      height:32px !important;
+      min-height:32px !important;
+      max-height:32px !important;
+      padding:2px 4px !important;
+    }
+  }
+  @media (min-width:901px) and (max-width:1100px) and (not (any-pointer:coarse)) {
+    html body[data-floodmapper-unified] #mapTitleBadge#mapTitleBadge #mapTitleText {
+      font-size:23px !important;
+    }
+    html body[data-floodmapper-unified] #mapTitleBadge#mapTitleBadge #mapTitlePartnerLogo {
+      width:56px !important;
+      min-width:56px !important;
+      max-width:56px !important;
+      flex-basis:56px !important;
+      height:24px !important;
+      min-height:24px !important;
+      max-height:24px !important;
+    }
+  }
+  @media (min-width:901px) and (max-width:960px) and (min-height:561px) and (not (any-pointer:coarse)) {
+    html body[data-floodmapper-unified] #mapTitleBadge#mapTitleBadge {
+      flex-direction:column !important;
+    }
+  }
+  /* Navigation shares the panel surface and button states, including its knob. */
+  html body[data-floodmapper-unified] #nwDefaultNavControl#nwDefaultNavControl {
+    color:var(--fleet-text) !important;
+    filter:none !important;
+  }
+  html body[data-floodmapper-unified] #nwDefaultNavControl#nwDefaultNavControl
+    :is(.nw-direction-wheel,.nw-simple-view,.nw-simple-zoom,.nw-simple-zoom-button) {
+    background:#171e2a !important;
+    border-color:var(--fleet-line) !important;
+    color:var(--fleet-text) !important;
+    box-shadow:none !important;
+  }
+  html body[data-floodmapper-unified] #nwDefaultNavControl#nwDefaultNavControl .nw-simple-view {
+    opacity:1 !important;
+  }
+  html body[data-floodmapper-unified] #nwDefaultNavControl#nwDefaultNavControl .nw-direction-wheel {
+    border-width:1px !important;
+  }
+  html body[data-floodmapper-unified] #nwDefaultNavControl#nwDefaultNavControl .nw-wheel-cardinal {
+    color:var(--fleet-text) !important;
+    text-shadow:none !important;
+  }
+  html body[data-floodmapper-unified] #nwDefaultNavControl#nwDefaultNavControl .nw-wheel-knob {
+    background:rgba(255,255,255,.06) !important;
+    border-color:var(--fleet-line) !important;
+    color:var(--fleet-accent) !important;
+    box-shadow:none !important;
+  }
+  html body[data-floodmapper-unified] #nwDefaultNavControl#nwDefaultNavControl .nw-simple-zoom-button {
+    border-color:var(--fleet-line) !important;
+  }
+  html body[data-floodmapper-unified] #nwDefaultNavControl#nwDefaultNavControl
+    :is(.nw-simple-view[aria-pressed="true"],.nw-simple-view:hover,.nw-simple-zoom-button:hover) {
+    background:#23344b !important;
+    border-color:var(--fleet-accent) !important;
+    color:var(--fleet-accent) !important;
+    box-shadow:none !important;
+    filter:none !important;
+  }
+  html body[data-floodmapper-unified] #nwDefaultNavControl#nwDefaultNavControl
+    :is(.nw-direction-wheel.is-active,.nw-direction-wheel:hover) {
+    border-color:var(--fleet-accent) !important;
+  }
+  html body[data-floodmapper-unified] #nwDefaultNavControl#nwDefaultNavControl
+    :is(button,.nw-direction-wheel):focus-visible {
+    outline:2px solid var(--fleet-accent) !important;
+    outline-offset:3px !important;
+  }
+  html body[data-floodmapper-unified] #nwDefaultNavControl#nwDefaultNavControl
+    .nw-simple-zoom-button:focus-visible {
+    outline-offset:-3px !important;
+  }
+}

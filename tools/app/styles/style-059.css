@@ -1,0 +1,73 @@
+
+  /* Use the desktop dialog's width instead of stacking every short control. */
+  @media (min-width:721px) and (min-height:561px), (min-width:721px) and (pointer:fine), (min-width:721px) and (pointer:none) {
+    #downloadModal.download-modal.open{
+      align-items:center !important;
+    }
+    #downloadModal .download-modal-card{
+      width:min(760px,calc(100vw - 32px)) !important;
+      padding:16px !important;
+    }
+    #downloadModal .download-modal-head{
+      margin-bottom:8px !important;
+    }
+    #downloadModal .download-modal-sub{
+      margin:0 0 10px !important;
+      font-size:14px !important;
+      line-height:1.35 !important;
+    }
+    #downloadModal .download-grid{
+      display:grid !important;
+      grid-template-columns:repeat(12,minmax(0,1fr)) !important;
+      gap:10px 12px !important;
+      align-items:start !important;
+    }
+    #downloadModal .export-filetype-field,
+    #downloadModal .export-interval-field{
+      grid-column:span 6 !important;
+      grid-row:1 !important;
+    }
+    #downloadModal .export-filetype-field{ grid-column:1 / span 6 !important; }
+    #downloadModal .export-interval-field{ grid-column:7 / span 6 !important; }
+    #downloadModal .export-layout-field{
+      grid-column:1 / span 8 !important;
+      grid-row:2 !important;
+    }
+    #downloadModal .export-speed-field{
+      grid-column:9 / span 4 !important;
+      grid-row:2 !important;
+    }
+    #downloadModal .download-grid:has(#gifSpeedField[hidden]) .export-layout-field{
+      grid-column:1 / -1 !important;
+    }
+    #downloadModal .export-framing-field{
+      grid-column:1 / -1 !important;
+      grid-row:3 !important;
+    }
+    #downloadModal #exportTimePicker,
+    #downloadModal .download-actions,
+    #downloadModal .download-status{
+      grid-column:1 / -1 !important;
+    }
+    #downloadModal #exportTimePicker.export-simple-picker{
+      gap:9px !important;
+      padding:10px !important;
+    }
+  }
+
+  /* Preserve the roomy, one-column touch layout on phones. */
+  @media (max-width:720px){
+    #downloadModal .download-grid{
+      grid-template-columns:minmax(0,1fr) !important;
+    }
+    #downloadModal .export-filetype-field,
+    #downloadModal .export-interval-field,
+    #downloadModal .export-layout-field,
+    #downloadModal .export-framing-field,
+    #downloadModal .export-speed-field,
+    #downloadModal #exportTimePicker,
+    #downloadModal .download-actions,
+    #downloadModal .download-status{
+      grid-column:1 !important;
+    }
+  }

@@ -1,0 +1,312 @@
+{
+  "config": {
+    "pageTitle": "Highlands Flood Mapper",
+    "mapTitle": "Highlands Flood Mapper",
+    "brandTitleLine1": "Highlands Borough",
+    "brandTitleLine2": "Flood Mapper",
+    "data": {
+      "forecastPath": "./forecast.json",
+      "observedPath": "./observed.json",
+      "topTidesPath": "./toptides.json",
+      "returnIntervalsPath": "assets/highlands-data/return-intervals.json",
+      "observedFormat": "days"
+    },
+    "bunny": {
+      "storageZoneId": "5907481",
+      "cdnBaseUrl": "https://floodmapperv1.b-cdn.net"
+    },
+    "assets": {
+      "titleLogoPath": "assets/highlands-logo.png",
+      "titleLogoAlt": "Highlands Borough",
+      "partnerLogoPath": "https://floodmapperv1.b-cdn.net/Logos/ShorelySafe.jpg",
+      "partnerLogoFallbackPath": "https://floodmapperv1.b-cdn.net/Logos/ShorelySafe.jpg",
+      "partnerLogoAlt": "ShorelySafe",
+      "rightRailLogoPath": "https://floodmapperv1.b-cdn.net/Logos/ShorelySafe.jpg",
+      "rightRailLogoAlt": "ShorelySafe",
+      "roadImpactsPath": "./assets/highlands-data/roads.geojson",
+      "exportRoadFallback": true,
+      "elevationContoursPath": "data/highlands-elevation-contours.json?v=20261028-contours-1ft-v2",
+      "exportRoadCenterlinesPath": "./assets/highlands-data/roads.geojson"
+    },
+    "links": {
+      "partnerUrl": "https://cupajoe.live",
+      "partnerAriaLabel": "Visit cupajoe.live"
+    },
+    "site": {
+      "name": "Highlands Borough",
+      "municipalityName": "Highlands Borough",
+      "county": "MONMOUTH",
+      "usgsGaugeId": "01407600",
+      "noaaGaugeId": "8531804",
+      "petssGaugeId": "8531804",
+      "gaugeName": "Sea Bright"
+    },
+    "datums": {
+      "helpText": "Water levels can be viewed in NAVD88 or MLLW depending on the selected datum.",
+      "navd88OffsetFromMllwFt": -2.13,
+      "offsets": {
+        "navd88": 0,
+        "mllw": 2.13
+      }
+    },
+    "thresholds": {
+      "mllw": {
+        "minor": 5.2,
+        "moderate": 6.2,
+        "major": 7.2
+      },
+      "navd88": {
+        "minor": 3.07,
+        "moderate": 4.07,
+        "major": 5.07
+      }
+    },
+    "overlays": {
+      "depthPngPrefix": "HighlandsBoroughDepth",
+      "stagePngPrefix": "HighlandsBoroughStage",
+      "depthRoots": [
+        "./assets/hydraulic-connectivity-v1/DepthPNGs/Highlands%20Borough/"
+      ],
+      "dynamicRoots": [
+        "./assets/hydraulic-connectivity-v1/StagePNGs/Highlands%20Borough/"
+      ],
+      "phaseRoots": {
+        "depth": {
+          "filling": [
+            "./assets/hydraulic-connectivity-v1/DepthPNGs/Highlands%20Borough/filling/"
+          ],
+          "slack": [
+            "./assets/hydraulic-connectivity-v1/DepthPNGs/Highlands%20Borough/"
+          ],
+          "draining-release-15": [
+            "./assets/hydraulic-connectivity-v1/DepthPNGs/Highlands%20Borough/draining-release-15/"
+          ],
+          "draining-release-30": [
+            "./assets/hydraulic-connectivity-v1/DepthPNGs/Highlands%20Borough/draining-release-30/"
+          ],
+          "draining": [
+            "./assets/hydraulic-connectivity-v1/DepthPNGs/Highlands%20Borough/draining/"
+          ]
+        },
+        "dynamic": {
+          "filling": [
+            "./assets/hydraulic-connectivity-v1/StagePNGs/Highlands%20Borough/filling/"
+          ],
+          "slack": [
+            "./assets/hydraulic-connectivity-v1/StagePNGs/Highlands%20Borough/"
+          ],
+          "draining-release-15": [
+            "./assets/hydraulic-connectivity-v1/StagePNGs/Highlands%20Borough/draining-release-15/"
+          ],
+          "draining-release-30": [
+            "./assets/hydraulic-connectivity-v1/StagePNGs/Highlands%20Borough/draining-release-30/"
+          ],
+          "draining": [
+            "./assets/hydraulic-connectivity-v1/StagePNGs/Highlands%20Borough/draining/"
+          ]
+        }
+      },
+      "depthQueryPngPath": "./assets/hydraulic-connectivity-v1/queries/HighlandsHydraulicQuery5ft.png",
+      "developedQueryPngPath": "./assets/hydraulic-connectivity-v1/queries/HighlandsDevelopedMask5ft.png",
+      "legacyExactQuery": {
+        "id": "highlands-borough",
+        "width": 1476,
+        "height": 1638,
+        "bounds": [
+          [
+            40.3889009,
+            -74.0052046
+          ],
+          [
+            40.4114995,
+            -73.9785369
+          ]
+        ],
+        "noDataValue": -9999,
+        "geoTransform": [
+          629944.9999999895,
+          5,
+          0,
+          575194.9999999992,
+          0,
+          -5
+        ],
+        "cogUrl": "https://floodmapperv1.b-cdn.net/MasterRasters/cog-cors/highlands-borough.png"
+      },
+      "legacyQueryGrid": "displayed-boundary",
+      "catalogPalette": {
+        "depth": [
+          [
+            207,
+            239,
+            255
+          ],
+          [
+            39,
+            105,
+            219
+          ],
+          [
+            91,
+            95,
+            214
+          ],
+          [
+            95,
+            45,
+            168
+          ],
+          [
+            124,
+            66,
+            196
+          ],
+          [
+            167,
+            63,
+            161
+          ],
+          [
+            224,
+            90,
+            174
+          ],
+          [
+            177,
+            54,
+            123
+          ],
+          [
+            165,
+            36,
+            64
+          ],
+          [
+            63,
+            0,
+            10
+          ],
+          [
+            58,
+            0,
+            8
+          ]
+        ],
+        "stages": [
+          [
+            213,
+            138,
+            0
+          ],
+          [
+            216,
+            75,
+            103
+          ],
+          [
+            124,
+            92,
+            224
+          ]
+        ],
+        "uncertainty": [
+          121,
+          221,
+          90
+        ]
+      }
+    },
+    "addressLookup": {
+      "title": "Find a Highlands Borough Address",
+      "displayName": "Highlands Borough",
+      "city": "Highlands Borough",
+      "state": "NJ",
+      "stateName": "New Jersey",
+      "countryCode": "us",
+      "sourceCountry": "USA",
+      "postalCode": "",
+      "placeholder": "Example: 123 Main St",
+      "buttonText": "Search Highlands Borough",
+      "bbox": {
+        "west": -74.0050561,
+        "south": 40.3889225,
+        "east": -73.9787221,
+        "north": 40.4114573
+      },
+      "geocodeCenter": {
+        "lat": 40.4001899,
+        "lon": -73.9918891
+      },
+      "searchDistanceMeters": 9000
+    },
+    "alerts": {
+      "zoneCodes": []
+    },
+    "exportSlug": "Highlands-Borough-floodmapper",
+    "boundary": {
+      "boundaryUrl": "Boundaries/Highlands Borough.geojson",
+      "bunnyBoundaryPath": "Boundaries/Highlands Borough.geojson",
+      "queryUrl": "https://services2.arcgis.com/XVOqAjTOJ5P6ngMu/arcgis/rest/services/NJ_Municipalities_3857/FeatureServer/0/query",
+      "outFields": "NAME,COUNTY,MUN,MUN_LABEL,MUN_TYPE,GNIS_NAME",
+      "queryCandidates": [
+        "MUN_LABEL = 'Highlands Borough'",
+        "NAME = 'Highlands Borough'"
+      ]
+    },
+    "map": {
+      "center": {
+        "lat": 40.4001899,
+        "lon": -73.9918891
+      }
+    },
+    "nwsPoint": {
+      "lat": 40.4001899,
+      "lon": -73.9918891
+    },
+    "observed": {
+      "usgsGaugeId": "01407600",
+      "usgsParameterCd": "72279",
+      "surrogate": {
+        "enabled": false
+      },
+      "archiveContract": "legacy"
+    },
+    "parcels": {
+      "geojsonPath": "assets/highlands-data/parcels.geojson",
+      "boundaryPngPath": "assets/highlands-data/parcel-boundaries.png",
+      "houseAlertCdfPath": "assets/highlands-data/flood-projections.json"
+    },
+    "structures": {
+      "nsi2026GeojsonPath": "assets/highlands-data/structures.geojson",
+      "certifiedFirstFloorsPath": "assets/highlands-data/certified-first-floors.json",
+      "firstFloorAssetSchema": "highlands-structure-floor-v1",
+      "certifiedFloorSchema": "highlands-certified-first-floors-v1"
+    },
+    "staticSiteBase": "https://hondrospj.github.io/Highlands-Borough-floodmapper/",
+    "compatibility": {
+      "hydraulicCatalog": "phase-v1",
+      "buildingsCoverage": "municipality-only"
+    }
+  },
+  "webcams": {
+    "town": "Highlands",
+    "cameras": [
+      {
+        "id": "highlands",
+        "name": "Highlands harbor / Sandy Hook Bay",
+        "short": "Highlands harbor / Sandy Hook Bay",
+        "url": "https://www.youtube.com/embed/xIxvTSVeHGk?autoplay=1&mute=1",
+        "sourceUrl": "https://abovethehook.com/stream/",
+        "source": "Above the Hook Studios",
+        "location": "Above the Hook Studios \u00b7 Highlands \u00b7 approximate provider-published location",
+        "external": false,
+        "description": "View Sandy Hook Bay, the harbor and the New York skyline from Highlands.",
+        "kind": "video",
+        "relation": "local",
+        "lat": 40.4035,
+        "lng": -74.0052
+      }
+    ],
+    "otherSources": []
+  }
+}

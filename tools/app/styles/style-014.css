@@ -1,0 +1,31 @@
+
+
+
+:root{
+  --pj-all-slider-row-inset:32px;
+}
+
+#timelineDock .timeline-trackRow{
+  width:calc(100% - (2 * var(--pj-all-slider-row-inset))) !important;
+  max-width:calc(100% - (2 * var(--pj-all-slider-row-inset))) !important;
+  margin-left:var(--pj-all-slider-row-inset) !important;
+  margin-right:var(--pj-all-slider-row-inset) !important;
+  box-sizing:border-box !important;
+  overflow:visible !important;
+}
+
+#timelineDock #hourSlider{
+  width:100% !important;
+  max-width:100% !important;
+  margin-left:0 !important;
+  margin-right:0 !important;
+  box-sizing:border-box !important;
+}
+
+@media (max-width:900px), (max-width:1366px) and (any-pointer:coarse) {
+  :root{ --pj-all-slider-row-inset:22px; }
+}
+
+@media (max-width: 520px){
+  :root{ --pj-all-slider-row-inset:18px; }
+}

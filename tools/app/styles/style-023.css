@@ -1,0 +1,208 @@
+
+
+
+
+html body #mapTitleBadge.shorely-title-badge{
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  gap:12px !important;
+  min-height:46px !important;
+  height:auto !important;
+  padding:6px 14px !important;
+  overflow:visible !important;
+  line-height:1 !important;
+}
+
+html body #mapTitleBadge .shorely-title-text{
+  line-height:1 !important;
+  white-space:nowrap !important;
+}
+
+html body #mapTitleBadge .shorely-title-logo,
+html body #mapTitleBadge #mapTitlePartnerLogo,
+html body #mapTitleBadge .shorely-title-logo-shorelysafe{
+  display:block !important;
+  flex:0 0 auto !important;
+  width:auto !important;
+  height:34px !important;
+  min-height:34px !important;
+  max-height:34px !important;
+  max-width:128px !important;
+  object-fit:contain !important;
+  object-position:center center !important;
+  margin:0 !important;
+  padding:0 !important;
+  border:0 !important;
+  border-radius:0 !important;
+  background:transparent !important;
+  box-shadow:none !important;
+  filter:none !important;
+  transform:none !important;
+  vertical-align:middle !important;
+}
+
+html body #rightRail .right-logo-card{
+  overflow:visible !important;
+  min-height:96px !important;
+  height:96px !important;
+  padding:12px !important;
+}
+
+html body #rightRail .right-logo-card .right-logo-link{
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  width:100% !important;
+  height:100% !important;
+  overflow:visible !important;
+}
+
+html body #rightRail .right-logo-card .right-rail-logo,
+html body #rightRail .right-logo-card .shorelysafe-logo{
+  display:block !important;
+  width:auto !important;
+  max-width:176px !important;
+  height:auto !important;
+  max-height:58px !important;
+  object-fit:contain !important;
+  object-position:center center !important;
+  margin:0 auto !important;
+  padding:0 !important;
+  background:transparent !important;
+  border:0 !important;
+  filter:none !important;
+  transform:none !important;
+}
+
+
+html body #timelineDock .timeline-controls{
+  min-height:46px !important;
+  gap:8px !important;
+  align-items:center !important;
+}
+
+html body #timelineDock .playFab,
+html body #playBtn,
+html.os-windows body #playBtn,
+html.win-compact-ui body #playBtn,
+html.os-mac body #playBtn,
+html body.observed-mode #playBtn{
+  width:44px !important;
+  min-width:44px !important;
+  max-width:44px !important;
+  height:44px !important;
+  min-height:44px !important;
+  max-height:44px !important;
+  border-radius:14px !important;
+  padding:0 !important;
+  display:grid !important;
+  place-items:center !important;
+  overflow:visible !important;
+  z-index:3200 !important;
+  transform:none !important;
+  box-shadow:
+    0 12px 24px rgba(0,0,0,.30),
+    0 0 0 4px rgba(96,165,250,.10),
+    inset 0 1px 0 rgba(255,255,255,.95),
+    inset 0 -8px 15px rgba(15,23,42,.11) !important;
+}
+
+html body #playBtn::before{
+  content:"" !important;
+  position:absolute !important;
+  inset:-11px !important;
+  border-radius:23px !important;
+  background:transparent !important;
+  pointer-events:auto !important;
+  z-index:-1 !important;
+}
+
+html body #playBtn::after{
+  inset:6px !important;
+  border-radius:11px !important;
+}
+
+html body #playBtn:hover:not(:disabled){
+  transform:translateY(-1px) scale(1.015) !important;
+  box-shadow:
+    0 14px 26px rgba(0,0,0,.34),
+    0 0 0 5px rgba(96,165,250,.13),
+    inset 0 1px 0 rgba(255,255,255,1),
+    inset 0 -8px 15px rgba(15,23,42,.11) !important;
+}
+
+html body #playBtn:active,
+html body #playBtn.just-pressed{
+  transform:translateY(1px) scale(.96) !important;
+  box-shadow:
+    0 8px 16px rgba(0,0,0,.28),
+    0 0 0 6px rgba(96,165,250,.16),
+    inset 0 2px 6px rgba(15,23,42,.18) !important;
+}
+
+html body #playBtn.is-playing{
+  box-shadow:
+    0 13px 26px rgba(37,99,235,.30),
+    0 0 0 5px rgba(96,165,250,.16),
+    inset 0 1px 0 rgba(255,255,255,.38),
+    inset 0 -9px 16px rgba(15,23,42,.20) !important;
+}
+
+html body #playBtn .playTriangle{
+  margin-left:4px !important;
+  border-top-width:9px !important;
+  border-bottom-width:9px !important;
+  border-left-width:15px !important;
+}
+
+html body #playBtn .pauseIcon{
+  width:18px !important;
+  height:19px !important;
+}
+
+html body #playBtn .pauseIcon::before,
+html body #playBtn .pauseIcon::after{
+  width:6px !important;
+  height:19px !important;
+  border-radius:3px !important;
+}
+
+html body #playBtn .pauseIcon::before{ left:1px !important; }
+html body #playBtn .pauseIcon::after{ right:1px !important; }
+
+@media (max-width:900px), (max-width:1366px) and (any-pointer:coarse), (max-height:560px) and (pointer:coarse) {
+  html body #timelineDock .timeline-controls{
+    min-height:44px !important;
+    gap:7px !important;
+  }
+
+  html body #timelineDock .playFab,
+  html body #playBtn,
+  html body.observed-mode #playBtn{
+    width:42px !important;
+    min-width:42px !important;
+    max-width:42px !important;
+    height:42px !important;
+    min-height:42px !important;
+    max-height:42px !important;
+    border-radius:13px !important;
+  }
+
+  html body #playBtn .playTriangle{
+    border-top-width:8px !important;
+    border-bottom-width:8px !important;
+    border-left-width:14px !important;
+  }
+
+  html body #playBtn .pauseIcon{
+    width:17px !important;
+    height:18px !important;
+  }
+
+  html body #playBtn .pauseIcon::before,
+  html body #playBtn .pauseIcon::after{
+    width:5.5px !important;
+    height:18px !important;
+  }
+}

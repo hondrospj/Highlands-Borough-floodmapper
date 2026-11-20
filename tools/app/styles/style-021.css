@@ -1,0 +1,618 @@
+
+
+
+@media (min-width:901px) and (min-height:561px) and (not (any-pointer:coarse)), (min-width:1367px) and (min-height:561px), (min-width:901px) and (pointer:fine) and (not (any-pointer:coarse)), (min-width:1367px) and (pointer:fine), (min-width:901px) and (pointer:none) and (not (any-pointer:coarse)), (min-width:1367px) and (pointer:none) {
+  :root{
+    --pj-stable-left-width:356px;
+    --pj-stable-right-width:260px;
+    --pj-stable-bottom-reserve:112px;
+  }
+
+
+  html body #leftPanel,
+  html body.observed-mode #leftPanel,
+  html body:not(.observed-mode) #leftPanel,
+  html body.calendar-picker-open #leftPanel,
+  html body.observed-mode.calendar-picker-open #leftPanel,
+  html.os-mac body #leftPanel,
+  html.os-mac body.observed-mode #leftPanel,
+  html.os-windows body #leftPanel,
+  html.os-windows body.observed-mode #leftPanel,
+  html.win-compact-ui body #leftPanel,
+  html.win-compact-ui body.observed-mode #leftPanel{
+    position:fixed !important;
+    top:16px !important;
+    left:16px !important;
+    bottom:var(--pj-stable-bottom-reserve) !important;
+    width:var(--pj-stable-left-width) !important;
+    min-width:var(--pj-stable-left-width) !important;
+    max-width:var(--pj-stable-left-width) !important;
+    max-height:calc(100vh - 16px - var(--pj-stable-bottom-reserve)) !important;
+    display:flex !important;
+    flex-direction:column !important;
+    align-items:stretch !important;
+    align-content:flex-start !important;
+    justify-content:flex-start !important;
+    gap:8px !important;
+    padding:0 4px 6px 0 !important;
+    margin:0 !important;
+    overflow-y:auto !important;
+    overflow-x:hidden !important;
+    scrollbar-gutter:auto !important;
+    background:transparent !important;
+    border:0 !important;
+    transform:none !important;
+    z-index:1250 !important;
+  }
+
+  html body #leftPanel > .panel-card,
+  html body #leftPanel > .compact-card,
+  html body #leftPanel > .calendar-card,
+  html body #leftPanel > .calendar-card.active,
+  html body.observed-mode #leftPanel > .panel-card,
+  html body.observed-mode #leftPanel > .compact-card,
+  html body.observed-mode #leftPanel > .calendar-card,
+  html body.observed-mode #leftPanel > .calendar-card.active{
+    width:100% !important;
+    min-width:0 !important;
+    max-width:100% !important;
+    box-sizing:border-box !important;
+    margin:0 !important;
+    flex:0 0 auto !important;
+  }
+
+
+  html body #leftPanel .section-title h2,
+  html body.observed-mode #leftPanel .section-title h2,
+  html body #leftPanel button,
+  html body.observed-mode #leftPanel button,
+  html body #leftPanel select,
+  html body.observed-mode #leftPanel select,
+  html body #leftPanel .pill,
+  html body.observed-mode #leftPanel .pill{
+    font-size:14px !important;
+    line-height:1.12 !important;
+  }
+
+  html body #leftPanel .section-title h2,
+  html body.observed-mode #leftPanel .section-title h2{
+    font-size:15px !important;
+    font-weight:900 !important;
+    letter-spacing:-.025em !important;
+  }
+
+  html body #leftPanel .button-grid-2 button,
+  html body.observed-mode #leftPanel .button-grid-2 button,
+  html body #leftPanel .button-grid-3 button,
+  html body.observed-mode #leftPanel .button-grid-3 button,
+  html body #leftPanel .segmented-control button,
+  html body.observed-mode #leftPanel .segmented-control button{
+    min-height:42px !important;
+    font-size:14px !important;
+    font-weight:850 !important;
+    padding:9px 10px !important;
+  }
+
+
+  html body #leftPanel > .data-source-card{ order:1 !important; }
+  html body #leftPanel > .forecast-scenario-card{ order:2 !important; }
+  html body.observed-mode #leftPanel > .forecast-scenario-card{
+    display:none !important;
+    height:0 !important;
+    min-height:0 !important;
+    max-height:0 !important;
+    padding:0 !important;
+    margin:0 !important;
+    border:0 !important;
+    overflow:hidden !important;
+  }
+  html body #leftPanel > #calendarCard{ order:2 !important; }
+  html body #leftPanel > .overlay-card{ order:3 !important; }
+  html body #leftPanel > .datum-card{ order:4 !important; }
+  html body #leftPanel > .opacity-card{ order:5 !important; }
+  html body #leftPanel > #legendDock{ order:6 !important; }
+
+
+  html body #leftPanel > .snapshot-card,
+  html body.observed-mode #leftPanel > .snapshot-card,
+  html body.observed-mode.calendar-picker-open #leftPanel > .snapshot-card,
+  html body.observed-tight #leftPanel > .snapshot-card,
+  html body.observed-ultra-tight #leftPanel > .snapshot-card,
+  html body.observed-fit-tight #leftPanel > .snapshot-card,
+  html body.observed-fit-ultra #leftPanel > .snapshot-card{
+    order:99 !important;
+    display:none !important;
+    visibility:hidden !important;
+    flex:0 0 0 !important;
+    width:0 !important;
+    min-width:0 !important;
+    max-width:0 !important;
+    height:0 !important;
+    min-height:0 !important;
+    max-height:0 !important;
+    padding:0 !important;
+    margin:0 !important;
+    border:0 !important;
+    overflow:hidden !important;
+    opacity:0 !important;
+    pointer-events:none !important;
+  }
+
+
+  html body.observed-mode #leftPanel > #calendarCard.calendar-card.active,
+  html body.observed-mode.calendar-picker-open #leftPanel > #calendarCard.calendar-card.active{
+    display:grid !important;
+    gap:7px !important;
+    padding:9px 10px !important;
+    min-height:0 !important;
+    height:auto !important;
+    max-height:none !important;
+    overflow:visible !important;
+  }
+
+  html body.observed-mode #leftPanel .calendar-toolbar,
+  html body.observed-mode.calendar-picker-open #leftPanel .calendar-toolbar{
+    grid-template-columns:36px minmax(0,1fr) 36px !important;
+    gap:5px !important;
+  }
+  html body.observed-mode #leftPanel .calendar-toolbar > button,
+  html body.observed-mode #leftPanel .calendar-title-btn,
+  html body.observed-mode.calendar-picker-open #leftPanel .calendar-toolbar > button,
+  html body.observed-mode.calendar-picker-open #leftPanel .calendar-title-btn{
+    min-height:34px !important;
+    height:34px !important;
+    padding:0 8px !important;
+    border-radius:12px !important;
+    font-size:12.5px !important;
+    font-weight:900 !important;
+  }
+  html body.observed-mode #leftPanel .calendar-head,
+  html body.observed-mode #leftPanel .calendar-grid,
+  html body.observed-mode.calendar-picker-open #leftPanel .calendar-head,
+  html body.observed-mode.calendar-picker-open #leftPanel .calendar-grid{
+    gap:4px !important;
+  }
+  html body.observed-mode #leftPanel .calendar-head div,
+  html body.observed-mode.calendar-picker-open #leftPanel .calendar-head div{
+    font-size:11px !important;
+    line-height:1 !important;
+    padding:1px 0 !important;
+  }
+  html body.observed-mode #leftPanel .calendar-day,
+  html body.observed-mode.calendar-picker-open #leftPanel .calendar-day{
+    min-height:28px !important;
+    height:28px !important;
+    border-radius:9px !important;
+    font-size:12px !important;
+    font-weight:850 !important;
+    padding:0 !important;
+  }
+  html body.observed-mode #leftPanel .day-nav,
+  html body.observed-mode.calendar-picker-open #leftPanel .day-nav{
+    grid-template-columns:36px minmax(0,1fr) 36px !important;
+    gap:5px !important;
+  }
+  html body.observed-mode #leftPanel .calendar-nav-btn,
+  html body.observed-mode #leftPanel .day-nav-center,
+  html body.observed-mode.calendar-picker-open #leftPanel .calendar-nav-btn,
+  html body.observed-mode.calendar-picker-open #leftPanel .day-nav-center{
+    min-height:36px !important;
+    height:36px !important;
+    padding:0 8px !important;
+    border-radius:12px !important;
+    font-size:13px !important;
+    font-weight:900 !important;
+  }
+  html body.observed-mode #leftPanel .calendar-key,
+  html body.observed-mode.calendar-picker-open #leftPanel .calendar-key{
+    gap:5px !important;
+    margin-top:3px !important;
+  }
+  html body.observed-mode #leftPanel .calendar-key-item,
+  html body.observed-mode.calendar-picker-open #leftPanel .calendar-key-item{
+    min-height:25px !important;
+    height:25px !important;
+    padding:0 7px !important;
+    font-size:10.5px !important;
+    line-height:1 !important;
+    gap:5px !important;
+  }
+
+
+  html body #leftPanel > .opacity-card,
+  html body.observed-mode #leftPanel > .opacity-card,
+  html body.observed-mode.calendar-picker-open #leftPanel > .opacity-card{
+    position:relative !important;
+    top:auto !important;
+    bottom:auto !important;
+    margin:0 !important;
+    flex:0 0 auto !important;
+    min-height:62px !important;
+    height:62px !important;
+    max-height:62px !important;
+    padding:8px 12px 9px !important;
+    display:flex !important;
+    flex-direction:column !important;
+    justify-content:center !important;
+    gap:4px !important;
+    overflow:visible !important;
+  }
+
+  html body #leftPanel > .opacity-card .section-title,
+  html body.observed-mode #leftPanel > .opacity-card .section-title{
+    min-height:20px !important;
+    margin:0 !important;
+  }
+  html body #leftPanel > .opacity-card .control-row,
+  html body.observed-mode #leftPanel > .opacity-card .control-row{
+    padding:0 5px !important;
+    gap:0 !important;
+  }
+
+
+  html body #leftPanel > #legendDock,
+  html body #leftPanel > #legendDock.left-lower-legend-card,
+  html body #leftPanel > #legendDock.legend-card,
+  html body #leftPanel > #legendDock.map-floating,
+  html body #leftPanel > #legendDock.rail-card,
+  html body.observed-mode #leftPanel > #legendDock,
+  html body.observed-mode.calendar-picker-open #leftPanel > #legendDock,
+  html.os-mac body #leftPanel > #legendDock,
+  html.os-windows body #leftPanel > #legendDock,
+  html.win-compact-ui body #leftPanel > #legendDock{
+    display:block !important;
+    position:relative !important;
+    float:none !important;
+    clear:both !important;
+    inset:auto !important;
+    top:auto !important;
+    right:auto !important;
+    bottom:auto !important;
+    left:auto !important;
+    transform:none !important;
+    translate:none !important;
+    scale:1 !important;
+    zoom:1 !important;
+    z-index:auto !important;
+    width:100% !important;
+    min-width:0 !important;
+    max-width:100% !important;
+    height:auto !important;
+    min-height:0 !important;
+    max-height:none !important;
+    margin:0 !important;
+    padding:10px 12px 12px !important;
+    box-sizing:border-box !important;
+    overflow:visible !important;
+    pointer-events:auto !important;
+    background:rgba(11,18,32,.94) !important;
+    border:1px solid rgba(255,255,255,.11) !important;
+    border-radius:18px !important;
+    box-shadow:0 12px 24px rgba(15,23,42,.20) !important;
+    backdrop-filter:blur(14px) !important;
+    -webkit-backdrop-filter:blur(16px) !important;
+  }
+
+  html body #leftPanel #legendDock .legend-header{
+    display:flex !important;
+    align-items:center !important;
+    justify-content:space-between !important;
+    gap:8px !important;
+    margin:0 0 7px !important;
+  }
+  html body #leftPanel #legendDock .legend-title{
+    margin:0 !important;
+    font-size:15px !important;
+    line-height:1.05 !important;
+    letter-spacing:-.03em !important;
+    font-weight:900 !important;
+  }
+  html body #leftPanel #legendDock .legend-header-actions{
+    display:flex !important;
+    gap:5px !important;
+  }
+  html body #leftPanel #legendDock .legend-help-btn,
+  html body #leftPanel #legendDock .legend-collapse-btn,
+  html body #leftPanel #legendDock .legend-expand-btn{
+    width:24px !important;
+    min-width:24px !important;
+    height:24px !important;
+    min-height:24px !important;
+    padding:0 !important;
+    font-size:12px !important;
+    line-height:24px !important;
+    border-radius:999px !important;
+  }
+  html body #leftPanel #legendDock .legend-body{
+    display:block !important;
+    max-height:none !important;
+    overflow:visible !important;
+    padding:0 !important;
+    margin:0 !important;
+  }
+  html body #leftPanel #legendDock .legend-list{
+    display:grid !important;
+    grid-template-columns:repeat(2, minmax(0, 1fr)) !important;
+    gap:4px 9px !important;
+    align-items:start !important;
+  }
+  html body #leftPanel #legendDock .legend-row{
+    display:grid !important;
+    grid-template-columns:10px minmax(0,1fr) !important;
+    gap:6px !important;
+    align-items:center !important;
+    min-width:0 !important;
+    font-size:10.8px !important;
+    line-height:1.04 !important;
+    font-weight:900 !important;
+    letter-spacing:-.025em !important;
+    white-space:nowrap !important;
+    overflow:hidden !important;
+    text-overflow:clip !important;
+  }
+  html body #leftPanel #legendDock .legend-label{
+    overflow:hidden !important;
+    text-overflow:clip !important;
+    white-space:nowrap !important;
+  }
+  html body #leftPanel #legendDock .legend-swatch{
+    width:9px !important;
+    height:9px !important;
+    border-radius:999px !important;
+    margin:0 !important;
+  }
+  html body #leftPanel #legendDock .legend-row.legend-row-boundary{
+    grid-column:1 / -1 !important;
+    margin-top:5px !important;
+    padding-top:7px !important;
+    border-top:1px solid rgba(255,255,255,.12) !important;
+    font-size:15px !important;
+    line-height:1.1 !important;
+  }
+  html body #leftPanel #legendDock .legend-swatch.legend-line{
+    width:22px !important;
+    height:0 !important;
+    border:none !important;
+    border-top:4px solid var(--boundary-color) !important;
+    border-radius:999px !important;
+  }
+  html body #leftPanel #legendDock .legend-note,
+  html body #leftPanel #legendDock .legend-sub,
+  html body #leftPanel #legendDock .legend-drag-hint{
+    display:none !important;
+  }
+
+
+  html body #rightRail > #legendDock,
+  html body #mobileRailMount > #legendDock,
+  html body #timelineDock > #legendDock{
+    display:none !important;
+  }
+
+
+  html body #rightRail,
+  html body.observed-mode #rightRail,
+  html body:not(.observed-mode) #rightRail,
+  html body.calendar-picker-open #rightRail,
+  html body.observed-mode.calendar-picker-open #rightRail,
+  html.os-mac body #rightRail,
+  html.os-mac body.observed-mode #rightRail,
+  html.os-windows body #rightRail,
+  html.os-windows body.observed-mode #rightRail,
+  html.win-compact-ui body #rightRail,
+  html.win-compact-ui body.observed-mode #rightRail{
+    position:fixed !important;
+    top:16px !important;
+    right:16px !important;
+    bottom:var(--pj-stable-bottom-reserve) !important;
+    left:auto !important;
+    width:var(--pj-stable-right-width) !important;
+    min-width:var(--pj-stable-right-width) !important;
+    max-width:var(--pj-stable-right-width) !important;
+    height:auto !important;
+    min-height:0 !important;
+    max-height:calc(100vh - 16px - var(--pj-stable-bottom-reserve)) !important;
+    display:flex !important;
+    flex-direction:column !important;
+    align-items:stretch !important;
+    align-content:flex-start !important;
+    justify-content:flex-start !important;
+    gap:10px !important;
+    padding:0 !important;
+    margin:0 !important;
+    overflow-y:visible !important;
+    overflow-x:visible !important;
+    scrollbar-gutter:auto !important;
+    scrollbar-width:none !important;
+    transform:none !important;
+    translate:none !important;
+    scale:1 !important;
+    zoom:1 !important;
+    background:transparent !important;
+    border:0 !important;
+    box-shadow:none !important;
+    backdrop-filter:none !important;
+    -webkit-backdrop-filter:none !important;
+    pointer-events:none !important;
+    z-index:1250 !important;
+  }
+  html body #rightRail::-webkit-scrollbar{
+    display:none !important;
+    width:0 !important;
+    height:0 !important;
+  }
+  html body #rightRail > .rail-card,
+  html body.observed-mode #rightRail > .rail-card{
+    width:100% !important;
+    min-width:0 !important;
+    max-width:100% !important;
+    box-sizing:border-box !important;
+    flex:0 0 auto !important;
+    margin:0 !important;
+    pointer-events:auto !important;
+  }
+
+  html body #rightRail .right-logo-card,
+  html body.observed-mode #rightRail .right-logo-card{
+    height:74px !important;
+    min-height:74px !important;
+    max-height:74px !important;
+    padding:11px 14px !important;
+    display:grid !important;
+    place-items:center !important;
+  }
+  html body #rightRail .right-rail-logo,
+  html body.observed-mode #rightRail .right-rail-logo{
+    max-height:52px !important;
+    width:auto !important;
+    max-width:100% !important;
+    object-fit:contain !important;
+  }
+
+  html body #rightRail .layers-card,
+  html body.observed-mode #rightRail .layers-card{
+    min-height:118px !important;
+    height:auto !important;
+    padding:12px !important;
+  }
+
+  html body #rightRail .top-tides-card,
+  html body.observed-mode #rightRail .top-tides-card{
+    padding:12px !important;
+    gap:8px !important;
+    min-height:0 !important;
+    height:auto !important;
+    max-height:none !important;
+    overflow:visible !important;
+  }
+
+  html body #rightRail .top-tide-item,
+  html body.observed-mode #rightRail .top-tide-item{
+    min-height:70px !important;
+    height:70px !important;
+    padding:8px 9px !important;
+    border-radius:14px !important;
+    gap:3px !important;
+  }
+
+  html body #rightRail #downloadCard,
+  html body #rightRail .download-launch-card,
+  html body.observed-mode #rightRail #downloadCard,
+  html body.observed-mode #rightRail .download-launch-card{
+    min-height:112px !important;
+    height:auto !important;
+    padding:12px !important;
+    gap:8px !important;
+  }
+
+  html body #rightRail #townAddressCard,
+  html body #rightRail .town-address-card,
+  html body.observed-mode #rightRail #townAddressCard,
+  html body.observed-mode #rightRail .town-address-card{
+    min-height:146px !important;
+    height:auto !important;
+    padding:12px !important;
+    gap:8px !important;
+  }
+
+  html body .leaflet-top.leaflet-right,
+  html body.observed-mode .leaflet-top.leaflet-right,
+  html.os-mac body .leaflet-top.leaflet-right,
+  html.os-windows body .leaflet-top.leaflet-right{
+    top:16px !important;
+    right:calc(16px + var(--pj-stable-right-width) + 14px) !important;
+    transform:none !important;
+  }
+}
+
+
+@media (max-width:900px), (max-width:1366px) and (any-pointer:coarse), (max-height:560px) and (pointer:coarse) {
+  html body #leftPanel #legendDock .legend-title{
+    font-size:15px !important;
+  }
+  html body #leftPanel #legendDock .legend-row{
+    font-size:11px !important;
+    line-height:1.08 !important;
+  }
+}
+
+
+
+    #legendDock .legend-row.legend-row-boundary,
+    #legendDock .legend-swatch.legend-line,
+    #legendDock .legend-boundary-label{
+      display:none !important;
+      visibility:hidden !important;
+      width:0 !important;
+      height:0 !important;
+      margin:0 !important;
+      padding:0 !important;
+      border:0 !important;
+      overflow:hidden !important;
+    }
+
+
+
+    html body #timelineDock,
+    html body.observed-mode #timelineDock,
+    html.os-mac body #timelineDock,
+    html.os-windows body #timelineDock{
+      padding-top:44px !important;
+      overflow:visible !important;
+    }
+
+    html body #timelineBubble,
+    html body.observed-mode #timelineBubble,
+    html.os-mac body #timelineBubble,
+    html.os-windows body #timelineBubble{
+      top:-26px !important;
+      min-height:28px !important;
+      padding:7px 16px !important;
+      border-radius:22px !important;
+      font-size:20px !important;
+      line-height:1 !important;
+      font-weight:950 !important;
+      letter-spacing:-.02em !important;
+      white-space:nowrap !important;
+      max-width:calc(100vw - 96px) !important;
+      overflow:hidden !important;
+      text-overflow:ellipsis !important;
+      box-shadow:0 14px 26px rgba(0,0,0,.32) !important;
+      z-index:1405 !important;
+    }
+
+    html body #timelineBubble::after,
+    html body.observed-mode #timelineBubble::after,
+    html.os-mac body #timelineBubble::after,
+    html.os-windows body #timelineBubble::after{
+      bottom:-9px !important;
+      border-left-width:9px !important;
+      border-right-width:9px !important;
+      border-top-width:9px !important;
+    }
+
+    @media (max-width:900px), (max-width:1366px) and (any-pointer:coarse), (max-height:560px) and (pointer:coarse) {
+      html body #timelineDock,
+      html body.observed-mode #timelineDock{
+        padding-top:38px !important;
+        overflow:visible !important;
+      }
+      html body #timelineBubble,
+      html body.observed-mode #timelineBubble{
+        top:-23px !important;
+        min-height:25px !important;
+        padding:6px 12px !important;
+        border-radius:20px !important;
+        font-size:16px !important;
+        line-height:1 !important;
+        font-weight:950 !important;
+        max-width:calc(100vw - 40px) !important;
+      }
+      html body #timelineBubble::after,
+      html body.observed-mode #timelineBubble::after{
+        bottom:-7px !important;
+        border-left-width:7px !important;
+        border-right-width:7px !important;
+        border-top-width:7px !important;
+      }
+    }

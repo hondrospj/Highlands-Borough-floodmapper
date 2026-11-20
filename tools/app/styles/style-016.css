@@ -1,0 +1,154 @@
+
+
+
+:root{
+  --pj-right-rail-width-final:250px;
+  --pj-zoom-clearance-final:302px;
+}
+
+
+#rightRail{
+  pointer-events:none !important;
+  z-index:1350 !important;
+}
+
+#rightRail .rail-card,
+#rightRail button,
+#rightRail a,
+#rightRail input,
+#rightRail select,
+#rightRail textarea{
+  pointer-events:auto !important;
+}
+
+#downloadCard,
+#rightRail #downloadCard,
+#rightRail .download-launch-card{
+  display:grid !important;
+  grid-template-rows:auto auto auto !important;
+  gap:10px !important;
+  min-height:126px !important;
+  height:auto !important;
+  overflow:visible !important;
+  cursor:pointer !important;
+  position:relative !important;
+  z-index:30 !important;
+}
+
+#downloadCard .rail-head,
+#rightRail #downloadCard .rail-head{
+  margin-bottom:0 !important;
+}
+
+#downloadCard .download-launch-meta,
+#rightRail #downloadCard .download-launch-meta{
+  display:block !important;
+  visibility:visible !important;
+  opacity:1 !important;
+  font-size:12.5px !important;
+  line-height:1.38 !important;
+}
+
+#openDownloadModalBtn,
+#downloadCard .download-launch-btn,
+#rightRail #downloadCard .download-launch-btn{
+  display:inline-flex !important;
+  visibility:visible !important;
+  opacity:1 !important;
+  pointer-events:auto !important;
+  width:100% !important;
+  min-height:46px !important;
+  align-items:center !important;
+  justify-content:center !important;
+  padding:10px 12px !important;
+  font-size:13.5px !important;
+  line-height:1.1 !important;
+  border-radius:15px !important;
+  position:relative !important;
+  z-index:35 !important;
+}
+
+#downloadCard:hover #openDownloadModalBtn{
+  border-color:rgba(191,219,254,.65) !important;
+  background:rgba(96,165,250,.20) !important;
+}
+
+
+@media (min-width:901px) and (min-height:561px) and (not (any-pointer:coarse)), (min-width:1367px) and (min-height:561px), (min-width:901px) and (pointer:fine) and (not (any-pointer:coarse)), (min-width:1367px) and (pointer:fine), (min-width:901px) and (pointer:none) and (not (any-pointer:coarse)), (min-width:1367px) and (pointer:none) {
+  #rightRail,
+  body.observed-mode #rightRail,
+  body.calendar-picker-open #rightRail,
+  body.observed-mode.calendar-picker-open #rightRail{
+    width:var(--pj-right-rail-width-final) !important;
+    min-width:var(--pj-right-rail-width-final) !important;
+    max-width:var(--pj-right-rail-width-final) !important;
+  }
+
+  .leaflet-top.leaflet-right .leaflet-control-zoom{
+    margin-top:104px !important;
+    margin-right:var(--pj-zoom-clearance-final) !important;
+    z-index:1320 !important;
+  }
+}
+
+
+@media (min-width:901px) and (min-height:561px) and (not (any-pointer:coarse)), (min-width:1367px) and (min-height:561px), (min-width:901px) and (pointer:fine) and (not (any-pointer:coarse)), (min-width:1367px) and (pointer:fine), (min-width:901px) and (pointer:none) and (not (any-pointer:coarse)), (min-width:1367px) and (pointer:none) {
+  html.os-windows .leaflet-top.leaflet-right .leaflet-control-zoom,
+  html.win-compact-ui .leaflet-top.leaflet-right .leaflet-control-zoom{
+    margin-top:104px !important;
+    margin-right:var(--pj-zoom-clearance-final) !important;
+    zoom:1 !important;
+  }
+
+  html.os-windows #downloadCard,
+  html.win-compact-ui #downloadCard,
+  html.os-windows #rightRail #downloadCard,
+  html.win-compact-ui #rightRail #downloadCard{
+    min-height:124px !important;
+    gap:9px !important;
+  }
+
+  html.os-windows #openDownloadModalBtn,
+  html.win-compact-ui #openDownloadModalBtn{
+    min-height:44px !important;
+    font-size:13px !important;
+  }
+}
+
+
+@media (min-width:761px) and (max-width:1320px){
+  .leaflet-top.leaflet-right .leaflet-control-zoom{
+    margin-top:108px !important;
+    margin-right:calc(var(--pj-right-rail-width-final) + 36px) !important;
+  }
+}
+
+
+@media (max-width:900px), (max-width:1366px) and (any-pointer:coarse), (max-height:560px) and (pointer:coarse) {
+  body.mobile-optimized #mobileRailMount > #downloadCard,
+  body.mobile-optimized #mobileRailMount > .download-launch-card,
+  body.mobile-optimized #mobileRailMount > .download-card{
+    display:grid !important;
+    grid-template-rows:auto auto auto !important;
+    gap:10px !important;
+    min-height:126px !important;
+    overflow:visible !important;
+    cursor:pointer !important;
+  }
+
+  body.mobile-optimized #openDownloadModalBtn,
+  body.mobile-optimized #downloadCard .download-launch-btn{
+    display:inline-flex !important;
+    min-height:44px !important;
+    font-size:13.5px !important;
+    opacity:1 !important;
+    visibility:visible !important;
+    pointer-events:auto !important;
+  }
+
+  body.mobile-optimized .leaflet-top.leaflet-right .leaflet-control-zoom{
+    margin-top:70px !important;
+    margin-right:10px !important;
+    z-index:1320 !important;
+  }
+}

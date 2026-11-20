@@ -1,0 +1,108 @@
+
+  /* One UI accent source of truth. Transparency may communicate state, but
+     every interactive blue is derived from this exact RGB value. Flood and
+     stage visualization colors remain independent data colors. */
+  :root{
+    --nw-ui-blue:#60a5fa;
+    --nw-ui-blue-rgb:96,165,250;
+    --accent:var(--nw-ui-blue);
+    --accent-soft:rgba(var(--nw-ui-blue-rgb),.14);
+    --accent-strong:var(--nw-ui-blue);
+  }
+
+  html body button.active,
+  html body .segmented-control button.active,
+  html body .download-launch-btn.active{
+    border-color:var(--nw-ui-blue) !important;
+  }
+  html body button.active,
+  html body .download-launch-btn.active{
+    color:var(--nw-ui-blue) !important;
+  }
+  html body .segmented-control button.active,
+  html body .timeline-interval-toggle button.active{
+    background:rgba(var(--nw-ui-blue-rgb),.14) !important;
+  }
+  html body .toggle.on,
+  html body .top-tide-more-plus{
+    background:var(--nw-ui-blue) !important;
+  }
+  html body input[type="range"]{
+    accent-color:var(--nw-ui-blue) !important;
+  }
+  html body #timelineDock #hourSlider,
+  html body #timelineDock .timeline-trackRow #hourSlider{
+    background-color:transparent !important;
+    background-image:linear-gradient(to right,var(--nw-ui-blue) 0%,var(--nw-ui-blue) var(--timeline-progress),rgba(157,181,218,.38) var(--timeline-progress),rgba(157,181,218,.38) 100%) !important;
+  }
+  html body #timelineDock #hourSlider::-webkit-slider-thumb{
+    background:var(--nw-ui-blue) !important;
+  }
+  html body #timelineDock #hourSlider::-moz-range-thumb,
+  html body #timelineDock #hourSlider::-moz-range-progress{
+    background:var(--nw-ui-blue) !important;
+  }
+
+  /* Google-Earth-style navigation keeps its navy surface while every blue
+     ring, glyph, and selected state uses the shared accent. */
+  html body .nw-simple-control{
+    color:var(--nw-ui-blue) !important;
+  }
+  html body .nw-direction-wheel{
+    border-color:var(--nw-ui-blue) !important;
+    background:#13233a !important;
+    box-shadow:inset 0 0 0 3px rgba(var(--nw-ui-blue-rgb),.18),0 8px 20px rgba(2,6,23,.42) !important;
+  }
+  html body .nw-wheel-knob{
+    border-color:var(--nw-ui-blue) !important;
+    color:var(--nw-ui-blue) !important;
+  }
+  html body .nw-simple-control button,
+  html body .nw-simple-zoom,
+  html body .nw-simple-zoom-button{
+    border-color:var(--nw-ui-blue) !important;
+    color:var(--nw-ui-blue) !important;
+  }
+  html body .nw-simple-zoom-out{
+    border-top-color:rgba(var(--nw-ui-blue-rgb),.58) !important;
+  }
+  html body .nw-simple-view[aria-pressed="true"]{
+    border-color:var(--nw-ui-blue) !important;
+    background:#13233a !important;
+    color:var(--nw-ui-blue) !important;
+    box-shadow:0 0 0 2px rgba(var(--nw-ui-blue-rgb),.36),0 6px 14px rgba(2,6,23,.34) !important;
+  }
+
+  html body #timelineDock .playFab,
+  html body #timelineDock .playFab:hover:not(:disabled){
+    border-color:var(--nw-ui-blue) !important;
+    background:var(--nw-ui-blue) !important;
+  }
+  html body #timelineDock .playFab:hover:not(:disabled){
+    filter:brightness(1.08);
+  }
+  html body .top-tide-more-btn,
+  html body .top-tide-more-btn:hover:not(:disabled){
+    border-color:var(--nw-ui-blue) !important;
+    background:rgba(var(--nw-ui-blue-rgb),.12) !important;
+  }
+  html body .top-tide-more-btn:hover:not(:disabled){
+    background:rgba(var(--nw-ui-blue-rgb),.18) !important;
+  }
+
+  html body .map-click-mode-control button.active,
+  html body .building-info-card .house-alert-cta{
+    border-color:var(--nw-ui-blue) !important;
+    background:rgba(var(--nw-ui-blue-rgb),.14) !important;
+    color:var(--nw-ui-blue) !important;
+  }
+  html body .building-info-card .house-alert-kicker,
+  html body .flood-scenario-field,
+  html body .flood-year-readout span{
+    color:var(--nw-ui-blue) !important;
+  }
+  html body .shorely-flood-popup .leaflet-popup-content,
+  html body #map3d .maplibregl-popup-content,
+  html body .flood-summary-item{
+    border-color:rgba(var(--nw-ui-blue-rgb),.34) !important;
+  }

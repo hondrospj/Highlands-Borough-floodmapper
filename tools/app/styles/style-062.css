@@ -1,0 +1,51 @@
+
+  /* Live backdrop sampling over a moving WebGL canvas causes Chrome to
+     invalidate strips of fixed UI. The existing opaque panel colors remain;
+     only the expensive live blur is disabled once MapLibre owns the map. */
+  html body.map-3d-ready #app *,
+  html body.map-3d-ready #topBanner{
+    -webkit-backdrop-filter:none !important;
+    backdrop-filter:none !important;
+  }
+  html body.map-3d-ready #leftPanel,
+  html body.map-3d-ready #rightRail,
+  html body.map-3d-ready #timelineDock,
+  html body.map-3d-ready #timelineBubble,
+  html body.map-3d-ready #topBanner,
+  html body.map-3d-ready #mapTitleBadge,
+  html body.map-3d-ready #mapClickModeControl,
+  html body.map-3d-ready #nwDefaultNavControl{
+    isolation:isolate;
+    will-change:transform;
+    translate:0 0 1px !important;
+    -webkit-backface-visibility:hidden !important;
+    backface-visibility:hidden !important;
+  }
+  /* Some desktop layout rules intentionally reset transforms with
+     !important. Re-establish a real compositor surface after those rules so
+     the control text is rasterized once instead of during every WebGL frame. */
+  html body.map-3d-ready #leftPanel,
+  html body.map-3d-ready #rightRail,
+  html body.map-3d-ready #timelineDock,
+  html body.map-3d-ready #nwDefaultNavControl{
+    transform:translateZ(0) !important;
+  }
+  html body.map-3d-ready #topBanner,
+  html body.map-3d-ready #mapTitleBadge,
+  html body.map-3d-ready #mapClickModeControl{
+    transform:translateX(-50%) translateZ(0) !important;
+  }
+  html body.map-3d-ready #map3d{
+    contain:strict;
+    isolation:isolate;
+    transform:translateZ(0);
+    -webkit-backface-visibility:hidden;
+    backface-visibility:hidden;
+  }
+  /* Both the flat and pitched views are rendered by the preloaded MapLibre
+     camera. Remove the superseded Leaflet surface from composition entirely;
+     opacity:0 alone still made Chrome allocate and merge its full-screen
+     layer during every 3D drag. */
+  html body.map-3d-ready #map{
+    display:none !important;
+  }

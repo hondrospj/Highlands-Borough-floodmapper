@@ -1,0 +1,8 @@
+
+@layer shorelysafe-brand;
+@layer shorelysafe-brand {
+/* Persistent product identity inside the existing, measured title lane. */
+html body #mapTitleBadge #mapTitlePartnerLogo{display:block!important;visibility:visible!important;opacity:1!important;width:104px!important;min-width:104px!important;max-width:104px!important;height:42px!important;max-height:42px!important;object-fit:contain!important;flex:0 0 104px!important;background:#fff!important;border-radius:6px!important;padding:3px 5px!important;margin:0!important}
+@media(max-width:1100px){html body #mapTitleBadge #mapTitlePartnerLogo{width:76px!important;min-width:76px!important;max-width:76px!important;height:32px!important;max-height:32px!important;flex-basis:76px!important}}
+@media(max-width:900px), (max-width:1366px) and (any-pointer:coarse) {html body #mapTitleBadge{gap:6px!important}html body #mapTitleBadge #mapTitlePartnerLogo{width:58px!important;min-width:58px!important;max-width:58px!important;height:25px!important;max-height:25px!important;flex-basis:58px!important;padding:2px!important}html body #mapTitleText{min-width:0!important;flex:1 1 auto!important}}
+}

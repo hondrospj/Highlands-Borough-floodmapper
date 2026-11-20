@@ -1,0 +1,45 @@
+
+
+html body #topBanner:not(.alert),
+html.os-mac body #topBanner:not(.alert),
+html.os-windows body #topBanner:not(.alert),
+html.win-compact-ui body #topBanner:not(.alert){
+  display:none !important;
+  visibility:hidden !important;
+  opacity:0 !important;
+  pointer-events:none !important;
+}
+
+html body #topBanner.alert,
+html.os-mac body #topBanner.alert,
+html.os-windows body #topBanner.alert,
+html.win-compact-ui body #topBanner.alert{
+  display:flex !important;
+  visibility:visible !important;
+  opacity:1 !important;
+  pointer-events:auto !important;
+  cursor:pointer !important;
+  user-select:none !important;
+  -webkit-user-select:none !important;
+}
+
+html body #topBanner.alert #topBannerCloseBtn{
+  position:relative !important;
+  z-index:2 !important;
+  pointer-events:auto !important;
+  cursor:pointer !important;
+}
+
+html body #timelineDock,
+html body #timelineDock *,
+html body #hourSlider{
+  transition-property:background-color, border-color, box-shadow, color, opacity, transform !important;
+}
+
+html body #timelineDock .timeline-flood-key,
+html body #timelineDock #timelineDayTabs,
+html body #timelineDock .timeline-trackRow,
+html body #timelineDock #hourSlider{
+  transition:none !important;
+  animation:none !important;
+}

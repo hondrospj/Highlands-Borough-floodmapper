@@ -1,5 +1,9 @@
 /* Shared Avalon phone layout for all ShorelySafe floodmappers. */
 (() => {
+  // The unified controller can load after this legacy module. Check ownership
+  // when callbacks run as well as at startup, including already queued frames.
+  const unifiedOwnsLayout = () => Boolean(document.body.dataset.unifiedUiReady);
+  if (unifiedOwnsLayout()) return;
   const media = floodmapperLayoutMedia;
   const panel = document.getElementById('leftPanel');
   const app = document.getElementById('app');
@@ -32,6 +36,7 @@
   legend.setAttribute('tabindex', '0');
   legend.setAttribute('aria-label', 'Flood map legend');
   const toggleLegend = event => {
+    if (unifiedOwnsLayout()) return;
     if (!media.matches || event.target.closest('button')) return;
     event.preventDefault();
     event.stopImmediatePropagation();
@@ -41,6 +46,7 @@
   };
   legend.addEventListener('click', toggleLegend, true);
   legend.addEventListener('keydown', event => {
+    if (unifiedOwnsLayout()) return;
     if (event.key === 'Enter' || event.key === ' ') toggleLegend(event);
     if (event.key === 'Escape' && document.body.classList.contains('mobile-legend-open')) {
       document.body.classList.remove('mobile-legend-open');
@@ -49,6 +55,7 @@
     }
   }, true);
   document.addEventListener('click', event => {
+    if (unifiedOwnsLayout()) return;
     if (!media.matches || legend.contains(event.target)) return;
     document.body.classList.remove('mobile-legend-open');
     legend.setAttribute('aria-expanded', 'false');
@@ -57,6 +64,7 @@
   function dayButtons() { return [...days.querySelectorAll('button')].filter(button => button.classList.contains('timeline-day')); }
   function activeDayIndex(buttons) { return Math.max(0, buttons.findIndex(button => button.classList.contains('active') || button.getAttribute('aria-current') === 'date')); }
   function syncDayButtons() {
+    if (unifiedOwnsLayout()) return;
     const buttons = dayButtons();
     const index = activeDayIndex(buttons);
     for (const [button, offset] of [[before, -1], [after, 1]]) {
@@ -69,12 +77,14 @@
   }
   for (const [button, offset] of [[before, -1], [after, 1]]) {
     button.addEventListener('click', () => {
+      if (unifiedOwnsLayout()) return;
       const buttons = dayButtons();
       buttons[activeDayIndex(buttons) + offset]?.click();
     });
   }
 
   function syncLayout() {
+    if (unifiedOwnsLayout()) return;
     const mobile = media.matches;
     const open = mobile && document.body.classList.contains('mobile-controls-open');
     if (mobile) {
@@ -116,6 +126,7 @@
 
   let queued = false;
   function schedule() {
+    if (unifiedOwnsLayout()) return;
     if (queued) return;
     queued = true;
     requestAnimationFrame(() => { queued = false; syncLayout(); });
@@ -128,6 +139,7 @@
   window.addEventListener('load', schedule, {once:true});
   window.addEventListener('resize', schedule, {passive:true});
   document.addEventListener('keydown', event => {
+    if (unifiedOwnsLayout()) return;
     if (event.key !== 'Tab' || !media.matches || !document.body.classList.contains('mobile-controls-open') || document.querySelector('#infoModal.open,#datumModal.open,#downloadModal.open,#topTidesModal.open,#mapperTutorial:not([hidden])')) return;
     const items = [...panel.querySelectorAll('button,input,select,a[href],[tabindex="0"]')].filter(element => !element.disabled && !element.closest('[hidden]') && element.getClientRects().length);
     const first = items[0], last = items.at(-1);

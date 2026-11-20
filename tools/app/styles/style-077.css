@@ -1,0 +1,14 @@
+
+@layer floodmapper-unified-polish {
+  html body[data-floodmapper-unified] #mapTitleBadge#mapTitleBadge #mapTitleText {
+    flex:1 1 auto !important;
+    min-width:0 !important;
+    max-width:100% !important;
+    overflow-wrap:anywhere !important;
+  }
+  @media (max-width:900px), (max-width:1366px) and (any-pointer:coarse), (max-height:560px) and (pointer:coarse) {
+    html body[data-floodmapper-unified].mobile-optimized #leftPanel[data-nww-section]:not([data-nww-section="forecast"]) #calendarCard.calendar-card.active {
+      display:none !important;
+    }
+  }
+}

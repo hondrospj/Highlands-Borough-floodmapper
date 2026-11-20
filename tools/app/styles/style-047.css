@@ -1,0 +1,114 @@
+
+  /* Keep native antialiasing when road labels are composited above floodwater. */
+  html body .export-stage .leaflet-pane.roads-dark{
+    z-index:710 !important;
+  }
+  html body .export-stage .leaflet-pane.roads-dark img,
+  html body .export-stage .leaflet-layer.roads-dark{
+    filter:none !important;
+    mix-blend-mode:normal !important;
+    opacity:1 !important;
+  }
+
+  .export-stage-logo-strip{
+    top:18px !important;
+    left:18px !important;
+    min-height:160px !important;
+    max-width:572px !important;
+    padding:22px 32px !important;
+    border-radius:40px !important;
+  }
+  .export-stage-logo{
+    max-width:460px !important;
+    max-height:120px !important;
+  }
+  .export-stage-logo-shorelysafe{
+    max-width:484px !important;
+    max-height:128px !important;
+  }
+
+  .export-stage-timestamp{
+    top:18px !important;
+    min-width:min(620px, calc(100% - 620px)) !important;
+    max-width:min(850px, calc(100% - 620px)) !important;
+    padding:14px 24px 15px !important;
+    border-radius:22px !important;
+    font-size:clamp(23px, 2vw, 34px) !important;
+    line-height:1.16 !important;
+  }
+
+  .export-stage-legend[data-export-legend-mode="depth"]{
+    top:18px !important;
+    right:40px !important;
+    width:260px !important;
+    padding:17px 18px 16px !important;
+    border-radius:20px !important;
+    background:rgba(11,18,32,.96) !important;
+    border:1px solid rgba(191,219,254,.32) !important;
+    box-shadow:0 12px 28px rgba(0,0,0,.28) !important;
+  }
+  .export-depth-key{
+    display:grid;
+    gap:11px;
+    color:#fff;
+  }
+  .export-depth-key-heading{
+    display:flex;
+    align-items:center;
+  }
+  .export-depth-key-heading strong{
+    color:#fff;
+    font-size:21px;
+    line-height:1;
+    font-weight:950;
+    letter-spacing:-.025em;
+    white-space:nowrap;
+  }
+  .export-depth-key-scale{
+    display:grid;
+    gap:6px;
+  }
+  .export-depth-key-gradient{
+    height:18px;
+    border:1px solid rgba(255,255,255,.68);
+    border-radius:999px;
+    background:linear-gradient(90deg,#18c8ff 0%,#00a6f2 20%,#1479df 40%,#1852bd 60%,#132f7d 80%,#041536 100%);
+    box-shadow:inset 0 1px 2px rgba(255,255,255,.28);
+  }
+  .export-depth-key-ends{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+  }
+  .export-depth-key-ends{
+    color:#c8d8ef;
+    font-size:9.5px;
+    line-height:1;
+    font-weight:900;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+  }
+
+  .export-stage-frame[data-export-aspect="1:1"] .export-stage-legend[data-export-legend-mode="depth"]{
+    width:252px !important;
+  }
+  .export-stage-frame[data-export-aspect="9:16"] .export-stage-logo-strip{
+    min-height:176px !important;
+    max-width:540px !important;
+  }
+  .export-stage-frame[data-export-aspect="9:16"] .export-stage-logo{
+    max-width:448px !important;
+    max-height:132px !important;
+  }
+  .export-stage-frame[data-export-aspect="9:16"] .export-stage-timestamp{
+    top:122px !important;
+    left:18px !important;
+    right:316px !important;
+    min-width:0 !important;
+    max-width:none !important;
+  }
+  .export-stage-frame[data-export-aspect="9:16"] .export-stage-legend[data-export-legend-mode="depth"]{
+    top:122px !important;
+    right:40px !important;
+    width:258px !important;
+  }

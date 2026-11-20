@@ -1,0 +1,39 @@
+
+  @media (min-width:901px) and (min-height:561px) and (not (any-pointer:coarse)), (min-width:1367px) and (min-height:561px), (min-width:901px) and (pointer:fine) and (not (any-pointer:coarse)), (min-width:1367px) and (pointer:fine), (min-width:901px) and (pointer:none) and (not (any-pointer:coarse)), (min-width:1367px) and (pointer:none) {
+    html body:not(.mobile-optimized) #rightRail#rightRail{
+      gap:8px !important;
+      row-gap:8px !important;
+      padding-bottom:0 !important;
+    }
+
+    html body:not(.mobile-optimized) #rightRail#rightRail > .rail-card,
+    html body:not(.mobile-optimized) #rightRail#rightRail > .mapper-tutorial-launch{
+      margin:0 !important;
+    }
+
+    html body:not(.mobile-optimized) #rightRail#rightRail > #mapperTutorialBtn.mapper-tutorial-launch{
+      position:static !important;
+      inset:auto !important;
+      width:100% !important;
+    }
+
+    html body:not(.mobile-optimized) #rightRail#rightRail > #downloadCard.download-launch-card{
+      display:block !important;
+      grid-template-rows:none !important;
+      min-height:64px !important;
+      height:64px !important;
+      max-height:64px !important;
+      padding:10px !important;
+      overflow:hidden !important;
+    }
+
+    html body:not(.mobile-optimized) #rightRail#rightRail > #downloadCard #openDownloadModalBtn.download-launch-btn{
+      display:flex !important;
+      width:100% !important;
+      min-height:42px !important;
+      height:42px !important;
+      margin:0 !important;
+      padding:9px 12px !important;
+      box-sizing:border-box !important;
+    }
+  }

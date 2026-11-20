@@ -1,0 +1,7 @@
+
+@layer floodmapper-unified-polish {
+/* The welcome overlay follows renderer readiness; controls reveal without a second transition. */
+html body.nw-app-ready:not(.nw-app-loading) :is(#app,#topBanner){
+ opacity:1!important;pointer-events:auto!important;animation:none!important;filter:none!important;
+}
+}

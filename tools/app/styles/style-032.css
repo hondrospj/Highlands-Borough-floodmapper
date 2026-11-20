@@ -1,0 +1,55 @@
+
+
+html body #timelineBubble,
+html body.observed-mode #timelineBubble,
+html.os-mac body #timelineBubble,
+html.os-windows body #timelineBubble,
+html.win-compact-ui body #timelineBubble{
+  top:-56px !important;
+  z-index:4 !important;
+}
+
+html body #timelineBubble::after,
+html body.observed-mode #timelineBubble::after,
+html.os-mac body #timelineBubble::after,
+html.os-windows body #timelineBubble::after,
+html.win-compact-ui body #timelineBubble::after{
+  bottom:-10px !important;
+  border-left-width:10px !important;
+  border-right-width:10px !important;
+  border-top-width:10px !important;
+}
+
+html body #timelineDock,
+html body.observed-mode #timelineDock,
+html.os-mac body #timelineDock,
+html.os-windows body #timelineDock,
+html.win-compact-ui body #timelineDock{
+  overflow:visible !important;
+}
+
+@media (max-width:900px), (max-width:1366px) and (any-pointer:coarse), (max-height:560px) and (pointer:coarse) {
+  html body #timelineBubble,
+  html body.observed-mode #timelineBubble,
+  html.os-mac body #timelineBubble,
+  html.os-windows body #timelineBubble,
+  html.win-compact-ui body #timelineBubble{
+    top:-46px !important;
+  }
+
+  html body #timelineBubble::after,
+  html body.observed-mode #timelineBubble::after{
+    bottom:-8px !important;
+    border-left-width:8px !important;
+    border-right-width:8px !important;
+    border-top-width:8px !important;
+  }
+}
+
+@media (max-width:420px){
+  html body #timelineBubble,
+  html body.observed-mode #timelineBubble{
+    top:-44px !important;
+  }
+}
+

@@ -1,0 +1,147 @@
+
+
+html body #timelineBubble,
+html body.observed-mode #timelineBubble,
+html.os-mac body #timelineBubble,
+html.os-windows body #timelineBubble,
+html.win-compact-ui body #timelineBubble{
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  gap:12px !important;
+  min-height:46px !important;
+  padding:9px 22px !important;
+  border-radius:999px !important;
+  font-size:22px !important;
+  line-height:1 !important;
+  font-weight:950 !important;
+  letter-spacing:-.03em !important;
+  white-space:nowrap !important;
+  max-width:calc(100vw - 80px) !important;
+  overflow:hidden !important;
+  text-overflow:ellipsis !important;
+}
+
+html body #timelineBubble .timeline-bubble-current,
+html body.observed-mode #timelineBubble .timeline-bubble-current,
+html.os-mac body #timelineBubble .timeline-bubble-current,
+html.os-windows body #timelineBubble .timeline-bubble-current,
+html.win-compact-ui body #timelineBubble .timeline-bubble-current{
+  display:inline-block !important;
+  color:#ffffff !important;
+  font-size:clamp(20px, 1.55vw, 26px) !important;
+  line-height:1 !important;
+  font-weight:950 !important;
+  letter-spacing:-.04em !important;
+  min-width:0 !important;
+  max-width:100% !important;
+  overflow:hidden !important;
+  text-overflow:ellipsis !important;
+  white-space:nowrap !important;
+  flex:0 1 auto !important;
+}
+
+html body #timelineBubble .timeline-bubble-stage,
+html body.observed-mode #timelineBubble .timeline-bubble-stage,
+html.os-mac body #timelineBubble .timeline-bubble-stage,
+html.os-windows body #timelineBubble .timeline-bubble-stage,
+html.win-compact-ui body #timelineBubble .timeline-bubble-stage{
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  color:#ffffff !important;
+  font-size:clamp(18px, 1.35vw, 24px) !important;
+  line-height:1 !important;
+  font-weight:950 !important;
+  letter-spacing:-.035em !important;
+  padding:4px 12px 5px !important;
+  border-radius:999px !important;
+  min-height:30px !important;
+  flex:0 0 auto !important;
+}
+
+html body #timelineBubble::after,
+html body.observed-mode #timelineBubble::after,
+html.os-mac body #timelineBubble::after,
+html.os-windows body #timelineBubble::after,
+html.win-compact-ui body #timelineBubble::after{
+  bottom:-10px !important;
+  border-left-width:10px !important;
+  border-right-width:10px !important;
+  border-top-width:10px !important;
+}
+
+html body #timelineDock,
+html body.observed-mode #timelineDock,
+html.os-mac body #timelineDock,
+html.os-windows body #timelineDock,
+html.win-compact-ui body #timelineDock{
+  padding-top:46px !important;
+  overflow:visible !important;
+}
+
+@media (max-width:900px), (max-width:1366px) and (any-pointer:coarse), (max-height:560px) and (pointer:coarse) {
+  html body #timelineDock,
+  html body.observed-mode #timelineDock{
+    padding-top:40px !important;
+    overflow:visible !important;
+  }
+
+  html body #timelineBubble,
+  html body.observed-mode #timelineBubble,
+  html.os-mac body #timelineBubble,
+  html.os-windows body #timelineBubble,
+  html.win-compact-ui body #timelineBubble{
+    top:-36px !important;
+    gap:8px !important;
+    min-height:36px !important;
+    padding:7px 13px !important;
+    border-radius:999px !important;
+    font-size:18px !important;
+    max-width:calc(100vw - 24px) !important;
+  }
+
+  html body #timelineBubble .timeline-bubble-current,
+  html body.observed-mode #timelineBubble .timeline-bubble-current{
+    font-size:clamp(16px, 4.6vw, 20px) !important;
+    letter-spacing:-.04em !important;
+  }
+
+  html body #timelineBubble .timeline-bubble-stage,
+  html body.observed-mode #timelineBubble .timeline-bubble-stage{
+    font-size:clamp(15px, 4.2vw, 19px) !important;
+    min-height:26px !important;
+    padding:3px 9px 4px !important;
+  }
+
+  html body #timelineBubble::after,
+  html body.observed-mode #timelineBubble::after{
+    bottom:-8px !important;
+    border-left-width:8px !important;
+    border-right-width:8px !important;
+    border-top-width:8px !important;
+  }
+}
+
+@media (max-width:420px){
+  html body #timelineBubble,
+  html body.observed-mode #timelineBubble{
+    gap:7px !important;
+    padding-left:10px !important;
+    padding-right:10px !important;
+    max-width:calc(100vw - 16px) !important;
+  }
+
+  html body #timelineBubble .timeline-bubble-current,
+  html body.observed-mode #timelineBubble .timeline-bubble-current{
+    font-size:clamp(15px, 4.7vw, 18px) !important;
+  }
+
+  html body #timelineBubble .timeline-bubble-stage,
+  html body.observed-mode #timelineBubble .timeline-bubble-stage{
+    font-size:clamp(14px, 4.25vw, 17px) !important;
+    padding-left:8px !important;
+    padding-right:8px !important;
+  }
+}
+

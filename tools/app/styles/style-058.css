@@ -1,0 +1,135 @@
+
+  #downloadCard.download-launch-card{
+    padding:0 !important;
+    overflow:hidden !important;
+  }
+  #downloadCard #openDownloadModalBtn{
+    width:100% !important;
+    min-height:48px !important;
+    margin:0 !important;
+    border:0 !important;
+    border-radius:inherit !important;
+    font-size:15px !important;
+    font-weight:900 !important;
+  }
+
+  html body #leftPanel #legendDock[data-legend-mode="dynamic"] .legend-title,
+  #legendDock[data-legend-mode="dynamic"] .legend-title{
+    font-size:18px !important;
+    line-height:1.08 !important;
+  }
+  html body #leftPanel #legendDock[data-legend-mode="dynamic"] .legend-list,
+  #legendDock[data-legend-mode="dynamic"] .legend-list{
+    grid-template-columns:repeat(3,minmax(0,1fr)) !important;
+    gap:8px !important;
+  }
+  html body #leftPanel #legendDock[data-legend-mode="dynamic"] .legend-row,
+  #legendDock[data-legend-mode="dynamic"] .legend-row{
+    grid-template-columns:13px minmax(0,1fr) !important;
+    gap:6px !important;
+    font-size:14px !important;
+    line-height:1.1 !important;
+    overflow:visible !important;
+  }
+  html body #leftPanel #legendDock[data-legend-mode="dynamic"] .legend-label,
+  #legendDock[data-legend-mode="dynamic"] .legend-label{
+    overflow:visible !important;
+  }
+  html body #leftPanel #legendDock[data-legend-mode="dynamic"] .legend-swatch,
+  #legendDock[data-legend-mode="dynamic"] .legend-swatch{
+    width:12px !important;
+    height:12px !important;
+  }
+
+  body.mobile-optimized #legendDock .legend-header-actions,
+  body.mobile-optimized.mobile-legend-open #legendDock .legend-header-actions{
+    display:flex !important;
+  }
+  body.mobile-optimized #legendDock .legend-help-btn,
+  body.mobile-optimized.mobile-legend-open #legendDock .legend-help-btn{
+    display:inline-grid !important;
+    place-items:center !important;
+    width:28px !important;
+    min-width:28px !important;
+    height:28px !important;
+    min-height:28px !important;
+    font-size:15px !important;
+  }
+  body.mobile-optimized #legendDock[data-legend-mode="dynamic"] .legend-title,
+  body.mobile-optimized.mobile-legend-open #legendDock[data-legend-mode="dynamic"] .legend-title{
+    font-size:16px !important;
+  }
+  body.mobile-optimized #legendDock[data-legend-mode="dynamic"] .legend-row,
+  body.mobile-optimized.mobile-legend-open #legendDock[data-legend-mode="dynamic"] .legend-row{
+    font-size:13px !important;
+  }
+
+  @media (max-width:900px), (max-width:1366px) and (any-pointer:coarse), (max-height:560px) and (pointer:coarse) {
+    html body.mobile-optimized #legendDock[data-legend-mode="dynamic"],
+    html body.mobile-optimized #timelineDock #legendDock[data-legend-mode="dynamic"],
+    html body.mobile-optimized #mapWrap #legendDock[data-legend-mode="dynamic"]{
+      display:block !important;
+      visibility:visible !important;
+      opacity:1 !important;
+      position:fixed !important;
+      top:108px !important;
+      left:max(8px,env(safe-area-inset-left,0px)) !important;
+      right:auto !important;
+      bottom:auto !important;
+      width:min(282px,calc(100vw - 96px)) !important;
+      min-width:0 !important;
+      max-width:min(282px,calc(100vw - 96px)) !important;
+      height:78px !important;
+      min-height:78px !important;
+      max-height:78px !important;
+      padding:9px 10px !important;
+      overflow:hidden !important;
+      z-index:4400 !important;
+    }
+    html body.mobile-optimized #legendDock[data-legend-mode="dynamic"] .legend-header{
+      display:flex !important;
+      align-items:center !important;
+      justify-content:space-between !important;
+      min-height:28px !important;
+      margin:0 0 6px !important;
+    }
+    html body.mobile-optimized #legendDock[data-legend-mode="dynamic"] .legend-header-text,
+    html body.mobile-optimized #legendDock[data-legend-mode="dynamic"] .legend-title{
+      display:block !important;
+      visibility:visible !important;
+      opacity:1 !important;
+      margin:0 !important;
+      color:#fff !important;
+      font-size:16px !important;
+      line-height:1 !important;
+    }
+    html body.mobile-optimized #legendDock[data-legend-mode="dynamic"] .legend-body,
+    html body.mobile-optimized #legendDock[data-legend-mode="dynamic"] .legend-list{
+      display:flex !important;
+      visibility:visible !important;
+      opacity:1 !important;
+      gap:7px !important;
+      margin:0 !important;
+      padding:0 !important;
+    }
+    html body.mobile-optimized #legendDock[data-legend-mode="dynamic"] .legend-row{
+      display:flex !important;
+      visibility:visible !important;
+      opacity:1 !important;
+      flex:1 1 0 !important;
+      min-width:0 !important;
+      gap:5px !important;
+      align-items:center !important;
+      color:#fff !important;
+      font-size:12px !important;
+      line-height:1 !important;
+      white-space:nowrap !important;
+      overflow:visible !important;
+    }
+    html body.mobile-optimized #legendDock[data-legend-mode="dynamic"] .legend-label{
+      display:block !important;
+      min-width:0 !important;
+      overflow:visible !important;
+      white-space:nowrap !important;
+    }
+  }

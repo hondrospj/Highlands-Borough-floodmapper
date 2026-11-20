@@ -1,0 +1,631 @@
+
+
+
+:root{
+  --pj-ui-left-width:340px;
+  --pj-ui-right-width:250px;
+  --pj-ui-legend-width:212px;
+}
+
+
+@media (min-width:901px) and (min-height:561px) and (not (any-pointer:coarse)), (min-width:1367px) and (min-height:561px), (min-width:901px) and (pointer:fine) and (not (any-pointer:coarse)), (min-width:1367px) and (pointer:fine), (min-width:901px) and (pointer:none) and (not (any-pointer:coarse)), (min-width:1367px) and (pointer:none) {
+  #leftPanel{
+    width:var(--pj-ui-left-width) !important;
+    max-width:calc(100vw - 32px) !important;
+    gap:12px !important;
+  }
+
+  .panel-card{
+    padding:14px 16px !important;
+    border-radius:21px !important;
+  }
+
+  .compact-card{
+    padding:12px 14px !important;
+  }
+
+  .datum-card,
+  .opacity-card{
+    min-height:146px !important;
+  }
+
+  .brand{
+    min-height:130px !important;
+  }
+
+  .section-title h2,
+  .rail-head h3{
+    font-size:16px !important;
+    line-height:1.16 !important;
+  }
+
+  .section-kicker,
+  .muted,
+  .range-label,
+  .range-value{
+    font-size:12.5px !important;
+    line-height:1.38 !important;
+  }
+
+  button,
+  select{
+    min-height:46px !important;
+    font-size:14.5px !important;
+    border-radius:15px !important;
+  }
+
+  button{
+    padding:10px 14px !important;
+  }
+
+  .button-grid-3 button,
+  .segmented-control button,
+  .datum-card .segmented-control button,
+  .export-segmented button{
+    min-height:42px !important;
+    font-size:14px !important;
+    padding:9px 11px !important;
+  }
+
+  .segmented-control button .datum-offset{
+    font-size:10.5px !important;
+  }
+
+  .snapshot-card .stat-box,
+  .stat-box{
+    padding:18px 20px !important;
+    border-radius:21px !important;
+    gap:8px !important;
+  }
+
+  .stat-label{
+    font-size:12.5px !important;
+    line-height:1.12 !important;
+  }
+
+  .stat-value{
+    font-size:24px !important;
+    line-height:1.04 !important;
+  }
+
+  .stat-sub{
+    font-size:12.5px !important;
+    line-height:1.35 !important;
+  }
+
+  #timeText{
+    font-size:clamp(17px, 1.4vw, 22px) !important;
+  }
+
+  #stageText{
+    font-size:clamp(27px, 2.08vw, 35px) !important;
+  }
+
+  .calendar-title-btn,
+  .day-nav-center{
+    font-size:15px !important;
+  }
+
+  .calendar-head div{
+    font-size:14px !important;
+  }
+
+  .calendar-day{
+    min-height:48px !important;
+    font-size:16px !important;
+  }
+
+  .calendar-key-item{
+    min-height:38px !important;
+    font-size:13px !important;
+  }
+
+  #legendDock{
+    left:calc(16px + var(--pj-ui-left-width) + 16px) !important;
+    width:var(--pj-ui-legend-width) !important;
+    padding:14px !important;
+    border-radius:25px !important;
+  }
+
+  .legend-title{
+    font-size:15.5px !important;
+    line-height:1.15 !important;
+    margin-bottom:8px !important;
+  }
+
+  .legend-list{
+    gap:8px !important;
+  }
+
+  .legend-row{
+    grid-template-columns:17px minmax(0,1fr) !important;
+    gap:10px !important;
+    font-size:12.5px !important;
+    line-height:1.28 !important;
+    font-weight:820 !important;
+  }
+
+  .legend-swatch{
+    width:15px !important;
+    height:15px !important;
+    border-radius:6px !important;
+  }
+
+  .legend-swatch.legend-line{
+    width:17px !important;
+    border-top-width:4px !important;
+  }
+
+  #rightRail{
+    width:var(--pj-ui-right-width) !important;
+    min-width:var(--pj-ui-right-width) !important;
+    max-width:var(--pj-ui-right-width) !important;
+    gap:14px !important;
+  }
+
+  .rail-card{
+    padding:14px !important;
+    border-radius:18px !important;
+  }
+
+  .rail-head{
+    margin-bottom:10px !important;
+  }
+
+  .pill,
+  .badge{
+    min-height:26px !important;
+    padding:0 10px !important;
+    font-size:11.5px !important;
+  }
+
+  .layer-list,
+  .top-tide-list{
+    gap:10px !important;
+  }
+
+  .layer-item{
+    padding:12px 14px !important;
+    border-radius:16px !important;
+    gap:10px !important;
+  }
+
+  .layer-name{
+    font-size:14px !important;
+    line-height:1.2 !important;
+  }
+
+  .top-tide-item{
+    padding:14px 12px !important;
+    border-radius:17px !important;
+    gap:6px !important;
+  }
+
+  .top-tides-card .rail-head h3{
+    font-size:17px !important;
+  }
+
+  .top-tide-rank{
+    font-size:13px !important;
+  }
+
+  .top-tide-main{
+    font-size:18px !important;
+    line-height:1.08 !important;
+  }
+
+  .top-tide-sub{
+    font-size:14.5px !important;
+    line-height:1.32 !important;
+  }
+
+  .right-rail-note,
+  .download-launch-meta,
+  .town-address-status{
+    font-size:12.5px !important;
+    line-height:1.45 !important;
+  }
+
+  .town-address-label{
+    font-size:11.5px !important;
+  }
+
+  .town-address-input{
+    min-height:44px !important;
+    font-size:13.5px !important;
+  }
+
+  .right-rail-action,
+  .town-address-btn,
+  .town-address-clear-btn,
+  .download-launch-btn{
+    min-height:46px !important;
+    font-size:13.5px !important;
+  }
+}
+
+
+.export-stage-legend{
+  width:var(--pj-ui-legend-width) !important;
+  padding:14px !important;
+}
+
+.export-stage-legend .legend-title{
+  font-size:15.5px !important;
+}
+
+.export-stage-legend .legend-row{
+  grid-template-columns:17px minmax(0,1fr) !important;
+  gap:10px !important;
+  font-size:12.5px !important;
+  line-height:1.28 !important;
+}
+
+.export-stage-legend .legend-swatch{
+  width:15px !important;
+  height:15px !important;
+}
+
+
+@media (min-width:901px) and (min-height:561px) and (not (any-pointer:coarse)), (min-width:1367px) and (min-height:561px), (min-width:901px) and (pointer:fine) and (not (any-pointer:coarse)), (min-width:1367px) and (pointer:fine), (min-width:901px) and (pointer:none) and (not (any-pointer:coarse)), (min-width:1367px) and (pointer:none) {
+  html.os-windows,
+  html.win-compact-ui{
+    --win-left-width:340px !important;
+    --win-right-width:250px !important;
+    --win-bottom-y:122px !important;
+    --win-ui-zoom:1 !important;
+  }
+
+  html.os-windows #leftPanel,
+  html.win-compact-ui #leftPanel,
+  html.os-windows body.observed-mode #leftPanel,
+  html.win-compact-ui body.observed-mode #leftPanel,
+  html.os-windows body.observed-mode.calendar-picker-open #leftPanel,
+  html.win-compact-ui body.observed-mode.calendar-picker-open #leftPanel{
+    width:340px !important;
+    min-width:340px !important;
+    max-width:340px !important;
+    gap:10px !important;
+    zoom:1 !important;
+  }
+
+  html.os-windows #leftPanel .panel-card,
+  html.win-compact-ui #leftPanel .panel-card,
+  html.os-windows #leftPanel .compact-card,
+  html.win-compact-ui #leftPanel .compact-card,
+  html.os-windows #leftPanel .snapshot-card,
+  html.win-compact-ui #leftPanel .snapshot-card,
+  html.os-windows #leftPanel .calendar-card.active,
+  html.win-compact-ui #leftPanel .calendar-card.active,
+  html.os-windows #leftPanel .opacity-card,
+  html.win-compact-ui #leftPanel .opacity-card{
+    padding:12px 14px !important;
+    border-radius:18px !important;
+  }
+
+  html.os-windows .section-title h2,
+  html.win-compact-ui .section-title h2,
+  html.os-windows .rail-head h3,
+  html.win-compact-ui .rail-head h3,
+  html.os-windows .legend-title,
+  html.win-compact-ui .legend-title{
+    font-size:15px !important;
+    line-height:1.16 !important;
+  }
+
+  html.os-windows button,
+  html.win-compact-ui button,
+  html.os-windows select,
+  html.win-compact-ui select,
+  html.os-windows .segmented-control button,
+  html.win-compact-ui .segmented-control button,
+  html.os-windows .datum-card .segmented-control button,
+  html.win-compact-ui .datum-card .segmented-control button{
+    min-height:40px !important;
+    padding:8px 10px !important;
+    font-size:13.5px !important;
+    border-radius:13px !important;
+  }
+
+  html.os-windows .stat-label,
+  html.win-compact-ui .stat-label{
+    font-size:11.5px !important;
+  }
+
+  html.os-windows #timeText,
+  html.win-compact-ui #timeText{
+    font-size:16px !important;
+  }
+
+  html.os-windows #stageText,
+  html.win-compact-ui #stageText{
+    font-size:24px !important;
+  }
+
+  html.os-windows #timeSubText,
+  html.win-compact-ui #timeSubText,
+  html.os-windows .stat-sub,
+  html.win-compact-ui .stat-sub,
+  html.os-windows .muted,
+  html.win-compact-ui .muted{
+    font-size:12px !important;
+  }
+
+  html.os-windows #legendDock,
+  html.win-compact-ui #legendDock,
+  html.os-windows #legendDock.map-floating,
+  html.win-compact-ui #legendDock.map-floating,
+  html.os-windows #legendDock.legend-card,
+  html.win-compact-ui #legendDock.legend-card,
+  html.os-windows body.observed-mode #legendDock,
+  html.win-compact-ui body.observed-mode #legendDock,
+  html.os-windows body.calendar-picker-open #legendDock,
+  html.win-compact-ui body.calendar-picker-open #legendDock{
+    left:372px !important;
+    width:212px !important;
+    max-width:212px !important;
+    padding:14px !important;
+    zoom:1 !important;
+  }
+
+  html.os-windows .legend-row,
+  html.win-compact-ui .legend-row{
+    grid-template-columns:17px minmax(0,1fr) !important;
+    gap:10px !important;
+    font-size:12px !important;
+    line-height:1.28 !important;
+  }
+
+  html.os-windows .legend-swatch,
+  html.win-compact-ui .legend-swatch{
+    width:14px !important;
+    height:14px !important;
+  }
+
+  html.os-windows #rightRail,
+  html.win-compact-ui #rightRail,
+  html.os-windows body.observed-mode #rightRail,
+  html.win-compact-ui body.observed-mode #rightRail,
+  html.os-windows body.calendar-picker-open #rightRail,
+  html.win-compact-ui body.calendar-picker-open #rightRail{
+    width:250px !important;
+    min-width:250px !important;
+    max-width:250px !important;
+    gap:12px !important;
+    zoom:1 !important;
+  }
+
+  html.os-windows #rightRail .rail-card,
+  html.win-compact-ui #rightRail .rail-card{
+    padding:13px !important;
+    border-radius:17px !important;
+  }
+
+  html.os-windows .layer-item,
+  html.win-compact-ui .layer-item{
+    padding:11px 12px !important;
+    border-radius:15px !important;
+  }
+
+  html.os-windows .layer-name,
+  html.win-compact-ui .layer-name{
+    font-size:13.5px !important;
+  }
+
+  html.os-windows .pill,
+  html.win-compact-ui .pill,
+  html.os-windows .badge,
+  html.win-compact-ui .badge{
+    min-height:24px !important;
+    font-size:11px !important;
+  }
+
+  html.os-windows .top-tide-item,
+  html.win-compact-ui .top-tide-item{
+    padding:12px 11px !important;
+    border-radius:16px !important;
+    gap:5px !important;
+  }
+
+  html.os-windows .top-tide-main,
+  html.win-compact-ui .top-tide-main{
+    font-size:17px !important;
+  }
+
+  html.os-windows .top-tide-sub,
+  html.win-compact-ui .top-tide-sub{
+    font-size:13.5px !important;
+  }
+
+  html.os-windows .top-tide-rank,
+  html.win-compact-ui .top-tide-rank{
+    font-size:12px !important;
+  }
+
+  html.os-windows .leaflet-top.leaflet-right .leaflet-control-zoom,
+  html.win-compact-ui .leaflet-top.leaflet-right .leaflet-control-zoom{
+    margin-right:272px !important;
+    zoom:1 !important;
+  }
+}
+
+
+@media (min-width:761px) and (max-width:1320px){
+  #leftPanel{
+    gap:10px !important;
+  }
+
+  .panel-card,
+  .rail-card{
+    padding:12px !important;
+    border-radius:18px !important;
+  }
+
+  .section-title h2,
+  .rail-head h3{
+    font-size:15px !important;
+  }
+
+  button,
+  select,
+  .segmented-control button{
+    min-height:42px !important;
+    font-size:14px !important;
+  }
+
+  .stat-label{
+    font-size:12px !important;
+  }
+
+  #timeText{
+    font-size:17px !important;
+  }
+
+  #stageText{
+    font-size:25px !important;
+  }
+
+  .top-tide-main{
+    font-size:19px !important;
+  }
+
+  .top-tide-sub{
+    font-size:15px !important;
+  }
+}
+
+
+@media (max-width:760px){
+  #leftPanel{
+    font-size:15px !important;
+    gap:10px !important;
+  }
+
+  #leftPanel .panel-card,
+  #leftPanel .rail-card,
+  #leftPanel #legendDock{
+    padding:12px !important;
+    border-radius:18px !important;
+  }
+
+  #leftPanel .section-title h2,
+  #leftPanel .rail-head h3{
+    font-size:15px !important;
+    line-height:1.18 !important;
+  }
+
+  #leftPanel .section-kicker,
+  #leftPanel .muted,
+  #leftPanel .range-label,
+  #leftPanel .range-value,
+  #leftPanel .stat-sub{
+    font-size:12px !important;
+    line-height:1.36 !important;
+  }
+
+  #leftPanel button,
+  #leftPanel select,
+  #leftPanel input[type="datetime-local"],
+  #leftPanel .segmented-control button{
+    min-height:42px !important;
+    font-size:14px !important;
+    border-radius:14px !important;
+  }
+
+  #leftPanel .snapshot-card .stat-box,
+  #leftPanel .stat-box{
+    padding:14px 15px !important;
+    border-radius:18px !important;
+    gap:6px !important;
+  }
+
+  #leftPanel .stat-label{
+    font-size:11.5px !important;
+  }
+
+  #leftPanel #timeText{
+    font-size:16px !important;
+  }
+
+  #leftPanel #stageText{
+    font-size:24px !important;
+  }
+
+  #leftPanel .top-tide-item,
+  #leftPanel .layer-item{
+    padding:12px !important;
+    border-radius:16px !important;
+    gap:7px !important;
+  }
+
+  #leftPanel .layer-name{
+    font-size:14px !important;
+  }
+
+  #leftPanel .top-tide-rank{
+    font-size:12px !important;
+  }
+
+  #leftPanel .top-tide-main{
+    font-size:18px !important;
+  }
+
+  #leftPanel .top-tide-sub{
+    font-size:14px !important;
+  }
+
+  body.mobile-optimized #legendDock .legend-title,
+  #leftPanel #legendDock .legend-title{
+    font-size:15px !important;
+    line-height:1.15 !important;
+  }
+
+  body.mobile-optimized #legendDock .legend-row,
+  #leftPanel #legendDock .legend-row{
+    grid-template-columns:16px minmax(0,1fr) !important;
+    gap:9px !important;
+    font-size:12px !important;
+    line-height:1.25 !important;
+  }
+
+  body.mobile-optimized #legendDock .legend-swatch,
+  #leftPanel #legendDock .legend-swatch{
+    width:14px !important;
+    height:14px !important;
+    border-radius:6px !important;
+  }
+}
+
+@media (max-width:420px){
+  #leftPanel .panel-card,
+  #leftPanel .rail-card,
+  #leftPanel #legendDock{
+    padding:11px !important;
+  }
+
+  #leftPanel .section-title h2,
+  #leftPanel .rail-head h3{
+    font-size:14.5px !important;
+  }
+
+  #leftPanel button,
+  #leftPanel select,
+  #leftPanel input[type="datetime-local"],
+  #leftPanel .segmented-control button{
+    min-height:40px !important;
+    font-size:13.5px !important;
+  }
+
+  #leftPanel #timeText{
+    font-size:15.5px !important;
+  }
+
+  #leftPanel #stageText{
+    font-size:23px !important;
+  }
+
+  body.mobile-optimized #legendDock .legend-row,
+  #leftPanel #legendDock .legend-row{
+    font-size:11.5px !important;
+  }
+}

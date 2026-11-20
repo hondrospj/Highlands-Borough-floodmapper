@@ -1,0 +1,28 @@
+
+  html body #mapTitleBadge,
+  html body #mapTitleBadge.shorely-title-badge,
+  html body.forecast-mode #mapTitleBadge.shorely-title-badge,
+  html body.observed-mode #mapTitleBadge.shorely-title-badge{
+    box-sizing:border-box !important;
+    min-width:0 !important;
+    overflow:hidden !important;
+    grid-template-columns:minmax(0,1fr) max-content !important;
+  }
+
+  html body #mapTitleBadge #mapTitleText,
+  html body #mapTitleBadge .shorely-title-text{
+    min-width:0 !important;
+    max-width:100% !important;
+    font-size:var(--nww-title-font-size, clamp(18px, 2.4vw, 42px)) !important;
+    overflow:hidden !important;
+    text-overflow:clip !important;
+  }
+
+  html body #mapTitleBadge #mapTitleLogo,
+  html body #mapTitleBadge #mapTitlePartnerLogo,
+  html body #mapTitleBadge .shorely-title-logo,
+  html body #mapTitleBadge .shorely-title-logo-town,
+  html body #mapTitleBadge .shorely-title-logo-shorelysafe{
+    min-width:0 !important;
+    max-width:var(--nww-title-logo-max, 150px) !important;
+  }

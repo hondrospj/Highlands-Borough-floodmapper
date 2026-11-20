@@ -1,0 +1,93 @@
+
+
+html body #rightRail .right-logo-card,
+html body.observed-mode #rightRail .right-logo-card,
+html body.forecast-mode #rightRail .right-logo-card{
+  display:grid !important;
+  place-items:center !important;
+  justify-items:center !important;
+  align-items:center !important;
+  text-align:center !important;
+  width:100% !important;
+  min-height:88px !important;
+  height:88px !important;
+  max-height:88px !important;
+  padding:12px 16px !important;
+  overflow:visible !important;
+}
+
+html body #rightRail .right-logo-card .right-logo-link,
+html body.observed-mode #rightRail .right-logo-card .right-logo-link,
+html body.forecast-mode #rightRail .right-logo-card .right-logo-link{
+  display:grid !important;
+  place-items:center !important;
+  justify-items:center !important;
+  align-items:center !important;
+  width:100% !important;
+  height:100% !important;
+  min-width:0 !important;
+  min-height:0 !important;
+  margin:0 !important;
+  padding:0 !important;
+  line-height:0 !important;
+  text-align:center !important;
+  overflow:visible !important;
+}
+
+html body #rightRail .right-logo-card #rightRailLogo,
+html body #rightRail .right-logo-card .right-rail-logo,
+html body #rightRail .right-logo-card .shorelysafe-logo,
+html body.observed-mode #rightRail .right-logo-card #rightRailLogo,
+html body.forecast-mode #rightRail .right-logo-card #rightRailLogo{
+  display:block !important;
+  position:static !important;
+  justify-self:center !important;
+  align-self:center !important;
+  width:auto !important;
+  height:auto !important;
+  max-width:156px !important;
+  max-height:52px !important;
+  margin:0 !important;
+  padding:0 !important;
+  object-fit:contain !important;
+  object-position:50% 50% !important;
+  transform:none !important;
+  translate:none !important;
+  left:auto !important;
+  right:auto !important;
+  top:auto !important;
+  bottom:auto !important;
+  vertical-align:middle !important;
+}
+
+html body #mapTitleBadge.shorely-title-badge{
+  display:inline-grid !important;
+  grid-auto-flow:column !important;
+  align-items:center !important;
+  justify-content:center !important;
+  justify-items:center !important;
+  text-align:center !important;
+}
+
+html body #mapTitleBadge #mapTitlePartnerLogo,
+html body #mapTitleBadge .shorely-title-logo-shorelysafe{
+  justify-self:center !important;
+  align-self:center !important;
+  object-position:50% 50% !important;
+  margin:0 !important;
+}
+
+@media (max-width:900px), (max-width:1366px) and (any-pointer:coarse), (max-height:560px) and (pointer:coarse) {
+  html body #rightRail .right-logo-card{
+    min-height:76px !important;
+    height:76px !important;
+    max-height:76px !important;
+    padding:10px 14px !important;
+  }
+  html body #rightRail .right-logo-card #rightRailLogo,
+  html body #rightRail .right-logo-card .right-rail-logo,
+  html body #rightRail .right-logo-card .shorelysafe-logo{
+    max-width:138px !important;
+    max-height:44px !important;
+  }
+}

@@ -1,0 +1,945 @@
+{
+  "version": 1,
+  "baselineCommit": "e87e11c9c37d13acbc557f415e5b09e43029d937",
+  "styles": [
+    {
+      "id": "style-001",
+      "openTag": "<style id=\"shorely-depth-pill-20261016\">",
+      "closeTag": "</style>",
+      "sources": [
+        "tools/app/styles/style-001.css"
+      ],
+      "output": "assets/styles/app-01.css",
+      "firstInBundle": true
+    },
+    {
+      "id": "style-002",
+      "openTag": "<style id=\"floodmapper-unified-ui-20261017\" data-ui-sha256=\"6066e10bf08b0a1bb7267d99d4cf0d920acb47cd19ce9b79a3987b37690b941a\">",
+      "closeTag": "</style>",
+      "sources": [
+        "tools/app/styles/style-002.css"
+      ],
+      "output": "assets/styles/app-01.css",
+      "firstInBundle": false
+    },
+    {
+      "id": "style-003",
+      "openTag": "<style id=\"shorelysafe-visible-brand-20261015\">",
+      "closeTag": "</style>",
+      "sources": [
+        "tools/app/styles/style-003.css"
+      ],
+      "output": "assets/styles/app-01.css",
+      "firstInBundle": false
+    },
+    {
+      "id": "style-004",
+      "openTag": "<style id=\"county-safari-mobile-20261015\">",
+      "closeTag": "</style>",
+      "sources": [
+        "tools/app/styles/style-004.css"
+      ],
+      "output": "assets/styles/app-01.css",
+      "firstInBundle": false
+    },
+    {
+      "id": "style-005",
+      "openTag": "<style id=\"county-viewport-fix-20261015\">",
+      "closeTag": "</style>",
+      "sources": [
+        "tools/app/styles/style-005.css"
+      ],
+      "output": "assets/styles/app-01.css",
+      "firstInBundle": false
+    },
+    {
+      "id": "style-006",
+      "openTag": "<style id=\"shorelysafe-fleet-layer\">",
+      "closeTag": "</style>",
+      "sources": [
+        "tools/app/styles/style-006.css"
+      ],
+      "output": "assets/styles/app-01.css",
+      "firstInBundle": false
+    },
+    {
+      "id": "style-007",
+      "openTag": "<style id=\"floodmapper-road-labels-20261002\">",
+      "closeTag": "</style>",
+      "sources": [
+        "tools/app/styles/style-007.css"
+      ],
+      "output": "assets/styles/app-02.css",
+      "firstInBundle": true
+    },
+    {
+      "id": "style-008",
+      "openTag": "<style>",
+      "closeTag": "</style>",
+      "sources": [
+        "tools/app/styles/style-008.css"
+      ],
+      "output": "assets/styles/app-03.css",
+      "firstInBundle": true
+    },
+    {
+      "id": "style-009",
+      "openTag": "<style>",
+      "closeTag": "</style>",
+      "sources": [
+        "tools/app/styles/style-009.css"
+      ],
+      "output": "assets/styles/app-03.css",
+      "firstInBundle": false
+    },
+    {
+      "id": "style-010",
+      "openTag": "<style>",
+      "closeTag": "</style>",
+      "sources": [
+        "tools/app/styles/style-010.css"
+      ],
+      "output": "assets/styles/app-03.css",
+      "firstInBundle": false
+    },
+    {
+      "id": "style-011",
+      "openTag": "<style id=\"v2-export-visibility-fix\">",
+      "closeTag": "</style>",
+      "sources": [
+        "tools/app/styles/style-011.css"
+      ],
+      "output": "assets/styles/app-03.css",
+      "firstInBundle": false
+    },
+    {
+      "id": "style-012",
+      "openTag": "<style id=\"shorelysafeWebcamsStyle\">",
+      "closeTag": "</style>",
+      "sources": [
+        "tools/app/styles/style-012.css"
+      ],
+      "output": "assets/styles/app-04.css",
+      "firstInBundle": true
+    },
+    {
+      "id": "style-013",
+      "openTag": "<style id=\"floodmapper-2-controls\">",
+      "closeTag": "</style>",
+      "sources": [
+        "tools/app/styles/style-013.css"
+      ],
+      "output": "assets/styles/app-05.css",
+      "firstInBundle": true
+    },
+    {
+      "id": "style-014",
+      "openTag": "<style>",
+      "closeTag": "</style>",
+      "sources": [
+        "tools/app/styles/style-014.css"
+      ],
+      "output": "assets/styles/app-05.css",
+      "firstInBundle": false
+    },
+    {
+      "id": "style-015",
+      "openTag": "<style>",
+      "closeTag": "</style>",
+      "sources": [
+        "tools/app/styles/style-015.css"
+      ],
+      "output": "assets/styles/app-05.css",
+      "firstInBundle": false
+    },
+    {
+      "id": "style-016",
+      "openTag": "<style>",
+      "closeTag": "</style>",
+      "sources": [
+        "tools/app/styles/style-016.css"
+      ],
+      "output": "assets/styles/app-05.css",
+      "firstInBundle": false
+    },
+    {
+      "id": "style-017",
+      "openTag": "<style>",
+      "closeTag": "</style>",
+      "sources": [
+        "tools/app/styles/style-017.css"
+      ],
+      "output": "assets/styles/app-05.css",
+      "firstInBundle": false
+    },
+    {
+      "id": "style-018",
+      "openTag": "<style>",
+      "closeTag": "</style>",
+      "sources": [
+        "tools/app/styles/style-018.css"
+      ],
+      "output": "assets/styles/app-05.css",
+      "firstInBundle": false
+    },
+    {
+      "id": "style-019",
+      "openTag": "<style>",
+      "closeTag": "</style>",
+      "sources": [
+        "tools/app/styles/style-019.css"
+      ],
+      "output": "assets/styles/app-05.css",
+      "firstInBundle": false
+    },
+    {
+      "id": "style-020",
+      "openTag": "<style>",
+      "closeTag": "</style>",
+      "sources": [
+        "tools/app/styles/style-020.css"
+      ],
+      "output": "assets/styles/app-05.css",
+      "firstInBundle": false
+    },
+    {
+      "id": "style-021",
+      "openTag": "<style>",
+      "closeTag": "</style>",
+      "sources": [
+        "tools/app/styles/style-021.css"
+      ],
+      "output": "assets/styles/app-05.css",
+      "firstInBundle": false
+    },
+    {
+      "id": "style-022",
+      "openTag": "<style>",
+      "closeTag": "</style>",
+      "sources": [
+        "tools/app/styles/style-022.css"
+      ],
+      "output": "assets/styles/app-05.css",
+      "firstInBundle": false
+    },
+    {
+      "id": "style-023",
+      "openTag": "<style>",
+      "closeTag": "</style>",
+      "sources": [
+        "tools/app/styles/style-023.css"
+      ],
+      "output": "assets/styles/app-05.css",
+      "firstInBundle": false
+    },
+    {
+      "id": "style-024",
+      "openTag": "<style>",
+      "closeTag": "</style>",
+      "sources": [
+        "tools/app/styles/style-024.css"
+      ],
+      "output": "assets/styles/app-05.css",
+      "firstInBundle": false
+    },
+    {
+      "id": "style-025",
+      "openTag": "<style>",
+      "closeTag": "</style>",
+      "sources": [
+        "tools/app/styles/style-025.css"
+      ],
+      "output": "assets/styles/app-05.css",
+      "firstInBundle": false
+    },
+    {
+      "id": "style-026",
+      "openTag": "<style>",
+      "closeTag": "</style>",
+      "sources": [
+        "tools/app/styles/style-026.css"
+      ],
+      "output": "assets/styles/app-05.css",
+      "firstInBundle": false
+    },
+    {
+      "id": "style-027",
+      "openTag": "<style>",
+      "closeTag": "</style>",
+      "sources": [
+        "tools/app/styles/style-027.css"
+      ],
+      "output": "assets/styles/app-05.css",
+      "firstInBundle": false
+    },
+    {
+      "id": "style-028",
+      "openTag": "<style>",
+      "closeTag": "</style>",
+      "sources": [
+        "tools/app/styles/style-028.css"
+      ],
+      "output": "assets/styles/app-05.css",
+      "firstInBundle": false
+    },
+    {
+      "id": "style-029",
+      "openTag": "<style>",
+      "closeTag": "</style>",
+      "sources": [
+        "tools/app/styles/style-029.css"
+      ],
+      "output": "assets/styles/app-05.css",
+      "firstInBundle": false
+    },
+    {
+      "id": "style-030",
+      "openTag": "<style>",
+      "closeTag": "</style>",
+      "sources": [
+        "tools/app/styles/style-030.css"
+      ],
+      "output": "assets/styles/app-05.css",
+      "firstInBundle": false
+    },
+    {
+      "id": "style-031",
+      "openTag": "<style>",
+      "closeTag": "</style>",
+      "sources": [
+        "tools/app/styles/style-031.css"
+      ],
+      "output": "assets/styles/app-05.css",
+      "firstInBundle": false
+    },
+    {
+      "id": "style-032",
+      "openTag": "<style>",
+      "closeTag": "</style>",
+      "sources": [
+        "tools/app/styles/style-032.css"
+      ],
+      "output": "assets/styles/app-05.css",
+      "firstInBundle": false
+    },
+    {
+      "id": "style-033",
+      "openTag": "<style>",
+      "closeTag": "</style>",
+      "sources": [
+        "tools/app/styles/style-033.css"
+      ],
+      "output": "assets/styles/app-05.css",
+      "firstInBundle": false
+    },
+    {
+      "id": "style-034",
+      "openTag": "<style>",
+      "closeTag": "</style>",
+      "sources": [
+        "tools/app/styles/style-034.css"
+      ],
+      "output": "assets/styles/app-05.css",
+      "firstInBundle": false
+    },
+    {
+      "id": "style-035",
+      "openTag": "<style>",
+      "closeTag": "</style>",
+      "sources": [
+        "tools/app/styles/style-035.css"
+      ],
+      "output": "assets/styles/app-05.css",
+      "firstInBundle": false
+    },
+    {
+      "id": "style-036",
+      "openTag": "<style>",
+      "closeTag": "</style>",
+      "sources": [
+        "tools/app/styles/style-036.css"
+      ],
+      "output": "assets/styles/app-05.css",
+      "firstInBundle": false
+    },
+    {
+      "id": "style-037",
+      "openTag": "<style>",
+      "closeTag": "</style>",
+      "sources": [
+        "tools/app/styles/style-037.css"
+      ],
+      "output": "assets/styles/app-05.css",
+      "firstInBundle": false
+    },
+    {
+      "id": "style-038",
+      "openTag": "<style>",
+      "closeTag": "</style>",
+      "sources": [
+        "tools/app/styles/style-038.css"
+      ],
+      "output": "assets/styles/app-05.css",
+      "firstInBundle": false
+    },
+    {
+      "id": "style-039",
+      "openTag": "<style>",
+      "closeTag": "</style>",
+      "sources": [
+        "tools/app/styles/style-039.css"
+      ],
+      "output": "assets/styles/app-05.css",
+      "firstInBundle": false
+    },
+    {
+      "id": "style-040",
+      "openTag": "<style id=\"north-wildwood-road-impacts\">",
+      "closeTag": "</style>",
+      "sources": [
+        "tools/app/styles/style-040.css"
+      ],
+      "output": "assets/styles/app-05.css",
+      "firstInBundle": false
+    },
+    {
+      "id": "style-041",
+      "openTag": "<style id=\"shorely-mobile-slider-polish\">",
+      "closeTag": "</style>",
+      "sources": [
+        "tools/app/styles/style-041.css"
+      ],
+      "output": "assets/styles/app-05.css",
+      "firstInBundle": false
+    },
+    {
+      "id": "style-042",
+      "openTag": "<style id=\"shorely-mobile-slider-key-correction\">",
+      "closeTag": "</style>",
+      "sources": [
+        "tools/app/styles/style-042.css"
+      ],
+      "output": "assets/styles/app-05.css",
+      "firstInBundle": false
+    },
+    {
+      "id": "style-043",
+      "openTag": "<style id=\"cape-may-floodmapper-followup-polish\">",
+      "closeTag": "</style>",
+      "sources": [
+        "tools/app/styles/style-043.css"
+      ],
+      "output": "assets/styles/app-05.css",
+      "firstInBundle": false
+    },
+    {
+      "id": "style-044",
+      "openTag": "<style id=\"stone-harbor-final-qa-layout-fixes\">",
+      "closeTag": "</style>",
+      "sources": [
+        "tools/app/styles/style-044.css"
+      ],
+      "output": "assets/styles/app-05.css",
+      "firstInBundle": false
+    },
+    {
+      "id": "style-045",
+      "openTag": "<style id=\"floodmapper-2-final-corrections\">",
+      "closeTag": "</style>",
+      "sources": [
+        "tools/app/styles/style-045.css"
+      ],
+      "output": "assets/styles/app-05.css",
+      "firstInBundle": false
+    },
+    {
+      "id": "style-046",
+      "openTag": "<style id=\"floodmapper-2-observed-key-and-surface-fixes\">",
+      "closeTag": "</style>",
+      "sources": [
+        "tools/app/styles/style-046.css"
+      ],
+      "output": "assets/styles/app-05.css",
+      "firstInBundle": false
+    },
+    {
+      "id": "style-047",
+      "openTag": "<style id=\"north-wildwood-export-readability\">",
+      "closeTag": "</style>",
+      "sources": [
+        "tools/app/styles/style-047.css"
+      ],
+      "output": "assets/styles/app-05.css",
+      "firstInBundle": false
+    },
+    {
+      "id": "style-048",
+      "openTag": "<style id=\"north-wildwood-mobile-qa-20260726\">",
+      "closeTag": "</style>",
+      "sources": [
+        "tools/app/styles/style-048.css"
+      ],
+      "output": "assets/styles/app-05.css",
+      "firstInBundle": false
+    },
+    {
+      "id": "style-049",
+      "openTag": "<style id=\"north-wildwood-return-interval-controls\">",
+      "closeTag": "</style>",
+      "sources": [
+        "tools/app/styles/style-049.css"
+      ],
+      "output": "assets/styles/app-05.css",
+      "firstInBundle": false
+    },
+    {
+      "id": "style-050",
+      "openTag": "<style id=\"north-wildwood-archive-key-tour-mobile-fixes\">",
+      "closeTag": "</style>",
+      "sources": [
+        "tools/app/styles/style-050.css"
+      ],
+      "output": "assets/styles/app-05.css",
+      "firstInBundle": false
+    },
+    {
+      "id": "style-051",
+      "openTag": "<style id=\"north-wildwood-requested-ui-consistency-20260730\">",
+      "closeTag": "</style>",
+      "sources": [
+        "tools/app/styles/style-051.css"
+      ],
+      "output": "assets/styles/app-05.css",
+      "firstInBundle": false
+    },
+    {
+      "id": "style-052",
+      "openTag": "<style id=\"north-wildwood-sidebar-pane-qa-20260802\">",
+      "closeTag": "</style>",
+      "sources": [
+        "tools/app/styles/style-052.css"
+      ],
+      "output": "assets/styles/app-05.css",
+      "firstInBundle": false
+    },
+    {
+      "id": "style-053",
+      "openTag": "<style id=\"north-wildwood-centered-close-controls\">",
+      "closeTag": "</style>",
+      "sources": [
+        "tools/app/styles/style-053.css"
+      ],
+      "output": "assets/styles/app-05.css",
+      "firstInBundle": false
+    },
+    {
+      "id": "style-054",
+      "openTag": "<style id=\"north-wildwood-depth-popup-close-qa-20260802\">",
+      "closeTag": "</style>",
+      "sources": [
+        "tools/app/styles/style-054.css"
+      ],
+      "output": "assets/styles/app-05.css",
+      "firstInBundle": false
+    },
+    {
+      "id": "style-055",
+      "openTag": "<style id=\"north-wildwood-physics-legend\">",
+      "closeTag": "</style>",
+      "sources": [
+        "tools/app/styles/style-055.css"
+      ],
+      "output": "assets/styles/app-05.css",
+      "firstInBundle": false
+    },
+    {
+      "id": "style-056",
+      "openTag": "<style id=\"north-wildwood-title-viewport-containment\">",
+      "closeTag": "</style>",
+      "sources": [
+        "tools/app/styles/style-056.css"
+      ],
+      "output": "assets/styles/app-05.css",
+      "firstInBundle": false
+    },
+    {
+      "id": "style-057",
+      "openTag": "<style id=\"north-wildwood-export-device-layout\">",
+      "closeTag": "</style>",
+      "sources": [
+        "tools/app/styles/style-057.css"
+      ],
+      "output": "assets/styles/app-05.css",
+      "firstInBundle": false
+    },
+    {
+      "id": "style-058",
+      "openTag": "<style id=\"north-wildwood-requested-key-and-export-polish\">",
+      "closeTag": "</style>",
+      "sources": [
+        "tools/app/styles/style-058.css"
+      ],
+      "output": "assets/styles/app-05.css",
+      "firstInBundle": false
+    },
+    {
+      "id": "style-059",
+      "openTag": "<style id=\"north-wildwood-compact-export-panel\">",
+      "closeTag": "</style>",
+      "sources": [
+        "tools/app/styles/style-059.css"
+      ],
+      "output": "assets/styles/app-05.css",
+      "firstInBundle": false
+    },
+    {
+      "id": "style-060",
+      "openTag": "<style id=\"north-wildwood-right-rail-polish-v2\">",
+      "closeTag": "</style>",
+      "sources": [
+        "tools/app/styles/style-060.css"
+      ],
+      "output": "assets/styles/app-05.css",
+      "firstInBundle": false
+    },
+    {
+      "id": "style-061",
+      "openTag": "<style id=\"north-wildwood-native-zoom-suppression-v1\">",
+      "closeTag": "</style>",
+      "sources": [
+        "tools/app/styles/style-061.css"
+      ],
+      "output": "assets/styles/app-05.css",
+      "firstInBundle": false
+    },
+    {
+      "id": "style-062",
+      "openTag": "<style id=\"north-wildwood-3d-compositor-stability-v1\">",
+      "closeTag": "</style>",
+      "sources": [
+        "tools/app/styles/style-062.css"
+      ],
+      "output": "assets/styles/app-05.css",
+      "firstInBundle": false
+    },
+    {
+      "id": "style-063",
+      "openTag": "<style id=\"north-wildwood-depth-legend-v43\">",
+      "closeTag": "</style>",
+      "sources": [
+        "tools/app/styles/style-063.css"
+      ],
+      "output": "assets/styles/app-05.css",
+      "firstInBundle": false
+    },
+    {
+      "id": "style-064",
+      "openTag": "<style id=\"north-wildwood-3d-ui-stability-v47\">",
+      "closeTag": "</style>",
+      "sources": [
+        "tools/app/styles/style-064.css"
+      ],
+      "output": "assets/styles/app-05.css",
+      "firstInBundle": false
+    },
+    {
+      "id": "style-065",
+      "openTag": "<style id=\"north-wildwood-unified-ui-blue-v49\">",
+      "closeTag": "</style>",
+      "sources": [
+        "tools/app/styles/style-065.css"
+      ],
+      "output": "assets/styles/app-05.css",
+      "firstInBundle": false
+    },
+    {
+      "id": "style-066",
+      "openTag": "<style id=\"north-wildwood-responsive-tightening-20260921\">",
+      "closeTag": "</style>",
+      "sources": [
+        "tools/app/styles/style-066.css"
+      ],
+      "output": "assets/styles/app-05.css",
+      "firstInBundle": false
+    },
+    {
+      "id": "style-067",
+      "openTag": "<style id=\"floodmapper-popup-contrast-fix-20260924\">",
+      "closeTag": "</style>",
+      "sources": [
+        "tools/app/styles/style-067.css"
+      ],
+      "output": "assets/styles/app-05.css",
+      "firstInBundle": false
+    },
+    {
+      "id": "style-068",
+      "openTag": "<style id=\"floodmapper-control-pill-contrast-fix-20260924\">",
+      "closeTag": "</style>",
+      "sources": [
+        "tools/app/styles/style-068.css"
+      ],
+      "output": "assets/styles/app-05.css",
+      "firstInBundle": false
+    },
+    {
+      "id": "style-069",
+      "openTag": "<style id=\"shorelysafe-fleet-ui-20261008\">",
+      "closeTag": "</style>",
+      "sources": [
+        "tools/app/styles/style-069.css"
+      ],
+      "output": "assets/styles/app-05.css",
+      "firstInBundle": false
+    },
+    {
+      "id": "style-070",
+      "openTag": "<style id=\"north-wildwood-depth-popup-layout-20261013\">",
+      "closeTag": "</style>",
+      "sources": [
+        "tools/app/styles/style-070.css"
+      ],
+      "output": "assets/styles/app-05.css",
+      "firstInBundle": false
+    },
+    {
+      "id": "style-071",
+      "openTag": "<style id=\"county-desktop-hotfix-20261015\">",
+      "closeTag": "</style>",
+      "sources": [
+        "tools/app/styles/style-071.css"
+      ],
+      "output": "assets/styles/app-05.css",
+      "firstInBundle": false
+    },
+    {
+      "id": "style-072",
+      "openTag": "<style id=\"county-stable-loading-20261015\">",
+      "closeTag": "</style>",
+      "sources": [
+        "tools/app/styles/style-072.css"
+      ],
+      "output": "assets/styles/app-05.css",
+      "firstInBundle": false
+    },
+    {
+      "id": "style-073",
+      "openTag": "<style id=\"shorely-timeline-frame-alignment-20261019\">",
+      "closeTag": "</style>",
+      "sources": [
+        "tools/app/styles/style-073.css"
+      ],
+      "output": "assets/styles/app-05.css",
+      "firstInBundle": false
+    },
+    {
+      "id": "style-074",
+      "openTag": "<style id=\"floodmapper-no-loading-interstitial-20261021\">",
+      "closeTag": "</style>",
+      "sources": [
+        "tools/app/styles/style-074.css"
+      ],
+      "output": "assets/styles/app-05.css",
+      "firstInBundle": false
+    },
+    {
+      "id": "style-075",
+      "openTag": "<style id=\"floodmapper-past-calendar-fit-20261021\">",
+      "closeTag": "</style>",
+      "sources": [
+        "tools/app/styles/style-075.css"
+      ],
+      "output": "assets/styles/app-05.css",
+      "firstInBundle": false
+    },
+    {
+      "id": "style-076",
+      "openTag": "<style id=\"mapper-size-only-20261021\">",
+      "closeTag": "</style>",
+      "sources": [
+        "tools/app/styles/style-076.css"
+      ],
+      "output": "assets/styles/app-05.css",
+      "firstInBundle": false
+    },
+    {
+      "id": "style-077",
+      "openTag": "<style id=\"northwild-title-containment-20261021\">",
+      "closeTag": "</style>",
+      "sources": [
+        "tools/app/styles/style-077.css"
+      ],
+      "output": "assets/styles/app-05.css",
+      "firstInBundle": false
+    },
+    {
+      "id": "style-078",
+      "openTag": "<style id=\"floodmapper-touch-readability-20261021\">",
+      "closeTag": "</style>",
+      "sources": [
+        "tools/app/styles/style-078.css"
+      ],
+      "output": "assets/styles/app-05.css",
+      "firstInBundle": false
+    },
+    {
+      "id": "style-079",
+      "openTag": "<style id=\"northwild-title-controls-20261023\">",
+      "closeTag": "</style>",
+      "sources": [
+        "tools/app/styles/style-079.css"
+      ],
+      "output": "assets/styles/app-05.css",
+      "firstInBundle": false
+    },
+    {
+      "id": "style-080",
+      "openTag": "<style id=\"north-wildwood-camera-viewport-20261023\">",
+      "closeTag": "</style>",
+      "sources": [
+        "tools/app/styles/style-080.css"
+      ],
+      "output": "assets/styles/app-05.css",
+      "firstInBundle": false
+    },
+    {
+      "id": "style-081",
+      "openTag": "<style id=\"north-wildwood-export-footer-20261023\">",
+      "closeTag": "</style>",
+      "sources": [
+        "tools/app/styles/style-081.css"
+      ],
+      "output": "assets/styles/app-05.css",
+      "firstInBundle": false
+    }
+  ],
+  "scripts": [
+    {
+      "id": "script-001",
+      "openTag": "<script id=\"floodmapper-startup-20261002\">",
+      "closeTag": "</script>",
+      "sources": [
+        "tools/app/startup.js"
+      ],
+      "output": "assets/app/startup.js"
+    },
+    {
+      "id": "script-002",
+      "openTag": "<script>",
+      "closeTag": "</script>",
+      "sources": [
+        "tools/app/mobile-class.js"
+      ],
+      "output": "assets/app/mobile-class.js"
+    },
+    {
+      "id": "script-003",
+      "openTag": "<script>",
+      "closeTag": "</script>",
+      "sources": [
+        "tools/app/platform.js"
+      ],
+      "output": "assets/app/platform.js"
+    },
+    {
+      "id": "script-004",
+      "openTag": "<script>",
+      "closeTag": "</script>",
+      "sources": [
+        "tools/app/runtime/00-configuration.js",
+        "tools/app/runtime/01-physics-manifests.js",
+        "tools/app/runtime/02-data-and-datums.js",
+        "tools/app/runtime/03-time-series.js",
+        "tools/app/runtime/04-observation-archives.js",
+        "tools/app/runtime/05-presentation.js",
+        "tools/app/runtime/06-inundation-catalog.js",
+        "tools/app/runtime/07-image-loading.js",
+        "tools/app/runtime/08-filling-and-drainage.js",
+        "tools/app/runtime/09-raster-lifecycle.js",
+        "tools/app/runtime/10-map-geometry-and-layers.js",
+        "tools/app/runtime/11-export-selection.js",
+        "tools/app/runtime/12-export-date-editors.js",
+        "tools/app/runtime/13-export-range.js",
+        "tools/app/runtime/14-export-calendars.js",
+        "tools/app/runtime/15-export-capture.js",
+        "tools/app/runtime/16-export-map.js",
+        "tools/app/runtime/17-export-encoding.js",
+        "tools/app/runtime/18-flood-frame-rendering.js",
+        "tools/app/runtime/19-observed-history.js",
+        "tools/app/runtime/20-timeline-rendering.js",
+        "tools/app/runtime/21-forecast-and-observed-loading.js",
+        "tools/app/runtime/22-calendar-and-modes.js",
+        "tools/app/runtime/23-refresh-and-playback.js",
+        "tools/app/runtime/24-alerts-and-projections.js",
+        "tools/app/runtime/25-structures-and-parcels.js",
+        "tools/app/runtime/26-depth-queries.js",
+        "tools/app/runtime/27-mobile-and-address.js",
+        "tools/app/runtime/28-tutorial-and-events.js"
+      ],
+      "output": "assets/app/runtime.js"
+    },
+    {
+      "id": "script-005",
+      "openTag": "<script>",
+      "closeTag": "</script>",
+      "sources": [
+        "tools/app/calendar-dialog.js"
+      ],
+      "output": "assets/app/calendar-dialog.js"
+    },
+    {
+      "id": "script-006",
+      "openTag": "<script>",
+      "closeTag": "</script>",
+      "sources": [
+        "tools/app/alert-interaction.js"
+      ],
+      "output": "assets/app/alert-interaction.js"
+    },
+    {
+      "id": "script-007",
+      "openTag": "<script>",
+      "closeTag": "</script>",
+      "sources": [
+        "tools/app/town-config.js"
+      ],
+      "output": "assets/app/town-config.js"
+    },
+    {
+      "id": "script-008",
+      "openTag": "<script id=\"shorelysafeWebcamsScript\">",
+      "closeTag": "</script>",
+      "sources": [
+        "tools/app/webcams.js"
+      ],
+      "output": "assets/app/webcams.js"
+    },
+    {
+      "id": "script-009",
+      "openTag": "<script id=\"county-buildings-20261015\">",
+      "closeTag": "</script>",
+      "sources": [
+        "tools/app/county-buildings.js"
+      ],
+      "output": "assets/app/county-buildings.js"
+    },
+    {
+      "id": "script-010",
+      "openTag": "<script id=\"shorelysafe-visible-brand-controller-20261015\">",
+      "closeTag": "</script>",
+      "sources": [
+        "tools/app/branding.js"
+      ],
+      "output": "assets/app/branding.js"
+    },
+    {
+      "id": "script-011",
+      "openTag": "<script id=\"floodmapper-unified-controller-20261017\" data-ui-sha256=\"3668b4912f612ae595cb1ee4e11fdf9aa7a80ccfbdbfff78d243e7714470baf7\">",
+      "closeTag": "</script>",
+      "sources": [
+        "tools/app/unified-controller.js"
+      ],
+      "output": "assets/app/unified-controller.js"
+    }
+  ]
+}

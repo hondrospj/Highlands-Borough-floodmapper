@@ -1,0 +1,235 @@
+
+#downloadModal .download-modal-card{
+  width:min(720px, calc(100vw - 32px)) !important;
+}
+
+#exportTimePicker.export-simple-picker{
+  display:grid !important;
+  gap:12px !important;
+  padding:14px !important;
+  contain:none !important;
+  overflow:visible !important;
+}
+
+#downloadRangeFields.export-simple-range-grid{
+  display:grid !important;
+  grid-template-columns:repeat(2, minmax(0, 1fr)) !important;
+  gap:12px !important;
+  align-items:start !important;
+}
+
+#downloadRangeFields.export-simple-range-grid[hidden]{
+  display:none !important;
+}
+
+.export-simple-datetime-field{
+  display:grid !important;
+  gap:7px !important;
+  min-width:0 !important;
+  color:var(--muted) !important;
+  font-size:11px !important;
+  font-weight:900 !important;
+  letter-spacing:.08em !important;
+  text-transform:uppercase !important;
+}
+
+.export-date-time-controls{
+  display:grid;
+  grid-template-columns:minmax(0, 1.45fr) minmax(118px, .85fr);
+  gap:8px;
+  min-width:0;
+}
+
+.export-date-control{
+  position:relative;
+  min-width:0;
+}
+
+.export-date-text-input,
+.export-time-select{
+  display:block !important;
+  width:100% !important;
+  min-width:0 !important;
+  min-height:50px !important;
+  border:1px solid rgba(191,219,254,.22) !important;
+  border-radius:15px !important;
+  background:rgba(255,255,255,.055) !important;
+  color:#eaf0ff !important;
+  font:800 15px/1.2 Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
+  color-scheme:dark !important;
+  outline:none !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.04) !important;
+  text-transform:none !important;
+  letter-spacing:0 !important;
+}
+
+.export-date-text-input{
+  padding:0 48px 0 13px !important;
+  font-variant-numeric:tabular-nums;
+}
+
+#downloadModal .export-date-text-input.modeled-date-locked{
+  padding:0 13px !important;
+  background:rgba(255,255,255,.035) !important;
+  border-color:rgba(191,219,254,.14) !important;
+  color:#c7d2fe !important;
+  -webkit-text-fill-color:#c7d2fe !important;
+  text-align:center;
+  text-transform:lowercase !important;
+  cursor:not-allowed;
+  opacity:1;
+}
+
+.export-time-select{
+  padding:0 34px 0 12px !important;
+  cursor:pointer;
+  font-variant-numeric:tabular-nums;
+}
+
+#downloadModal .export-date-text-input,
+#downloadModal .export-time-select{
+  -webkit-text-fill-color:#eaf0ff !important;
+}
+
+#downloadModal .export-time-select option,
+#downloadModal .export-time-select optgroup,
+#downloadModal .download-field select option,
+#downloadModal .export-wheel-field select option{
+  background-color:#ffffff !important;
+  color:#0f172a !important;
+  -webkit-text-fill-color:#0f172a !important;
+}
+
+#downloadModal .export-time-select option:checked{
+  background-color:#dbeafe !important;
+  color:#0f172a !important;
+  -webkit-text-fill-color:#0f172a !important;
+}
+
+#downloadModal .export-native-date-picker{
+  background-color:#ffffff !important;
+  color:#0f172a !important;
+  -webkit-text-fill-color:#0f172a !important;
+  color-scheme:light !important;
+}
+
+.export-date-text-input:focus,
+.export-time-select:focus{
+  border-color:#bfdbfe !important;
+  box-shadow:0 0 0 3px rgba(96,165,250,.16), inset 0 1px 0 rgba(255,255,255,.06) !important;
+}
+
+.export-date-text-input.is-invalid{
+  border-color:#fca5a5 !important;
+  box-shadow:0 0 0 3px rgba(248,113,113,.14) !important;
+}
+
+.export-calendar-button{
+  position:absolute;
+  top:50%;
+  right:7px;
+  width:38px;
+  min-width:38px;
+  height:38px;
+  min-height:38px;
+  padding:8px;
+  transform:translateY(-50%);
+  border:0;
+  border-radius:10px;
+  background:transparent;
+  color:#eaf0ff;
+  box-shadow:none;
+  z-index:2;
+}
+
+.export-calendar-button:hover:not(:disabled),
+.export-calendar-button:focus-visible{
+  transform:translateY(-50%);
+  background:rgba(255,255,255,.08);
+  box-shadow:none;
+  outline:none;
+}
+
+.export-calendar-button svg{
+  display:block;
+  width:100%;
+  height:100%;
+}
+
+.export-native-date-picker{
+  position:fixed;
+  left:-10000px;
+  top:0;
+  width:1px;
+  height:1px;
+  margin:0;
+  padding:0;
+  border:0;
+  opacity:.001;
+  color-scheme:dark;
+}
+
+@media (pointer:coarse){
+  .export-calendar-button{
+    pointer-events:auto;
+  }
+
+  .export-native-date-picker{
+    position:absolute;
+    left:auto;
+    right:0;
+    top:0;
+    width:48px;
+    height:100%;
+    opacity:.001;
+    cursor:pointer;
+    pointer-events:none;
+    z-index:1;
+  }
+}
+
+#downloadStartInput,
+#downloadEndInput{
+  display:none !important;
+}
+
+#exportDataRangeText.export-data-range{
+  margin:0 !important;
+  padding:0 2px 2px !important;
+}
+
+.playback-still-there-card{
+  width:min(460px, calc(100vw - 32px));
+}
+
+.playback-still-there-actions{
+  display:grid;
+  grid-template-columns:1fr 1.4fr;
+  gap:10px;
+  margin-top:18px;
+}
+
+.playback-still-there-actions button{
+  min-height:46px;
+}
+
+@media (max-width:720px){
+  #downloadRangeFields.export-simple-range-grid{
+    grid-template-columns:1fr !important;
+    gap:10px !important;
+  }
+
+  .export-date-time-controls{
+    grid-template-columns:minmax(0, 1.35fr) minmax(112px, .85fr);
+  }
+
+  .export-date-text-input,
+  .export-time-select{
+    min-height:50px !important;
+    font-size:16px !important;
+  }
+
+  .playback-still-there-actions{
+    grid-template-columns:1fr;
+  }
+}

@@ -1,0 +1,846 @@
+
+<!doctype html>
+<!-- The app owns timeline metadata and legend placement; skip the hosting legacy controller. -->
+<html lang="en" data-nww-avalon-timeline data-nww-mobile-layout data-ss-ui-ready="app">
+<head>
+<template id="floodmapperTownData"><!-- floodmapper:profile --></template>
+<link rel="stylesheet" href="./assets/north-wildwood-font.css?v=44bc78225f5bedbc">
+<link rel="preconnect" href="https://hondrospj.github.io" crossorigin>
+<!-- nww:style:style-001 -->
+<!-- nww:style:style-002 -->
+
+
+
+<!-- nww:style:style-003 -->
+<!-- nww:style:style-004 -->
+<!-- nww:style:style-005 -->
+<!-- Keep the same layer order on GitHub Pages and CupaJoe. -->
+<!-- nww:style:style-006 -->
+<!-- Shorely Safe browser-tab branding -->
+<link rel="icon" type="image/png" href="./assets/shorelysafe-favicon-20261008.png" />
+<link rel="stylesheet" href="assets/north-wildwood-loading.css?v=20261027-lines1">
+
+
+<!-- Keep optional work outside the initial flood-map loading path. -->
+<link rel="preconnect" href="https://unpkg.com" crossorigin>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="preconnect" href="https://basemaps.arcgis.com" crossorigin>
+<link rel="preconnect" href="https://floodmapperv1.b-cdn.net" crossorigin>
+<!-- nww:script:script-001 -->
+
+<!-- nww:style:style-007 -->
+
+<link rel="stylesheet" href="assets/avalon-mobile.css?v=20261021-tablet1">
+<link rel="stylesheet" href="assets/north-wildwood-timeline.css?v=20261021-tablet1">
+<!-- nww:script:script-002 -->
+
+<meta charset="utf-8" />
+  <title><!-- floodmapper:page-title --></title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <!-- nww:script:script-003 -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+  <!-- nww:style:style-008 -->
+
+  <!-- nww:style:style-009 -->
+
+
+<!-- nww:style:style-010 -->
+
+
+  <!-- nww:style:style-011 -->
+  <link rel="stylesheet" href="./assets/map-status.css?v=691b3e74990d9d20" />
+<link rel="stylesheet" href="assets/north-wildwood-mobile.css?v=20261026-holistic1">
+<!-- nww:style:style-012 -->
+<link rel="stylesheet" href="assets/north-wildwood-layers.css?v=20261021-tablet1">
+<link rel="stylesheet" href="assets/north-wildwood-controls.css?v=20261021-tablet1">
+<link rel="stylesheet" href="assets/north-wildwood-calendar.css?v=20261021-tablet1">
+<link rel="stylesheet" href="assets/export-date-time-picker.css?v=9a8f640254cba6b4">
+<link rel="stylesheet" href="assets/north-wildwood-type.css?v=20261021-tablet1">
+<!-- Load the complete layout before rendering any controls. -->
+<!-- nww:style:style-013 -->
+<!-- nww:style:style-014 -->
+<!-- nww:style:style-015 -->
+<!-- nww:style:style-016 -->
+<!-- nww:style:style-017 -->
+<!-- nww:style:style-018 -->
+<!-- nww:style:style-019 -->
+<!-- nww:style:style-020 -->
+<!-- nww:style:style-021 -->
+<!-- nww:style:style-022 -->
+<!-- nww:style:style-023 -->
+<!-- nww:style:style-024 -->
+<!-- nww:style:style-025 -->
+<!-- nww:style:style-026 -->
+<!-- nww:style:style-027 -->
+<!-- nww:style:style-028 -->
+<!-- nww:style:style-029 -->
+<!-- nww:style:style-030 -->
+<!-- nww:style:style-031 -->
+<!-- nww:style:style-032 -->
+<!-- nww:style:style-033 -->
+<!-- nww:style:style-034 -->
+<!-- nww:style:style-035 -->
+<!-- nww:style:style-036 -->
+<!-- nww:style:style-037 -->
+<!-- nww:style:style-038 -->
+<!-- nww:style:style-039 -->
+<!-- nww:style:style-040 -->
+<!-- nww:style:style-041 -->
+<!-- nww:style:style-042 -->
+<!-- nww:style:style-043 -->
+<!-- nww:style:style-044 -->
+<!-- nww:style:style-045 -->
+<!-- nww:style:style-046 -->
+<!-- nww:style:style-047 -->
+<!-- nww:style:style-048 -->
+<!-- nww:style:style-049 -->
+<!-- nww:style:style-050 -->
+<!-- nww:style:style-051 -->
+
+<!-- nww:style:style-052 -->
+<!-- nww:style:style-053 -->
+<!-- nww:style:style-054 -->
+<!-- nww:style:style-055 -->
+<!-- nww:style:style-056 -->
+<!-- nww:style:style-057 -->
+<!-- nww:style:style-058 -->
+<!-- nww:style:style-059 -->
+<!-- nww:style:style-060 -->
+<!-- nww:style:style-061 -->
+<!-- nww:style:style-062 -->
+<!-- nww:style:style-063 -->
+<!-- nww:style:style-064 -->
+<!-- nww:style:style-065 -->
+
+<!-- nww:style:style-066 -->
+<!-- nww:style:style-067 -->
+<!-- nww:style:style-068 -->
+
+<!-- nww:style:style-069 -->
+<!-- nww:style:style-070 -->
+<!-- nww:style:style-071 -->
+<!-- nww:style:style-072 -->
+<!-- nww:style:style-073 -->
+
+<!-- nww:style:style-074 -->
+<!-- nww:style:style-075 -->
+
+
+<!-- nww:style:style-076 -->
+<!-- nww:style:style-077 -->
+<!-- nww:style:style-078 -->
+<!-- nww:style:style-079 -->
+<!-- nww:style:style-080 -->
+<!-- nww:style:style-081 -->
+<style id="floodmapper-quiet-loading-20261119">
+/* Keep request/readiness state and failure recovery; omit loading presentation. */
+body:not([data-site-loader$="error"]):not([data-site-loader$="failed"]) #nwSiteLoader{display:none!important}
+html body.nw-app-loading #app[inert]{filter:none!important;animation:none!important}
+html body.nw-app-loading :is(#app,#mobileControlsToggle,#legendDock):not([inert]),html body.nw-app-loading #topBanner{display:none!important;opacity:0!important;visibility:hidden!important;pointer-events:none!important}
+#nwSiteLoader::before,#nwSiteLoader::after,.nw-loader-spinner,.nw-loader-progress,.flood-history-spinner,.download-btn-spinner{display:none!important;animation:none!important}
+.flood-history-loading{display:none!important}
+#stageSubText:empty,#floodFrameStatus:empty{display:none!important}
+body[data-road-impacts-state="loading"] #roadImpactsStatus{display:none!important}
+#downloadModal #exportPreview[data-state="loading"] .export-preview-image::after,#exportPreview[data-state="loading"] #exportPreviewStatus{display:none!important;animation:none!important}
+body:has(#contoursToggle[aria-busy="true"]) #contoursStatus{display:none!important}
+.nww-picker-message:empty{display:none!important}
+</style>
+</head>
+<body data-floodmapper-loading-ui="quiet-20261119" data-county-viewport="20261017" data-county-mobile="20261015" data-county-fix="20261015" class="nw-app-loading" data-flood-frame-cache="bounded-composites-20261008" data-flood-frame-swap="decode-before-swap-20261008" data-shorelysafe-ui="20261017" data-flood-frame-resilience="retain-retry-20261013" data-floodmapper-reference="20261017" data-fleet-viewport-existing="true" data-floodmapper-unified="20261017.3">
+  <div id="nwSiteLoader" role="status" aria-live="polite" aria-label="Map status">
+    <div class="nw-loader-card">
+      <div class="nw-loader-spinner" aria-hidden="true"></div>
+      <div class="nw-loader-eyebrow">ShorelySafe</div>
+      <h1><!-- floodmapper:page-title --></h1>
+      <p id="nwLoaderStatus" class="nw-loader-status"></p>
+      <div class="nw-loader-progress" aria-hidden="true"><span id="nwLoaderProgress"></span></div>
+      <button id="nwLoaderRetry" type="button" hidden>Retry loading map</button>
+    </div>
+  </div>
+  <div id="floodFrameStatus" role="status" aria-live="polite" hidden></div>
+  <div id="topBanner">
+    <div class="banner-text">
+      <div class="banner-eyebrow">Flood alert <span id="bannerCount">0 active</span></div>
+      <div id="bannerTitle" class="banner-title">Checking alerts</div>
+      <div id="bannerMeta" class="banner-meta"></div>
+    </div>
+    <button id="topBannerCloseBtn" class="centered-close-control" type="button" aria-label="Close flood alert">×</button>
+  </div>
+
+  <div id="app">
+    <div id="mapTitleBadge" class="shorely-title-badge" aria-hidden="true">
+      <span id="mapTitleText" class="shorely-title-text"><!-- floodmapper:page-title --></span>
+      <img id="mapTitlePartnerLogo" class="shorely-title-logo shorely-title-logo-shorelysafe" src="" alt="" loading="eager" decoding="async" style="display:none;" />
+    </div>
+    <aside id="leftPanel">
+      <button id="mobileControlsClose" class="centered-close-control" type="button" aria-label="Close controls" title="Close controls">&times;</button>
+      <section class="panel-card compact-card data-source-card">
+        <div class="section-title">
+          <div class="title-with-help">
+            <h2>Flood Data</h2>
+            <button id="dataSourceHelpBtn" class="help-btn" type="button" aria-expanded="false" aria-controls="infoModal" title="Explain flood data">?</button>
+          </div>
+          <span id="dataModePill" class="nww-status-value" hidden>Forecast</span>
+        </div>
+        <div class="button-grid-2 data-source-options">
+          <button id="forecastDataBtn" class="active" type="button" aria-pressed="true">Forecast</button>
+          <button id="observedDataBtn" type="button" aria-pressed="false">Past</button>
+          <button id="returnIntervalDataBtn" type="button" aria-label="Modeled flood scenarios" aria-pressed="false">Modeled Floods</button>
+        </div>
+      </section>
+
+      <section id="forecastScenarioCard" class="panel-card compact-card forecast-scenario-card">
+        <div class="section-title">
+          <div class="title-with-help">
+            <h2>Forecast range</h2>
+            <button id="forecastTypeHelpBtn" class="help-btn" type="button" aria-expanded="false" aria-controls="infoModal" title="Explain forecast type">?</button>
+          </div>
+          <span id="forecastScenarioPill" class="nww-status-value" hidden>Mean</span>
+        </div>
+        <div class="button-grid-3">
+          <button id="forecastLowBtn" type="button" data-scenario="lowEnd">Lower End</button>
+          <button id="forecastMeanBtn" class="active" type="button" data-scenario="mean">Mean</button>
+          <button id="forecastHighBtn" type="button" data-scenario="highEnd">Upper End</button>
+        </div>
+      </section>
+
+      <section id="returnIntervalCard" class="panel-card compact-card return-interval-card">
+        <div class="section-title">
+          <div class="title-with-help">
+            <h2>How Often?</h2>
+            <button id="returnIntervalHelpBtn" class="help-btn" type="button" aria-expanded="false" aria-controls="infoModal" title="Explain modeled floods">?</button>
+          </div>
+          <span id="returnIntervalPill" class="nww-status-value" hidden>Every 10 Years</span>
+        </div>
+        <div class="return-interval-grid" role="group" aria-label="Choose a modeled flood">
+          <button id="return1Btn" type="button" data-return-years="1" aria-label="Every year modeled flood">1</button>
+          <button id="return2Btn" type="button" data-return-years="2" aria-label="Every 2 years modeled flood">2</button>
+          <button id="return5Btn" type="button" data-return-years="5" aria-label="Every 5 years modeled flood">5</button>
+          <button id="return10Btn" class="active" type="button" data-return-years="10" aria-label="Every 10 years modeled flood">10</button>
+          <button id="return20Btn" type="button" data-return-years="20" aria-label="Every 20 years modeled flood">20</button>
+          <button id="return50Btn" type="button" data-return-years="50" aria-label="Every 50 years modeled flood">50</button>
+          <button id="return100Btn" type="button" data-return-years="100" aria-label="Every 100 years modeled flood">100</button>
+          <button id="return200Btn" type="button" data-return-years="200" aria-label="Every 200 years modeled flood">200</button>
+          <button id="return500Btn" type="button" data-return-years="500" aria-label="Every 500 years modeled flood">500</button>
+          <button id="return1000Btn" type="button" data-return-years="1000" aria-label="Every 1,000 years modeled flood">1,000</button>
+          <button id="return2000Btn" type="button" data-return-years="2000" aria-label="Every 2,000 years modeled flood">2,000</button>
+          <button id="return5000Btn" type="button" data-return-years="5000" aria-label="Every 5,000 years modeled flood">5,000</button>
+          <button id="return10000Btn" type="button" data-return-years="10000" aria-label="Every 10,000 years modeled flood">10,000</button>
+        </div>
+      </section>
+
+      <section class="panel-card compact-card overlay-card">
+        <div class="section-title">
+          <div class="title-with-help">
+            <h2>Overlay</h2>
+            <button id="overlayHelpBtn" class="help-btn" type="button" aria-expanded="false" aria-controls="infoModal" title="Explain overlays">?</button>
+          </div>
+          <span id="overlayModePill" class="nww-status-value" hidden>Flood Depth</span>
+        </div>
+        <div class="button-grid-2">
+          <button id="depthModeBtn" class="active" type="button" aria-pressed="true">Flood Depth</button>
+          <button id="dynamicModeBtn" type="button" aria-pressed="false">Flood Stages</button>
+        </div>
+      </section>
+
+      <section class="panel-card compact-card datum-card">
+        <div class="section-title">
+          <div class="title-with-help">
+            <h2>Datum</h2>
+            <button id="datumHelpBtn" class="help-btn" type="button" aria-expanded="false" aria-controls="datumModal" title="Explain datum">?</button>
+          </div>
+          <span id="datumPill" class="nww-status-value" hidden>MLLW</span>
+        </div>
+        <div class="segmented-control" role="group" aria-label="Vertical datum">
+          <button id="datumMllwBtn" type="button" class="active" data-datum="mllw" aria-pressed="true">MLLW</button>
+          <button id="datumNavd88Btn" type="button" data-datum="navd88" aria-pressed="false">NAVD88</button>
+        </div>
+      </section>
+
+      <section class="panel-card compact-card opacity-card">
+        <div class="section-title">
+          <h2>Overlay opacity</h2>
+        </div>
+        <div class="control-row opacity-control">
+          <input id="opacitySlider" type="range" min="1" max="100" value="75" step="1" aria-label="Flood overlay opacity" aria-valuetext="75 percent" />
+          <output id="opacityText" for="opacitySlider">75%</output>
+        </div>
+      </section>
+
+      <section id="timelineIntervalCard" class="panel-card compact-card timeline-resolution-card">
+        <div class="section-title">
+          <div class="title-with-help">
+            <h2>Interval</h2>
+            <button id="timelineDetailHelpBtn" class="help-btn" type="button" aria-expanded="false" aria-controls="infoModal" title="Explain timeline interval">?</button>
+          </div>
+        </div>
+        <div id="timelineIntervalToggle" class="timeline-interval-toggle" role="group" aria-label="Timeline interval">
+          <button id="intervalHourBtn" class="active" type="button" data-interval-minutes="60" aria-pressed="true">Hourly</button>
+          <button id="intervalQuarterBtn" type="button" data-interval-minutes="15" aria-pressed="false">15-Min</button>
+          <button id="intervalDailyBtn" type="button" data-interval-minutes="1440" aria-pressed="false">Daily Max</button>
+        </div>
+      </section>
+
+        <section id="legendDock" class="rail-card legend-card left-lower-legend-card panel-card compact-card" data-user-moved="1" data-legend-mode="depth" aria-label="Map key">
+          <div id="legendHeader" class="legend-header" title="Legend">
+            <div class="legend-header-text">
+              <h2 id="legendTitle" class="legend-title">Flood Depth</h2>
+              <p id="legendSub" class="legend-sub"></p>
+            </div>
+            <div class="legend-header-actions">
+              <button id="legendHelpBtn" class="help-btn legend-help-btn" type="button" aria-expanded="false" aria-controls="infoModal" title="Explain current map key">?</button>
+            </div>
+          </div>
+          <div id="legendBody" class="legend-body">
+            <div id="legendList" class="legend-list">
+              <div class="depth-legend-scale" aria-label="Uncertainty areas followed by connected modeled flood depth from shallow to deep">
+                <div class="depth-legend-labels"><span>Uncertain</span><span>Shallow</span><span>Deep</span></div>
+                <div class="depth-legend-gradient" aria-hidden="true"></div>
+              </div>
+            </div>
+            <div id="legendNote" class="legend-note"></div>
+          </div>
+        </section>
+
+
+      <section class="panel-card snapshot-card">
+        <div class="section-title center-title">
+          <h2>Snapshot</h2>
+        </div>
+        <div class="stat-grid">
+          <div class="stat-box">
+            <div class="stat-label">Time</div>
+            <div id="timeText" class="stat-value">--</div>
+            <div id="timeSubText" class="stat-sub">--</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-label">Water level</div>
+            <div id="stageText" class="stat-value">--</div>
+            <div id="stageSubText" class="stat-sub">MLLW</div>
+          </div>
+        </div>
+        <div hidden>
+          <div id="selectedText">--</div>
+          <div id="selectedSubText"></div>
+        </div>
+      </section>
+
+      <section class="panel-card mobile-top-tides-card">
+        <div class="section-title center-title">
+          <h2>Top 10 Highest Floods</h2>
+        </div>
+        <div id="topTideListMobile" class="top-tide-list top-tide-list-mobile"></div>
+
+      </section>
+
+      <section id="calendarCard" class="panel-card calendar-card">
+        <div class="section-title">
+          <h2>Past Date</h2>
+          <button id="observedCalendarOpenBtn" type="button" aria-haspopup="dialog" aria-expanded="false" aria-controls="observedCalendarModal"><svg class="nww-calendar-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4M17 3v4M3 11h18M7 15h3M14 15h3"/></svg><span>Choose date</span></button>
+        </div>
+
+        <div class="day-nav">
+          <button id="prevDayBtn" type="button" class="calendar-nav-btn" aria-label="Previous observed day">‹</button>
+          <div id="dayNavCenter" class="day-nav-center"><input id="observedDateInput" class="observed-date-input" type="text" inputmode="numeric" autocomplete="off" spellcheck="false" aria-label="Type observed date" placeholder="Apr 19, 2026" /></div>
+          <button id="nextDayBtn" type="button" class="calendar-nav-btn" aria-label="Next observed day">›</button>
+        </div>
+
+      </section>
+    </aside>
+<main id="mapWrap">
+      <div id="map"></div>
+      <div id="map3d" role="region" aria-label="Interactive 3D <!-- floodmapper:town-name --> flood map"></div>
+      <div id="map3dStatus" role="status">3D terrain ×4</div>
+      <output id="map3dDiagnostics" hidden aria-hidden="true"></output>
+      <div id="mapClickModeControl" class="map-click-mode-control" role="group" aria-label="Choose what happens when you tap the map" hidden>
+        <button id="mapClickBuildingBtn" type="button" data-map-click-mode="building" aria-label="Building Info" aria-pressed="true">Building Info</button>
+        <button id="mapClickParcelBtn" type="button" data-map-click-mode="parcel" aria-pressed="false" hidden>Parcel Info</button>
+        <button id="mapClickDepthBtn" type="button" data-map-click-mode="depth" aria-label="Flood Depth" aria-pressed="false">Flood Depth</button>
+      </div>
+<aside id="rightRail" class="map-floating" data-ss-pane-fit="1" data-ss-pane-dense="1" style="--ss-pane-height:calc(100dvh - 156px)">
+        <section class="rail-card right-logo-card" aria-label="Client logo">
+          <a id="rightLogoLink" class="right-logo-link" href="#" target="_blank" rel="noopener noreferrer" aria-label="Visit partner site">
+            <img id="rightRailLogo" class="shorelysafe-logo right-rail-logo" src="" alt="" loading="eager" decoding="async" style="display:none;" />
+          </a>
+        </section>
+
+        <button id="mapperTutorialBtn" class="mapper-tutorial-launch mapper-tutorial-launch-rail" type="button">Take the FloodMapper tour</button>
+
+        <section class="rail-card layers-card nww-layers-card">
+          <div class="rail-head">
+            <div>
+              <h3>Layers</h3>
+            </div>
+          </div>
+          <div class="layer-list">
+            <div class="layer-item">
+              <div id="satelliteToggle" class="toggle" role="switch" tabindex="0" aria-checked="false" aria-label="Show satellite imagery"></div>
+              <div class="layer-meta title-with-help">
+                <div class="layer-name">Satellite</div>
+                <button class="help-btn" type="button" data-layer-help="satellite" aria-label="About Satellite" aria-haspopup="dialog" aria-controls="infoModal">?</button>
+              </div>
+            </div>
+            <div class="layer-item">
+              <div id="buildingsToggle" class="toggle" role="switch" tabindex="0" aria-checked="false" aria-label="Show buildings above floodwater"></div>
+              <div class="layer-meta title-with-help">
+                <div class="layer-name">Buildings</div>
+                <button class="help-btn" type="button" data-layer-help="buildings" aria-label="About Buildings" aria-haspopup="dialog" aria-controls="infoModal">?</button>
+              </div>
+            </div>
+            <div class="layer-item">
+              <div id="parcelsToggle" class="toggle" role="switch" tabindex="0" aria-checked="false" aria-label="Show parcels"></div>
+              <div class="layer-meta title-with-help">
+                <div class="layer-name">Parcels</div>
+                <button class="help-btn" type="button" data-layer-help="parcels" aria-label="About Parcels" aria-haspopup="dialog" aria-controls="infoModal">?</button>
+              </div>
+            </div>
+
+            <div class="layer-item">
+              <div id="nsiStructuresToggle" class="toggle" role="switch" tabindex="0" aria-checked="false" aria-label="Show structural impacts: garage, crawlspace, first floor"></div>
+              <div class="layer-meta title-with-help">
+                <div class="layer-name">Structural Impacts</div>
+                <button class="help-btn" type="button" data-layer-help="structuralImpacts" aria-label="About Structural Impacts" aria-haspopup="dialog" aria-controls="infoModal">?</button>
+              </div>
+            </div>
+            <div class="layer-item">
+              <div id="roadImpactsToggle" class="toggle" role="switch" tabindex="0" aria-checked="false" aria-label="Show roads with 6+ inches of water" title="Highlight roads with more than 0.5 ft of modeled water at the selected time"></div>
+              <div class="layer-meta title-with-help">
+                <div class="layer-name">Roads with 6+ Inches of Water</div>
+                <button class="help-btn" type="button" data-layer-help="roadImpacts" aria-label="About Roads with 6+ Inches of Water" aria-haspopup="dialog" aria-controls="infoModal">?</button>
+              </div>
+            </div>
+            <div class="layer-item">
+              <div id="roadsToggle" class="toggle on" role="switch" tabindex="0" aria-checked="true" aria-label="Show road names"></div>
+              <div class="layer-meta title-with-help">
+                <div class="layer-name">Road Names</div>
+                <button class="help-btn" type="button" data-layer-help="roadNames" aria-label="About Road Names" aria-haspopup="dialog" aria-controls="infoModal">?</button>
+              </div>
+            </div>
+            <div class="layer-item shorelysafe-camera-item" data-html2canvas-ignore="true">
+              <div id="webcamsToggle" class="toggle" role="switch" tabindex="0" aria-checked="false" aria-label="Show cameras"></div>
+              <div class="layer-meta title-with-help">
+                <div class="layer-name">Cameras</div>
+                <button class="help-btn" type="button" data-layer-help="cameras" aria-label="About Cameras" aria-haspopup="dialog" aria-controls="infoModal">?</button>
+              </div>
+            </div>
+            <div class="layer-item" hidden style="display:none!important">
+              <div id="contoursToggle" class="toggle" role="switch" tabindex="0" aria-label="Ground Elevation Contours" aria-checked="false" aria-describedby="contoursStatus"></div>
+              <div class="layer-meta">
+                <div class="layer-name">Ground Elevation Contours</div>
+                <span id="contoursStatus" class="highlands-contour-status" role="status" aria-live="polite"></span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="townAddressCard" class="rail-card town-address-card" aria-label="address lookup">
+          <div class="rail-head">
+            <div>
+              <h3 id="townAddressTitle">Find a <!-- floodmapper:town-name --> Address</h3>
+            </div>
+          </div>
+          <form id="townAddressForm" class="town-address-form" autocomplete="off">
+            <label class="town-address-label" for="townAddressInput">Address or street</label>
+            <input id="townAddressInput" class="town-address-input" type="search" inputmode="search" placeholder="Example: 123 Main St" aria-describedby="townAddressStatus" />
+            <div class="town-address-actions">
+              <button id="townAddressSearchBtn" class="right-rail-action town-address-btn" type="submit">Search <!-- floodmapper:town-name --></button>
+              <button id="townAddressClearBtn" class="town-address-clear-btn" type="button" aria-label="Clear address search">Clear</button>
+            </div>
+          </form>
+          <div id="townAddressStatus" class="town-address-status" role="status" aria-live="polite"></div>
+        </section>
+
+        <section id="downloadCard" class="rail-card download-card download-launch-card" aria-label="Export Map">
+          <button id="openDownloadModalBtn" class="download-launch-btn active" type="button" aria-expanded="false" aria-controls="downloadModal">Export Map</button>
+        </section>
+
+        <section class="rail-card top-tides-card">
+          <div class="rail-head">
+            <div>
+              <h3>Top 10 Highest Floods</h3>
+            </div>
+          </div>
+          <div id="topTideList" class="top-tide-list"></div>
+
+        </section>
+
+</aside>
+
+      <div id="topTidesModal" class="top-tides-modal" hidden aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="topTidesModalTitle">
+        <div class="top-tides-modal-card">
+          <div class="top-tides-modal-head">
+            <div>
+              <h3 id="topTidesModalTitle">Top 10 Highest Floods</h3>
+              <p>Select a flood to replay its observed record when available.</p>
+            </div>
+            <button id="topTidesModalCloseBtn" class="top-tides-modal-close centered-close-control" type="button" aria-label="Close top floods popup">×</button>
+          </div>
+          <div id="topTidesModalList" class="top-tides-modal-list"></div>
+        </div>
+      </div>
+
+      <section id="timelineDock" class="map-floating">
+        <div id="timelineBubble"><span class="timeline-bubble-current timeline-bubble-startup-placeholder">--</span><span class="timeline-bubble-stage">--</span></div>
+        <aside id="structuralImpactsKey" aria-label="Structural Impacts key" hidden>
+          <strong>Structural Impacts</strong>
+          <button id="structuralImpactsKeyClose" type="button" class="centered-close-control" aria-label="Close structural impacts key">×</button>
+          <ul>
+            <li><i class="structure-key-above" aria-hidden="true"></i>Above</li>
+            <li><i class="structure-key-close" aria-hidden="true"></i>Close</li>
+            <li><i class="structure-key-below" aria-hidden="true"></i>Below</li>
+          </ul>
+          <span>Close = 6 in below to 1.2 in above the floor.</span>
+        </aside>
+        <div class="timeline-top">
+          <div class="timeline-controls">
+            <button id="playBtn" type="button" class="playFab" aria-label="Play"><span class="playIcon playTriangle" aria-hidden="true"></span></button>
+          </div>
+          <div id="timelineMeta" class="timeline-meta">--</div>
+        </div>
+        <div id="timelineFloodKey" class="timeline-flood-key" aria-label="Flood category key">
+          <span class="timeline-key-item"><span class="timeline-key-swatch no-flood" aria-hidden="true"></span><span class="timeline-key-label">No Flooding</span></span>
+          <span class="timeline-key-item"><span class="timeline-key-swatch minor-flood" aria-hidden="true"></span><span class="timeline-key-label">Minor</span></span>
+          <span class="timeline-key-item"><span class="timeline-key-swatch moderate-flood" aria-hidden="true"></span><span class="timeline-key-label">Moderate</span></span>
+          <span class="timeline-key-item"><span class="timeline-key-swatch major-flood" aria-hidden="true"></span><span class="timeline-key-label">Major</span></span>
+          <div id="roadImpactsKey" hidden aria-label="Roads with 6+ Inches of Water">
+            <span class="road-impacts-swatch" aria-hidden="true"></span>
+            <span class="road-impacts-label">Roads with 6+ Inches of Water</span>
+            <span class="road-impacts-label-mobile">Roads with 6+ Inches of Water</span>
+            <span id="roadImpactsStatus" class="road-impacts-status" role="status">Modeled road water depth &gt; 0.5 ft</span>
+          </div>
+        </div>
+        <button id="timelineStepBack" class="timeline-step" type="button" aria-label="Previous time" disabled>−1h</button>
+        <button id="timelineStepForward" class="timeline-step" type="button" aria-label="Next time" disabled>+1h</button>
+        <div id="timelineDayTabs" class="timeline-days" aria-label="Available days"></div>
+        <div class="timeline-trackRow">
+          <div id="timelineStart" class="timeline-end">--</div>
+          <div id="pjBlueSliderExactTrackLine" aria-hidden="true"></div>
+          <input id="hourSlider" type="range" min="0" max="0" value="0" step="1" aria-label="Flood forecast time" />
+          <div id="timelineEnd" class="timeline-scale">--</div>
+        </div>
+        <div id="timelineTimeBounds" aria-hidden="true"><span id="timelineFirstTime"></span><span id="timelineMiddleTime"></span><span id="timelineLastTime"></span></div>
+        <div hidden>
+          <div id="timelineLabel"></div>
+          <div id="timelineValue"></div>
+        </div>
+      </section>
+
+      <div id="toast" role="status" aria-live="polite">
+        <span id="toastMessage"></span>
+        <button id="toastCloseBtn" class="centered-close-control" type="button" aria-label="Clear message">×</button>
+      </div>
+    </main>
+  </div>
+
+  <button id="mobileMapperTutorialBtn" class="mapper-tutorial-launch mapper-tutorial-launch-mobile" type="button" aria-haspopup="dialog" data-html2canvas-ignore="true">Take the FloodMapper tour</button>
+
+  <div id="mapperTutorial" class="mapper-tutorial" hidden aria-hidden="true">
+    <div id="mapperTutorialSpotlight" class="mapper-tutorial-spotlight" aria-hidden="true"></div>
+    <section id="mapperTutorialCard" class="mapper-tutorial-card" role="dialog" aria-modal="true" aria-labelledby="mapperTutorialTitle" aria-describedby="mapperTutorialBody">
+      <span id="mapperTutorialAnnouncement" class="mapper-tutorial-announcement" role="status" aria-atomic="true"></span>
+      <div class="mapper-tutorial-head">
+        <span id="mapperTutorialProgress" class="mapper-tutorial-progress">1 of 9</span>
+        <button id="mapperTutorialClose" class="mapper-tutorial-close centered-close-control" type="button" aria-label="Close tutorial">×</button>
+      </div>
+      <h2 id="mapperTutorialTitle"></h2>
+      <div id="mapperTutorialBody" class="mapper-tutorial-body"></div>
+      <div class="mapper-tutorial-actions">
+        <button id="mapperTutorialBack" type="button">Back</button>
+        <button id="mapperTutorialNext" class="active" type="button">Next</button>
+      </div>
+    </section>
+  </div>
+
+  <div id="datumModal" class="datum-modal" hidden>
+    <div class="datum-modal-card" role="dialog" aria-modal="true" aria-labelledby="datumModalTitle">
+      <div class="datum-modal-head">
+        <h3 id="datumModalTitle">Datum reference</h3>
+        <button id="datumModalCloseBtn" class="datum-modal-close centered-close-control" type="button" aria-label="Close datum explanation">×</button>
+      </div>
+      <div class="datum-modal-body">
+        <strong>MLLW</strong> is a local tide reference used for water levels.<br><br>
+        <strong>NAVD88</strong> is a land elevation reference used for surveyed ground heights.<br><br>
+        <span id="datumHelpTownLine">MLLW offset information is configured for this town.</span>
+      </div>
+    </div>
+  </div>
+
+  <div id="observedCalendarModal" class="nww-calendar-modal" hidden>
+    <section class="nww-calendar-dialog" role="dialog" aria-modal="true" aria-labelledby="observedCalendarTitle">
+      <div class="nww-calendar-heading">
+        <h2 id="observedCalendarTitle">Choose a past date</h2>
+        <button id="observedCalendarCloseBtn" type="button" aria-label="Close past date calendar">×</button>
+      </div>
+        <div class="calendar-toolbar">
+          <button id="prevMonthBtn" type="button" aria-label="Previous month">‹</button>
+          <button id="calendarTitleBtn" class="calendar-title-btn" type="button">
+            <span id="monthLabel">--</span>
+            <span class="caret">▾</span>
+          </button>
+          <button id="nextMonthBtn" type="button" aria-label="Next month">›</button>
+        </div>
+
+        <div id="calendarPopover" class="calendar-popover">
+          <div class="calendar-popover-head">
+            <span>Choose month</span>
+            <button id="calendarPopoverCloseBtn" class="calendar-popover-close centered-close-control" type="button" aria-label="Close calendar month picker">×</button>
+          </div>
+          <div class="calendar-popover-grid">
+            <label>
+              Month
+              <select id="monthSelect"></select>
+            </label>
+            <label>
+              Year
+              <select id="yearSelect"></select>
+            </label>
+            <button id="calendarGoBtn" type="button">Go</button>
+          </div>
+        </div>
+
+        <div class="calendar-head">
+          <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
+        </div>
+        <div id="calendarGrid" class="calendar-grid"></div>
+
+        <div class="calendar-key" aria-label="Observed flood day key">
+          <div class="calendar-key-item minor"><span class="calendar-key-swatch"></span><span>Minor</span></div>
+          <div class="calendar-key-item moderate"><span class="calendar-key-swatch"></span><span>Moderate</span></div>
+          <div class="calendar-key-item major"><span class="calendar-key-swatch"></span><span>Major</span></div>
+        </div>
+    </section>
+  </div>
+
+  <div id="infoModal" class="datum-modal" hidden>
+    <div class="datum-modal-card info-modal-card" role="dialog" aria-modal="true" aria-labelledby="infoModalTitle">
+      <div class="datum-modal-head">
+        <h3 id="infoModalTitle">Information</h3>
+        <button id="infoModalCloseBtn" class="datum-modal-close centered-close-control" type="button" aria-label="Close explanation">×</button>
+      </div>
+      <div id="infoModalBody" class="datum-modal-body info-modal-body"></div>
+    </div>
+  </div>
+
+  <div id="downloadModal" class="download-modal" hidden>
+    <div class="download-modal-card" role="dialog" aria-modal="true" aria-labelledby="downloadModalTitle">
+      <div class="download-modal-head">
+        <h3 id="downloadModalTitle">Export map</h3>
+        <div class="download-modal-head-actions">
+          <button id="downloadResetBtn" class="download-reset-btn" type="button" aria-label="Reset export inputs to default">Reset</button>
+          <button id="downloadModalCloseBtn" class="datum-modal-close centered-close-control" type="button" aria-label="Close export window">×</button>
+        </div>
+      </div>
+      <p id="downloadModalSub" class="download-modal-sub">Choose the timing, layout, and framing. Map view preserves the area you are viewing.</p>
+      <div class="download-grid">
+        <div class="download-field export-filetype-field">
+          File type
+          <div id="downloadFormatControl" class="export-segmented" role="group" aria-label="Export file type">
+            <button id="exportFormatGifBtn" type="button" class="active" data-format="gif" aria-pressed="true">Animated GIF</button>
+            <button id="exportFormatPngBtn" type="button" data-format="png" aria-pressed="false">PNG Frames</button>
+          </div>
+        </div>
+        <div class="download-field export-interval-field">
+          Frame interval
+          <div id="downloadIntervalControl" class="export-segmented" role="group" aria-label="Export time interval" style="--seg-cols:3">
+            <button id="exportIntervalHourlyBtn" type="button" class="active" data-export-interval="hourly" aria-pressed="true">Hourly</button>
+            <button id="exportIntervalQuarterBtn" type="button" data-export-interval="15min" aria-pressed="false">15-Min</button>
+            <button id="exportIntervalDailyBtn" type="button" data-export-interval="daily" aria-pressed="false">Daily Max</button>
+          </div>
+        </div>
+        <div class="download-field export-layout-field">
+          Layout
+          <div id="downloadAspectControl" class="export-segmented" role="group" aria-label="Export layout" style="--seg-cols:4">
+            <button id="exportAspectViewportBtn" type="button" class="active" data-aspect="viewport" aria-pressed="true">Map view</button>
+            <button id="exportAspectLandscapeBtn" type="button" data-aspect="16:9" aria-pressed="false">Wide 16:9</button>
+            <button id="exportAspectPortraitBtn" type="button" data-aspect="9:16" aria-pressed="false">Story 9:16</button>
+            <button id="exportAspectSquareBtn" type="button" data-aspect="1:1" aria-pressed="false">Square 1:1</button>
+          </div>
+        </div>
+        <div class="download-field export-framing-field">
+          Map framing
+          <div id="downloadExtentControl" class="export-segmented" role="group" aria-label="Export map framing">
+            <button id="exportExtentTownBtn" type="button" data-extent="town" aria-pressed="false">Fill <!-- floodmapper:town-name --></button>
+            <button id="exportExtentCurrentBtn" type="button" data-extent="current" aria-pressed="true" class="active">Current View</button>
+          </div>
+          <span class="export-extent-help"><span><strong>Current View</strong> keeps the area you are viewing. Map view preserves its shape; other layouts crop from the center.</span><button id="adjustExportViewBtn" class="export-adjust-view-btn" type="button">Adjust map</button></span>
+        </div>
+        <div id="gifSpeedField" class="download-field export-speed-field">
+          GIF speed
+          <div id="downloadSpeedControl" class="export-segmented" role="group" aria-label="GIF speed" style="--seg-cols:3">
+            <button id="exportSpeedSlowBtn" type="button" data-speed="slow" aria-pressed="false">Slow</button>
+            <button id="exportSpeedNormalBtn" type="button" class="active" data-speed="normal" aria-pressed="true">Normal</button>
+            <button id="exportSpeedFastBtn" type="button" data-speed="fast" aria-pressed="false">Fast</button>
+          </div>
+        </div>
+        <section id="exportTimePicker" class="export-picker export-simple-picker" aria-label="Export time range">
+          <div id="exportDataRangeText" class="export-data-range" aria-label="Available export data range"></div>
+          <div id="downloadRangeFields" class="export-simple-range-grid">
+            <label class="export-simple-datetime-field">
+              <span>Start date and time</span>
+              <div class="export-date-time-controls">
+                <div class="export-date-control">
+                  <input id="downloadStartDateText" class="export-date-text-input" type="text" inputmode="numeric" autocomplete="off" value="MM/DD/YYYY" aria-label="Export start date in month day year format" spellcheck="false" />
+                  <button id="downloadStartCalendarBtn" class="export-calendar-button" type="button" aria-label="Open start date calendar">
+                    <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true"><path d="M7 2v3M17 2v3M3.5 9h17M5.5 4h13a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2h-13a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </button>
+                  <input id="downloadStartDatePicker" class="export-native-date-picker" type="date" aria-label="Choose export start date" />
+                </div>
+                <select id="downloadStartTimeSelect" class="export-time-select" aria-label="Export start time"></select>
+                <input id="downloadStartInput" type="hidden" />
+              </div>
+            </label>
+            <label class="export-simple-datetime-field">
+              <span>End date and time</span>
+              <div class="export-date-time-controls">
+                <div class="export-date-control">
+                  <input id="downloadEndDateText" class="export-date-text-input" type="text" inputmode="numeric" autocomplete="off" value="MM/DD/YYYY" aria-label="Export end date in month day year format" spellcheck="false" />
+                  <button id="downloadEndCalendarBtn" class="export-calendar-button" type="button" aria-label="Open end date calendar">
+                    <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true"><path d="M7 2v3M17 2v3M3.5 9h17M5.5 4h13a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2h-13a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </button>
+                  <input id="downloadEndDatePicker" class="export-native-date-picker" type="date" aria-label="Choose export end date" />
+                </div>
+                <select id="downloadEndTimeSelect" class="export-time-select" aria-label="Export end time"></select>
+                <input id="downloadEndInput" type="hidden" />
+              </div>
+            </label>
+          </div>
+        </section>
+        <input id="downloadScopeSelect" type="hidden" value="range" />
+            <input id="downloadFormatSelect" type="hidden" value="gif" />
+            <input id="downloadIntervalSelect" type="hidden" value="hourly" />
+            <input id="downloadAspectSelect" type="hidden" value="viewport" />
+            <input id="downloadExtentSelect" type="hidden" value="current" />
+            <input id="downloadSpeedSelect" type="hidden" value="normal" />
+            <div id="downloadSummary" class="download-summary" hidden aria-hidden="true"></div>
+        <div class="download-actions">
+          <button id="downloadBtn" class="download-btn active" type="button"><span class="download-btn-spinner" aria-hidden="true"></span><span id="downloadBtnLabel">Download GIF</span></button>
+        </div>
+        <div id="downloadStatus" class="download-status" aria-live="polite"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="exportOrderModal" class="datum-modal export-order-modal" hidden>
+    <div class="datum-modal-card export-order-modal-card" role="dialog" aria-modal="true" aria-labelledby="exportOrderModalTitle">
+      <div class="datum-modal-head">
+        <h3 id="exportOrderModalTitle">Check export range</h3>
+        <button id="exportOrderModalCloseBtn" class="datum-modal-close centered-close-control" type="button" aria-label="Close export range warning">×</button>
+      </div>
+      <div id="exportOrderModalBody" class="datum-modal-body export-order-modal-body">Start date must be before end date.</div>
+      <div class="export-order-modal-actions">
+        <button id="exportOrderModalOkBtn" class="download-btn active" type="button">OK</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="floodHistoryBackdrop" class="flood-history-backdrop" hidden aria-hidden="true">
+    <aside id="floodHistoryPane" class="flood-history-pane" role="dialog" aria-modal="true" aria-labelledby="floodHistoryTitle">
+      <header class="flood-history-head">
+        <div>
+          <h2 id="floodHistoryTitle">Flood History &amp; Projections</h2>
+          <p id="floodHistoryAddress">Selected <!-- floodmapper:town-name --> parcel</p>
+        </div>
+        <div class="flood-history-head-actions">
+          <details class="property-help">
+            <summary aria-label="About flood history and projections">?</summary>
+            <p id="floodHistoryHelpText">Past tides show how often water rose above the estimated floor. Future estimates show how that could change as sea level rises.</p>
+          </details>
+          <button id="floodHistoryCloseBtn" class="flood-history-close centered-close-control" type="button" aria-label="Close flood history and projections">×</button>
+        </div>
+      </header>
+      <div id="floodHistoryBody" class="flood-history-body">
+        <div class="flood-history-loading" aria-hidden="true"></div>
+      </div>
+    </aside>
+  </div>
+
+  <div id="playbackStillThereModal" class="datum-modal" hidden>
+    <div class="datum-modal-card playback-still-there-card" role="dialog" aria-modal="true" aria-labelledby="playbackStillThereTitle">
+      <div class="datum-modal-head">
+        <h3 id="playbackStillThereTitle">Still there?</h3>
+        <button id="playbackStillThereCloseBtn" class="datum-modal-close centered-close-control" type="button" aria-label="Stop historical playback">×</button>
+      </div>
+      <div class="datum-modal-body">Historical playback has advanced through 20 consecutive days.</div>
+      <div class="playback-still-there-actions">
+        <button id="playbackStillThereStopBtn" type="button">Stop</button>
+        <button id="playbackStillThereContinueBtn" class="active" type="button">Continue playback</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="exportProgressOverlay" class="export-progress-overlay" hidden aria-busy="false">
+    <div class="export-progress-card" role="dialog" aria-modal="true" aria-labelledby="exportProgressTitle" aria-describedby="exportProgressMessage" tabindex="-1">
+      <button id="exportProgressCloseBtn" class="export-progress-close centered-close-control" type="button" aria-label="Hide export progress">×</button>
+      <div class="export-progress-wheel" aria-hidden="true"></div>
+      <div id="exportProgressTitle" class="export-progress-title">Preparing export</div>
+      <div id="exportProgressMessage" class="export-progress-message" role="status" aria-live="polite">Preparing export...</div>
+      <div class="export-progress-bar" aria-hidden="true"><div id="exportProgressFill" class="export-progress-fill"></div></div>
+      <div id="exportProgressPercent" class="export-progress-percent">0%</div>
+    </div>
+  </div>
+
+  <div id="exportStage" class="export-stage" aria-hidden="true" inert>
+    <div id="exportStageFrame" class="export-stage-frame">
+      <div id="exportMap" class="export-stage-map"></div>
+      <div id="exportFooter" class="export-stage-footer">
+      <div id="exportLogoStrip" class="export-stage-logo-strip" aria-hidden="true">
+        <img id="exportTownLogo" class="export-stage-logo export-stage-logo-town" src="" alt="" loading="lazy" decoding="async" style="display:none;" />
+        <img id="exportPartnerLogo" class="export-stage-logo export-stage-logo-shorelysafe" data-export-brand-src="./assets/shorelysafe-logo-export.jpg" src="" alt="" loading="lazy" decoding="async" style="display:none;" />
+      </div>
+      <section id="exportLegendDock" class="export-stage-legend"></section>
+      <div id="exportTimestampLabel" class="export-stage-timestamp">--</div>
+      </div>
+      <div id="exportMapAttribution" style="position:absolute;left:6px;bottom:6px;z-index:900;max-width:calc(100% - 12px);padding:2px 4px;background:rgba(255,255,255,.88);color:#263445;font-family:inherit;font-size:12px;line-height:1.2;pointer-events:none;">Map: Esri, HERE, Garmin, USGS, &copy; OpenStreetMap contributors · Local road names: NJOGIS</div>
+    </div>
+  </div>
+
+
+
+  <script src="assets/north-wildwood-loading.js?v=d7288f205d13c615"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/esri-leaflet@3.0.19/dist/esri-leaflet.js"></script>
+  <script src="https://unpkg.com/esri-leaflet-vector@4.3.2/dist/esri-leaflet-vector.js"></script>
+  <script src="assets/road-labels.js?v=3ad509cbb4274b6c"></script>
+
+  <script src="./assets/app/raster-readers.js?v=shared"></script>
+  <!-- nww:script:script-004 -->
+  <script src="./assets/app/hydraulic-catalog.js?v=shared"></script>
+
+<!-- nww:script:script-005 -->
+
+
+<!-- nww:script:script-006 -->
+
+
+<script src="./assets/3d/north-wildwood-3d.js?v=shared"></script>
+<script src="./assets/road-impacts.js?v=shared"></script>
+<script defer src="./assets/export-road-labels.js?v=shared"></script>
+
+<script defer src="./assets/modal-focus.js?v=77c8d9e9efcb920b"></script>
+<!-- nww:script:script-007 -->
+
+
+<script src="assets/avalon-mobile.js?v=20261026-holistic1"></script>
+
+
+<script defer src="assets/north-wildwood-mobile.js?v=20261026-holistic1"></script>
+
+<script src="assets/export-area.js?v=ee1e14cc57fb8b8e" id="floodmapper-export-area"></script>
+<script defer src="assets/export-preview.js?v=shared" id="floodmapper-export-preview"></script>
+<script defer src="assets/export-date-time-picker.js?v=33c7d7908c9d305e" id="floodmapper-export-date-time-picker"></script>
+
+
+
+<div id="shorelysafeWebcamConfig" hidden><!-- floodmapper:webcams --></div>
+<!-- nww:script:script-008 -->
+
+<!-- nww:script:script-009 -->
+
+<!-- nww:script:script-010 -->
+
+<!-- nww:script:script-011 -->
+<script src="https://unpkg.com/proj4@2.11.0/dist/proj4.js" defer></script>
+<script src="./assets/3d/elevation-contours.js?v=shared" defer></script>
+</body>
+</html>

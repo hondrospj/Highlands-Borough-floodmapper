@@ -1,0 +1,16 @@
+
+@layer floodmapper-unified-polish {
+/* Inline display:none was losing to the shared fixed-size card rule. */
+html body.observed-mode[data-floodmapper-unified] #leftPanel > #forecastScenarioCard{
+ display:none!important;height:0!important;min-height:0!important;max-height:0!important;margin:0!important;padding:0!important;
+}
+/* The month grid lives in its existing dialog; reserve only the visible date controls. */
+html body.observed-mode[data-floodmapper-unified] #leftPanel > #calendarCard.calendar-card.active{
+ display:flex!important;flex-direction:column!important;flex:0 0 auto!important;
+ height:auto!important;min-height:0!important;max-height:none!important;
+ justify-content:flex-start!important;gap:8px!important;
+}
+html body.observed-mode[data-floodmapper-unified] #leftPanel > #calendarCard .section-title{
+ margin:0!important;min-height:28px!important;align-items:center!important;
+}
+}

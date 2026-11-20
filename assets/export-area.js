@@ -27,8 +27,8 @@
   };
 
   const originalFit = fitExportMapToSelectedExtent;
-  fitExportMapToSelectedExtent = function (mapInstance) {
-    if (getDownloadExtentValue() !== "custom") return originalFit(mapInstance);
+  fitExportMapToSelectedExtent = function (mapInstance, renderConfig = null) {
+    if (getDownloadExtentValue() !== "custom") return originalFit(mapInstance, renderConfig);
     if (!mapInstance) return;
     const bounds = copyBounds(chosenBounds());
     // Keep all of the chosen rectangle visible even when a different layout is selected.
@@ -49,10 +49,8 @@
     const nw = L.CRS.EPSG3857.latLngToPoint(bounds.getNorthWest(), 0);
     const se = L.CRS.EPSG3857.latLngToPoint(bounds.getSouthEast(), 0);
     const ratio = (se.x - nw.x) / (se.y - nw.y);
-    const longEdge = getDownloadFormatValue() === "png" ? 2160 : 1440;
-    const width = Math.max(2, Math.round(longEdge * Math.min(1, ratio)));
-    const height = Math.max(2, Math.round(longEdge / Math.max(1, ratio)));
-    return { value: "viewport", width, height, label: "Selected area", resolutionLabel: `${width} × ${height}` };
+    const longEdge = getExportViewportLongEdge();
+    return { ...getExportViewportConfigForRatio(ratio, longEdge), label: "Selected area" };
   };
 
   const originalBusy = setDownloadBusy;
@@ -90,7 +88,7 @@
     if (button) {
       button.classList.toggle("active", active);
       button.setAttribute("aria-pressed", String(active));
-      button.textContent = active ? "Edit selected area" : "Choose area";
+      button.textContent = active ? "Edit selected area" : "Choose Area";
     }
     const status = document.getElementById("exportAreaStatus");
     if (status) status.textContent = active
@@ -100,7 +98,6 @@
 
   function refreshExportControls() {
     updateExportSegmentedUI();
-    applyExportStageAspect(getDownloadAspectValue());
     updateDownloadSummary();
   }
 
@@ -109,20 +106,35 @@
     return typeof map !== "undefined" && map ? map.getBounds() : null;
   }
 
-  function setPending(bounds) {
-    pendingBounds = validBounds(bounds) ? copyBounds(bounds) : null;
+  function renderSelection(bounds) {
     if (rectangle) pickerMap.removeLayer(rectangle);
-    rectangle = pendingBounds ? L.rectangle(pendingBounds, {
+    rectangle = validBounds(bounds) ? L.rectangle(bounds, {
       color: "#2563eb", weight: 3, fillColor: "#60a5fa", fillOpacity: 0.18, interactive: false
     }).addTo(pickerMap) : null;
+  }
+
+  function setPending(bounds) {
+    pendingBounds = validBounds(bounds) ? copyBounds(bounds) : null;
+    renderSelection(pendingBounds);
     document.getElementById("exportAreaApplyBtn").disabled = !pendingBounds;
+  }
+
+  function updateDrawingHint() {
+    document.getElementById("exportAreaHint").textContent = drawing
+      ? firstCorner ? "Now tap the opposite corner." : "Drag a box, or tap two opposite corners of the area you want."
+      : "Pan and zoom, then use the visible area. You can also draw a box.";
   }
 
   function setDrawing(enabled) {
     drawing = !!enabled;
     firstCorner = null;
-    gesture = null;
     const container = pickerMap.getContainer();
+    if (gesture) {
+      const { id } = gesture;
+      gesture = null;
+      renderSelection(pendingBounds);
+      if (container.hasPointerCapture(id)) container.releasePointerCapture(id);
+    }
     container.classList.toggle("export-area-drawing", drawing);
     if (drawing) {
       savedInteractions = ["dragging", "touchZoom", "doubleClickZoom", "boxZoom", "scrollWheelZoom"]
@@ -135,9 +147,7 @@
     const button = document.getElementById("exportAreaDrawBtn");
     button.classList.toggle("active", drawing);
     button.setAttribute("aria-pressed", String(drawing));
-    document.getElementById("exportAreaHint").textContent = drawing
-      ? "Drag a box, or tap two opposite corners of the area you want."
-      : "Pan and zoom, then use the visible area. You can also draw a box.";
+    updateDrawingHint();
   }
 
   function pointerPosition(event) {
@@ -163,7 +173,7 @@
       event.preventDefault();
       const position = pointerPosition(event);
       gesture.moved ||= gesture.point.distanceTo(position.point) >= 8;
-      if (gesture.moved) setPending(L.latLngBounds(gesture.start, position.latlng));
+      if (gesture.moved) renderSelection(L.latLngBounds(gesture.start, position.latlng));
     });
     container.addEventListener("pointerup", event => {
       if (!gesture || gesture.id !== event.pointerId) return;
@@ -178,24 +188,32 @@
         if (validBounds(bounds)) {
           setPending(bounds);
           setDrawing(false);
-        }
+        } else renderSelection(pendingBounds);
       } else {
         firstCorner = start;
-        document.getElementById("exportAreaHint").textContent = "Now tap the opposite corner.";
+        updateDrawingHint();
       }
     });
-    container.addEventListener("pointercancel", () => { gesture = null; firstCorner = null; });
+    const cancelGesture = event => {
+      if (gesture?.id !== event.pointerId) return;
+      gesture = null;
+      firstCorner = null;
+      renderSelection(pendingBounds);
+      updateDrawingHint();
+    };
+    container.addEventListener("pointercancel", cancelGesture);
+    container.addEventListener("lostpointercapture", cancelGesture);
   }
 
-  function openPicker() {
+  function openPicker(opener) {
     if (exportInProgress || !document.getElementById("exportAreaModal").hidden) return;
     const seed = selectedBounds || activeBounds();
     if (!validBounds(seed)) {
       setDownloadStatus("The map is still loading. Try choosing an area in a moment.", true);
       return;
     }
-    previousFocus = document.activeElement;
-    setDownloadModalOpen(false);
+    previousFocus = opener;
+    setDownloadModalOpen(false, { preserveReview: true });
     const modal = document.getElementById("exportAreaModal");
     modal.hidden = false;
     modal.setAttribute("aria-hidden", "false");
@@ -233,18 +251,30 @@
     modal.hidden = true;
     modal.setAttribute("aria-hidden", "true");
     pendingBounds = null;
-    setDownloadModalOpen(true);
-    previousFocus?.focus({ preventScroll: true });
-    requestAnimationFrame(() => previousFocus?.focus({ preventScroll: true }));
+    setDownloadModalOpen(true, { preserveRange: true, preserveReview: true });
+    previousFocus?.focus();
+    previousFocus = null;
+  }
+
+  function setBounds(bounds) {
+    const extent = document.getElementById("downloadExtentSelect");
+    if (!extent || !validBounds(bounds) || exportInProgress) return false;
+    selectedBounds = copyBounds(bounds);
+    extent.value = "custom";
+    setDownloadStatus("", false);
+    return true;
   }
 
   function applySelection() {
-    if (!validBounds(pendingBounds) || exportInProgress) return;
-    selectedBounds = copyBounds(pendingBounds);
-    document.getElementById("downloadExtentSelect").value = "custom";
-    setDownloadStatus("", false);
+    if (!setBounds(pendingBounds)) return;
     closePicker();
     refreshExportControls();
+  }
+
+  function setPreviewBounds(bounds) {
+    if (!isDownloadModalOpen() || !setBounds(bounds)) return false;
+    refreshExportControls();
+    return true;
   }
 
   function init() {
@@ -259,7 +289,7 @@
       #exportAreaModal[hidden]{display:none!important}
       #exportAreaModal{position:fixed;inset:0;z-index:25000;background:rgba(3,9,20,.78);display:flex;align-items:center;justify-content:center;padding:16px;box-sizing:border-box}
       #exportAreaModal *{box-sizing:border-box}
-      .export-area-card{width:min(900px,100%);height:min(740px,calc(100dvh - 32px));display:flex;flex-direction:column;gap:12px;padding:18px;border-radius:20px;border:1px solid #415779;background:#101d32;color:#eaf0ff;box-shadow:0 24px 80px #0008}
+      .export-area-card{width:min(900px,100%);height:min(740px,calc(100dvh - 32px));display:flex;flex-direction:column;gap:12px;padding:18px;border-radius:20px;border:1px solid #415779;background:#101d32;color:#eaf0ff;box-shadow:0 24px 80px #0008;overflow-y:auto;overscroll-behavior:contain}
       .export-area-head{display:flex;align-items:center;justify-content:space-between;gap:12px}
       .export-area-head h3{margin:0;font-size:20px}
       #exportAreaCloseBtn{font-size:24px;min-width:44px;padding:0;line-height:1}
@@ -274,6 +304,7 @@
       #exportAreaMap .leaflet-control-zoom a{color:#17243a;background:white}
       .export-area-actions{justify-content:flex-end}
       @media(max-width:600px){#exportAreaModal{padding:8px}.export-area-card{height:calc(100dvh - 16px);padding:12px;border-radius:14px;gap:10px}.export-area-head h3{font-size:18px}.export-area-tools button{flex:1}.export-area-actions button{flex:1}#downloadExtentControl button{font-size:11px;padding:7px 4px}}
+      @media(max-height:440px){.export-area-card{padding:10px;gap:8px}#exportAreaHint{min-height:0}#exportAreaMap{min-height:64px}}
     `;
     document.head.appendChild(style);
     let control = document.getElementById("downloadExtentControl");
@@ -302,19 +333,19 @@
     button.setAttribute("aria-pressed", "false");
     button.setAttribute("aria-haspopup", "dialog");
     button.setAttribute("aria-controls", "exportAreaModal");
-    button.textContent = "Choose area";
+    button.textContent = "Choose Area";
     // Safari can suppress the synthetic click after this button changes its label.
     // Handle a completed touch directly; openPicker also ignores duplicate activation.
     button.addEventListener("pointerup", event => {
       if (event.pointerType !== "touch" && event.pointerType !== "pen") return;
       event.preventDefault();
       event.stopImmediatePropagation();
-      openPicker();
+      openPicker(event.currentTarget);
     });
     button.addEventListener("click", event => {
       event.preventDefault();
       event.stopImmediatePropagation();
-      openPicker();
+      openPicker(event.currentTarget);
     });
     control.appendChild(button);
     control.querySelectorAll("button[data-extent]").forEach(other => {
@@ -361,7 +392,9 @@
   }
 
   window.FLOODMAPPER_EXPORT_AREA = {
-    version: "20261008-2", ready: false,
+    version: "20261023-3", ready: false,
+    openPicker,
+    setPreviewBounds,
     getBounds: () => copyBounds(selectedBounds),
     getJobBounds: () => copyBounds(jobBounds)
   };

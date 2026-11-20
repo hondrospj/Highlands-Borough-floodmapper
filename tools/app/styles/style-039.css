@@ -1,0 +1,197 @@
+
+
+html.platform-mac-template{
+  --win-ui-zoom:1 !important;
+  -webkit-text-size-adjust:100% !important;
+  text-size-adjust:100% !important;
+}
+
+html.platform-mac-template,
+html.platform-mac-template body,
+html.platform-mac-template button,
+html.platform-mac-template input,
+html.platform-mac-template select,
+html.platform-mac-template textarea{
+  font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
+}
+
+html.platform-mac-template body{
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  font-optical-sizing:auto;
+}
+
+
+@media (min-width:901px) and (min-height:561px) and (not (any-pointer:coarse)), (min-width:1367px) and (min-height:561px), (min-width:901px) and (pointer:fine) and (not (any-pointer:coarse)), (min-width:1367px) and (pointer:fine), (min-width:901px) and (pointer:none) and (not (any-pointer:coarse)), (min-width:1367px) and (pointer:none) {
+  html.platform-mac-template #leftPanel,
+  html.platform-mac-template #rightRail,
+  html.platform-mac-template #legendDock,
+  html.platform-mac-template #mapTitleBadge,
+  html.platform-mac-template #timelineDock,
+  html.platform-mac-template .leaflet-top.leaflet-right,
+  html.platform-mac-template .leaflet-top.leaflet-right .leaflet-control-zoom{
+    zoom:1 !important;
+    scale:1 !important;
+  }
+
+  html.platform-mac-template #leftPanel,
+  html.platform-mac-template #rightRail,
+  html.platform-mac-template #legendDock,
+  html.platform-mac-template #timelineDock,
+  html.platform-mac-template .leaflet-top.leaflet-right,
+  html.platform-mac-template .leaflet-top.leaflet-right .leaflet-control-zoom{
+    transform:none !important;
+  }
+
+  html.platform-mac-template #mapTitleBadge{
+    transform:translateX(-50%) !important;
+  }
+}
+
+
+html.platform-mac-template .export-simple-datetime-field input[type="datetime-local"]{
+  box-sizing:border-box !important;
+  min-width:0 !important;
+  max-width:100% !important;
+  font-family:inherit !important;
+  font-variant-numeric:tabular-nums !important;
+  letter-spacing:0 !important;
+  line-height:1.2 !important;
+  color-scheme:dark !important;
+  touch-action:manipulation !important;
+  -webkit-tap-highlight-color:transparent !important;
+}
+
+html.platform-mac-template .export-simple-datetime-field input[type="datetime-local"]::-webkit-date-and-time-value{
+  min-height:1.2em !important;
+  padding:0 !important;
+  text-align:left !important;
+}
+
+html.platform-mac-template .export-simple-datetime-field input[type="datetime-local"]::-webkit-calendar-picker-indicator{
+  opacity:.90 !important;
+  cursor:pointer !important;
+}
+
+
+@supports (-webkit-touch-callout:none){
+  html.platform-mac-template .export-simple-datetime-field input[type="datetime-local"]{
+    font-size:16px !important;
+  }
+}
+
+
+@media (max-width:900px), (max-width:1366px) and (any-pointer:coarse), (max-height:560px) and (pointer:coarse) {
+
+  html.platform-mac-template body.mobile-optimized #legendDock{
+    width:auto !important;
+    min-width:148px !important;
+    max-width:min(216px, calc(100vw - 96px - env(safe-area-inset-left) - env(safe-area-inset-right))) !important;
+    height:42px !important;
+    max-height:42px !important;
+    padding:6px 10px !important;
+    gap:7px !important;
+  }
+
+  html.platform-mac-template body.mobile-optimized #legendDock::before{
+    width:38px !important;
+    height:12px !important;
+    flex:0 0 38px !important;
+  }
+
+  html.platform-mac-template body.mobile-optimized #legendDock::after{
+    font-size:13px !important;
+    line-height:1.06 !important;
+    letter-spacing:0 !important;
+  }
+
+
+  html.platform-mac-template body.mobile-optimized.mobile-legend-open #legendDock{
+    width:min(304px, calc(100vw - 24px - env(safe-area-inset-left) - env(safe-area-inset-right))) !important;
+    max-width:min(304px, calc(100vw - 24px - env(safe-area-inset-left) - env(safe-area-inset-right))) !important;
+    padding:10px 11px 11px !important;
+  }
+
+  html.platform-mac-template body.mobile-optimized.mobile-legend-open #legendDock .legend-title{
+    margin:0 72px 8px 0 !important;
+    font-size:15px !important;
+    line-height:1.12 !important;
+  }
+
+  html.platform-mac-template body.mobile-optimized.mobile-legend-open #legendDock .legend-list{
+    column-gap:10px !important;
+    row-gap:7px !important;
+  }
+
+  html.platform-mac-template body.mobile-optimized.mobile-legend-open #legendDock .legend-row,
+  html.platform-mac-template body.mobile-optimized.mobile-legend-open #legendDock .legend-row:nth-child(n+9){
+    grid-template-columns:13px minmax(0,1fr) !important;
+    gap:7px !important;
+    min-height:18px !important;
+    font-size:13px !important;
+    line-height:1.16 !important;
+    font-weight:850 !important;
+  }
+
+  html.platform-mac-template body.mobile-optimized.mobile-legend-open #legendDock .legend-swatch{
+    width:12px !important;
+    height:12px !important;
+    border-radius:4px !important;
+  }
+
+  html.platform-mac-template body.mobile-optimized.mobile-legend-open #legendDock .legend-swatch.legend-line{
+    width:13px !important;
+    height:0 !important;
+  }
+
+  html.platform-mac-template body.mobile-optimized.mobile-legend-open #legendDock::after{
+    right:10px !important;
+    top:11px !important;
+    font-size:9px !important;
+  }
+
+
+  html.platform-mac-template body #mapTitleBadge,
+  html.platform-mac-template body #mapTitleBadge.shorely-title-badge{
+    display:inline-grid !important;
+    width:max-content !important;
+    min-width:0 !important;
+    max-width:calc(100vw - 48px - env(safe-area-inset-left) - env(safe-area-inset-right)) !important;
+    gap:5px !important;
+    padding:5px 8px !important;
+  }
+
+  html.platform-mac-template body #mapTitleBadge #mapTitleText,
+  html.platform-mac-template body #mapTitleBadge .shorely-title-text{
+    min-width:0 !important;
+    font-size:clamp(18px, 5.6vw, 25px) !important;
+    line-height:1.05 !important;
+  }
+
+  html.platform-mac-template body #mapTitleBadge #mapTitleLogo,
+  html.platform-mac-template body #mapTitleBadge #mapTitlePartnerLogo,
+  html.platform-mac-template body #mapTitleBadge .shorely-title-logo,
+  html.platform-mac-template body #mapTitleBadge .shorely-title-logo-town,
+  html.platform-mac-template body #mapTitleBadge .shorely-title-logo-shorelysafe{
+    max-width:68px !important;
+    max-height:23px !important;
+  }
+}
+
+@media (max-width:430px) and (orientation:portrait){
+  html.platform-mac-template body.mobile-optimized #legendDock{
+    min-width:142px !important;
+    max-width:min(204px, calc(100vw - 92px - env(safe-area-inset-left) - env(safe-area-inset-right))) !important;
+  }
+
+  html.platform-mac-template body.mobile-optimized.mobile-legend-open #legendDock{
+    width:min(296px, calc(100vw - 20px - env(safe-area-inset-left) - env(safe-area-inset-right))) !important;
+    max-width:min(296px, calc(100vw - 20px - env(safe-area-inset-left) - env(safe-area-inset-right))) !important;
+  }
+
+  html.platform-mac-template body.mobile-optimized.mobile-legend-open #legendDock .legend-row,
+  html.platform-mac-template body.mobile-optimized.mobile-legend-open #legendDock .legend-row:nth-child(n+9){
+    font-size:12.5px !important;
+    line-height:1.15 !important;
+  }
+}

@@ -1,0 +1,31 @@
+@layer county-safari-mobile {
+  #countySafeAreaProbe {position:fixed!important;visibility:hidden!important;pointer-events:none!important;width:0!important;height:0!important;padding:env(safe-area-inset-top,0px) env(safe-area-inset-right,0px) env(safe-area-inset-bottom,0px) env(safe-area-inset-left,0px)!important;}
+  @media(max-width:900px), (max-width:1366px) and (any-pointer:coarse), (max-height:560px) and (pointer:coarse) {
+    html body[data-county-mobile] #leftPanel {overscroll-behavior:contain!important;-webkit-overflow-scrolling:touch!important;scroll-padding-top:136px!important;scroll-padding-bottom:24px!important;}
+    html body[data-county-mobile]:not(.observed-mode):not(.return-interval-mode) #leftPanel[data-nww-section="forecast"] #forecastScenarioCard:not([hidden]),
+    html body[data-county-mobile].observed-mode #leftPanel[data-nww-section="forecast"] #calendarCard.active,
+    html body[data-county-mobile].return-interval-mode #leftPanel[data-nww-section="forecast"] #returnIntervalCard:not([hidden]) {display:flex!important;flex-direction:column!important;height:auto!important;min-height:0!important;max-height:none!important;}
+    html body[data-county-mobile] :is(#leftPanel,#downloadModal) :is(input,select,textarea) {font-size:16px!important;}
+    html body[data-county-mobile] #leftPanel :is(button,[role="tab"]) {min-height:44px!important;}
+    html body[data-county-mobile] #leftPanel :is(.calendar-day,.calendar-nav-btn) {min-height:36px!important;}
+    html body[data-county-mobile] #mapTitleBadge {top:var(--cm-top,8px)!important;left:var(--cm-left,8px)!important;right:var(--cm-right,8px)!important;}
+    html body[data-county-mobile] #mobileControlsToggle {top:calc(var(--cm-top,8px) + 4px)!important;right:calc(var(--cm-right,8px) + 4px)!important;}
+    html body[data-county-mobile]:not(.mobile-legend-open) #legendDock {top:calc(var(--cm-top,8px) + 4px)!important;right:calc(var(--cm-right,8px) + 104px)!important;}
+    html body[data-county-mobile] #leftPanel #mobileControlsClose {top:calc(var(--cm-top,8px) + 12px)!important;right:calc(var(--cm-right,8px) + 12px)!important;}
+    html body[data-county-mobile] #nwDefaultNavControl {top:calc(var(--cm-top,8px) + 60px)!important;right:var(--cm-right,8px)!important;}
+    html body[data-county-mobile] #countyStandaloneView {top:calc(var(--cm-top,8px) + 60px)!important;right:var(--cm-right,8px)!important;}
+    html body[data-county-mobile] #countyStandalone3d .maplibregl-ctrl-top-right {top:calc(var(--cm-top,8px) + 110px)!important;right:calc(var(--cm-right,8px) - 10px)!important;}
+    html body[data-county-mobile] .leaflet-bottom {bottom:calc(var(--cm-bottom,8px) + 188px)!important;}
+    html body[data-county-mobile] #toast {bottom:calc(var(--cm-bottom,8px) + 190px)!important;max-height:calc(var(--cm-height,100dvh) - 230px)!important;overflow:auto!important;}
+    html body[data-county-mobile] #downloadModal:not([hidden]) {top:var(--cm-top,8px)!important;bottom:var(--cm-bottom,8px)!important;left:var(--cm-left,8px)!important;right:var(--cm-right,8px)!important;width:auto!important;height:auto!important;min-height:0!important;padding:0!important;}
+    html body[data-county-mobile] #downloadModal .download-modal-card {max-height:var(--cm-height,calc(100dvh - 16px))!important;width:min(100%,620px)!important;overflow-y:auto!important;overscroll-behavior:contain!important;}
+    html body[data-county-mobile] #downloadModal .download-modal-head {position:sticky!important;top:0!important;z-index:2!important;background:var(--bg,#0b1220)!important;}
+    @media(max-height:500px){
+      html body[data-county-mobile] #nwDefaultNavControl {flex-direction:row!important;width:auto!important;height:44px!important;align-items:center!important;}
+      html body[data-county-mobile] #nwDefaultNavControl .nw-direction-wheel {width:44px!important;height:44px!important;}
+      html body[data-county-mobile] #nwDefaultNavControl .nw-simple-zoom {flex-direction:row!important;width:88px!important;height:44px!important;}
+      html body[data-county-mobile] #countyStandalone3d .maplibregl-ctrl-top-right {top:calc(var(--cm-top,8px) + 60px)!important;right:calc(var(--cm-right,8px) + 48px)!important;}
+      html body[data-county-mobile] #countyStandalone3d .maplibregl-ctrl-group {display:flex!important;}
+    }
+  }
+}

@@ -1,0 +1,57 @@
+
+
+@media (min-width: 901px) and (min-height: 561px) and (not (any-pointer:coarse)), (min-width:1367px) and (min-height: 561px), (min-width: 901px) and (pointer:fine) and (not (any-pointer:coarse)), (min-width:1367px) and (pointer:fine), (min-width: 901px) and (pointer:none) and (not (any-pointer:coarse)), (min-width:1367px) and (pointer:none) {
+  html body #mapTitleBadge.shorely-title-badge,
+  html body.forecast-mode #mapTitleBadge.shorely-title-badge,
+  html body.observed-mode #mapTitleBadge.shorely-title-badge{
+    gap:18px !important;
+    padding:12px 22px !important;
+    min-height:54px !important;
+    border-radius:999px !important;
+    display:inline-grid !important;
+    grid-auto-flow:column !important;
+    align-items:center !important;
+    justify-content:center !important;
+    justify-items:center !important;
+    width:auto !important;
+    max-width:calc(100vw - 720px) !important;
+    min-width:0 !important;
+    overflow:visible !important;
+    white-space:nowrap !important;
+  }
+
+  html body #mapTitleBadge #mapTitleText,
+  html body #mapTitleBadge .shorely-title-text{
+    font-size:clamp(30px, 2.85vw, 48px) !important;
+    line-height:.96 !important;
+    letter-spacing:-.045em !important;
+    font-weight:950 !important;
+    white-space:nowrap !important;
+    overflow:visible !important;
+    text-overflow:clip !important;
+  }
+
+  html body #mapTitleBadge #mapTitlePartnerLogo,
+  html body #mapTitleBadge .shorely-title-logo,
+  html body #mapTitleBadge .shorely-title-logo-shorelysafe{
+    display:block !important;
+    width:auto !important;
+    height:auto !important;
+    max-width:162px !important;
+    max-height:45px !important;
+    object-fit:contain !important;
+    object-position:50% 50% !important;
+    margin:0 !important;
+    padding:0 !important;
+    justify-self:center !important;
+    align-self:center !important;
+    transform:none !important;
+  }
+}
+
+
+@media (max-width:900px), (max-width:1366px) and (any-pointer:coarse), (max-height:560px) and (pointer:coarse) {
+  html body #mapTitleBadge.shorely-title-badge{
+    min-height:unset !important;
+  }
+}

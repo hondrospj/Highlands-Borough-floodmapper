@@ -1,0 +1,155 @@
+
+  /* Keep the side controls visually flat against the map. */
+  html body #leftPanel > .panel-card,
+  html body #leftPanel > #legendDock,
+  html body #rightRail > .rail-card,
+  html body #mapperTutorialBtn{
+    box-shadow:none !important;
+    filter:none !important;
+  }
+  html body:not(.mobile-optimized) #timelineDock{
+    bottom:4px !important;
+  }
+
+  /* The slider contains only the compact four-category key. */
+  html body #timelineDock #timelineFloodKey{
+    display:flex !important;
+    color:#eaf0ff !important;
+    font-size:11.5px !important;
+    font-weight:900 !important;
+  }
+  html body #timelineDock #timelineFloodKey .timeline-key-item{
+    display:inline-flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    width:auto !important;
+    min-width:0 !important;
+    gap:5px !important;
+    color:#eaf0ff !important;
+    font-size:11.5px !important;
+    line-height:1 !important;
+    white-space:nowrap !important;
+  }
+  html body #timelineDock #timelineFloodKey .timeline-key-item::after{
+    content:none !important;
+    display:none !important;
+  }
+  html body #timelineDock #timelineFloodKey .timeline-key-label{
+    display:inline !important;
+    font-size:inherit !important;
+    line-height:inherit !important;
+  }
+  html body #timelineDock #timelineFloodKey .timeline-key-swatch{
+    width:10px !important;
+    min-width:10px !important;
+    height:10px !important;
+    min-height:10px !important;
+    flex:0 0 10px !important;
+  }
+  html body #shorelyMobileSliderKey{display:none !important}
+  html body #shorelyMobileSliderHelpBtn{display:none !important}
+
+  /* Larger, balanced depth key that still keeps green uncertainty in-line. */
+  html body #legendDock[data-legend-mode="depth"]{
+    height:64px !important;
+    min-height:64px !important;
+    max-height:64px !important;
+    padding:4px 10px 5px !important;
+  }
+  html body #leftPanel #legendDock[data-legend-mode="depth"] .legend-header{
+    height:22px !important;
+    min-height:22px !important;
+    margin:0 0 3px !important;
+  }
+  html body #leftPanel #legendDock[data-legend-mode="depth"] .legend-title{
+    font-size:14px !important;
+    line-height:20px !important;
+  }
+  html body #legendDock[data-legend-mode="depth"] #legendList{
+    display:grid !important;
+    grid-template-columns:minmax(120px,1fr) auto !important;
+    grid-template-rows:25px !important;
+    grid-auto-flow:row !important;
+    grid-auto-rows:25px !important;
+    align-items:end !important;
+    gap:7px !important;
+    width:100% !important;
+    height:25px !important;
+    min-height:25px !important;
+    padding:0 !important;
+  }
+  html body #legendDock[data-legend-mode="depth"] .depth-legend-scale{
+    display:block !important;
+    grid-column:1 !important;
+    grid-row:1 !important;
+    width:auto !important;
+    height:25px !important;
+    min-width:0 !important;
+    margin:0 !important;
+  }
+  html body #legendDock[data-legend-mode="depth"] .depth-legend-labels{
+    margin:0 2px 2px !important;
+    font-size:10px !important;
+    line-height:10px !important;
+    letter-spacing:.045em !important;
+  }
+  html body #leftPanel #legendDock[data-legend-mode="depth"] .depth-legend-gradient{
+    height:10px !important;
+  }
+  html body #leftPanel #legendDock[data-legend-mode="depth"] .depth-legend-disconnected{
+    position:static !important;
+    display:grid !important;
+    grid-column:2 !important;
+    grid-row:1 !important;
+    grid-template-columns:12px auto 21px !important;
+    align-items:center !important;
+    gap:4px !important;
+    height:25px !important;
+    width:max-content !important;
+    max-width:none !important;
+    justify-self:end !important;
+    color:#ddfbe3 !important;
+    font-size:10.5px !important;
+    line-height:1 !important;
+    font-weight:900 !important;
+  }
+  html body #leftPanel #legendDock[data-legend-mode="depth"] .depth-legend-disconnected-swatch{
+    width:12px !important;
+    height:12px !important;
+  }
+  html body #leftPanel #legendDock[data-legend-mode="depth"] .depth-legend-help{
+    width:21px !important;
+    min-width:21px !important;
+    height:21px !important;
+    min-height:21px !important;
+    font-size:11px !important;
+  }
+
+  @media (max-width:900px), (max-width:1366px) and (any-pointer:coarse), (max-height:560px) and (pointer:coarse) {
+    html body.mobile-optimized #timelineDock #timelineFloodKey{
+      display:none !important;
+    }
+    html body.mobile-optimized #timelineDock #shorelyMobileSliderKey{
+      position:absolute !important;
+      display:flex !important;
+      align-items:center !important;
+      justify-content:center !important;
+      gap:clamp(5px,2vw,10px) !important;
+      overflow:hidden !important;
+      white-space:nowrap !important;
+    }
+    html body.mobile-optimized #timelineDock #shorelyMobileSliderKey .shorely-mobile-slider-key-item{
+      gap:3px !important;
+      font-size:clamp(8px,2.4vw,9.5px) !important;
+    }
+    html body.mobile-optimized #timelineDock #shorelyMobileSliderKey .shorely-mobile-slider-key-swatch{
+      width:8px !important;
+      min-width:8px !important;
+      height:8px !important;
+    }
+    html body.mobile-optimized #leftPanel #legendDock[data-legend-mode="depth"]{
+      height:64px !important;
+      min-height:64px !important;
+      max-height:64px !important;
+    }
+  }

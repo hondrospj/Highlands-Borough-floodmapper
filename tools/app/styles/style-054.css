@@ -1,0 +1,39 @@
+
+  /* Leaflet's close control must stay anchored inside the popup card. */
+  html body .shorely-flood-popup .leaflet-popup-close-button{
+    --centered-close-x-size:12px;
+    position:absolute !important;
+    top:8px !important;
+    right:8px !important;
+    left:auto !important;
+    bottom:auto !important;
+    z-index:12 !important;
+    width:30px !important;
+    min-width:30px !important;
+    height:30px !important;
+    min-height:30px !important;
+    border:1px solid rgba(191,219,254,.25) !important;
+    border-radius:10px !important;
+    background:rgba(30,41,59,.9) !important;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.06) !important;
+  }
+
+  html body .shorely-flood-popup .depth-query-popup h3{
+    padding:0 28px !important;
+  }
+
+  @media (max-width:900px), (max-width:1366px) and (any-pointer:coarse), (max-height:560px) and (pointer:coarse) {
+    html body.mobile-optimized .shorely-flood-popup .leaflet-popup-close-button{
+      --centered-close-x-size:14px;
+      top:7px !important;
+      right:7px !important;
+      width:36px !important;
+      min-width:36px !important;
+      height:36px !important;
+      min-height:36px !important;
+    }
+
+    html body.mobile-optimized .shorely-flood-popup .depth-query-popup h3{
+      padding:0 34px !important;
+    }
+  }

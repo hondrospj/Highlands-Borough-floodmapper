@@ -1,0 +1,59 @@
+
+  html body .depth-query-popup{
+    box-sizing:border-box;
+    min-width:0;
+    width:100%;
+    max-width:100%;
+    text-align:left;
+  }
+  html body .depth-query-popup h3,
+  html body .shorely-flood-popup.shorely-depth-popup .depth-query-popup h3{
+    margin:0 40px 14px 0 !important;
+    padding:0 !important;
+    color:#bdcce0;
+    font-size:15px !important;
+    font-weight:650;
+    line-height:1.35 !important;
+    letter-spacing:0;
+    overflow-wrap:normal;
+  }
+  html body .depth-query-value{
+    display:flex;
+    align-items:baseline;
+    justify-content:flex-start;
+    gap:8px;
+    color:#7df9ff;
+    font-size:44px;
+    font-weight:800;
+    line-height:1.05;
+    letter-spacing:-.035em;
+    font-variant-numeric:tabular-nums;
+  }
+  html body .depth-query-unit{
+    color:#bdcce0;
+    font-size:20px;
+    font-weight:600;
+    letter-spacing:0;
+  }
+  html body .shorely-flood-popup.shorely-depth-popup .leaflet-popup-content-wrapper{
+    padding:0;
+    border:1px solid rgba(125,249,255,.24);
+    border-radius:16px;
+    background:#0b1423;
+    box-shadow:0 12px 30px rgba(2,6,23,.28);
+  }
+  html body .shorely-flood-popup.shorely-depth-popup .leaflet-popup-content{
+    box-sizing:border-box;
+    width:240px !important;
+    max-width:calc(100vw - 84px);
+    margin:18px 20px 20px !important;
+    padding:0 !important;
+    border:0 !important;
+    border-radius:0 !important;
+    background:transparent !important;
+  }
+  html body .shorely-flood-popup.shorely-depth-popup .leaflet-popup-tip{
+    border:0;
+    background:#0b1423;
+    box-shadow:none;
+  }

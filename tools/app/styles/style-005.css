@@ -1,0 +1,15 @@
+@layer shorelysafe-unified {
+  html body[data-county-viewport] :is(#leftPanel,#rightRail) {flex-shrink:0!important;}
+  html body[data-county-viewport] #rightRail .top-tide-list {max-height:180px!important;overflow-y:auto!important;scrollbar-width:thin;}
+  html body[data-county-viewport] #rightRail .rail-card {flex-shrink:0!important;}
+  html body[data-county-viewport] :is(#rightRail,#leftPanel) #townAddressCard {height:auto!important;min-height:0!important;max-height:none!important;overflow:visible!important;}
+  html body[data-county-viewport] #countyStandalone3d {position:absolute!important;inset:0!important;z-index:2!important;display:none!important;}
+  html body.county-standalone-3d #countyStandalone3d {display:block!important;}
+  html body.county-standalone-3d #map {z-index:0!important;}
+  html body[data-county-viewport] #countyStandalone3d .maplibregl-ctrl-top-right {top:140px!important;right:var(--county-nav-right,320px)!important;}
+  html body[data-county-viewport] #countyStandaloneView {position:absolute!important;z-index:800!important;top:90px!important;right:320px;min-height:44px!important;min-width:52px!important;background:#101b2d!important;color:#eaf0ff!important;border:1px solid #60a5fa!important;border-radius:20px!important;font:700 14px system-ui!important;cursor:pointer!important;}
+  @media(max-width:900px), (max-width:1366px) and (any-pointer:coarse), (max-height:560px) and (pointer:coarse) {
+    html body[data-county-viewport] #countyStandaloneView {position:fixed!important;top:120px!important;right:12px!important;}
+    html body[data-county-viewport] #countyStandalone3d .maplibregl-ctrl-top-right {top:170px!important;right:2px!important;}
+  }
+}

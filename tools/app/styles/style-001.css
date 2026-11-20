@@ -1,0 +1,199 @@
+
+/* Keep forced-colors rules ahead of the authored control layers. */
+@layer north-wildwood-forced-colors {
+  @media (forced-colors: active) {
+    body[data-shorelysafe-ui] [role="switch"] {
+      forced-color-adjust:none;
+      box-sizing:border-box;
+      border:1px solid ButtonText !important;
+      background:ButtonFace !important;
+      transition:none !important;
+    }
+    body[data-shorelysafe-ui] [role="switch"]::after {
+      background:ButtonText !important;
+      transition:none !important;
+    }
+    body[data-shorelysafe-ui] [role="switch"][aria-checked="true"] {
+      border-color:Highlight !important;
+      background:Highlight !important;
+    }
+    body[data-shorelysafe-ui] [role="switch"][aria-checked="true"]::after {
+      background:HighlightText !important;
+    }
+    body[data-shorelysafe-ui] [role="switch"]:focus-visible {
+      outline-color:Highlight !important;
+    }
+
+    body[data-shorelysafe-ui] :is(button[aria-pressed="true"],[role="tab"][aria-selected="true"],.timeline-day[aria-current="true"]) {
+      text-decoration:underline !important;
+      text-decoration-thickness:2px !important;
+    }
+
+    /* These paints encode the same water categories as the map raster. */
+    #legendDock :is(.depth-legend-gradient,.stage-legend-green,.stage-legend-gradient),
+    #timelineDock :is(.timeline-key-swatch,.road-impacts-swatch) {
+      forced-color-adjust:none;
+      border:1px solid CanvasText !important;
+    }
+    #timelineDock .timeline-day {
+      position:relative !important;
+      background-image:none !important;
+    }
+    #timelineDock .timeline-day::after {
+      forced-color-adjust:none;
+      content:"" !important;
+      position:absolute !important;
+      inset:auto 1px 1px !important;
+      height:4px !important;
+      border:0 !important;
+      background:var(--fleet-day-gradient,var(--timeline-day-gradient,none)) !important;
+      pointer-events:none;
+    }
+    #timelineDock #hourSlider {
+      forced-color-adjust:none;
+      background-image:var(--nww-stage-gradient,linear-gradient(CanvasText,CanvasText)),
+        linear-gradient(CanvasText,CanvasText) !important;
+      background-position:center !important;
+      background-repeat:no-repeat !important;
+      background-size:calc(100% - var(--nww-thumb-size,26px)) 5px,
+        calc(100% - var(--nww-thumb-size,26px)) 7px !important;
+      outline-color:Highlight !important;
+    }
+    #timelineDock #hourSlider::-webkit-slider-thumb {
+      background:Highlight !important;
+      border-color:HighlightText !important;
+      box-shadow:none !important;
+    }
+    #timelineDock #hourSlider::-moz-range-thumb {
+      background:Highlight !important;
+      border-color:HighlightText !important;
+      box-shadow:none !important;
+    }
+
+    #timelineDock #playBtn .playTriangle {
+      forced-color-adjust:none;
+      width:13px !important;
+      height:16px !important;
+      border:0 !important;
+      background:ButtonText !important;
+      clip-path:polygon(0 0,100% 50%,0 100%);
+      filter:none !important;
+    }
+    #timelineDock #playBtn .pauseIcon::before,
+    #timelineDock #playBtn .pauseIcon::after {
+      forced-color-adjust:none;
+      background:ButtonText !important;
+    }
+    :is(.centered-close-control,.leaflet-popup-close-button,.maplibregl-popup-close-button)::before,
+    :is(.centered-close-control,.leaflet-popup-close-button,.maplibregl-popup-close-button)::after {
+      forced-color-adjust:none;
+      --nww-close-ink:ButtonText;
+    }
+  }
+}
+
+/* Shared click-depth card. Keep the existing heading, depth, units and query states. */
+@layer shorely-depth-pill {
+  :is(.leaflet-popup,.maplibregl-popup):has(:is(.depth-query-popup,.shorely-v11-depth-query)) {
+    --depth-pill-width:min(320px,calc(100vw - 32px));
+    --depth-pill-bg:rgba(11,18,32,.96);
+    max-width:var(--depth-pill-width) !important;
+  }
+  :is(.leaflet-popup,.maplibregl-popup):has(:is(.depth-query-popup,.shorely-v11-depth-query))
+  :is(.leaflet-popup-content-wrapper,.maplibregl-popup-content) {
+    box-sizing:border-box !important;
+    width:var(--depth-pill-width) !important;
+    min-width:0 !important;
+    max-width:var(--depth-pill-width) !important;
+    margin:0 !important;
+    padding:0 !important;
+    overflow:visible !important;
+    border:1px solid rgba(125,249,255,.42) !important;
+    border-radius:20px !important;
+    background:var(--depth-pill-bg) !important;
+    color:#c9d8ee !important;
+    box-shadow:0 10px 26px rgba(2,6,23,.24) !important;
+  }
+  .leaflet-popup:has(:is(.depth-query-popup,.shorely-v11-depth-query)) .leaflet-popup-content {
+    box-sizing:border-box !important;
+    width:auto !important;
+    min-width:0 !important;
+    max-width:none !important;
+    margin:0 !important;
+    padding:0 !important;
+    border:0 !important;
+    border-radius:0 !important;
+    background:transparent !important;
+    box-shadow:none !important;
+  }
+  :is(.leaflet-popup,.maplibregl-popup) :is(.depth-query-popup,.shorely-v11-depth-query) {
+    box-sizing:border-box !important;
+    display:block !important;
+    width:100% !important;
+    min-width:0 !important;
+    max-width:none !important;
+    margin:0 !important;
+    padding:18px 24px 20px !important;
+    color:#c9d8ee !important;
+    font:16px/1.25 Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif !important;
+    text-align:center !important;
+  }
+  :is(.leaflet-popup,.maplibregl-popup) :is(.depth-query-popup,.shorely-v11-depth-query) h3 {
+    display:block !important;
+    width:auto !important;
+    margin:0 0 10px !important;
+    padding:0 !important;
+    color:#c9d8ee !important;
+    font-size:20px !important;
+    font-weight:750 !important;
+    line-height:1.2 !important;
+    letter-spacing:0 !important;
+    text-align:center !important;
+    white-space:normal !important;
+    overflow-wrap:normal !important;
+  }
+  :is(.leaflet-popup,.maplibregl-popup) :is(.depth-query-value,.shorely-v11-depth-value) {
+    display:block !important;
+    width:auto !important;
+    min-width:0 !important;
+    margin:0 !important;
+    padding:0 !important;
+    color:#7df9ff !important;
+    font-size:48px !important;
+    font-weight:900 !important;
+    line-height:1.08 !important;
+    letter-spacing:-.035em !important;
+    font-variant-numeric:tabular-nums !important;
+    text-align:center !important;
+    white-space:nowrap !important;
+  }
+  :is(.leaflet-popup,.maplibregl-popup) :is(.depth-query-number,.depth-query-unit) {
+    color:inherit !important;
+    font-size:inherit !important;
+    font-weight:inherit !important;
+    line-height:inherit !important;
+    letter-spacing:inherit !important;
+  }
+  .leaflet-popup:has(:is(.depth-query-popup,.shorely-v11-depth-query)) .leaflet-popup-tip {
+    border:1px solid rgba(125,249,255,.42) !important;
+    border-top:0 !important;
+    border-left:0 !important;
+    background:var(--depth-pill-bg) !important;
+    box-shadow:none !important;
+  }
+  .maplibregl-popup:has(:is(.depth-query-popup,.shorely-v11-depth-query)) .maplibregl-popup-tip {
+    border-top-color:transparent !important;
+    border-right-color:transparent !important;
+    border-bottom-color:transparent !important;
+    border-left-color:transparent !important;
+  }
+  .maplibregl-popup:is(.maplibregl-popup-anchor-bottom,.maplibregl-popup-anchor-bottom-left,.maplibregl-popup-anchor-bottom-right):has(:is(.depth-query-popup,.shorely-v11-depth-query)) .maplibregl-popup-tip {border-top-color:var(--depth-pill-bg) !important;}
+  .maplibregl-popup:is(.maplibregl-popup-anchor-top,.maplibregl-popup-anchor-top-left,.maplibregl-popup-anchor-top-right):has(:is(.depth-query-popup,.shorely-v11-depth-query)) .maplibregl-popup-tip {border-bottom-color:var(--depth-pill-bg) !important;}
+  .maplibregl-popup.maplibregl-popup-anchor-left:has(:is(.depth-query-popup,.shorely-v11-depth-query)) .maplibregl-popup-tip {border-right-color:var(--depth-pill-bg) !important;}
+  .maplibregl-popup.maplibregl-popup-anchor-right:has(:is(.depth-query-popup,.shorely-v11-depth-query)) .maplibregl-popup-tip {border-left-color:var(--depth-pill-bg) !important;}
+  @media (max-width:360px) {
+    :is(.leaflet-popup,.maplibregl-popup) :is(.depth-query-popup,.shorely-v11-depth-query) {padding:18px 18px 20px !important;}
+    :is(.leaflet-popup,.maplibregl-popup) :is(.depth-query-popup,.shorely-v11-depth-query) h3 {font-size:18px !important;}
+    :is(.leaflet-popup,.maplibregl-popup) :is(.depth-query-value,.shorely-v11-depth-value) {font-size:44px !important;}
+  }
+}

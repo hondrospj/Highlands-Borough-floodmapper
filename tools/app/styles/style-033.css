@@ -1,0 +1,62 @@
+
+
+html body #timelineBubble,
+html body.observed-mode #timelineBubble,
+html.os-mac body #timelineBubble,
+html.os-windows body #timelineBubble,
+html.win-compact-ui body #timelineBubble{
+  width:auto !important;
+  min-width:0 !important;
+  max-width:max-content !important;
+  gap:7px !important;
+  padding-left:13px !important;
+  padding-right:13px !important;
+}
+
+html body #timelineBubble .timeline-bubble-current,
+html body.observed-mode #timelineBubble .timeline-bubble-current,
+html.os-mac body #timelineBubble .timeline-bubble-current,
+html.os-windows body #timelineBubble .timeline-bubble-current,
+html.win-compact-ui body #timelineBubble .timeline-bubble-current{
+  flex:0 0 auto !important;
+  max-width:none !important;
+}
+
+html body #timelineBubble .timeline-bubble-stage,
+html body.observed-mode #timelineBubble .timeline-bubble-stage,
+html.os-mac body #timelineBubble .timeline-bubble-stage,
+html.os-windows body #timelineBubble .timeline-bubble-stage,
+html.win-compact-ui body #timelineBubble .timeline-bubble-stage{
+  padding-left:8px !important;
+  padding-right:8px !important;
+}
+
+@media (max-width:900px), (max-width:1366px) and (any-pointer:coarse), (max-height:560px) and (pointer:coarse) {
+  html body #timelineBubble,
+  html body.observed-mode #timelineBubble,
+  html.os-mac body #timelineBubble,
+  html.os-windows body #timelineBubble,
+  html.win-compact-ui body #timelineBubble{
+    max-width:calc(100vw - 18px) !important;
+    gap:6px !important;
+    padding-left:10px !important;
+    padding-right:10px !important;
+  }
+
+  html body #timelineBubble .timeline-bubble-stage,
+  html body.observed-mode #timelineBubble .timeline-bubble-stage{
+    padding-left:7px !important;
+    padding-right:7px !important;
+  }
+}
+
+@media (max-width:420px){
+  html body #timelineBubble,
+  html body.observed-mode #timelineBubble{
+    max-width:calc(100vw - 14px) !important;
+    gap:5px !important;
+    padding-left:9px !important;
+    padding-right:9px !important;
+  }
+}
+

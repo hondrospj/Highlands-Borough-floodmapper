@@ -1,0 +1,127 @@
+
+  /* Keep both control rails readable as one consistent, ordered system. */
+  @media (min-width:901px) and (min-height:561px) and (not (any-pointer:coarse)), (min-width:1367px) and (min-height:561px), (min-width:901px) and (pointer:fine) and (not (any-pointer:coarse)), (min-width:1367px) and (pointer:fine), (min-width:901px) and (pointer:none) and (not (any-pointer:coarse)), (min-width:1367px) and (pointer:none) {
+    html body:not(.mobile-optimized) #leftPanel{
+      gap:7px !important;
+      padding:0 4px 8px 0 !important;
+      overflow-y:auto !important;
+      overflow-x:hidden !important;
+      scrollbar-width:thin !important;
+      scrollbar-color:rgba(125,249,255,.5) transparent !important;
+    }
+
+    html body #leftPanel > .data-source-card{order:1 !important}
+    html body #leftPanel > .forecast-scenario-card,
+    html body #leftPanel > .return-interval-card,
+    html body #leftPanel > #calendarCard{order:2 !important}
+    html body #leftPanel > .overlay-card{order:3 !important}
+    html body #leftPanel > .datum-card{order:4 !important}
+    html body #leftPanel > .opacity-card{order:5 !important}
+    html body #leftPanel > #timelineIntervalCard{order:6 !important}
+    html body #leftPanel > #legendDock{order:7 !important}
+    html body #leftPanel > .snapshot-card{order:8 !important}
+    html body #leftPanel > .mobile-top-tides-card{order:9 !important}
+
+    html body.return-interval-mode #leftPanel > .data-source-card,
+    html body.observed-mode #leftPanel > .data-source-card{order:1 !important}
+    html body.return-interval-mode #leftPanel > .return-interval-card,
+    html body.observed-mode #leftPanel > #calendarCard{order:2 !important}
+    html body.return-interval-mode #leftPanel > .overlay-card,
+    html body.observed-mode #leftPanel > .overlay-card{order:3 !important}
+    html body.return-interval-mode #leftPanel > .datum-card,
+    html body.observed-mode #leftPanel > .datum-card{order:4 !important}
+    html body.return-interval-mode #leftPanel > .opacity-card,
+    html body.observed-mode #leftPanel > .opacity-card{order:5 !important}
+    html body.return-interval-mode #leftPanel > #timelineIntervalCard,
+    html body.observed-mode #leftPanel > #timelineIntervalCard{order:6 !important}
+    html body.return-interval-mode #leftPanel > #legendDock,
+    html body.observed-mode #leftPanel > #legendDock{order:7 !important}
+    html body.return-interval-mode #leftPanel > .snapshot-card,
+    html body.observed-mode #leftPanel > .snapshot-card{order:8 !important}
+    html body.observed-mode #leftPanel > .mobile-top-tides-card{order:9 !important}
+
+    html body:not(.mobile-optimized) #leftPanel > .panel-card,
+    html body:not(.mobile-optimized) #leftPanel > #legendDock{
+      background:rgba(11,18,32,.94) !important;
+      border:1px solid rgba(191,219,254,.16) !important;
+      border-radius:16px !important;
+      box-shadow:0 12px 24px rgba(15,23,42,.20) !important;
+    }
+  }
+
+  @media (max-width:900px), (max-width:1366px) and (any-pointer:coarse), (max-height:560px) and (pointer:coarse) {
+    html body.mobile-optimized #leftPanel{
+      gap:8px !important;
+      overflow-y:auto !important;
+      overflow-x:hidden !important;
+    }
+
+    html body.mobile-optimized #leftPanel > .data-source-card{order:1 !important}
+    html body.mobile-optimized #leftPanel > .forecast-scenario-card,
+    html body.mobile-optimized #leftPanel > .return-interval-card,
+    html body.mobile-optimized #leftPanel > #calendarCard{order:2 !important}
+    html body.mobile-optimized #leftPanel > .overlay-card{order:3 !important}
+    html body.mobile-optimized #leftPanel > .datum-card{order:4 !important}
+    html body.mobile-optimized #leftPanel > .opacity-card{order:5 !important}
+    html body.mobile-optimized #leftPanel > #timelineIntervalCard{order:6 !important}
+    html body.mobile-optimized #leftPanel > .snapshot-card{order:7 !important}
+    html body.mobile-optimized #leftPanel > .mobile-top-tides-card{order:8 !important}
+    html body.mobile-optimized #leftPanel > #mobileRailMount{order:9 !important}
+
+    html body.mobile-optimized.return-interval-mode #leftPanel > .data-source-card,
+    html body.mobile-optimized.observed-mode #leftPanel > .data-source-card{order:1 !important}
+    html body.mobile-optimized.return-interval-mode #leftPanel > .return-interval-card,
+    html body.mobile-optimized.observed-mode #leftPanel > #calendarCard{order:2 !important}
+    html body.mobile-optimized.return-interval-mode #leftPanel > .overlay-card,
+    html body.mobile-optimized.observed-mode #leftPanel > .overlay-card{order:3 !important}
+    html body.mobile-optimized.return-interval-mode #leftPanel > .datum-card,
+    html body.mobile-optimized.observed-mode #leftPanel > .datum-card{order:4 !important}
+    html body.mobile-optimized.return-interval-mode #leftPanel > .opacity-card,
+    html body.mobile-optimized.observed-mode #leftPanel > .opacity-card{order:5 !important}
+    html body.mobile-optimized.return-interval-mode #leftPanel > #timelineIntervalCard,
+    html body.mobile-optimized.observed-mode #leftPanel > #timelineIntervalCard{order:6 !important}
+    html body.mobile-optimized.return-interval-mode #leftPanel > .snapshot-card,
+    html body.mobile-optimized.observed-mode #leftPanel > .snapshot-card{order:7 !important}
+
+    html body.mobile-optimized #leftPanel > .panel-card,
+    html body.mobile-optimized #mobileRailMount > .rail-card,
+    html body.mobile-optimized #mobileRailMount > #mapperTutorialBtn{
+      border:1px solid rgba(191,219,254,.16) !important;
+      border-radius:18px !important;
+      background:rgba(11,18,32,.94) !important;
+      box-shadow:none !important;
+    }
+
+    html body.mobile-optimized #mobileRailMount{
+      display:flex !important;
+      flex-direction:column !important;
+      gap:8px !important;
+      width:100% !important;
+    }
+
+    html body.mobile-optimized #mobileRailMount > .layers-card{
+      width:100% !important;
+      min-height:142px !important;
+      height:auto !important;
+      padding:12px !important;
+    }
+
+    html body.mobile-optimized #mobileRailMount > .layers-card .layer-list{
+      display:grid !important;
+      grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+      gap:8px !important;
+    }
+
+    html body.mobile-optimized #mobileRailMount > .layers-card .layer-item{
+      min-width:0 !important;
+      min-height:48px !important;
+      height:48px !important;
+      padding:7px 9px !important;
+      border-radius:13px !important;
+    }
+
+    html body.mobile-optimized #mobileRailMount > .layers-card .layer-name{
+      font-size:13px !important;
+      white-space:nowrap !important;
+    }
+  }

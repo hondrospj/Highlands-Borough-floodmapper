@@ -1,0 +1,24 @@
+
+  #exportStageFrame #exportMap {inset:0 auto auto 0 !important;width:100% !important;overflow:hidden !important;}
+  #exportStageFrame #exportFooter {position:absolute;left:0;right:0;bottom:0;z-index:1300;overflow:hidden;background:#0b1424;border-top:1px solid #40516b;box-sizing:border-box;}
+  #exportStageFrame #exportFooter :is(#exportTimestampLabel,#exportLegendDock,#exportLogoStrip) {position:absolute !important;right:auto !important;bottom:auto !important;transform:none !important;min-width:0 !important;max-width:none !important;min-height:0 !important;margin:0 !important;padding:0 !important;border:0 !important;border-radius:0 !important;background:transparent !important;box-shadow:none !important;box-sizing:border-box !important;overflow:hidden !important;}
+  #exportStageFrame #exportFooter #exportTimestampLabel {text-align:left !important;white-space:normal !important;}
+  #exportStageFrame #exportFooter #exportTimestampLabel span {position:absolute;left:0;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:0;}
+  #exportStageFrame #exportFooter #exportLogoStrip {display:flex;align-items:center;justify-content:flex-end;gap:var(--export-footer-gap) !important;}
+  #exportStageFrame #exportFooter .export-stage-logo {width:auto !important;height:auto !important;min-width:0 !important;max-width:100% !important;max-height:100% !important;object-fit:contain !important;flex-shrink:1;}
+  #exportStageFrame #exportFooter .export-depth-key {display:grid;gap:var(--export-key-gap) !important;}
+  #exportStageFrame #exportFooter .export-depth-key-heading strong {font-size:var(--export-key-title) !important;line-height:1.25 !important;font-weight:750 !important;letter-spacing:0 !important;}
+  #exportStageFrame #exportFooter .export-depth-key-scale {display:grid;gap:var(--export-key-gap) !important;}
+  #exportStageFrame #exportFooter .export-depth-key-gradient {height:var(--export-key-bar) !important;border:0 !important;box-shadow:none !important;}
+  #exportStageFrame #exportFooter .export-depth-key-ends {font-size:var(--export-key-label) !important;line-height:1.2 !important;letter-spacing:0 !important;text-transform:none !important;}
+  #exportStageFrame #exportFooter .export-depth-key-ends {position:relative;gap:var(--export-footer-gap) !important;}
+  #exportStageFrame #exportFooter .export-depth-key-ends-three {display:grid !important;grid-template-columns:minmax(max-content,18%) minmax(max-content,1fr) max-content;align-items:center;}
+  #exportStageFrame #exportFooter .export-depth-key-ends span {white-space:nowrap;}
+  #exportStageFrame #exportFooter .export-depth-key-ends-three span:nth-child(2) {position:static;justify-self:start;}
+  #exportStageFrame #exportFooter .export-depth-key-ends-three span:last-child {justify-self:end;}
+  #exportStageFrame #exportFooter .export-depth-key-note {display:none !important;}
+  @layer floodmapper-unified-base {
+    html body[data-shorelysafe-ui] #exportStageFrame #exportFooter #exportLegendDock .stage-legend-scale {font-size:var(--export-key-label) !important;line-height:1.2 !important;gap:var(--export-footer-gap) !important;}
+    html body[data-shorelysafe-ui] #exportStageFrame #exportFooter #exportLegendDock :is(.stage-legend-green,.stage-legend-gradient) {height:var(--export-key-bar) !important;margin-top:var(--export-key-gap) !important;border-width:1px !important;}
+  }
+  #exportStageFrame #exportMapAttribution {z-index:1400 !important;left:0 !important;bottom:0 !important;width:100% !important;max-width:none !important;background:#0b1424 !important;color:#aabbd1 !important;box-sizing:border-box !important;white-space:nowrap;overflow:hidden;}

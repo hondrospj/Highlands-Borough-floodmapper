@@ -1,0 +1,61 @@
+
+@media (max-width:900px), (max-width:1366px) and (any-pointer:coarse), (max-height:560px) and (pointer:coarse) {
+  html body.mobile-optimized #shorelyMobileSliderKey{
+    position:absolute !important;
+    top:13px !important;
+    left:62px !important;
+    right:46px !important;
+    height:18px !important;
+    display:flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    gap:clamp(8px, 2.4vw, 14px) !important;
+    z-index:16 !important;
+    pointer-events:none !important;
+    overflow:hidden !important;
+    white-space:nowrap !important;
+  }
+
+  html body.mobile-optimized #shorelyMobileSliderKey .shorely-mobile-slider-key-item{
+    display:inline-flex !important;
+    align-items:center !important;
+    gap:4px !important;
+    min-width:0 !important;
+    color:#eaf0ff !important;
+    font-size:9.8px !important;
+    font-weight:900 !important;
+    line-height:1 !important;
+    letter-spacing:0 !important;
+    text-shadow:0 1px 2px rgba(0,0,0,.35) !important;
+  }
+
+  html body.mobile-optimized #shorelyMobileSliderKey .shorely-mobile-slider-key-swatch{
+    width:10px !important;
+    min-width:10px !important;
+    height:10px !important;
+    border-radius:999px !important;
+    box-shadow:0 0 0 1px rgba(255,255,255,.16) !important;
+  }
+
+  html body.mobile-optimized #shorelyMobileSliderKey .shorely-mobile-slider-key-swatch.no{ background:#72d85d !important; }
+  html body.mobile-optimized #shorelyMobileSliderKey .shorely-mobile-slider-key-swatch.minor{ background:#d99a28 !important; }
+  html body.mobile-optimized #shorelyMobileSliderKey .shorely-mobile-slider-key-swatch.moderate{ background:#d75470 !important; }
+  html body.mobile-optimized #shorelyMobileSliderKey .shorely-mobile-slider-key-swatch.major{ background:#7659d6 !important; }
+
+  @media (max-width:340px) and (orientation:portrait){
+    html body.mobile-optimized #shorelyMobileSliderKey{
+      gap:5px !important;
+    }
+
+    html body.mobile-optimized #shorelyMobileSliderKey .shorely-mobile-slider-key-item{
+      gap:3px !important;
+      font-size:8.6px !important;
+    }
+
+    html body.mobile-optimized #shorelyMobileSliderKey .shorely-mobile-slider-key-swatch{
+      width:8px !important;
+      min-width:8px !important;
+      height:8px !important;
+    }
+  }
+}

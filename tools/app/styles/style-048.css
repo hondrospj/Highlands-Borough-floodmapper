@@ -1,0 +1,225 @@
+
+  /*
+   * Final phone layout contract:
+   * - the map title owns the first row;
+   * - map-tap mode and Controls share the second row when Buildings/Parcels are on;
+   * - the timeline key never runs underneath its help button.
+   */
+  @media (max-width:900px), (max-width:1366px) and (any-pointer:coarse), (max-height:560px) and (pointer:coarse) {
+    html body.mobile-optimized #mobileControlsToggle{
+      top:max(64px, calc(env(safe-area-inset-top, 0px) + 64px)) !important;
+    }
+
+    html body.mobile-optimized.persistent-flood-popup-open #timelineBubble{
+      visibility:hidden !important;
+      opacity:0 !important;
+      pointer-events:none !important;
+    }
+
+    html body.mobile-optimized:has(#mapClickModeControl:not([hidden])) #mobileControlsToggle{
+      left:auto !important;
+      right:10px !important;
+      width:104px !important;
+      min-width:104px !important;
+      transform:none !important;
+    }
+
+    html body.mobile-optimized #mapClickModeControl.map-click-mode-control{
+      top:max(64px, calc(env(safe-area-inset-top, 0px) + 64px)) !important;
+      left:10px !important;
+      right:auto !important;
+      width:auto !important;
+      max-width:calc(100vw - 128px) !important;
+      grid-template-columns:repeat(2, minmax(0, 1fr)) !important;
+      transform:none !important;
+    }
+
+    html body.mobile-optimized #mapClickModeControl .map-click-mode-label{
+      display:none !important;
+    }
+
+    html body.mobile-optimized #mapClickModeControl button{
+      min-width:0 !important;
+      padding:0 9px !important;
+      overflow:hidden !important;
+      font-size:0 !important;
+      text-overflow:clip !important;
+    }
+
+    html body.mobile-optimized #mapClickModeControl button::after{
+      font-size:10px !important;
+      line-height:1 !important;
+      font-weight:900 !important;
+      white-space:nowrap !important;
+    }
+
+    html body.mobile-optimized #mapClickBuildingBtn::after{content:"Building Info"}
+    html body.mobile-optimized #mapClickDepthBtn::after{content:"Flood Depth"}
+
+    html body.mobile-optimized #shorelyMobileSliderKey{
+      left:64px !important;
+      right:48px !important;
+      width:auto !important;
+      max-width:none !important;
+    }
+
+    html body.mobile-optimized .flood-history-close{
+      width:44px !important;
+      min-width:44px !important;
+      height:44px !important;
+      min-height:44px !important;
+      border-radius:11px !important;
+    }
+
+    html body.mobile-optimized .flood-year-control input[type="range"]{
+      height:30px !important;
+      min-height:30px !important;
+    }
+
+    html body.mobile-optimized .flood-scenario-field{
+      flex-basis:200px !important;
+    }
+
+    html body.mobile-optimized .shorely-flood-popup .leaflet-popup-close-button{
+      top:4px !important;
+      right:4px !important;
+      width:44px !important;
+      min-width:44px !important;
+      height:44px !important;
+      min-height:44px !important;
+      font-size:25px !important;
+      line-height:42px !important;
+    }
+
+    html body.mobile-optimized .shorely-flood-popup .depth-query-popup h3{
+      box-sizing:border-box !important;
+      margin:0 44px 10px 0 !important;
+      padding:0 !important;
+    }
+  }
+
+  @media (max-width:360px) and (orientation:portrait){
+    html body.mobile-optimized #mapTitleBadge.shorely-title-badge{
+      width:calc(100vw - 16px) !important;
+      max-width:calc(100vw - 16px) !important;
+      grid-template-columns:minmax(0, 1fr) auto !important;
+      gap:4px !important;
+      overflow:hidden !important;
+    }
+
+    html body.mobile-optimized #mapTitleBadge #mapTitleText{
+      min-width:0 !important;
+      overflow:hidden !important;
+      font-size:15px !important;
+      letter-spacing:-.025em !important;
+      text-overflow:ellipsis !important;
+      white-space:nowrap !important;
+    }
+
+    html body.mobile-optimized #mapTitleBadge #mapTitlePartnerLogo{
+      max-width:49px !important;
+      max-height:24px !important;
+    }
+
+    html body.mobile-optimized #shorelyMobileSliderKey{
+      left:60px !important;
+      right:48px !important;
+      gap:4px !important;
+    }
+
+    html body.mobile-optimized #shorelyMobileSliderKey .shorely-mobile-slider-key-item{
+      gap:3px !important;
+      font-size:8.2px !important;
+    }
+
+    html body.mobile-optimized #shorelyMobileSliderKey .shorely-mobile-slider-key-swatch{
+      width:7px !important;
+      min-width:7px !important;
+      height:7px !important;
+      min-height:7px !important;
+    }
+
+    html body.mobile-optimized .flood-history-head{
+      gap:8px !important;
+    }
+
+    html body.mobile-optimized .flood-history-head h2{
+      font-size:16px !important;
+    }
+
+    html body.mobile-optimized .flood-scenario-field{
+      flex-basis:156px !important;
+    }
+
+    html body.mobile-optimized .shorely-flood-popup .leaflet-popup-content{
+      margin:14px 14px 15px !important;
+    }
+
+    html body.mobile-optimized .shorely-flood-popup .house-alert-popup{
+      width:auto !important;
+      min-width:0 !important;
+      max-width:none !important;
+    }
+
+    html body.mobile-optimized .shorely-flood-popup .house-alert-popup h3{
+      margin-right:44px !important;
+    }
+
+    html body.mobile-optimized .shorely-flood-popup .house-alert-cta{
+      padding:7px 8px !important;
+      line-height:1.2 !important;
+      white-space:normal !important;
+    }
+  }
+
+  @media (min-width:600px) and (max-height:560px) and (orientation:landscape) and (pointer:coarse) {
+    html body.mobile-optimized .shorely-flood-popup .leaflet-popup-content{
+      margin:10px 12px 11px !important;
+    }
+
+    html body.mobile-optimized .shorely-flood-popup .house-alert-popup{
+      display:grid !important;
+      grid-template-columns:120px minmax(0, 1fr) !important;
+      grid-template-areas:
+        "kicker kicker"
+        "title title"
+        "summary action" !important;
+      column-gap:10px !important;
+      row-gap:5px !important;
+      width:100% !important;
+      min-width:0 !important;
+    }
+
+    html body.mobile-optimized .shorely-flood-popup .house-alert-kicker{
+      grid-area:kicker !important;
+      margin:0 48px 0 0 !important;
+    }
+
+    html body.mobile-optimized .shorely-flood-popup .house-alert-popup h3{
+      grid-area:title !important;
+      margin:0 48px 0 0 !important;
+      font-size:16px !important;
+    }
+
+    html body.mobile-optimized .shorely-flood-popup .house-alert-summary{
+      grid-area:summary !important;
+      justify-content:center !important;
+      min-height:44px !important;
+      margin:0 !important;
+      padding:7px 9px !important;
+    }
+
+    html body.mobile-optimized .shorely-flood-popup .house-alert-cta{
+      grid-area:action !important;
+      min-height:44px !important;
+      margin:0 !important;
+    }
+
+    html body.mobile-optimized .flood-scenario-field{
+      flex-basis:220px !important;
+    }
+
+    html body.mobile-optimized .flood-projection-chart{
+      height:128px !important;
+    }
+  }

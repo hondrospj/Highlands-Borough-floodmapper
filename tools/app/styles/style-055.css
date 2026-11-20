@@ -1,0 +1,9 @@
+
+  html body.physics-forecast-active #legendDock[data-legend-mode="depth"] .depth-legend-gradient,
+  html body.physics-forecast-active .export-depth-key-gradient{
+    background:linear-gradient(90deg,#7df9ff 0%,#38d3ff 22%,#168ceb 43%,#1853c6 62%,#132f84 80%,#050e33 100%) !important;
+  }
+  html body.physics-forecast-active #legendDock[data-legend-mode="depth"] .depth-legend-uncertainty-note strong,
+  html body.physics-forecast-active .export-depth-key-note strong{
+    color:#7df9ff !important;
+  }
