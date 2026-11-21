@@ -1,6 +1,6 @@
 {
   "profile": "mapper",
-  "checkedAtUtc": "2026-11-21T12:21:27.202033Z",
+  "checkedAtUtc": "2026-11-21T12:28:08.850484Z",
   "station": "8531804",
   "observationStation": "01407600",
   "datum": "NAVD88",
@@ -13,8 +13,8 @@
       "bytes": 338833
     },
     "observed.json": {
-      "sha256": "42f6727d667c84dfa7fe6f17e839c22d36940ca79cc868876c9cec3bde700fda",
-      "bytes": 43052431
+      "sha256": "2ca9c0277a1ee91de2d6164ff9610df97f59812db18c8172cb81874ede4cc16c",
+      "bytes": 43424268
     },
     "toptides.json": {
       "sha256": "528c154bd5bd45f9db88786be58c960006a4a4298ad17e5c074c5a1c470b8d71",
