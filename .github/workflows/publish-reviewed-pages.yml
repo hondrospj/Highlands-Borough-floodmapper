@@ -1,0 +1,66 @@
+name: Publish reviewed client mapper Pages backup
+on:
+  workflow_dispatch:
+    inputs:
+      source_commit:
+        description: Reviewed current main commit, full 40-character SHA
+        type: string
+        required: true
+      expected_index_sha256:
+        description: SHA-256 of the reviewed index.html
+        type: string
+        required: true
+permissions:
+  contents: read
+  actions: read
+  pages: write
+  id-token: write
+concurrency:
+  group: client-mapper-pages-publication
+  cancel-in-progress: false
+jobs:
+  publish:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    env:
+      SOURCE_COMMIT: ${{ inputs.source_commit }}
+      EXPECTED_INDEX_SHA256: ${{ inputs.expected_index_sha256 }}
+      ARTIFACT_NAME: client-mapper-pages-${{ github.run_id }}-${{ github.run_attempt }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /.shorelysafe/
+            /tools/refresh_contract.py
+            /index.html
+            /forecast.json
+            /observed.json
+            /toptides.json
+            /petss_station_index.json
+            /usgs_crests.json
+            /Boundaries/
+            /assets/
+            /data/
+            ${{ github.repository != 'hondrospj/Highlands-Borough-floodmapper' && '!/assets/hydraulic-connectivity-v1/' || '' }}
+      - name: Validate reviewed source and stage the existing native mapper
+        run: python3 .shorelysafe/publish_reviewed_pages.py stage
+      - name: Upload this attempt's uniquely named Pages artifact
+        id: upload
+        uses: actions/upload-pages-artifact@7b1f4a764d45c48632c6b24a0339c27f5614fb0b
+        with:
+          name: ${{ env.ARTIFACT_NAME }}
+          path: _site
+          retention-days: 1
+      - name: Deploy the exact uploaded artifact through GitHub Pages
+        id: deploy
+        env:
+          ARTIFACT_ID: ${{ steps.upload.outputs.artifact_id }}
+        run: python3 .shorelysafe/publish_reviewed_pages.py deploy

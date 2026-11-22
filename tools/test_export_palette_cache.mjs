@@ -1,15 +1,16 @@
+import {loadMapperTestSource} from './mapper_test_source.mjs';
 import fs from 'node:fs';
 import vm from 'node:vm';
 import assert from 'node:assert/strict';
-const after=fs.readFileSync(new URL('../index.html',import.meta.url),'utf8');
-const fn=(s,name)=>{const m=s.match(new RegExp('^    (?:async )?function '+name+'\\([\\s\\S]+?\\n    }','m'));assert(m,name);return m[0];};
+const {source: after} = await loadMapperTestSource();
+const fn=(s,name)=>{const m=s.match(new RegExp('^  (?:async )?function '+name+'\\([\\s\\S]+?\\n    }','m'));assert(m,name);return m[0];};
 assert(after.includes('const FLOOD_COMPOSITE_CACHE_ENTRY_LIMIT = FLOOD_COMPOSITE_CACHE_COMPACT ? 16 : 48;'));
 const checks=[];
 function harness(compact=false){
  const revoked=[],loads=new Map(),sizes=new Map(),waits=new Map(),failures=new Set();let serial=0,conversions=0;
  const context={FLOOD_COMPOSITE_CACHE_COMPACT:compact,URL:{revokeObjectURL:url=>revoked.push(url)},exportImageElementCache:new Map(),preloadPromiseCache:new Map(),floodCompositeBlobSizes:new Map(),throwIfExportCancelled:()=>{},applyOverlayDisplayColors:()=>{conversions++;},getExportImageElement:async source=>{loads.set(source,(loads.get(source)||0)+1);if(failures.delete(source))throw Error('load failed');if(waits.has(source))await waits.get(source).promise;return {naturalWidth:1,naturalHeight:1,source};},document:{createElement:()=>{const canvas={};canvas.getContext=()=>({drawImage:image=>{canvas.source=image.source;},getImageData:()=>({data:new Uint8ClampedArray([1,2,3,225])}),putImageData:()=>{}});return canvas;}},canvasToFillingObjectUrl:async canvas=>{const url='blob:palette-'+(++serial);context.floodCompositeBlobSizes.set(url,sizes.get(canvas.source)||1);return url;}};
  vm.createContext(context);
- vm.runInContext(['const displayOverlayCache = new Map();',...after.match(/    const DISPLAY_OVERLAY_CACHE_(?:LIMIT|BYTE_LIMIT) =[^\n]+;/g),fn(after,'getDisplayOverlayRecord'),'globalThis.audit={cache:displayOverlayCache,entryLimit:DISPLAY_OVERLAY_CACHE_LIMIT,byteLimit:DISPLAY_OVERLAY_CACHE_BYTE_LIMIT,get:(record,mode="depth")=>getDisplayOverlayRecord(record,mode)};'].join('\n'),context);
+ vm.runInContext(['const displayOverlayCache = new Map();',...after.match(/  const DISPLAY_OVERLAY_CACHE_(?:LIMIT|BYTE_LIMIT) =[^\n]+;/g),fn(after,'getDisplayOverlayRecord'),'globalThis.audit={cache:displayOverlayCache,entryLimit:DISPLAY_OVERLAY_CACHE_LIMIT,byteLimit:DISPLAY_OVERLAY_CACHE_BYTE_LIMIT,get:(record,mode="depth")=>getDisplayOverlayRecord(record,mode)};'].join('\n'),context);
  const pause=key=>{let resolve;const promise=new Promise(r=>resolve=r);waits.set(key,{promise,resolve});return ()=>{waits.get(key).resolve();waits.delete(key);};};
  return {...context.audit,context,revoked,loads,sizes,pause,failures,conversions:()=>conversions};
 }

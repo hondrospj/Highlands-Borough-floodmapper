@@ -3,7 +3,7 @@ on:
   push:
     paths:
       - index.html
-      - assets/highlands-tour.js
+      - tools/mapper_test_source.mjs
       - tools/test_hourly_replay.mjs
       - tools/test_control_ui.mjs
       - tools/test_daily_max.mjs
@@ -11,7 +11,7 @@ on:
   pull_request:
     paths:
       - index.html
-      - assets/highlands-tour.js
+      - tools/mapper_test_source.mjs
       - tools/test_hourly_replay.mjs
       - tools/test_control_ui.mjs
       - tools/test_daily_max.mjs
@@ -25,10 +25,18 @@ jobs:
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            index.html
+            tools/mapper_test_source.mjs
+            tools/test_hourly_replay.mjs
+            tools/test_control_ui.mjs
+            tools/test_daily_max.mjs
+          sparse-checkout-cone-mode: false
+          lfs: false
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
       - run: node tools/test_hourly_replay.mjs
       - run: node tools/test_control_ui.mjs
       - run: node tools/test_daily_max.mjs
-      - run: node --check assets/highlands-tour.js

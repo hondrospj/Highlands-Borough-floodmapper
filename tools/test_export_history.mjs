@@ -1,8 +1,9 @@
+import {loadMapperTestSource} from './mapper_test_source.mjs';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import vm from 'node:vm';
 
-const html = fs.readFileSync(process.env.EXPORT_TEST_SOURCE || new URL('../index.html', import.meta.url), 'utf8');
+const {source: html} = await loadMapperTestSource();
 const extract = name => {
   const match = html.match(new RegExp(`(?:async )?function ${name}\\([^]*?\\n    }`));
   assert.ok(match, `Missing ${name}`);

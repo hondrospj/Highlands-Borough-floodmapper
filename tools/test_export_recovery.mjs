@@ -1,8 +1,9 @@
+import {loadMapperTestSource} from './mapper_test_source.mjs';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import vm from 'node:vm';
 
-const source = fs.readFileSync(process.env.EXPORT_TEST_SOURCE || new URL('../index.html', import.meta.url), 'utf8');
+const {source: source} = await loadMapperTestSource();
 const rasterReadinessSource = source;
 function extract(name) {
   const testedSource = name === 'waitForExportRasterLayerReady' ? rasterReadinessSource : source;
@@ -11,7 +12,7 @@ function extract(name) {
   return match[0];
 }
 function context(name, mocks) {
-  const ctx = vm.createContext({setTimeout, clearTimeout, setInterval, clearInterval, URL, ...mocks});
+  const ctx = vm.createContext({setTimeout, clearTimeout, setInterval, clearInterval, URL, TOWN_CONFIG:{assets:{}}, ...mocks});
   if (name === 'waitForExportRasterLayerReady') vm.runInContext(extract('retryExportRasterLayerTiles'), ctx);
   vm.runInContext(extract(name), ctx);
   return ctx;

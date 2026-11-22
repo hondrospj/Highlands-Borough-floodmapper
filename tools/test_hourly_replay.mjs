@@ -1,8 +1,9 @@
+import {loadMapperTestSource} from './mapper_test_source.mjs';
 // Exercise the deployed replay functions, including real gaps and day boundaries.
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import vm from 'node:vm';
-const html=fs.readFileSync(new URL(process.env.REPLAY_SOURCE || '../index.html',import.meta.url),'utf8');
+const {source: html} = await loadMapperTestSource();
 function extract(name){
  const start=html.search(new RegExp('^    (?:async )?function '+name+'\\(','m'));
  assert(start>=0,name);return html.slice(start,html.indexOf('\n    }',start)+6);
@@ -89,7 +90,7 @@ if(canonical){
  primary.entries=[sample(0,0),sample(30,2)];assert.equal(c.getStageValue(c[builder](primary,date)[1]),1);
  // December 31 loads the next year for both calendar replay and range export.
  const calls=[];
- Object.assign(c,{getObservedArchiveSourceForDate:()=> 'lewes',ensureObservedArchiveYear:async(...a)=>calls.push(a),getExportDayKeyFromDate:s=>s});
+ Object.assign(c,{archiveGeneration:0,lewesHourlyDaysByDate:new Map(),observed15MinuteDaysByDate:new Map(),getObservedArchiveSourceForDate:()=> 'lewes',ensureObservedArchiveYear:async(...a)=>calls.push(a),getExportDayKeyFromDate:s=>s});
  vm.runInContext(extract('ensureObservedArchiveForDate'),c);
  vm.runInContext(extract('ensureObservedArchiveRange'),c);
  await c.ensureObservedArchiveForDate('1962-12-31');

@@ -1,8 +1,9 @@
+import {loadMapperTestSource} from './mapper_test_source.mjs';
 // Exercise the shipped renderer with failed loads, decoding stalls and request races.
 import fs from 'node:fs';
 import vm from 'node:vm';
 import assert from 'node:assert/strict';
-const html=fs.readFileSync(new URL('../index.html',import.meta.url), 'utf8');
+const {source: html} = await loadMapperTestSource();
 const extract=name=>html.match(new RegExp('^    (?:async )?function '+name+'\\([\\s\\S]+?\\n    }','m'))?.[0];
 const native=html.includes('displayedFloodFrame = { entry, series, stage: rawStage');
 const physics=Boolean(extract('setPhysicsFloodLayer'));
