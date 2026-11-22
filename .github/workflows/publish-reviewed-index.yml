@@ -1,0 +1,55 @@
+name: Publish reviewed client mapper index
+on:
+  workflow_dispatch:
+    inputs:
+      source_commit:
+        description: Reviewed source commit, full 40-character SHA
+        type: string
+        required: true
+      expected_before:
+        description: SHA-256 of the reviewed current live index
+        type: string
+        required: true
+      expected_after:
+        description: SHA-256 of the reviewed replacement index
+        type: string
+        required: true
+      dry_run:
+        description: Validate the current deployment without publishing
+        type: boolean
+        default: true
+permissions:
+  contents: read
+concurrency:
+  group: shorelysafe-publish
+  cancel-in-progress: false
+jobs:
+  publish:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            .shorelysafe/
+            index.html
+      - name: Publish the exact reviewed index
+        env:
+          SHORELYSAFE_TOKEN: ${{ secrets.SHORELYSAFE_PUBLISH_TOKEN }}
+          SOURCE_COMMIT: ${{ inputs.source_commit }}
+          EXPECTED_BEFORE: ${{ inputs.expected_before }}
+          EXPECTED_AFTER: ${{ inputs.expected_after }}
+          DRY_RUN: ${{ inputs.dry_run }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          args=()
+          if [ "$DRY_RUN" = "true" ]; then args+=(--dry-run); fi
+          python3 .shorelysafe/publish_reviewed_index.py \
+            --source-commit "$SOURCE_COMMIT" \
+            --expected-before "$EXPECTED_BEFORE" \
+            --expected-after "$EXPECTED_AFTER" "${args[@]}"

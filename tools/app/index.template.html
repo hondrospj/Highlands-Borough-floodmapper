@@ -1,12 +1,34 @@
 
 <!doctype html>
 <!-- The app owns timeline metadata and legend placement; skip the hosting legacy controller. -->
-<html lang="en" data-nww-avalon-timeline data-nww-mobile-layout data-ss-ui-ready="app">
+<html lang="en" data-nww-avalon-timeline data-nww-mobile-layout data-nww-phone data-ss-ui-ready="app">
 <head>
+<meta charset="utf-8">
 <template id="floodmapperTownData"><!-- floodmapper:profile --></template>
-<link rel="stylesheet" href="./assets/north-wildwood-font.css?v=44bc78225f5bedbc">
+<script id="floodmapper-early-forecast">
+(() => {
+  const config = JSON.parse(document.getElementById("floodmapperTownData").content.textContent);
+  const url = new URL(config.data?.forecastPath || "./forecast.json", window.location.href).href;
+  const controller = new AbortController();
+  const timer = window.setTimeout(() => controller.abort(), 30000);
+  const request = fetch(url, {
+    cache: "no-cache",
+    headers: { Accept: "application/geo+json, application/json" },
+    signal: controller.signal,
+    priority: "high"
+  }).then(response => {
+    if (!response.ok) throw new Error(`HTTP ${response.status} for ${url}`);
+    return response.json();
+  }).then(data => ({ data }), error => ({ error }))
+    .finally(() => window.clearTimeout(timer));
+  window.floodmapperStartupForecast = { url, request };
+})();
+</script>
+
+<link rel="preload" as="style" href="https://cdn.jsdelivr.net/gh/hondrospj/Highlands-Borough-floodmapper@318ad74ebaa4ec38d2fdfd0e56d50e3f52111166/assets/north-wildwood-phone.css" integrity="sha256-/BdQhxVMH4DW3bUcGGlWPrnFDWMRUeRF3Oj0cSUVXDo=" crossorigin="anonymous">
+<link rel="preload" as="style" href="https://cdn.jsdelivr.net/gh/hondrospj/Highlands-Borough-floodmapper@318ad74ebaa4ec38d2fdfd0e56d50e3f52111166/assets/north-wildwood-font.css" integrity="sha256-U2bEzqfhlOI6INqW1dfL9KqBp95wOPVZFA8Q5ZoGI6w=" crossorigin="anonymous">
 <link rel="preconnect" href="https://hondrospj.github.io" crossorigin>
-<!-- nww:style:style-001 -->
+<link rel="preload" as="style" href="https://cdn.jsdelivr.net/gh/hondrospj/Highlands-Borough-floodmapper@318ad74ebaa4ec38d2fdfd0e56d50e3f52111166/assets/styles/app-01.css" integrity="sha256-vnkRGrmJh7yWrPqUJ0DShQDuuJnKjZnu7LOnVQgdUHg=" crossorigin="anonymous">
 <!-- nww:style:style-002 -->
 
 
@@ -17,8 +39,8 @@
 <!-- Keep the same layer order on GitHub Pages and CupaJoe. -->
 <!-- nww:style:style-006 -->
 <!-- Shorely Safe browser-tab branding -->
-<link rel="icon" type="image/png" href="./assets/shorelysafe-favicon-20261008.png" />
-<link rel="stylesheet" href="assets/north-wildwood-loading.css?v=20261027-lines1">
+<link rel="icon" type="image/png" href="https://cdn.jsdelivr.net/gh/hondrospj/Highlands-Borough-floodmapper@318ad74ebaa4ec38d2fdfd0e56d50e3f52111166/assets/shorelysafe-favicon-20261008.png" />
+<link rel="preload" as="style" href="https://cdn.jsdelivr.net/gh/hondrospj/Highlands-Borough-floodmapper@318ad74ebaa4ec38d2fdfd0e56d50e3f52111166/assets/north-wildwood-loading.css" integrity="sha256-OclVUciwC8dfnrbjEVVpUXJ+sWLr8VAx+T16FlGWO6U=" crossorigin="anonymous">
 
 
 <!-- Keep optional work outside the initial flood-map loading path. -->
@@ -26,21 +48,20 @@
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="preconnect" href="https://basemaps.arcgis.com" crossorigin>
 <link rel="preconnect" href="https://floodmapperv1.b-cdn.net" crossorigin>
-<!-- nww:script:script-001 -->
+<link rel="preload" as="script" href="https://cdn.jsdelivr.net/gh/hondrospj/Highlands-Borough-floodmapper@318ad74ebaa4ec38d2fdfd0e56d50e3f52111166/assets/app/startup.js" integrity="sha256-Byo/EZ1P/sg9cNG69T7MIhz2T/z1T3g//kJUI4sRfXc=" crossorigin="anonymous">
 
-<!-- nww:style:style-007 -->
+<link rel="preload" as="style" href="https://cdn.jsdelivr.net/gh/hondrospj/Highlands-Borough-floodmapper@318ad74ebaa4ec38d2fdfd0e56d50e3f52111166/assets/styles/app-02.css" integrity="sha256-SyfYMHzPs9FBWxfczpc1waRa7w9Hnt5EUs1zLkeht4o=" crossorigin="anonymous">
 
-<link rel="stylesheet" href="assets/avalon-mobile.css?v=20261021-tablet1">
-<link rel="stylesheet" href="assets/north-wildwood-timeline.css?v=20261021-tablet1">
-<!-- nww:script:script-002 -->
+<link rel="preload" as="style" href="https://cdn.jsdelivr.net/gh/hondrospj/Highlands-Borough-floodmapper@318ad74ebaa4ec38d2fdfd0e56d50e3f52111166/assets/avalon-mobile.css" integrity="sha256-O8jDXYBJq9Nmndn/olzOLHGlAUfssakRrThVZl/dTHQ=" crossorigin="anonymous">
+<link rel="preload" as="style" href="https://cdn.jsdelivr.net/gh/hondrospj/Highlands-Borough-floodmapper@318ad74ebaa4ec38d2fdfd0e56d50e3f52111166/assets/north-wildwood-timeline.css" integrity="sha256-DPCDWzohjwEEVX8XEZNzTunwBDr99oVS8rpSJmv7SFw=" crossorigin="anonymous">
+<link rel="preload" as="script" href="https://cdn.jsdelivr.net/gh/hondrospj/Highlands-Borough-floodmapper@318ad74ebaa4ec38d2fdfd0e56d50e3f52111166/assets/app/mobile-class.js" integrity="sha256-JnQCDhrw7Ucvx9qY6h5/93feiV4ixWWDqh5YJxSgYwY=" crossorigin="anonymous">
 
-<meta charset="utf-8" />
   <title><!-- floodmapper:page-title --></title>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <!-- nww:script:script-003 -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="preload" as="script" href="https://cdn.jsdelivr.net/gh/hondrospj/Highlands-Borough-floodmapper@318ad74ebaa4ec38d2fdfd0e56d50e3f52111166/assets/app/platform.js" integrity="sha256-vnp9iUMwAY1GOIVphF3nW/A73Xj+MyHJRxqV4icw1Yk=" crossorigin="anonymous">
+  <link rel="preload" as="style" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 
-  <!-- nww:style:style-008 -->
+  <link rel="preload" as="style" href="https://cdn.jsdelivr.net/gh/hondrospj/Highlands-Borough-floodmapper@318ad74ebaa4ec38d2fdfd0e56d50e3f52111166/assets/styles/app-03.css" integrity="sha256-qcGYaLGMvry4Eh+wyzJqgQ4Vy2Yuyi22Ht5mj6QXfw0=" crossorigin="anonymous">
 
   <!-- nww:style:style-009 -->
 
@@ -49,16 +70,16 @@
 
 
   <!-- nww:style:style-011 -->
-  <link rel="stylesheet" href="./assets/map-status.css?v=691b3e74990d9d20" />
-<link rel="stylesheet" href="assets/north-wildwood-mobile.css?v=20261026-holistic1">
-<!-- nww:style:style-012 -->
-<link rel="stylesheet" href="assets/north-wildwood-layers.css?v=20261021-tablet1">
-<link rel="stylesheet" href="assets/north-wildwood-controls.css?v=20261021-tablet1">
-<link rel="stylesheet" href="assets/north-wildwood-calendar.css?v=20261021-tablet1">
-<link rel="stylesheet" href="assets/export-date-time-picker.css?v=9a8f640254cba6b4">
-<link rel="stylesheet" href="assets/north-wildwood-type.css?v=20261021-tablet1">
+  <link rel="preload" as="style" href="https://cdn.jsdelivr.net/gh/hondrospj/Highlands-Borough-floodmapper@318ad74ebaa4ec38d2fdfd0e56d50e3f52111166/assets/map-status.css" integrity="sha256-aRs+dJkNnSCeB1TVNac2UIk7KfFS2lxGc1JBPDD1aTo=" crossorigin="anonymous">
+<link rel="preload" as="style" href="https://cdn.jsdelivr.net/gh/hondrospj/Highlands-Borough-floodmapper@318ad74ebaa4ec38d2fdfd0e56d50e3f52111166/assets/north-wildwood-mobile.css" integrity="sha256-ijGx+JardBGgiZWAf9qoU6MDnt4Xqu8tNbGYkYzwEkk=" crossorigin="anonymous">
+<link rel="preload" as="style" href="https://cdn.jsdelivr.net/gh/hondrospj/Highlands-Borough-floodmapper@318ad74ebaa4ec38d2fdfd0e56d50e3f52111166/assets/styles/app-04.css" integrity="sha256-UJvsrt1g3CJDEC9k6gRG7aSIWZ13GgJ2l2islifECKg=" crossorigin="anonymous">
+<link rel="preload" as="style" href="https://cdn.jsdelivr.net/gh/hondrospj/Highlands-Borough-floodmapper@318ad74ebaa4ec38d2fdfd0e56d50e3f52111166/assets/north-wildwood-layers.css" integrity="sha256-mGAarDIcymt52uWd+0/oBg5KFZa9YS/bQtx7LGhlLfY=" crossorigin="anonymous">
+<link rel="preload" as="style" href="https://cdn.jsdelivr.net/gh/hondrospj/Highlands-Borough-floodmapper@318ad74ebaa4ec38d2fdfd0e56d50e3f52111166/assets/north-wildwood-controls.css" integrity="sha256-IISzlMciUed5CfaBqFnn1ixA77082gY9OnaQUsPLa8E=" crossorigin="anonymous">
+<link rel="preload" as="style" href="https://cdn.jsdelivr.net/gh/hondrospj/Highlands-Borough-floodmapper@318ad74ebaa4ec38d2fdfd0e56d50e3f52111166/assets/north-wildwood-calendar.css" integrity="sha256-TkVSLwZeWcjgctM3eF2um4UJyvWrU/7ATK5cRhf4Jz8=" crossorigin="anonymous">
+<link rel="preload" as="style" href="https://cdn.jsdelivr.net/gh/hondrospj/Highlands-Borough-floodmapper@318ad74ebaa4ec38d2fdfd0e56d50e3f52111166/assets/export-date-time-picker.css" integrity="sha256-mo9kAlTLprQiY+tOrIUhxMChtwVUjRK+LhqG7XQPjb8=" crossorigin="anonymous">
+<link rel="preload" as="style" href="https://cdn.jsdelivr.net/gh/hondrospj/Highlands-Borough-floodmapper@318ad74ebaa4ec38d2fdfd0e56d50e3f52111166/assets/north-wildwood-type.css" integrity="sha256-vxiibhpiVkrcKK+uEeBfkiHjfcI6bsa/i3EB995B4so=" crossorigin="anonymous">
 <!-- Load the complete layout before rendering any controls. -->
-<!-- nww:style:style-013 -->
+<link rel="preload" as="style" href="https://cdn.jsdelivr.net/gh/hondrospj/Highlands-Borough-floodmapper@318ad74ebaa4ec38d2fdfd0e56d50e3f52111166/assets/styles/app-05.css" integrity="sha256-97dWewdaeu7vDqwUCxIzNJ2328ZMsQrWaUKKaHyHfdA=" crossorigin="anonymous">
 <!-- nww:style:style-014 -->
 <!-- nww:style:style-015 -->
 <!-- nww:style:style-016 -->
@@ -133,11 +154,17 @@
 <!-- nww:style:style-079 -->
 <!-- nww:style:style-080 -->
 <!-- nww:style:style-081 -->
+<style id="floodmapper-first-paint-priority">@layer floodmapper-first-paint;</style>
 <style id="floodmapper-quiet-loading-20261119">
 /* Keep request/readiness state and failure recovery; omit loading presentation. */
 body:not([data-site-loader$="error"]):not([data-site-loader$="failed"]) #nwSiteLoader{display:none!important}
 html body.nw-app-loading #app[inert]{filter:none!important;animation:none!important}
-html body.nw-app-loading :is(#app,#mobileControlsToggle,#legendDock):not([inert]),html body.nw-app-loading #topBanner{display:none!important;opacity:0!important;visibility:hidden!important;pointer-events:none!important}
+html body.nw-app-loading :is(#mobileControlsToggle,#legendDock):not([inert]),html body.nw-app-loading #topBanner{display:none!important;opacity:0!important;visibility:hidden!important;pointer-events:none!important}
+html body.nw-app-loading #app{opacity:1!important;visibility:hidden!important}
+html body.nw-app-loading #app :not(#map,#map *){visibility:hidden!important}
+@layer floodmapper-first-paint{html body.nw-app-loading #mapTitleBadge{opacity:0!important;visibility:hidden!important}}
+html body.nw-app-loading #map{visibility:visible!important}
+#startupMapPreview{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;pointer-events:none}
 #nwSiteLoader::before,#nwSiteLoader::after,.nw-loader-spinner,.nw-loader-progress,.flood-history-spinner,.download-btn-spinner{display:none!important;animation:none!important}
 .flood-history-loading{display:none!important}
 #stageSubText:empty,#floodFrameStatus:empty{display:none!important}
@@ -147,7 +174,29 @@ body:has(#contoursToggle[aria-busy="true"]) #contoursStatus{display:none!importa
 .nww-picker-message:empty{display:none!important}
 </style>
 </head>
-<body data-floodmapper-loading-ui="quiet-20261119" data-county-viewport="20261017" data-county-mobile="20261015" data-county-fix="20261015" class="nw-app-loading" data-flood-frame-cache="bounded-composites-20261008" data-flood-frame-swap="decode-before-swap-20261008" data-shorelysafe-ui="20261017" data-flood-frame-resilience="retain-retry-20261013" data-floodmapper-reference="20261017" data-fleet-viewport-existing="true" data-floodmapper-unified="20261017.3">
+<body data-floodmapper-initial-minutes="60" data-floodmapper-loading-ui="quiet-20261119" data-county-viewport="20261017" data-county-mobile="20261015" data-county-fix="20261015" class="nw-app-loading" data-flood-frame-cache="bounded-composites-20261008" data-flood-frame-swap="decode-before-swap-20261008" data-shorelysafe-ui="20261017" data-flood-frame-resilience="retain-retry-20261013" data-floodmapper-reference="20261017" data-fleet-viewport-existing="true" data-floodmapper-unified="20261017.3">
+  <style data-nww-startup-style>@layer north-wildwood-font, north-wildwood-control-layout, north-wildwood-phone;</style>
+<link data-nww-startup-style rel="stylesheet" href="https://cdn.jsdelivr.net/gh/hondrospj/Highlands-Borough-floodmapper@318ad74ebaa4ec38d2fdfd0e56d50e3f52111166/assets/north-wildwood-phone.css" integrity="sha256-/BdQhxVMH4DW3bUcGGlWPrnFDWMRUeRF3Oj0cSUVXDo=" crossorigin="anonymous">
+<link data-nww-startup-style rel="stylesheet" href="https://cdn.jsdelivr.net/gh/hondrospj/Highlands-Borough-floodmapper@318ad74ebaa4ec38d2fdfd0e56d50e3f52111166/assets/north-wildwood-font.css" integrity="sha256-U2bEzqfhlOI6INqW1dfL9KqBp95wOPVZFA8Q5ZoGI6w=" crossorigin="anonymous">
+<link data-nww-startup-style rel="stylesheet" data-nww-style-bundle="app-01" href="https://cdn.jsdelivr.net/gh/hondrospj/Highlands-Borough-floodmapper@318ad74ebaa4ec38d2fdfd0e56d50e3f52111166/assets/styles/app-01.css" integrity="sha256-vnkRGrmJh7yWrPqUJ0DShQDuuJnKjZnu7LOnVQgdUHg=" crossorigin="anonymous">
+<link data-nww-startup-style rel="stylesheet" href="https://cdn.jsdelivr.net/gh/hondrospj/Highlands-Borough-floodmapper@318ad74ebaa4ec38d2fdfd0e56d50e3f52111166/assets/north-wildwood-loading.css" integrity="sha256-OclVUciwC8dfnrbjEVVpUXJ+sWLr8VAx+T16FlGWO6U=" crossorigin="anonymous">
+<script id="floodmapper-startup-20261002" data-nww-script="script-001" src="https://cdn.jsdelivr.net/gh/hondrospj/Highlands-Borough-floodmapper@318ad74ebaa4ec38d2fdfd0e56d50e3f52111166/assets/app/startup.js" integrity="sha256-Byo/EZ1P/sg9cNG69T7MIhz2T/z1T3g//kJUI4sRfXc=" crossorigin="anonymous"></script>
+<link data-nww-startup-style rel="stylesheet" data-nww-style-bundle="app-02" href="https://cdn.jsdelivr.net/gh/hondrospj/Highlands-Borough-floodmapper@318ad74ebaa4ec38d2fdfd0e56d50e3f52111166/assets/styles/app-02.css" integrity="sha256-SyfYMHzPs9FBWxfczpc1waRa7w9Hnt5EUs1zLkeht4o=" crossorigin="anonymous">
+<link data-nww-startup-style rel="stylesheet" href="https://cdn.jsdelivr.net/gh/hondrospj/Highlands-Borough-floodmapper@318ad74ebaa4ec38d2fdfd0e56d50e3f52111166/assets/avalon-mobile.css" integrity="sha256-O8jDXYBJq9Nmndn/olzOLHGlAUfssakRrThVZl/dTHQ=" crossorigin="anonymous">
+<link data-nww-startup-style rel="stylesheet" href="https://cdn.jsdelivr.net/gh/hondrospj/Highlands-Borough-floodmapper@318ad74ebaa4ec38d2fdfd0e56d50e3f52111166/assets/north-wildwood-timeline.css" integrity="sha256-DPCDWzohjwEEVX8XEZNzTunwBDr99oVS8rpSJmv7SFw=" crossorigin="anonymous">
+<script data-nww-script="script-002" src="https://cdn.jsdelivr.net/gh/hondrospj/Highlands-Borough-floodmapper@318ad74ebaa4ec38d2fdfd0e56d50e3f52111166/assets/app/mobile-class.js" integrity="sha256-JnQCDhrw7Ucvx9qY6h5/93feiV4ixWWDqh5YJxSgYwY=" crossorigin="anonymous"></script>
+<script data-nww-script="script-003" src="https://cdn.jsdelivr.net/gh/hondrospj/Highlands-Borough-floodmapper@318ad74ebaa4ec38d2fdfd0e56d50e3f52111166/assets/app/platform.js" integrity="sha256-vnp9iUMwAY1GOIVphF3nW/A73Xj+MyHJRxqV4icw1Yk=" crossorigin="anonymous"></script>
+<link data-nww-startup-style rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<link data-nww-startup-style rel="stylesheet" data-nww-style-bundle="app-03" href="https://cdn.jsdelivr.net/gh/hondrospj/Highlands-Borough-floodmapper@318ad74ebaa4ec38d2fdfd0e56d50e3f52111166/assets/styles/app-03.css" integrity="sha256-qcGYaLGMvry4Eh+wyzJqgQ4Vy2Yuyi22Ht5mj6QXfw0=" crossorigin="anonymous">
+<link data-nww-startup-style rel="stylesheet" href="https://cdn.jsdelivr.net/gh/hondrospj/Highlands-Borough-floodmapper@318ad74ebaa4ec38d2fdfd0e56d50e3f52111166/assets/map-status.css" integrity="sha256-aRs+dJkNnSCeB1TVNac2UIk7KfFS2lxGc1JBPDD1aTo=" crossorigin="anonymous"/>
+<link data-nww-startup-style rel="stylesheet" href="https://cdn.jsdelivr.net/gh/hondrospj/Highlands-Borough-floodmapper@318ad74ebaa4ec38d2fdfd0e56d50e3f52111166/assets/north-wildwood-mobile.css" integrity="sha256-ijGx+JardBGgiZWAf9qoU6MDnt4Xqu8tNbGYkYzwEkk=" crossorigin="anonymous">
+<link data-nww-startup-style rel="stylesheet" data-nww-style-bundle="app-04" href="https://cdn.jsdelivr.net/gh/hondrospj/Highlands-Borough-floodmapper@318ad74ebaa4ec38d2fdfd0e56d50e3f52111166/assets/styles/app-04.css" integrity="sha256-UJvsrt1g3CJDEC9k6gRG7aSIWZ13GgJ2l2islifECKg=" crossorigin="anonymous">
+<link data-nww-startup-style rel="stylesheet" href="https://cdn.jsdelivr.net/gh/hondrospj/Highlands-Borough-floodmapper@318ad74ebaa4ec38d2fdfd0e56d50e3f52111166/assets/north-wildwood-layers.css" integrity="sha256-mGAarDIcymt52uWd+0/oBg5KFZa9YS/bQtx7LGhlLfY=" crossorigin="anonymous">
+<link data-nww-startup-style rel="stylesheet" href="https://cdn.jsdelivr.net/gh/hondrospj/Highlands-Borough-floodmapper@318ad74ebaa4ec38d2fdfd0e56d50e3f52111166/assets/north-wildwood-controls.css" integrity="sha256-IISzlMciUed5CfaBqFnn1ixA77082gY9OnaQUsPLa8E=" crossorigin="anonymous">
+<link data-nww-startup-style rel="stylesheet" href="https://cdn.jsdelivr.net/gh/hondrospj/Highlands-Borough-floodmapper@318ad74ebaa4ec38d2fdfd0e56d50e3f52111166/assets/north-wildwood-calendar.css" integrity="sha256-TkVSLwZeWcjgctM3eF2um4UJyvWrU/7ATK5cRhf4Jz8=" crossorigin="anonymous">
+<link data-nww-startup-style rel="stylesheet" href="https://cdn.jsdelivr.net/gh/hondrospj/Highlands-Borough-floodmapper@318ad74ebaa4ec38d2fdfd0e56d50e3f52111166/assets/export-date-time-picker.css" integrity="sha256-mo9kAlTLprQiY+tOrIUhxMChtwVUjRK+LhqG7XQPjb8=" crossorigin="anonymous">
+<link data-nww-startup-style rel="stylesheet" href="https://cdn.jsdelivr.net/gh/hondrospj/Highlands-Borough-floodmapper@318ad74ebaa4ec38d2fdfd0e56d50e3f52111166/assets/north-wildwood-type.css" integrity="sha256-vxiibhpiVkrcKK+uEeBfkiHjfcI6bsa/i3EB995B4so=" crossorigin="anonymous">
+<link data-nww-startup-style rel="stylesheet" data-nww-style-bundle="app-05" href="https://cdn.jsdelivr.net/gh/hondrospj/Highlands-Borough-floodmapper@318ad74ebaa4ec38d2fdfd0e56d50e3f52111166/assets/styles/app-05.css" integrity="sha256-97dWewdaeu7vDqwUCxIzNJ2328ZMsQrWaUKKaHyHfdA=" crossorigin="anonymous">
   <div id="nwSiteLoader" role="status" aria-live="polite" aria-label="Map status">
     <div class="nw-loader-card">
       <div class="nw-loader-spinner" aria-hidden="true"></div>
@@ -171,10 +220,12 @@ body:has(#contoursToggle[aria-busy="true"]) #contoursStatus{display:none!importa
   <div id="app">
     <div id="mapTitleBadge" class="shorely-title-badge" aria-hidden="true">
       <span id="mapTitleText" class="shorely-title-text"><!-- floodmapper:page-title --></span>
+      <span class="nww-mobile-title"><strong><!-- floodmapper:brand-title-line-1 --></strong><span><!-- floodmapper:brand-title-line-2 --></span></span>
       <img id="mapTitlePartnerLogo" class="shorely-title-logo shorely-title-logo-shorelysafe" src="" alt="" loading="eager" decoding="async" style="display:none;" />
     </div>
     <aside id="leftPanel">
       <button id="mobileControlsClose" class="centered-close-control" type="button" aria-label="Close controls" title="Close controls">&times;</button>
+      <div id="nwwDrawerViewMode"><span>Map view</span></div>
       <section class="panel-card compact-card data-source-card">
         <div class="section-title">
           <div class="title-with-help">
@@ -193,15 +244,15 @@ body:has(#contoursToggle[aria-busy="true"]) #contoursStatus{display:none!importa
       <section id="forecastScenarioCard" class="panel-card compact-card forecast-scenario-card">
         <div class="section-title">
           <div class="title-with-help">
-            <h2>Forecast range</h2>
+            <h2>Forecast Range</h2>
             <button id="forecastTypeHelpBtn" class="help-btn" type="button" aria-expanded="false" aria-controls="infoModal" title="Explain forecast type">?</button>
           </div>
-          <span id="forecastScenarioPill" class="nww-status-value" hidden>Mean</span>
+          <span id="forecastScenarioPill" class="nww-status-value" hidden>Likely</span>
         </div>
         <div class="button-grid-3">
-          <button id="forecastLowBtn" type="button" data-scenario="lowEnd">Lower End</button>
-          <button id="forecastMeanBtn" class="active" type="button" data-scenario="mean">Mean</button>
-          <button id="forecastHighBtn" type="button" data-scenario="highEnd">Upper End</button>
+          <button id="forecastLowBtn" type="button" data-scenario="lowEnd">Best Case</button>
+          <button id="forecastMeanBtn" class="active" type="button" data-scenario="mean">Likely</button>
+          <button id="forecastHighBtn" type="button" data-scenario="highEnd">Worst Case</button>
         </div>
       </section>
 
@@ -253,7 +304,7 @@ body:has(#contoursToggle[aria-busy="true"]) #contoursStatus{display:none!importa
           <span id="datumPill" class="nww-status-value" hidden>MLLW</span>
         </div>
         <div class="segmented-control" role="group" aria-label="Vertical datum">
-          <button id="datumMllwBtn" type="button" class="active" data-datum="mllw" aria-pressed="true">MLLW</button>
+          <button id="datumMllwBtn" title="Mean Lower Low Water" type="button" class="active" data-datum="mllw" aria-pressed="true">MLLW</button>
           <button id="datumNavd88Btn" type="button" data-datum="navd88" aria-pressed="false">NAVD88</button>
         </div>
       </section>
@@ -347,9 +398,22 @@ body:has(#contoursToggle[aria-busy="true"]) #contoursStatus{display:none!importa
         </div>
 
       </section>
+      <details id="mapCredits" class="panel-card compact-card" data-nww-group="tools" data-html2canvas-ignore="true">
+        <summary>Map credits</summary>
+        <div>
+          <div id="mapCreditsSources"></div>
+          <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap licence</a>
+        </div>
+      </details>
     </aside>
 <main id="mapWrap">
       <div id="map"></div>
+      <script id="floodmapper-startup-handoff">
+        {
+          const anchor = document.getElementById('floodmapper-quiet-loading-20261119');
+          for (const style of document.querySelectorAll('[data-nww-startup-style]')) anchor.before(style);
+        }
+      </script>
       <div id="map3d" role="region" aria-label="Interactive 3D <!-- floodmapper:town-name --> flood map"></div>
       <div id="map3dStatus" role="status">3D terrain ×4</div>
       <output id="map3dDiagnostics" hidden aria-hidden="true"></output>
@@ -365,34 +429,32 @@ body:has(#contoursToggle[aria-busy="true"]) #contoursStatus{display:none!importa
           </a>
         </section>
 
-        <button id="mapperTutorialBtn" class="mapper-tutorial-launch mapper-tutorial-launch-rail" type="button">Take the FloodMapper tour</button>
+        <button id="mapperTutorialBtn" class="mapper-tutorial-launch mapper-tutorial-launch-rail" type="button">Take the Flood Mapper Tour</button>
 
         <section class="rail-card layers-card nww-layers-card">
           <div class="rail-head">
             <div>
               <h3>Layers</h3>
             </div>
+            <button id="layersHelpBtn" class="help-btn" type="button" data-layer-help="layers" aria-label="About map layers" aria-haspopup="dialog" aria-controls="infoModal">?</button>
           </div>
           <div class="layer-list">
             <div class="layer-item">
               <div id="satelliteToggle" class="toggle" role="switch" tabindex="0" aria-checked="false" aria-label="Show satellite imagery"></div>
               <div class="layer-meta title-with-help">
                 <div class="layer-name">Satellite</div>
-                <button class="help-btn" type="button" data-layer-help="satellite" aria-label="About Satellite" aria-haspopup="dialog" aria-controls="infoModal">?</button>
               </div>
             </div>
             <div class="layer-item">
               <div id="buildingsToggle" class="toggle" role="switch" tabindex="0" aria-checked="false" aria-label="Show buildings above floodwater"></div>
               <div class="layer-meta title-with-help">
                 <div class="layer-name">Buildings</div>
-                <button class="help-btn" type="button" data-layer-help="buildings" aria-label="About Buildings" aria-haspopup="dialog" aria-controls="infoModal">?</button>
               </div>
             </div>
             <div class="layer-item">
               <div id="parcelsToggle" class="toggle" role="switch" tabindex="0" aria-checked="false" aria-label="Show parcels"></div>
               <div class="layer-meta title-with-help">
                 <div class="layer-name">Parcels</div>
-                <button class="help-btn" type="button" data-layer-help="parcels" aria-label="About Parcels" aria-haspopup="dialog" aria-controls="infoModal">?</button>
               </div>
             </div>
 
@@ -400,28 +462,24 @@ body:has(#contoursToggle[aria-busy="true"]) #contoursStatus{display:none!importa
               <div id="nsiStructuresToggle" class="toggle" role="switch" tabindex="0" aria-checked="false" aria-label="Show structural impacts: garage, crawlspace, first floor"></div>
               <div class="layer-meta title-with-help">
                 <div class="layer-name">Structural Impacts</div>
-                <button class="help-btn" type="button" data-layer-help="structuralImpacts" aria-label="About Structural Impacts" aria-haspopup="dialog" aria-controls="infoModal">?</button>
               </div>
             </div>
             <div class="layer-item">
               <div id="roadImpactsToggle" class="toggle" role="switch" tabindex="0" aria-checked="false" aria-label="Show roads with 6+ inches of water" title="Highlight roads with more than 0.5 ft of modeled water at the selected time"></div>
               <div class="layer-meta title-with-help">
-                <div class="layer-name">Roads with 6+ Inches of Water</div>
-                <button class="help-btn" type="button" data-layer-help="roadImpacts" aria-label="About Roads with 6+ Inches of Water" aria-haspopup="dialog" aria-controls="infoModal">?</button>
+                <div class="layer-name">Roads With 6+ Inches of Water</div>
               </div>
             </div>
             <div class="layer-item">
               <div id="roadsToggle" class="toggle on" role="switch" tabindex="0" aria-checked="true" aria-label="Show road names"></div>
               <div class="layer-meta title-with-help">
                 <div class="layer-name">Road Names</div>
-                <button class="help-btn" type="button" data-layer-help="roadNames" aria-label="About Road Names" aria-haspopup="dialog" aria-controls="infoModal">?</button>
               </div>
             </div>
             <div class="layer-item shorelysafe-camera-item" data-html2canvas-ignore="true">
               <div id="webcamsToggle" class="toggle" role="switch" tabindex="0" aria-checked="false" aria-label="Show cameras"></div>
               <div class="layer-meta title-with-help">
                 <div class="layer-name">Cameras</div>
-                <button class="help-btn" type="button" data-layer-help="cameras" aria-label="About Cameras" aria-haspopup="dialog" aria-controls="infoModal">?</button>
               </div>
             </div>
           </div>
@@ -496,10 +554,10 @@ body:has(#contoursToggle[aria-busy="true"]) #contoursStatus{display:none!importa
           <span class="timeline-key-item"><span class="timeline-key-swatch minor-flood" aria-hidden="true"></span><span class="timeline-key-label">Minor</span></span>
           <span class="timeline-key-item"><span class="timeline-key-swatch moderate-flood" aria-hidden="true"></span><span class="timeline-key-label">Moderate</span></span>
           <span class="timeline-key-item"><span class="timeline-key-swatch major-flood" aria-hidden="true"></span><span class="timeline-key-label">Major</span></span>
-          <div id="roadImpactsKey" hidden aria-label="Roads with 6+ Inches of Water">
+          <div id="roadImpactsKey" hidden aria-label="Roads With 6+ Inches of Water">
             <span class="road-impacts-swatch" aria-hidden="true"></span>
-            <span class="road-impacts-label">Roads with 6+ Inches of Water</span>
-            <span class="road-impacts-label-mobile">Roads with 6+ Inches of Water</span>
+            <span class="road-impacts-label">Roads With 6+ Inches of Water</span>
+            <span class="road-impacts-label-mobile">Roads With 6+ Inches of Water</span>
             <span id="roadImpactsStatus" class="road-impacts-status" role="status">Modeled road water depth &gt; 0.5 ft</span>
           </div>
         </div>
@@ -526,20 +584,31 @@ body:has(#contoursToggle[aria-busy="true"]) #contoursStatus{display:none!importa
     </main>
   </div>
 
-  <button id="mobileMapperTutorialBtn" class="mapper-tutorial-launch mapper-tutorial-launch-mobile" type="button" aria-haspopup="dialog" data-html2canvas-ignore="true">Take the FloodMapper tour</button>
+  <header id="nwwMobileUtilities" aria-label="<!-- floodmapper:page-title -->" data-html2canvas-ignore="true">
+    <div class="nww-mobile-actions" role="group" aria-label="Map actions">
+      <button id="mobileMapperTutorialBtn" class="mapper-tutorial-launch mapper-tutorial-launch-mobile" type="button" aria-label="Take the Flood Mapper Tour" aria-haspopup="dialog"><span class="nww-mobile-icon nww-mobile-icon--tour" aria-hidden="true"></span><span>Tour</span></button>
+      <button id="mobileControlsToggle" type="button" aria-label="Open map controls" aria-controls="leftPanel" aria-expanded="false"><span class="nww-mobile-icon nww-mobile-icon--controls" aria-hidden="true"><i></i><i></i><i></i></span><span>Controls</span></button>
+      <button id="nwwMobileLegendToggle" type="button" aria-controls="legendDock" aria-expanded="false"><span class="nww-mobile-icon nww-mobile-icon--legend" aria-hidden="true"><i></i><i></i><i></i></span><span>Legend</span></button>
+    </div>
+  </header>
 
   <div id="mapperTutorial" class="mapper-tutorial" hidden aria-hidden="true">
     <div id="mapperTutorialSpotlight" class="mapper-tutorial-spotlight" aria-hidden="true"></div>
     <section id="mapperTutorialCard" class="mapper-tutorial-card" role="dialog" aria-modal="true" aria-labelledby="mapperTutorialTitle" aria-describedby="mapperTutorialBody">
       <span id="mapperTutorialAnnouncement" class="mapper-tutorial-announcement" role="status" aria-atomic="true"></span>
       <div class="mapper-tutorial-head">
-        <span id="mapperTutorialProgress" class="mapper-tutorial-progress">1 of 9</span>
+        <span id="mapperTutorialProgress" class="mapper-tutorial-progress"></span>
+        <progress id="mapperTutorialTrack" class="mapper-tutorial-track" aria-hidden="true"></progress>
         <button id="mapperTutorialClose" class="mapper-tutorial-close centered-close-control" type="button" aria-label="Close tutorial">×</button>
       </div>
       <h2 id="mapperTutorialTitle"></h2>
-      <div id="mapperTutorialBody" class="mapper-tutorial-body"></div>
+      <div class="mapper-tutorial-content">
+        <div id="mapperTutorialBody" class="mapper-tutorial-body"></div>
+        <p id="mapperTutorialFeedback" class="mapper-tutorial-feedback" aria-live="polite"></p>
+      </div>
       <div class="mapper-tutorial-actions">
         <button id="mapperTutorialBack" type="button">Back</button>
+        <button id="mapperTutorialPractice" type="button" hidden></button>
         <button id="mapperTutorialNext" class="active" type="button">Next</button>
       </div>
     </section>
@@ -563,7 +632,7 @@ body:has(#contoursToggle[aria-busy="true"]) #contoursStatus{display:none!importa
     <section class="nww-calendar-dialog" role="dialog" aria-modal="true" aria-labelledby="observedCalendarTitle">
       <div class="nww-calendar-heading">
         <h2 id="observedCalendarTitle">Choose a past date</h2>
-        <button id="observedCalendarCloseBtn" type="button" aria-label="Close past date calendar">×</button>
+        <button id="observedCalendarCloseBtn" class="centered-close-control" type="button" aria-label="Close past date calendar">×</button>
       </div>
         <div class="calendar-toolbar">
           <button id="prevMonthBtn" type="button" aria-label="Previous month">‹</button>
@@ -779,7 +848,7 @@ body:has(#contoursToggle[aria-busy="true"]) #contoursStatus{display:none!importa
       <div id="exportFooter" class="export-stage-footer">
       <div id="exportLogoStrip" class="export-stage-logo-strip" aria-hidden="true">
         <img id="exportTownLogo" class="export-stage-logo export-stage-logo-town" src="" alt="" loading="lazy" decoding="async" style="display:none;" />
-        <img id="exportPartnerLogo" class="export-stage-logo export-stage-logo-shorelysafe" data-export-brand-src="./assets/shorelysafe-logo-export.jpg" src="" alt="" loading="lazy" decoding="async" style="display:none;" />
+        <img id="exportPartnerLogo" class="export-stage-logo export-stage-logo-shorelysafe" data-export-brand-src="https://cdn.jsdelivr.net/gh/hondrospj/Highlands-Borough-floodmapper@318ad74ebaa4ec38d2fdfd0e56d50e3f52111166/assets/shorelysafe-logo-export.jpg" src="" alt="" loading="lazy" decoding="async" style="display:none;" />
       </div>
       <section id="exportLegendDock" class="export-stage-legend"></section>
       <div id="exportTimestampLabel" class="export-stage-timestamp">--</div>
@@ -790,51 +859,53 @@ body:has(#contoursToggle[aria-busy="true"]) #contoursStatus{display:none!importa
 
 
 
-  <script src="assets/north-wildwood-loading.js?v=d7288f205d13c615"></script>
+  <script src="https://cdn.jsdelivr.net/gh/hondrospj/Highlands-Borough-floodmapper@318ad74ebaa4ec38d2fdfd0e56d50e3f52111166/assets/north-wildwood-loading.js" integrity="sha256-MtOVevKNIOgYspVRWcDa3jy8K6gM6C/BgFV9TyqaTq4=" crossorigin="anonymous"></script>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="https://unpkg.com/esri-leaflet@3.0.19/dist/esri-leaflet.js"></script>
   <script src="https://unpkg.com/esri-leaflet-vector@4.3.2/dist/esri-leaflet-vector.js"></script>
-  <script src="assets/road-labels.js?v=3ad509cbb4274b6c"></script>
+  <script src="https://cdn.jsdelivr.net/gh/hondrospj/Highlands-Borough-floodmapper@318ad74ebaa4ec38d2fdfd0e56d50e3f52111166/assets/road-labels.js" integrity="sha256-OtUJy7QnS2xxcJDXDKIR8vJPTkEQwrWq1sj5JOegJoA=" crossorigin="anonymous"></script>
 
-  <script src="./assets/app/raster-readers.js?v=shared"></script>
-  <!-- nww:script:script-004 -->
-  <script src="./assets/app/hydraulic-catalog.js?v=shared"></script>
+  <script src="https://cdn.jsdelivr.net/gh/hondrospj/Highlands-Borough-floodmapper@318ad74ebaa4ec38d2fdfd0e56d50e3f52111166/assets/app/raster-readers.js" integrity="sha256-mAWka2OX2UzrEQjXNmPZlTMzntf4KmZAZB8GpnRC4zE=" crossorigin="anonymous"></script>
+  <script data-nww-script="script-004" src="https://cdn.jsdelivr.net/gh/hondrospj/Highlands-Borough-floodmapper@318ad74ebaa4ec38d2fdfd0e56d50e3f52111166/assets/app/runtime.js" integrity="sha256-SWFIGpa4GAThBzAfCUxmuXRRRPOI0D8RFn0HBdmPpso=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/gh/hondrospj/Highlands-Borough-floodmapper@318ad74ebaa4ec38d2fdfd0e56d50e3f52111166/assets/app/hydraulic-catalog.js" integrity="sha256-4C+/dTvCSPEcEasWOaJD6SuRUt9vN9cDjnzzV+ltpRw=" crossorigin="anonymous"></script>
 
-<!-- nww:script:script-005 -->
-
-
-<!-- nww:script:script-006 -->
+<script data-nww-script="script-005" src="https://cdn.jsdelivr.net/gh/hondrospj/Highlands-Borough-floodmapper@318ad74ebaa4ec38d2fdfd0e56d50e3f52111166/assets/app/calendar-dialog.js" integrity="sha256-SuDuN3+wu1KZCtNGgFBGvTr9lGDI9GELq5g8JlKl3eM=" crossorigin="anonymous"></script>
 
 
-<script src="./assets/3d/north-wildwood-3d.js?v=shared"></script>
-<script src="./assets/road-impacts.js?v=shared"></script>
-<script defer src="./assets/export-road-labels.js?v=shared"></script>
-
-<script defer src="./assets/modal-focus.js?v=77c8d9e9efcb920b"></script>
-<!-- nww:script:script-007 -->
+<script data-nww-script="script-006" src="https://cdn.jsdelivr.net/gh/hondrospj/Highlands-Borough-floodmapper@318ad74ebaa4ec38d2fdfd0e56d50e3f52111166/assets/app/alert-interaction.js" integrity="sha256-sCo2dNtV39pf0BpYRLBOzOLm8AsUNoGuVbkwza0+oQ4=" crossorigin="anonymous"></script>
 
 
-<script src="assets/avalon-mobile.js?v=20261026-holistic1"></script>
+<script src="https://cdn.jsdelivr.net/gh/hondrospj/Highlands-Borough-floodmapper@318ad74ebaa4ec38d2fdfd0e56d50e3f52111166/assets/3d/north-wildwood-3d.js" integrity="sha256-NW25kzR7aEOA0SqMAUkDwcELcY3Smaq5ZTHh4YZyAGw=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/gh/hondrospj/Highlands-Borough-floodmapper@318ad74ebaa4ec38d2fdfd0e56d50e3f52111166/assets/road-impacts.js" integrity="sha256-5fMdNTsaBb7IGmDkrpt7iMaAzOKDskQ1B85owaD3Syo=" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/gh/hondrospj/Highlands-Borough-floodmapper@318ad74ebaa4ec38d2fdfd0e56d50e3f52111166/assets/export-road-labels.js" integrity="sha256-4O4Y0qY9t7IuB8C1HWUQ6ASLnQOTD13rbKfhritaAy0=" crossorigin="anonymous"></script>
+
+<script defer src="https://cdn.jsdelivr.net/gh/hondrospj/Highlands-Borough-floodmapper@318ad74ebaa4ec38d2fdfd0e56d50e3f52111166/assets/modal-focus.js" integrity="sha256-8UFLi8xVzPA9beRgo+p+iwqbA4KcNLwN2CifgEwS0PQ=" crossorigin="anonymous"></script>
+<script data-nww-script="script-007" src="https://cdn.jsdelivr.net/gh/hondrospj/Highlands-Borough-floodmapper@318ad74ebaa4ec38d2fdfd0e56d50e3f52111166/assets/app/town-config.js" integrity="sha256-0y6a5vmfQ/Kj3AGlS3NnXNCINg0KzlmuXvy+OfRfoiM=" crossorigin="anonymous"></script>
 
 
-<script defer src="assets/north-wildwood-mobile.js?v=20261026-holistic1"></script>
+<script src="https://cdn.jsdelivr.net/gh/hondrospj/Highlands-Borough-floodmapper@318ad74ebaa4ec38d2fdfd0e56d50e3f52111166/assets/avalon-mobile.js" integrity="sha256-gpol3RH36VQsGAJ/omdn56C98lvgfOtA329mlDuzFz4=" crossorigin="anonymous"></script>
 
-<script src="assets/export-area.js?v=ee1e14cc57fb8b8e" id="floodmapper-export-area"></script>
-<script defer src="assets/export-preview.js?v=shared" id="floodmapper-export-preview"></script>
-<script defer src="assets/export-date-time-picker.js?v=33c7d7908c9d305e" id="floodmapper-export-date-time-picker"></script>
+
+<script defer src="https://cdn.jsdelivr.net/gh/hondrospj/Highlands-Borough-floodmapper@318ad74ebaa4ec38d2fdfd0e56d50e3f52111166/assets/north-wildwood-mobile.js" integrity="sha256-l0sMVg/dBheV6m4NCNsTnOVtWb+gtS9fxSJymgctpGQ=" crossorigin="anonymous"></script>
+
+<script src="https://cdn.jsdelivr.net/gh/hondrospj/Highlands-Borough-floodmapper@318ad74ebaa4ec38d2fdfd0e56d50e3f52111166/assets/export-area.js" id="floodmapper-export-area" integrity="sha256-oUZ25fbdzyzSKvVf6U02TbmuSZShpStbX90M23xQ9mA=" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/gh/hondrospj/Highlands-Borough-floodmapper@318ad74ebaa4ec38d2fdfd0e56d50e3f52111166/assets/export-preview.js" id="floodmapper-export-preview" integrity="sha256-955JuYN7WdLywn9Yz0uS/D53J61SuMfAKGYzMk1CExQ=" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/gh/hondrospj/Highlands-Borough-floodmapper@318ad74ebaa4ec38d2fdfd0e56d50e3f52111166/assets/export-date-time-picker.js" id="floodmapper-export-date-time-picker" integrity="sha256-DU4DFo+h0eqj2UmlsKJNBfLxn64kmDSwlfaf4+36Vy0=" crossorigin="anonymous"></script>
 
 
 
 <div id="shorelysafeWebcamConfig" hidden><!-- floodmapper:webcams --></div>
-<!-- nww:script:script-008 -->
+<script id="shorelysafeWebcamsScript" data-nww-script="script-008" src="https://cdn.jsdelivr.net/gh/hondrospj/Highlands-Borough-floodmapper@318ad74ebaa4ec38d2fdfd0e56d50e3f52111166/assets/app/webcams.js" integrity="sha256-Cu5wO80ONoWYV0QBq3EiKOPSCLtRBmrifkmiqrD3jx8=" crossorigin="anonymous"></script>
 
-<!-- nww:script:script-009 -->
+<script id="county-buildings-20261015" data-nww-script="script-009" src="https://cdn.jsdelivr.net/gh/hondrospj/Highlands-Borough-floodmapper@318ad74ebaa4ec38d2fdfd0e56d50e3f52111166/assets/app/county-buildings.js" integrity="sha256-5ei5f8dMvMcSxc4wK/NJlC04iBf3YPXjsqLqdvtZ8c4=" crossorigin="anonymous"></script>
 
-<!-- nww:script:script-010 -->
+<script id="shorelysafe-visible-brand-controller-20261015" data-nww-script="script-010" src="https://cdn.jsdelivr.net/gh/hondrospj/Highlands-Borough-floodmapper@318ad74ebaa4ec38d2fdfd0e56d50e3f52111166/assets/app/branding.js" integrity="sha256-UhhQKxS6BcU1QiaNyt8/q1xWmRh4YQferJjRa2yQ170=" crossorigin="anonymous"></script>
 
-<!-- nww:script:script-011 -->
+<script id="floodmapper-unified-controller-20261017" data-ui-sha256="3668b4912f612ae595cb1ee4e11fdf9aa7a80ccfbdbfff78d243e7714470baf7" data-nww-script="script-011" src="https://cdn.jsdelivr.net/gh/hondrospj/Highlands-Borough-floodmapper@318ad74ebaa4ec38d2fdfd0e56d50e3f52111166/assets/app/unified-controller.js" integrity="sha256-WwJWkV2JN+pPEgg5hwbSI997CZZFqBqA6j+WMvV6w/A=" crossorigin="anonymous"></script>
+
+
 <script src="https://unpkg.com/proj4@2.11.0/dist/proj4.js" defer></script>
-<script src="./assets/3d/elevation-contours.js?v=shared" defer></script>
+<script src="https://cdn.jsdelivr.net/gh/hondrospj/Highlands-Borough-floodmapper@318ad74ebaa4ec38d2fdfd0e56d50e3f52111166/assets/3d/elevation-contours.js" defer integrity="sha256-Rtc7DRgyTPK+ltycRKMOE5nZPl++vxSw97hzjOpSA/4=" crossorigin="anonymous"></script>
 <template id="elevationContoursTemplate">
             <div class="layer-item">
               <div id="contoursToggle" class="toggle" role="switch" tabindex="0" aria-label="Ground Elevation Contours" aria-checked="false" aria-describedby="contoursStatus"></div>
