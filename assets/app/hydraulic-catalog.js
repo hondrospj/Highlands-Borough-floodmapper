@@ -1879,6 +1879,7 @@ function installDailyObservationReader() {
         await loadObserved();
         return true;
       };
+      ensureObservedArchiveRange = ensureObservedArchiveForDate;
       loadObserved = async () => {
         const generation = archiveGeneration;
         if (!observedData) {
