@@ -947,6 +947,7 @@
       : "axis-aligned";
     document.body.dataset.map3dFloodAltitudeMeters = options.altitudeMeters.toFixed(3);
     document.body.dataset.map3dFloodPhysicalAltitudeMeters = physicalAltitudeMeters.toFixed(3);
+    window.HIGHLANDS_CONTOURS?.syncMapLibre?.(glMap, false);
   }
 
   async function prepareFloodFrame3d(layer, frame, token) {
@@ -1133,6 +1134,8 @@
     });
   }
 
+  var nsiSourceFeatures = new WeakMap();
+
   function nsiImpactPaint(stage) {
     if (!Number.isFinite(stage)) {
       return {
@@ -1142,16 +1145,17 @@
         opacity: 0.42
       };
     }
-    var floor = ["+",
-      ["to-number", ["get", "localGroundNavd88Ft"], -9999],
-      ["max", 0, ["to-number", ["get", "foundationHeightFt"], 0]]
-    ];
+    var hasFloor = ["has", "resolvedFirstOccupiedFloorNavd88Ft"];
+    var floor = ["number", ["get", "resolvedFirstOccupiedFloorNavd88Ft"], 0];
     var difference = ["-", stage, floor];
+    function impactPaint(unknown, flooded, near, below) {
+      return ["case", hasFloor, ["case", [">", difference, 0.1], flooded, [">=", difference, -0.5], near, below], unknown];
+    }
     return {
-      color: ["case", [">", difference, 0.1], "#fb7185", [">=", difference, -0.5], "#fbbf24", "#22d3ee"],
-      stroke: ["case", [">", difference, 0.1], "#fff1f2", [">=", difference, -0.5], "#fff7d6", "#d9fdff"],
-      radius: ["case", [">", difference, 0.1], 4.3, [">=", difference, -0.5], 3.6, 2.7],
-      opacity: ["case", [">", difference, 0.1], 0.95, [">=", difference, -0.5], 0.88, 0.48]
+      color: impactPaint("#64748b", "#fb7185", "#fbbf24", "#22d3ee"),
+      stroke: impactPaint("#94a3b8", "#fff1f2", "#fff7d6", "#d9fdff"),
+      radius: impactPaint(2.7, 4.3, 3.6, 2.7),
+      opacity: impactPaint(0.42, 0.95, 0.88, 0.48)
     };
   }
 
@@ -1163,10 +1167,23 @@
       return;
     }
     var source = glMap.getSource("nw-nsi-source");
-    var data = { type: "FeatureCollection", features: nsiStructureFeatures };
-    if (source && typeof source.setData === "function") source.setData(data);
-    if (!source) {
-      glMap.addSource("nw-nsi-source", { type: "geojson", data: data });
+    if (!source || nsiSourceFeatures.get(source) !== nsiStructureFeatures) {
+      var features = nsiStructureFeatures.map(function (feature) {
+        var properties = { ...feature.properties };
+        var floor = getNsiFirstOccupiedFloorNavd88(properties);
+        if (Number.isFinite(floor)) properties.resolvedFirstOccupiedFloorNavd88Ft = floor;
+        else delete properties.resolvedFirstOccupiedFloorNavd88Ft;
+        return { ...feature, properties };
+      });
+      var data = { type: "FeatureCollection", features: features };
+      if (source) source.setData(data);
+      else {
+        glMap.addSource("nw-nsi-source", { type: "geojson", data: data });
+        source = glMap.getSource("nw-nsi-source");
+      }
+      nsiSourceFeatures.set(source, nsiStructureFeatures);
+    }
+    if (!glMap.getLayer("nw-nsi-points")) {
       addLayerBelowMask({
         id: "nw-nsi-points",
         type: "circle",
@@ -1952,6 +1969,9 @@
 
   function wire3dInteractions() {
     glMap.on("moveend", sync3dViewToLeaflet);
+    ["moveend", "zoomend", "resize"].forEach(function (event) {
+      glMap.on(event, function () { window.HIGHLANDS_CONTOURS?.syncMapLibre?.(glMap); });
+    });
     glMap.on("dragend", function () {
       // MapLibre's inertial glide keeps redrawing terrain after the pointer is
       // released. On this dense full-screen scene that starves Chrome's fixed
@@ -2098,6 +2118,7 @@
           syncRoadLabels3d();
           syncParcels3d();
           syncNsi3d();
+          window.HIGHLANDS_CONTOURS?.syncMapLibre?.(mapInstance);
           async function waitForCurrentFlood() {
             while (current(token)) {
               var restoredLayer = floodPlaneLayer;
@@ -2248,9 +2269,9 @@
       syncRoadLabels3d();
       syncParcels3d();
       syncNsi3d();
-      await syncBuildings3d({ preload: true });
       requireCurrent();
       document.body.classList.add("map-3d-ready");
+      window.HIGHLANDS_CONTOURS?.syncMapLibre?.(glMap);
       if (townAddressMarker) setAddressMarker(townAddressMarker.getLatLng(), townAddressMarker.options.title);
       if (townAddressPopup && persistentFloodPopup === townAddressPopup) {
         showGlPopup(townAddressPopup, undefined, true);
@@ -2263,6 +2284,18 @@
       document.body.dataset.map3dPitch = String(glMap.getPitch());
       updateDiagnostics();
       suspendLeafletVisualLayers();
+      var preloadGeneration = buildingToggleGeneration;
+      syncBuildings3d({ preload: true }).catch(function (error) {
+        if (!current() || glMap !== initialization.map || buildingToggleGeneration !== preloadGeneration) return;
+        console.warn("The optional 3D building layer could not load.", error);
+        if (glMap.getLayer("nw-3d-buildings")) return;
+        var toggle = document.getElementById("buildingsToggle");
+        toggle?.classList.remove("on");
+        toggle?.setAttribute("aria-checked", "false");
+        updateExportBuildingsLayer();
+        updateMapClickModeControl();
+        setStatus("3D terrain ×4 • buildings unavailable");
+      });
       requestAnimationFrame(function () { if (current() && glMap === initialization.map) glMap.resize(); });
       return glMap;
     })();

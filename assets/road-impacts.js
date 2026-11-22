@@ -306,7 +306,7 @@ function installWindowedRoadImpacts(config) {
  }
  async function loadRoads(){
   if(roads)return roads;
-  if(!roadsPromise)roadsPromise=fetch(new URL(config.assets.roadImpactsPath, APP_BASE),{cache:'force-cache'}).then(response=>{if(!response.ok)throw Error('Road geometry could not load.');return response.json();}).then(payload=>{
+  if(!roadsPromise)roadsPromise=fetchJson(new URL(config.assets.roadImpactsPath, APP_BASE).href,{cache:'force-cache',timeoutMs:15000}).then(payload=>{
    if(!payload.features?.length)throw Error('Road geometry is empty.');
    roads=payload.features.flatMap(feature=>{const geometry=feature.geometry;return(geometry?.type==='LineString'?[geometry.coordinates]:geometry?.type==='MultiLineString'?geometry.coordinates:[]).filter(line=>line.length>1).map(line=>({properties:feature.properties,coordinates:densify(line)}));});return roads;
   }).catch(error=>{roadsPromise=null;throw error;});

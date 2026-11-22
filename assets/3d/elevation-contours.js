@@ -24,6 +24,57 @@
   let labels = null;
   let mapInstance = null;
   let indexLines = [];
+  let contourData = null;
+  let glLabels = [];
+  const waitingMaps = new WeakSet();
+  const glSourceId = "highlands-contours-source";
+  const glLayerIds = ["highlands-contours-halo", "highlands-contours-lines"];
+
+  function getMapLibre() {
+    return document.body.classList.contains("map-3d-ready")
+      ? window.NORTH_WILDWOOD_3D?.getMap?.() : null;
+  }
+
+  function syncMapLibre(gl = getMapLibre(), refresh = true) {
+    if (!gl) { if (refresh) refreshLabels(); return; }
+    if (!gl.getSource(glSourceId) && !gl.isStyleLoaded()) {
+      if (enabled && contourData && !waitingMaps.has(gl)) {
+        waitingMaps.add(gl);
+        gl.once("idle", () => {
+          waitingMaps.delete(gl);
+          if (gl === getMapLibre()) syncMapLibre(gl);
+        });
+      }
+      if (refresh) refreshLabels();
+      return;
+    }
+    if (enabled && contourData && !gl.getSource(glSourceId)) {
+      gl.addSource(glSourceId, { type: "geojson", data: contourData });
+    }
+    if (gl.getSource(glSourceId)) {
+      for (const [id, color, opacity, indexWidth, width] of [
+        [glLayerIds[0], "#ffffff", 0.78, 3.5, 2.4],
+        [glLayerIds[1], "#765025", 0.92, 1.7, 0.85]
+      ]) {
+        if (!gl.getLayer(id)) gl.addLayer({
+          id, type: "line", source: glSourceId,
+          layout: { "line-cap": "round", "line-join": "round" },
+          paint: { "line-color": color, "line-opacity": opacity,
+            "line-width": ["case", ["get", "isIndex"], indexWidth, width] }
+        }, gl.getLayer("nw-boundary-mask") ? "nw-boundary-mask" : undefined);
+        const visibility = enabled ? "visible" : "none";
+        if (gl.getLayoutProperty(id, "visibility") !== visibility) {
+          gl.setLayoutProperty(id, "visibility", visibility);
+        }
+      }
+      const order = gl.getStyle().layers.map(layer => layer.id);
+      const water = Math.max(order.indexOf("nw-flood-drape"), order.indexOf("nw-flood-overlay"));
+      if (glLayerIds.some(id => order.indexOf(id) < water)) {
+        for (const id of glLayerIds) gl.moveLayer(id, gl.getLayer("nw-boundary-mask") ? "nw-boundary-mask" : undefined);
+      }
+    }
+    if (refresh) refreshLabels();
+  }
 
   const style = document.createElement("style");
   style.textContent = `
@@ -60,10 +111,14 @@
   function refreshLabels() {
     if (!labels) return;
     labels.clearLayers();
-    if (!enabled || !mapInstance.hasLayer(contourLayer) || mapInstance.getZoom() < 12) return;
+    glLabels.forEach(marker => marker.remove());
+    glLabels = [];
+    const gl = getMapLibre();
+    if (!enabled || (gl ? gl.getZoom() < 12
+      : !mapInstance.hasLayer(contourLayer) || mapInstance.getZoom() < 12)) return;
 
-    const bounds = mapInstance.getBounds();
-    const size = mapInstance.getSize();
+    const bounds = gl ? gl.getBounds() : mapInstance.getBounds();
+    const size = gl ? L.point(gl.getContainer().clientWidth, gl.getContainer().clientHeight) : mapInstance.getSize();
     const center = L.point(size.x / 2, size.y / 2);
     const placed = [];
     const perElevation = new Map();
@@ -74,8 +129,10 @@
       const stride = Math.max(1, Math.floor(line.points.length / 30));
       for (let i = 0; i < line.points.length; i += stride) {
         const position = line.points[i];
-        if (!bounds.contains(position)) continue;
-        const point = mapInstance.latLngToContainerPoint(position);
+        const coordinate = gl ? [position[1], position[0]] : position;
+        if (!bounds.contains(coordinate)) continue;
+        const projected = gl ? gl.project(coordinate) : mapInstance.latLngToContainerPoint(position);
+        const point = L.point(projected.x, projected.y);
         if (point.x < 30 || point.x > size.x - 30 || point.y < 25 || point.y > size.y - 25) continue;
         if (placed.some(other => Math.abs(other.x - point.x) < 85 && Math.abs(other.y - point.y) < 30)) continue;
         const candidateDistance = point.distanceTo(center);
@@ -85,7 +142,16 @@
         }
       }
       if (!selected) continue;
-      L.marker(selected.position, {
+      if (gl) {
+        const element = document.createElement("div");
+        element.className = "highlands-contour-label";
+        element.setAttribute("aria-hidden", "true");
+        const text = document.createElement("span");
+        text.textContent = `${line.elevationFt} ft`;
+        element.appendChild(text);
+        glLabels.push(new window.maplibregl.Marker({ element, anchor: "center" })
+          .setLngLat([selected.position[1], selected.position[0]]).addTo(gl));
+      } else L.marker(selected.position, {
         pane: labelPaneName,
         interactive: false,
         keyboard: false,
@@ -112,6 +178,7 @@
     const transform = window.proj4(projection, "EPSG:4326");
     const grouped = new Map();
     const preparedIndexes = [];
+    const features = [];
     for (const line of data.lines) {
       if (!Number.isFinite(line.elevationFt) || line.elevationFt % 5 !== 0 ||
           !Array.isArray(line.coordinates) || line.coordinates.length < 2) {
@@ -128,6 +195,9 @@
         }
         return [latitude, longitude];
       });
+      features.push({ type: "Feature", properties: {
+        elevationFt: line.elevationFt, isIndex: line.elevationFt % 25 === 0
+      }, geometry: { type: "LineString", coordinates: points.map(point => [point[1], point[0]]) } });
       if (!grouped.has(line.elevationFt)) grouped.set(line.elevationFt, []);
       grouped.get(line.elevationFt).push(points);
       if (line.elevationFt % 25 === 0) preparedIndexes.push({ elevationFt: line.elevationFt, points });
@@ -150,6 +220,7 @@
         weight: elevation % 25 === 0 ? 1.7 : 0.85, smoothFactor: 0
       }).addTo(layer);
     }
+    contourData = { type: "FeatureCollection", features };
     indexLines = preparedIndexes.sort((a, b) => b.points.length - a.points.length);
     labels = L.layerGroup();
     contourLayer = layer;
@@ -161,11 +232,7 @@
     if (contourLayer) return Promise.resolve(contourLayer);
     if (!loading) {
       const base = typeof APP_BASE !== "undefined" ? APP_BASE : document.baseURI;
-      loading = fetch(new URL(contourPath, base), { cache: "force-cache" })
-        .then(response => {
-          if (!response.ok) throw new Error("The elevation contours could not load. Please try again.");
-          return response.json();
-        })
+      loading = fetchJson(new URL(contourPath, base).href, { cache: "force-cache", timeoutMs: 20000 })
         .then(buildLayer)
         .catch(error => {
           loading = null;
@@ -183,6 +250,7 @@
     if (!enabled) {
       if (mapInstance && contourLayer) mapInstance.removeLayer(contourLayer);
       if (mapInstance && labels) mapInstance.removeLayer(labels);
+      syncMapLibre();
       toggle.removeAttribute("aria-busy");
       setStatus("");
       return;
@@ -194,9 +262,11 @@
       if (!mapInstance) throw new Error("The map is still loading. Please try again.");
       const layer = await loadLayer();
       if (!enabled || request !== generation) return;
-      if (!mapInstance.hasLayer(layer)) layer.addTo(mapInstance);
-      if (!mapInstance.hasLayer(labels)) labels.addTo(mapInstance);
-      refreshLabels();
+      if (!getMapLibre()) {
+        if (!mapInstance.hasLayer(layer)) layer.addTo(mapInstance);
+        if (!mapInstance.hasLayer(labels)) labels.addTo(mapInstance);
+      }
+      syncMapLibre();
       setStatus("");
     } catch (error) {
       if (request !== generation) return;
@@ -221,8 +291,23 @@
       setEnabled(!enabled);
     }
   });
+  let renderedMapLibre = getMapLibre();
+  new MutationObserver(() => {
+    const currentMapLibre = getMapLibre();
+    if (currentMapLibre === renderedMapLibre) return;
+    renderedMapLibre = currentMapLibre;
+    if (!enabled || !contourLayer || !mapInstance) return;
+    if (getMapLibre()) {
+      mapInstance.removeLayer(contourLayer);
+      mapInstance.removeLayer(labels);
+    } else {
+      if (!mapInstance.hasLayer(contourLayer)) contourLayer.addTo(mapInstance);
+      if (!mapInstance.hasLayer(labels)) labels.addTo(mapInstance);
+    }
+    syncMapLibre();
+  }).observe(document.body, { attributes: true, attributeFilter: ["class"] });
   window.HIGHLANDS_CONTOURS = {
-    setEnabled,
-    getState: () => ({ enabled, loaded: Boolean(contourLayer), labelCount: labels?.getLayers().length || 0 })
+    setEnabled, syncMapLibre,
+    getState: () => ({ enabled, loaded: Boolean(contourLayer), labelCount: glLabels.length || labels?.getLayers().length || 0 })
   };
 })();

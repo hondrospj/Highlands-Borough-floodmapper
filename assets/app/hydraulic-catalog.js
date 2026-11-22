@@ -31,22 +31,11 @@ function createHydraulicCatalogAdapter(format, palette = {}) {
       const stepped = Math.floor((value + 1e-9) / STAGE_STEP) * STAGE_STEP;
       return roundToOneDecimal(stepped);
     }
-  const getOverlayStage =
-    format === "phase-v2" || format === "phase-v2-sparse"
-      ? (function getOverlayStage(value) {
-      const n = Number(value);
-      if (!Number.isFinite(n)) return null;
-      const minimum = MIN_DEPTH_STAGE;
-      const clamped = Math.max(minimum, Math.min(MAX_STAGE, n));
-      return Math.max(minimum, floorToCatalogStep(clamped));
-    })
-    : (function getOverlayStage(value) {
-      const n = normalizeStageValue(value);
-      if (!Number.isFinite(n)) return null;
-      const minimum = MIN_DEPTH_STAGE;
-      const clamped = Math.max(minimum, Math.min(MAX_STAGE, n));
-      return Math.max(minimum, floorToCatalogStep(clamped));
-    });
+  function getOverlayStage(value) {
+      const stage = normalizeStageValue(value);
+      if (stage == null) return null;
+      return Math.max(MIN_DEPTH_STAGE, floorToCatalogStep(Math.max(MIN_DEPTH_STAGE, Math.min(MAX_STAGE, stage))));
+    }
 
   function getVerticalBathtubPenalty(stageValue) {
       const stage = Number(stageValue);
@@ -629,7 +618,7 @@ function createHydraulicCatalogAdapter(format, palette = {}) {
     });
 
   async function getOverlayRecord(mode, stageValue, phase = "slack") {
-      const rawStage = getOverlayStage(Number(stageValue));
+      const rawStage = getOverlayStage(stageValue);
       if (rawStage == null) return null;
       const normalizedPhase = normalizeHydraulicPhase(phase);
       const key = `${mode}:${normalizedPhase}:${stageToCode(rawStage)}`;
@@ -658,141 +647,63 @@ function createHydraulicCatalogAdapter(format, palette = {}) {
       if (stageFt >= MODERATE_FLOOD_FT) return DRAINAGE_STAGE_COLORS[1];
       return DRAINAGE_STAGE_COLORS[0];
     }
-  const loadHydraulicQueryPng =
-    format === "phase-v2"
-      ? (async function loadHydraulicQueryPng(url) {
-      if (window.AvalonQueryStripes && typeof DecompressionStream === "function") {
+  async function loadHydraulicQueryPng(url) {
+      const useStripes = format === "phase-v2" || format === "phase-v2-sparse";
+      if (useStripes && window.AvalonQueryStripes && typeof DecompressionStream === "function") {
         try { return await AvalonQueryStripes.load(getBunnyAssetUrl(url.replace(/\.png$/, ".rgba.json"))); }
         catch (error) { console.warn("Query strips unavailable; using the original PNG.", error); }
       }
-      return new Promise((resolve, reject) => {
-        const image = new Image();
-        image.crossOrigin = "anonymous";
-        image.decoding = "async";
-        image.onload = () => {
-          let canvas;
-          try {
-            canvas = document.createElement("canvas");
-            canvas.width = image.naturalWidth;
-            canvas.height = Math.min(RASTER_STRIPE_ROWS, image.naturalHeight);
-            const context = canvas.getContext("2d", { willReadFrequently: true });
-            if (!context) throw new Error("Hydraulic query canvas is unavailable.");
-            const width = image.naturalWidth, height = image.naturalHeight;
-            resolve({
-              width, height, storage: "png-stripes",
-              async readRows(y, rows) {
-                canvas.width = width; canvas.height = rows;
-                try {
-                  context.drawImage(image, 0, y, width, rows, 0, 0, width, rows);
-                  return context.getImageData(0, 0, width, rows).data;
-                } finally { canvas.width = canvas.height = 0; }
-              }
-            });
-          } catch (error) {
-            reject(error);
-          } finally {
-            if (canvas) canvas.width = canvas.height = 0;
-            image.onload = image.onerror = null;
-          }
-        };
-        const cdnUrl = getBunnyAssetUrl(url);
-        image.onerror = () => {
-          if (image.src !== url) { image.src = url; return; }
-          reject(new Error(`Could not load hydraulic query asset: ${url}`));
-        };
-        image.src = cdnUrl;
-      });
-    })
-    : format === "phase-v2-sparse"
-      ? (async function loadHydraulicQueryPng(url) {
-      if (window.AvalonQueryStripes && typeof DecompressionStream === "function") {
-        try { return await AvalonQueryStripes.load(getBunnyAssetUrl(url.replace(/\.png$/, ".rgba.json"))); }
-        catch (error) { console.warn("Query strips unavailable; using the original PNG.", error); }
-      }
-      return new Promise((resolve, reject) => {
-        const image = new Image();
-        image.crossOrigin = "anonymous";
-        image.decoding = "async";
-        const sources = Array.from(new Set([getBunnyAssetUrl(url), url]));
+      const sources = useStripes ? [...new Set([getBunnyAssetUrl(url), url])] : [url];
+      const image = await new Promise((resolve, reject) => {
         let attempt = 0;
-        let settled = false;
-        let timeoutTimer = null;
-        const finish = (error, value) => {
-          if (settled) return;
-          settled = true;
-          if (timeoutTimer) window.clearTimeout(timeoutTimer);
-          image.onload = image.onerror = null;
-          if (error) {
-            try { image.src = ""; } catch (_) {}
-            reject(error);
-          } else resolve(value);
-        };
-        const tryNextSource = () => {
-          if (settled) return;
-          if (timeoutTimer) window.clearTimeout(timeoutTimer);
-          if (attempt >= sources.length) {
-            finish(new Error(`Could not load hydraulic query asset: ${url}`));
+        function loadNext() {
+          if (attempt === sources.length) {
+            reject(new Error("Could not load hydraulic query asset: " + url));
             return;
           }
-          // Bound each CDN/origin attempt, including requests that never fire error.
-          timeoutTimer = window.setTimeout(tryNextSource, 20000);
-          image.src = sources[attempt++];
-        };
-        image.onload = () => {
-          let canvas;
-          try {
-            canvas = document.createElement("canvas");
-            canvas.width = image.naturalWidth;
-            canvas.height = Math.min(RASTER_STRIPE_ROWS, image.naturalHeight);
-            const context = canvas.getContext("2d", { willReadFrequently: true });
-            if (!context) throw new Error("Hydraulic query canvas is unavailable.");
-            const width = image.naturalWidth, height = image.naturalHeight;
-            finish(null, {
-              width, height, storage: "png-stripes",
-              async readRows(y, rows) {
-                canvas.width = width; canvas.height = rows;
-                try {
-                  context.drawImage(image, 0, y, width, rows, 0, 0, width, rows);
-                  return context.getImageData(0, 0, width, rows).data;
-                } finally { canvas.width = canvas.height = 0; }
-              }
-            });
-          } catch (error) {
-            finish(error);
-          } finally {
-            if (canvas) canvas.width = canvas.height = 0;
+          const candidate = new Image();
+          candidate.crossOrigin = "anonymous";
+          candidate.decoding = "async";
+          const timer = window.setTimeout(failed, 20000);
+          function release() {
+            window.clearTimeout(timer);
+            candidate.onload = candidate.onerror = null;
+          }
+          function failed() {
+            release();
+            candidate.removeAttribute("src");
+            loadNext();
+          }
+          candidate.onload = () => { release(); resolve(candidate); };
+          candidate.onerror = failed;
+          candidate.src = sources[attempt++];
+        }
+        loadNext();
+      });
+      const { naturalWidth: width, naturalHeight: height } = image;
+      const canvas = document.createElement("canvas");
+      try {
+        canvas.width = width;
+        canvas.height = useStripes ? Math.min(RASTER_STRIPE_ROWS, height) : height;
+        const context = canvas.getContext("2d", { willReadFrequently: true });
+        if (!context) throw new Error("Hydraulic query canvas is unavailable.");
+        if (!useStripes) {
+          context.drawImage(image, 0, 0);
+          return { width, height, values: context.getImageData(0, 0, width, height).data };
+        }
+        return {
+          width, height, storage: "png-stripes",
+          async readRows(y, rows) {
+            canvas.width = width;
+            canvas.height = rows;
+            try {
+              context.drawImage(image, 0, y, width, rows, 0, 0, width, rows);
+              return context.getImageData(0, 0, width, rows).data;
+            } finally { canvas.width = canvas.height = 0; }
           }
         };
-        image.onerror = tryNextSource;
-        tryNextSource();
-      });
-    })
-    : (function loadHydraulicQueryPng(url) {
-      return new Promise((resolve, reject) => {
-        const image = new Image();
-        image.crossOrigin = "anonymous";
-        image.decoding = "async";
-        image.onload = () => {
-          try {
-            const canvas = document.createElement("canvas");
-            canvas.width = image.naturalWidth;
-            canvas.height = image.naturalHeight;
-            const context = canvas.getContext("2d", { willReadFrequently: true });
-            if (!context) throw new Error("Hydraulic query canvas is unavailable.");
-            context.drawImage(image, 0, 0);
-            resolve({
-              values: context.getImageData(0, 0, canvas.width, canvas.height).data,
-              width: canvas.width,
-              height: canvas.height
-            });
-          } catch (error) {
-            reject(error);
-          }
-        };
-        image.onerror = () => reject(new Error(`Could not load hydraulic query asset: ${url}`));
-        image.src = url;
-      });
-    });
+      } finally { canvas.width = canvas.height = 0; }
+    }
 
   function getV2PointDepth(stage, phase, mode, ground, developed, pixel) {
       if (!Number.isFinite(stage) || !Number.isFinite(ground) || !pixel) return {value:null,state:"unavailable"};
@@ -1414,10 +1325,10 @@ function createHydraulicCatalogAdapter(format, palette = {}) {
       } finally { canvas.width = canvas.height = 0; }
     }
   async function buildHydraulicOverlayRecord(mode, stageValue, phase = "slack", entry = null, series = currentSeriesHours) {
-      if (mode === "dynamic") return getBathtubStageOverlayRecord(stageValue);
-      const rawStage = Number(stageValue);
+      const rawStage = normalizeStageValue(stageValue);
+      if (rawStage == null) return null;
+      if (mode === "dynamic") return getBathtubStageOverlayRecord(rawStage);
       const lowerStage = getOverlayStage(rawStage);
-      if (lowerStage == null) return null;
       let baseRecord = await getOverlayRecord(mode, rawStage, phase);
       if (!baseRecord || !entry) return baseRecord;
       baseRecord = await getFillingInterpolatedOverlayRecord(mode, lowerStage, phase, entry, baseRecord);
@@ -1634,9 +1545,9 @@ function createHydraulicCatalogAdapter(format, palette = {}) {
       }
     }
   async function getSourceHydraulicOverlayRecord(mode, stageValue, phase = "slack", entry = null, series = currentSeriesHours) {
-      const rawStage = Number(stageValue);
+      const rawStage = normalizeStageValue(stageValue);
+      if (rawStage == null) return null;
       const lowerStage = getOverlayStage(rawStage);
-      if (lowerStage == null) return null;
       let baseRecord = await getOverlayRecord(mode, rawStage, phase);
       if (!baseRecord || !entry) return baseRecord;
       baseRecord = await getFillingInterpolatedOverlayRecord(mode, lowerStage, phase, entry, baseRecord);

@@ -36,6 +36,7 @@
     if(!gl)return;
     if(!gl.getLayer(layerId)){
       const town=await boundary();
+      if(gl.getLayer(layerId))return syncNative(gl,scale);
       const bp=town.coordinates.flat(2);document.body.dataset.countyBuildingBoundary=JSON.stringify({polygons:town.coordinates.length,first:bp[0],min:[Math.min(...bp.map(p=>p[0])),Math.min(...bp.map(p=>p[1]))],max:[Math.max(...bp.map(p=>p[0])),Math.max(...bp.map(p=>p[1]))]});
       const footprint=(gl.getStyle().layers||[]).find(layer=>layer.type==='fill'&&/building/i.test(layer['source-layer']||''));
       if(!footprint)throw Error('The town basemap does not expose building footprints.');

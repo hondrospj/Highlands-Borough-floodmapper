@@ -116,13 +116,16 @@
         finish(null, paths);
       }).catch(error => finish(error));
     });
+    let usedFallback = false;
     request = current.catch(error => {
       const fallback = typeof TOWN_CONFIG !== "undefined" && TOWN_CONFIG?.assets?.exportRoadFallback;
       if (!fallback) throw error;
       console.warn("Local export road names could not load. Using the map road names.", error);
+      usedFallback = true;
       return [];
     }).then(value => {
-      roads = value;
+      // A failed fetch is retryable; valid responses can be cached, even if empty.
+      roads = usedFallback ? null : value;
       for (const layer of mapLayers.values()) layer._render();
       return value;
     }).finally(() => { request = null; });

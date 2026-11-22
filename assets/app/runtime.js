@@ -1902,6 +1902,7 @@ function parseStoredLocalNyToDate(timeEST) {
     function buildDailyMaximumSeries(entries = [], options = {}) {
       const bestByDate = new Map();
       (Array.isArray(entries) ? entries : []).forEach(entry => {
+        if (entry?.isMissingObservedHour || entry?.isMissingTimelineFrame) return;
         const date = getEntryESTDate(entry);
         const parts = date ? getNyParts(date) : null;
         const key = parts ? `${parts.year}-${parts.month}-${parts.day}` : (entry?.observedDate || "");
@@ -5515,6 +5516,8 @@ function normalizeBoundaryRingsFromArcGIS(rings, sourceWkid = 3857) {
       }
 
       if (startDate && endDate) {
+        const preferObserved = currentDataMode === "observed";
+        const observationCutoffMs = Date.now();
         const combined = [
           ...getObservedRangeExportEntries(startDate, endDate, options),
           ...getForecastExportEntries().filter(entry => {
@@ -5522,13 +5525,13 @@ function normalizeBoundaryRingsFromArcGIS(rings, sourceWkid = 3857) {
             if (t == null) return false;
             const minMs = Math.min(startDate.getTime(), endDate.getTime()) - 2 * 60 * 60 * 1000;
             const maxMs = Math.max(startDate.getTime(), endDate.getTime()) + 2 * 60 * 60 * 1000;
-            return t >= minMs && t <= maxMs;
+            // Forecast endpoints are retained only for future quarter-hour interpolation.
+            return t >= minMs && t <= maxMs &&
+              (!preferObserved || options.keepOverlappingForecast || t > observationCutoffMs);
           })
         ].filter(entry => entryTimeMs(entry) != null);
 
         if (!combined.length) return [];
-
-        const preferObserved = currentDataMode === "observed";
         if (preferObserved && options.keepOverlappingForecast) {
           // Keep forecast endpoints for quarter-hour interpolation across
           // forecast frames. The quarter-hour selection resolves the overlap.
@@ -7675,6 +7678,12 @@ function updateExportSegmentedUI() {
         attribution.textContent = localSource && localSource !== "OpenStreetMap contributors"
           ? `${baseAttribution} · Local road names: ${localSource}` : baseAttribution;
       }
+      // Recovered native labels replace provider fallback names.
+      if (showLabels && exportRoadsLayer?._roadSettings?.includeNames &&
+          window.NORTH_WILDWOOD_EXPORT_ROADS?.hasLocalNames?.()) {
+        if (exportMap.hasLayer(exportRoadsLayer)) exportMap.removeLayer(exportRoadsLayer);
+        exportRoadsLayer = null;
+      }
       // A hidden road pane needs no WebGL context. Keep an initialized layer
       // for later frames and retries once the selected extent can show it.
       if (showLabels && !exportRoadsLayer) mountExportRoadLayer();
@@ -8185,8 +8194,10 @@ function findClosestExportEntryForSlot(entries, slotMs, usedKeys = new Set(), to
           maxGapMinutes: 75
         });
         const preferObserved = currentDataMode === "observed";
+        const observationCutoffMs = Date.now();
         series.forEach(entry => {
           const time = entryTimeMs(entry);
+          if (preferObserved && time <= observationCutoffMs) return;
           if (!preferObserved || !byTime.has(time)) byTime.set(time, entry);
         });
       }
@@ -8673,7 +8684,10 @@ function findClosestExportEntryForSlot(entries, slotMs, usedKeys = new Set(), to
         : freshness?.state === "expired"
           ? `Forecast coverage ended ${formatFixedESTFromUtc(freshness.timestamp, true)}. Select Forecast to check for an update.`
           : "";
-      const message = [forecastNotice, status.dataset.frameMessage].filter(Boolean).join(" ");
+      const crestSource = currentFloodLayer?._floodmapperFrame?.entry?.crestSourceLabel;
+      const crestNotice = currentDataMode === "observed" && crestSource
+        ? `Crest source: USGS ${crestSource}.` : "";
+      const message = [forecastNotice, crestNotice, status.dataset.frameMessage].filter(Boolean).join(" ");
       const timeline = document.getElementById("timelineDock");
       const top = timeline?.getBoundingClientRect().top;
       if (Number.isFinite(top)) status.style.setProperty("--flood-status-bottom", `${Math.max(24, window.innerHeight - top + 70)}px`);
@@ -9468,6 +9482,11 @@ function formatSelectedObservedDate(dateStr) {
       const sourceArea = String(item.source_area || item.sourceArea || "historical");
       const sourceSite = String(item.site_no || item.siteNo || "");
       const sourceStation = String(item.station_name || item.stationName || "");
+      // The local replay and the measured crest may use different gauges.
+      const measuredCrestSite = String(item.officialCrestSourceSite || sourceSite);
+      const measuredCrestName = String(item.officialCrestSourceName || sourceStation).trim();
+      const crestSourceLabel = measuredCrestName && /^\d{8,15}$/.test(measuredCrestSite)
+        ? `${measuredCrestName} (${measuredCrestSite})` : measuredCrestName || measuredCrestSite;
       const sourceStationShort = String(item.station_short || item.stationShort || (sourceArea === "stone-harbor" ? "Stone Harbor" : ""));
 
       return {
@@ -9485,6 +9504,7 @@ function formatSelectedObservedDate(dateStr) {
         sourceSite,
         sourceStation,
         sourceStationShort,
+        crestSourceLabel,
         stationPriority: Number(item.station_priority ?? item.stationPriority ?? (sourceArea === "stone-harbor" ? 3 : 1)),
         recordType: String(item.record_type || item.recordType || "USGS storm-tide crest"),
         eventName: String(item.event_name || item.eventName || ""),
@@ -9861,7 +9881,9 @@ function formatSelectedObservedDate(dateStr) {
         cell.textContent = value;
         btn.appendChild(cell);
       }
-      btn.setAttribute("aria-label", `#${event.rank} ${event.title}, ${stage}`);
+      const crestSource = event.entry?.crestSourceLabel;
+      if (crestSource) btn.title = `Crest source: USGS ${crestSource}`;
+      btn.setAttribute("aria-label", `#${event.rank} ${event.title}, ${stage}${crestSource ? `. ${btn.title}` : ""}`);
       btn.addEventListener("click", () => {
         const closesDrawer = btn.closest("#topTidesModalList") && document.body.classList.contains("mobile-controls-open");
         // Close the parent before restoring focus from the child, so the
@@ -10114,7 +10136,8 @@ function formatSelectedObservedDate(dateStr) {
         toast("");
         ensureMap();
 
-        const match = await getHydraulicOverlayRecord(mode, stageValue, phase, entry, series);
+        const match = await getHydraulicOverlayRecord(mode, stageValue, phase, entry, series,
+          () => token === lastRenderToken);
         if (token !== lastRenderToken) return;
 
         if (!match) {
@@ -11340,6 +11363,7 @@ function populateCalendarSelectors() {
         topTideHourIndex: idx,
         topTideDateOnly: isCrestOnly,
         topTideDisplayDate: event.title,
+        crestSourceLabel: event.entry?.crestSourceLabel || entry.crestSourceLabel,
         observationInterval: isCrestOnly ? "crest" : (entry.observationInterval || "1hour"),
         isHistoricalTopTide: isCrestOnly && Boolean(entry.isHistoricalTopTide || event.sourceType === "historical")
       }));
@@ -12404,17 +12428,19 @@ function startPlayback() {
 
     function findProjectionElevationIndex(feature, data) {
       const grid = Array.isArray(data?.elevationGridFtNavd88) ? data.elevationGridFtNavd88 : [];
-      const preferred = Number(
+      const preferred = normalizeStageValue(
         feature?.properties?.nsi2026ModelElevationIndex ?? feature?.properties?.modelElevationIndex
       );
       if (Number.isInteger(preferred) && preferred >= 0 && preferred < grid.length) return preferred;
-      const elevation = Number(
+      const elevation = normalizeStageValue(
         feature?.properties?.nsi2026ModelElevationNavd88Ft ??
         feature?.properties?.nsi2026ModeledFirstFloorNavd88Ft ??
         feature?.properties?.modelElevationNavd88Ft ??
         feature?.properties?.elevationNavd88Ft
       );
-      let bestIndex = 0;
+      if (!Number.isFinite(elevation) || !grid.length ||
+          elevation < grid[0] || elevation > grid[grid.length - 1]) return -1;
+      let bestIndex = -1;
       let bestDifference = Infinity;
       grid.forEach((candidate, index) => {
         const difference = Math.abs(Number(candidate) - elevation);
@@ -12478,10 +12504,19 @@ function startPlayback() {
         supportedParcelOptions?.find(option => option.share > 0 && option.share < 100) ??
         supportedParcelOptions?.[0];
       if (parcelOptions && !parcelOption) {
-        body.innerHTML = '<div class="flood-history-error">Parcel-area projections are unavailable within the model’s coverage.</div>';
+        const message = PARCEL_AREA_STAGES_URL
+          ? "Parcel-area projections are unavailable within the model’s coverage."
+          : "Parcel-area projections are not available for this mapper.";
+        body.innerHTML = `<div class="flood-history-error">${message}</div>`;
         return;
       }
       const elevationIndex = parcelOption?.elevationIndex ?? findProjectionElevationIndex(feature, data);
+      if (!Number.isInteger(elevationIndex) || elevationIndex < 0 ||
+          !Array.isArray(data.elevationGridFtNavd88) || elevationIndex >= data.elevationGridFtNavd88.length) {
+        body.innerHTML = '<div class="flood-history-error">A usable property elevation is not available within this model’s coverage. Flood-history and projection estimates cannot be shown.</div>';
+        return;
+      }
+      const ground = normalizeStageValue(p.elevationNavd88Ft);
       const firstFloor = getNsiFirstOccupiedFloorNavd88(p);
       const hasModeledFloor = Number.isFinite(firstFloor);
       const historic = finiteStructureNumber(parcelOption ? data.historicFloodEventCountByElevation?.[elevationIndex] : hasModeledFloor
@@ -12506,7 +12541,7 @@ function startPlayback() {
           </div>
           <div class="flood-summary-item">
             <span>${parcelOption ? "Estimated Area Threshold" : hasModeledFloor ? "Estimated Occupied Floor" : "Parcel Ground"}</span>
-            <strong>${parcelOption ? parcelOption.stage.toFixed(1) : hasModeledFloor ? firstFloor.toFixed(1) : Number(p.elevationNavd88Ft).toFixed(1)} <small>ft NAVD88</small></strong>
+            <strong>${parcelOption ? parcelOption.stage.toFixed(1) : hasModeledFloor ? firstFloor.toFixed(1) : ground == null ? "—" : ground.toFixed(1)} <small>ft NAVD88</small></strong>
           </div>
         </div>
         <section class="flood-history-section">
@@ -13037,7 +13072,7 @@ function startPlayback() {
             <strong>${(100 * metrics.wet / metrics.covered).toFixed(1)}%</strong></div>
             <div><span>Maximum Flood Depth</span><strong>${formatParcelDepthBand(metrics)}</strong></div>
           </div>${metrics.covered === metrics.total ? "" : `<p class="house-alert-note">${Math.round(100 * metrics.covered / metrics.total)}% of this parcel has model coverage.</p>`}`
-        : `<p class="house-alert-note" role="status">${loading ? "" : "Parcel depth and area are unavailable for this frame."}</p>`;
+        : `<p class="house-alert-note" role="status">${loading ? "" : currentFloodLayer?._worldFileAffine ? "Parcel depth and area are unavailable for this frame." : "Parcel depth and area are not available for this mapper."}</p>`;
       return '<div class="house-alert-popup building-info-card parcel-area-popup">' +
         '<span class="house-alert-kicker">Parcel Flooding</span><h3>' + address + '</h3>' + facts +
         '<button class="house-alert-cta" data-property-profile="parcel" type="button">See Parcel Flood Projections</button></div>';
