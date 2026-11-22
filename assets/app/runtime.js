@@ -8670,7 +8670,9 @@ function findClosestExportEntryForSlot(entries, slotMs, usedKeys = new Set(), to
       const freshness = currentDataMode === "forecast" ? getForecastFreshness(getForecastSourceForNotice()) : null;
       const forecastNotice = freshness?.state === "stale"
         ? `Forecast from ${formatFixedESTFromUtc(freshness.timestamp, true)} is over 72 hours old. Select Forecast to check for an update.`
-        : "";
+        : freshness?.state === "expired"
+          ? `Forecast coverage ended ${formatFixedESTFromUtc(freshness.timestamp, true)}. Select Forecast to check for an update.`
+          : "";
       const message = [forecastNotice, status.dataset.frameMessage].filter(Boolean).join(" ");
       const timeline = document.getElementById("timelineDock");
       const top = timeline?.getBoundingClientRect().top;
@@ -8711,7 +8713,9 @@ function findClosestExportEntryForSlot(entries, slotMs, usedKeys = new Set(), to
       if (typeof floodFrameState !== "undefined") floodFrameState = "failed";
       document.body.dataset.floodFrame = "failed";
       document.body.dataset.floodFrameRecovery = "failed";
-      setFloodFrameStatus(retained ? "" : "Flood layer unavailable.", "error");
+      setFloodFrameStatus(retained
+        ? "The selected flood image could not load. The previous image is still displayed."
+        : "Flood layer unavailable.", "error");
       if (!retained && typeof markInitialFloodFrameFailed === "function") markInitialFloodFrameFailed();
       if (typeof stopPlayback === "function") stopPlayback();
     }

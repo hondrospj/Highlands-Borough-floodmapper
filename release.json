@@ -3,7 +3,7 @@
   "referenceIndexSha256": "5a8a2f5f9ef052e178583c01dc849e487c3a26227d7b88f2c437f9e4d6e2d8a3",
   "referenceSnapshotHead": "8875b07aa316d5d59654bd459674798fe0a2474d",
   "fileCount": 48,
-  "bytes": 3365645,
+  "bytes": 3364095,
   "assets": {
     "assets/3d/elevation-contours.js": {
       "sha256": "46d73b0d18324cf2be96dc9c44a30e1399d93e5fbebf14b0f7b8738cea5203fe",
@@ -30,8 +30,8 @@
       "bytes": 15675
     },
     "assets/app/hydraulic-catalog.js": {
-      "sha256": "e02fbf753bc248f11c11ab1639a243e92b9152df6f37d7038e7cf357e96da51c",
-      "bytes": 95509
+      "sha256": "5c14d6fef4fa7e176c5d1bbb207950fe0ec149e1f3fbfa2b494940d636b2b747",
+      "bytes": 93690
     },
     "assets/app/mobile-class.js": {
       "sha256": "2674020e1af0ed472fc7da98ea1e7ff777de895e22c56583aa1e582714a06306",
@@ -46,8 +46,8 @@
       "bytes": 9043
     },
     "assets/app/runtime.js": {
-      "sha256": "4961481a96b81804e107301f094c66b9745144f388d03f11167d0705d98fa6ca",
-      "bytes": 723662
+      "sha256": "467d387c3b4b26f80b42819833d811168cd707019112fb0358c48f8655234001",
+      "bytes": 723931
     },
     "assets/app/startup.js": {
       "sha256": "072a3f119d4ffec83d70d1baf53ecc221cf64ffcf54f783ffe4254238b117d77",

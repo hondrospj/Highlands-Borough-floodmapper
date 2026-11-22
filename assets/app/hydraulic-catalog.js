@@ -271,41 +271,29 @@ function createHydraulicCatalogAdapter(format, palette = {}) {
       throwIfExportCancelled();
       return null;
     }
-  const getBaseOverlayRecord =
-    format === "phase-v2" || format === "phase-v1"
-      ? (async function getBaseOverlayRecord(mode, stageValue) {
-      const key = `base:${mode}:${stageToCode(stageValue)}`;
-      if (exportCancelRequested) throwIfExportCancelled();
+  async function getCachedAtlasRecord(key, load) {
       if (overlayRecordCache.has(key)) return overlayRecordCache.get(key);
-      const request = findWorkingOverlay(mode, stageValue);
+      const request = load();
       overlayRecordCache.set(key, request);
       try {
-        const match = await request;
+        const record = await request;
         throwIfExportCancelled();
-        overlayRecordCache.set(key, match);
-        return match;
+        if (overlayRecordCache.get(key) === request) {
+          if (record) overlayRecordCache.set(key, record);
+          else overlayRecordCache.delete(key);
+        }
+        return record;
       } catch (error) {
-        overlayRecordCache.delete(key);
+        if (overlayRecordCache.get(key) === request) overlayRecordCache.delete(key);
         throw error;
       }
-    })
-    : (async function getBaseOverlayRecord(mode, stageValue) {
+    }
+
+  async function getBaseOverlayRecord(mode, stageValue) {
+      throwIfExportCancelled();
       const key = `base:${mode}:${stageToCode(stageValue)}`;
-      if (exportCancelRequested) throwIfExportCancelled();
-      if (overlayRecordCache.has(key)) return overlayRecordCache.get(key);
-      const request = findWorkingOverlay(mode, stageValue);
-      overlayRecordCache.set(key, request);
-      try {
-        const match = await request;
-        throwIfExportCancelled();
-        if (match) overlayRecordCache.set(key, match);
-        else overlayRecordCache.delete(key);
-        return match;
-      } catch (error) {
-        overlayRecordCache.delete(key);
-        throw error;
-      }
-    });
+      return getCachedAtlasRecord(key, () => findWorkingOverlay(mode, stageValue));
+    }
 
   function getUncertaintyRasterColor() {
       const canvas = document.createElement("canvas");
@@ -640,47 +628,13 @@ function createHydraulicCatalogAdapter(format, palette = {}) {
       };
     });
 
-  const getOverlayRecord =
-    format === "phase-v2" || format === "phase-v1"
-      ? (async function getOverlayRecord(mode, stageValue, phase = "slack") {
-      const sourceStage = Number(stageValue);
-      const rawStage = getOverlayStage(sourceStage);
-      const normalizedPhase = normalizeHydraulicPhase(phase);
+  async function getOverlayRecord(mode, stageValue, phase = "slack") {
+      const rawStage = getOverlayStage(Number(stageValue));
       if (rawStage == null) return null;
-      const key = `${mode}:${normalizedPhase}:${stageToCode(rawStage)}`;
-      if (overlayRecordCache.has(key)) return overlayRecordCache.get(key);
-      const request = findWorkingOverlay(mode, rawStage, normalizedPhase);
-      overlayRecordCache.set(key, request);
-      try {
-        const record = await request;
-        throwIfExportCancelled();
-        overlayRecordCache.set(key, record);
-        return record;
-      } catch (error) {
-        overlayRecordCache.delete(key);
-        throw error;
-      }
-    })
-    : (async function getOverlayRecord(mode, stageValue, phase = "slack") {
-      const sourceStage = Number(stageValue);
-      const rawStage = getOverlayStage(sourceStage);
       const normalizedPhase = normalizeHydraulicPhase(phase);
-      if (rawStage == null) return null;
       const key = `${mode}:${normalizedPhase}:${stageToCode(rawStage)}`;
-      if (overlayRecordCache.has(key)) return overlayRecordCache.get(key);
-      const request = findWorkingOverlay(mode, rawStage, normalizedPhase);
-      overlayRecordCache.set(key, request);
-      try {
-        const record = await request;
-        throwIfExportCancelled();
-        if (record) overlayRecordCache.set(key, record);
-        else overlayRecordCache.delete(key);
-        return record;
-      } catch (error) {
-        overlayRecordCache.delete(key);
-        throw error;
-      }
-    });
+      return getCachedAtlasRecord(key, () => findWorkingOverlay(mode, rawStage, normalizedPhase));
+    }
 
   function getHydraulicStageFraction(rawStageFt, lowerStageFt) {
       const raw = Number(rawStageFt);
