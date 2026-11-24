@@ -22,6 +22,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+      - name: Verify the Highlands Version 41 forecast adapter
+        run: node tools/test_highlands_v41.mjs
       - name: Verify committed frames, texture recovery and stable layer reuse
         run: |
           node --check assets/highlands-3d.js

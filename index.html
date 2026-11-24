@@ -9,18 +9,108 @@
 (() => {
   const config = JSON.parse(document.getElementById("floodmapperTownData").content.textContent);
   const url = new URL(config.data?.forecastPath || "./forecast.json", window.location.href).href;
-  const controller = new AbortController();
-  const timer = window.setTimeout(() => controller.abort(), 30000);
-  const request = fetch(url, {
-    cache: "no-cache",
-    headers: { Accept: "application/geo+json, application/json" },
-    signal: controller.signal,
-    priority: "high"
-  }).then(response => {
-    if (!response.ok) throw new Error(`HTTP ${response.status} for ${url}`);
-    return response.json();
-  }).then(data => ({ data }), error => ({ error }))
-    .finally(() => window.clearTimeout(timer));
+  const v41Url = "https://hondrospj.github.io/statewide-service/data/v41_forecasts_mllw.json";
+  const hour = 3600000;
+  const stationId = config.site.petssGaugeId;
+  const gaugeId = config.site.usgsGaugeId;
+  const navdOffset = config.datums.navd88OffsetFromMllwFt;
+  const sourceType = "SHORELYSAFE_V41_WEIGHTED_ECMWF_103_PATHS";
+
+  async function getJson(url, timeout) {
+    const controller = new AbortController();
+    const timer = window.setTimeout(() => controller.abort(), timeout);
+    try {
+      const response = await fetch(url, {
+        cache: "no-cache",
+        headers: { Accept: "application/geo+json, application/json" },
+        signal: controller.signal,
+        priority: "high"
+      });
+      if (!response.ok) throw new Error(`HTTP ${response.status} for ${url}`);
+      return await response.json();
+    } finally {
+      window.clearTimeout(timer);
+    }
+  }
+
+  function toTownForecast(feed, now) {
+    const station = feed?.stations?.[stationId];
+    const issue = Date.parse(feed?.model_time_utc);
+    const generated = Date.parse(feed?.generated_utc);
+    const sourceOffset = station?.navd88_to_mllw_ft;
+    const rows = station?.points;
+    if (feed?.schema_version !== 1 || feed.model_version !== "v41" ||
+        feed.datum !== "MLLW" || feed.units !== "ft" || feed.forecast_statistic !== "ensemble_mean" ||
+        station?.station_id !== stationId || station.gauge_id !== gaugeId || station.gauge_agency !== "USGS" ||
+        station.datum !== "MLLW" || station.model_time_utc !== feed.model_time_utc ||
+        station.physical_paths !== 103 || !/^[0-9a-f]{64}$/.test(station.forecast_receipt_sha256) ||
+        !Number.isFinite(sourceOffset) || !Number.isFinite(navdOffset) ||
+        Math.abs(sourceOffset + navdOffset) > 0.1 ||
+        !Number.isFinite(issue) || issue % (6 * hour) !== 0 || issue > now || now - issue > 18 * hour ||
+        !Number.isFinite(generated) || generated < issue || generated > now + 5 * 60000 ||
+        !Array.isArray(rows) || rows.length !== station.forecast_hours ||
+        Date.parse(station.through_utc) !== issue + rows.length * hour) {
+      throw new Error("No current V41 forecast for this gauge");
+    }
+    const start = Math.max(issue + hour, Math.ceil(now / hour) * hour);
+    const end = start + 96 * hour;
+    const scenarios = {
+      mean: { label: "Weighted mean", product: "mean", hours: [] },
+      lowEnd: { label: "10th percentile", product: "p10", hours: [] },
+      highEnd: { label: "90th percentile", product: "p90", hours: [] }
+    };
+    rows.forEach((row, index) => {
+      const valid = Date.parse(row?.t);
+      if (valid !== issue + (index + 1) * hour ||
+          ![row.fcst, row.tide, row.source_twl10p, row.source_twl90p].every(Number.isFinite) ||
+          row.source_twl10p > row.source_twl90p) {
+        throw new Error("Invalid V41 forecast hour");
+      }
+      if (valid < start || valid > end) return;
+      // Preserve the issued mean and percentiles in NAVD88, then use the mapper's MLLW datum.
+      const values = { mean: row.fcst, lowEnd: row.source_twl10p, highEnd: row.source_twl90p };
+      for (const [name, level] of Object.entries(values)) {
+        const navd88StageFt = Number((level - sourceOffset).toFixed(4));
+        scenarios[name].hours.push({
+          timeUtc: row.t,
+          navd88StageFt,
+          mllwStageFt: Number((navd88StageFt - navdOffset).toFixed(4))
+        });
+      }
+    });
+    if (scenarios.mean.hours.length !== 97) throw new Error("V41 coverage is shorter than 96 hours");
+    return {
+      schema: "shorelysafe-v41-town-map-forecast-v1",
+      sourceType,
+      sourceUrl: v41Url,
+      forecastReceiptSha256: station.forecast_receipt_sha256,
+      experimental: true,
+      gaugeName: config.site.gaugeName,
+      stationId,
+      usgsGaugeId: gaugeId,
+      weatherPaths: station.physical_paths,
+      sourceCycleUtc: feed.model_time_utc,
+      petssCycleUtc: feed.model_time_utc, // Compatibility key for the mapper's freshness checks.
+      issuedUtc: feed.generated_utc,
+      forecastStartUtc: new Date(start).toISOString(),
+      forecastEndUtc: new Date(end).toISOString(),
+      sourceDatum: "MLLW",
+      mapDatum: "NAVD88",
+      navd88OffsetFromMllwFt: navdOffset,
+      scenarioForecasts: scenarios,
+      hours: scenarios.mean.hours
+    };
+  }
+
+  window.floodmapperLoadTownForecast = async () => {
+    try {
+      return toTownForecast(await getJson(v41Url, 4500), Date.now());
+    } catch (error) {
+      console.warn("V41 forecast unavailable; using NOAA PETSS guidance.", error);
+      return getJson(url, 30000);
+    }
+  };
+  const request = window.floodmapperLoadTownForecast().then(data => ({ data }), error => ({ error }));
   window.floodmapperStartupForecast = { url, request };
 })();
 </script>
@@ -880,6 +970,32 @@ body:has(#contoursToggle[aria-busy="true"]) #contoursStatus{display:none!importa
 <script defer src="https://cdn.jsdelivr.net/gh/hondrospj/Highlands-Borough-floodmapper@59308111b233ab9cdbbe8c291e0bd434c24bfe5d/assets/export-road-labels.js" integrity="sha256-NgVBvsBnfb2MB7MsZpm29smPtc5ceo1cHWKFDEtAfkk=" crossorigin="anonymous"></script>
 
 <script defer src="https://cdn.jsdelivr.net/gh/hondrospj/Highlands-Borough-floodmapper@59308111b233ab9cdbbe8c291e0bd434c24bfe5d/assets/modal-focus.js" integrity="sha256-8UFLi8xVzPA9beRgo+p+iwqbA4KcNLwN2CifgEwS0PQ=" crossorigin="anonymous"></script>
+<script id="floodmapper-v41-reload">
+(() => {
+  const isV41 = () => forecastData?.sourceType === "SHORELYSAFE_V41_WEIGHTED_ECMWF_103_PATHS";
+  const originalFetchJson = fetchJson;
+  fetchJson = function (url, options) {
+    if (url === FORECAST_URL && options?.cache === "no-cache" &&
+        window.floodmapperStartupForecast?.url !== url) {
+      return window.floodmapperLoadTownForecast();
+    }
+    return originalFetchJson(url, options);
+  };
+
+  // Matching timestamps alone cannot qualify a PETSS-driven simulation as V41.
+  const originalPhysicsMatches = physicsManifestMatchesForecastCycle;
+  physicsManifestMatchesForecastCycle = function (manifest) {
+    return !isV41() && originalPhysicsMatches(manifest);
+  };
+
+  const { body } = HELP_COPY.forecastType;
+  Object.defineProperty(HELP_COPY.forecastType, "body", {
+    get() {
+      return isV41() ? body.replace("NOAA PETSS guidance", "experimental ShorelySafe V41 guidance") : body;
+    }
+  });
+})();
+</script>
 <script data-nww-script="script-007" src="https://cdn.jsdelivr.net/gh/hondrospj/Highlands-Borough-floodmapper@59308111b233ab9cdbbe8c291e0bd434c24bfe5d/assets/app/town-config.js" integrity="sha256-0y6a5vmfQ/Kj3AGlS3NnXNCINg0KzlmuXvy+OfRfoiM=" crossorigin="anonymous"></script>
 
 
