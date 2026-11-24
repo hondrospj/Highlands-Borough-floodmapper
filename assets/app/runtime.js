@@ -115,8 +115,7 @@
       daily: { value: "daily", label: "Daily Maximum", minutes: 1440, frameLimit: 5 }
     };
     const PLAYBACK_DAY_CONFIRMATION_INTERVAL = 20;
-    const PLAYBACK_SIMULATED_HOUR_MS = 950;
-    const PLAYBACK_MINIMUM_FRAME_DELAY_MS = 20;
+    const PLAYBACK_FRAME_DURATION_MS = 500;
     const EXPORT_CAPTURE_DELAY_MS = 1;
     const EXPORT_GIF_SPEEDS = {
       slow: { value: "slow", label: "Slow", delayMs: 2000 },
@@ -4972,6 +4971,7 @@ function normalizeBoundaryRingsFromArcGIS(rings, sourceWkid = 3857) {
         preferCanvas: true
       });
 
+      map.attributionControl?.setPrefix(false);
       map.createPane("basemapGrayPane");
       map.createPane("basemapColorPane");
       map.createPane("satellitePane");
@@ -11980,34 +11980,7 @@ function populateCalendarSelectors() {
       return renderHour(delta > 0 ? 0 : currentSeriesHours.length - 1, { playback });
     }
 
-    function getPlaybackCatchUpStep() {
-      const index = getTimelineNavigationIndex();
-      const intervalMinutes = getTimelineIntervalMinutes();
-      if (index !== currentHourIndex || intervalMinutes === 1440) return 1;
-      const entries = currentSeriesHours.slice(index, index + 3);
-      const [current, intermediate, next] = entries;
-      if (!current || !intermediate || !next ||
-          intermediate.observedDate !== current.observedDate || next.observedDate !== current.observedDate) return 1;
-
-      const [startTime, middleTime, endTime] = entries.map(entryTimeMs);
-      const intervalMs = intervalMinutes * 60_000;
-      if (![startTime, middleTime, endTime].every(Number.isFinite) ||
-          middleTime - startTime !== intervalMs || endTime - middleTime !== intervalMs) return 1;
-      const levels = entries.map(getStageValue);
-      if (!levels.every(Number.isFinite)) return 1;
-      const [start, middle, end] = levels;
-      // Always show local highs/lows, category changes, and hydraulic
-      // transitions as individual frames, even if rendering falls behind.
-      if (middle < Math.min(start, end) || middle > Math.max(start, end)) return 1;
-      const category = classifyFloodStage(start);
-      if (levels.some(level => classifyFloodStage(level) !== category)) return 1;
-      const phase = getHydraulicPhaseForEntry(entries[0], index, currentSeriesHours);
-      if (entries.some((entry, offset) =>
-        getHydraulicPhaseForEntry(entry, index + offset, currentSeriesHours) !== phase)) return 1;
-      return 2;
-    }
-
-    async function stepPlaybackForward(catchUp = false) {
+    async function stepPlaybackForward() {
       const generation = playbackGeneration;
       const previousDate = currentViewType === "observed-day"
         ? currentSeriesHours[currentHourIndex]?.observedDate || selectedObservedDate : null;
@@ -12015,7 +11988,7 @@ function populateCalendarSelectors() {
       if (step) pendingPlaybackStep = step;
       let advanced;
       try {
-        advanced = await stepSeriesBy(catchUp ? getPlaybackCatchUpStep() : 1, step);
+        advanced = await stepSeriesBy(1, step);
       } finally {
         if (pendingPlaybackStep === step) pendingPlaybackStep = null;
       }
@@ -12034,12 +12007,10 @@ function populateCalendarSelectors() {
     }
 
     function getPlaybackFrameDurationMs() {
-      const intervalMinutes = getTimelineIntervalMinutes();
-      if (intervalMinutes === 1440) return PLAYBACK_SIMULATED_HOUR_MS;
-      return PLAYBACK_SIMULATED_HOUR_MS * (intervalMinutes / 60);
+      return PLAYBACK_FRAME_DURATION_MS;
     }
 
-function startPlayback() {
+    function startPlayback() {
       stopPlayback({ resetDayGuard: false, closePrompt: true });
       if (!currentSeriesHours.length) {
         toast("No timeline frames are available to play for this selection.");
@@ -12051,34 +12022,13 @@ function startPlayback() {
       updatePlayPauseButton();
       const generation = playbackGeneration;
       let scheduleNext = null;
-      let previousFrameStartedAt = null;
-      let lagMs = 0;
 
-      reschedulePlaybackFrame = () => {
-        previousFrameStartedAt = null;
-        lagMs = 0;
-        scheduleNext?.();
-      };
+      reschedulePlaybackFrame = () => scheduleNext?.();
       const loop = async () => {
         if (!playTimer || generation !== playbackGeneration) return;
         scheduleNext = null;
-        const frameStartedAt = performance.now();
-        const frameDurationMs = getPlaybackFrameDurationMs() / playbackSpeedMultiplier;
-        let catchUp = false;
-        if (playbackSpeedMultiplier === 2 && previousFrameStartedAt !== null) {
-          lagMs = Math.min(2 * frameDurationMs,
-            Math.max(0, lagMs + frameStartedAt - previousFrameStartedAt - frameDurationMs));
-          catchUp = lagMs >= frameDurationMs;
-          // Make up at most one overdue reading. Do not carry a burst of
-          // overdue frames after a stalled request or background tab.
-          if (catchUp) lagMs %= frameDurationMs;
-        }
-        previousFrameStartedAt = frameStartedAt;
         try {
-          if (await stepPlaybackForward(catchUp) === false) {
-            previousFrameStartedAt = null;
-            lagMs = 0;
-          }
+          await stepPlaybackForward();
         } catch (err) {
           if (generation !== playbackGeneration) return;
           toast(err?.message || String(err));
@@ -12086,14 +12036,15 @@ function startPlayback() {
           return;
         }
         if (!playTimer || generation !== playbackGeneration) return;
+        const frameDisplayedAt = performance.now();
         let scheduledFrameTimer;
-        // Recalculate the current deadline when the speed changes between frames.
-        // A frame already rendering still finishes before the next one starts.
+        // Start the interval after the swap. Slow loads cannot trigger a burst
+        // of frames, and a speed change only reschedules the next frame.
         scheduleNext = () => {
           clearTimeout(scheduledFrameTimer);
-          const elapsedMs = performance.now() - frameStartedAt;
           const frameDurationMs = getPlaybackFrameDurationMs() / playbackSpeedMultiplier;
-          const nextFrameDelayMs = Math.max(PLAYBACK_MINIMUM_FRAME_DELAY_MS, frameDurationMs - elapsedMs);
+          const elapsedMs = performance.now() - frameDisplayedAt;
+          const nextFrameDelayMs = Math.max(0, Math.ceil(frameDurationMs - elapsedMs));
           scheduledFrameTimer = playTimer = setTimeout(loop, nextFrameDelayMs);
         };
         scheduleNext();
