@@ -1,0 +1,32 @@
+name: Publish Highlands forecast hold
+on: workflow_dispatch
+permissions:
+  contents: read
+concurrency:
+  group: shorelysafe-publish
+  cancel-in-progress: false
+jobs:
+  publish:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            .shorelysafe/
+            data/highlands-forecast-hold-index.html
+      - name: Publish exact reviewed index
+        env:
+          SHORELYSAFE_TOKEN: ${{ secrets.SHORELYSAFE_PUBLISH_TOKEN }}
+          EXPECTED_BEFORE: e1f4b5fcb01798f735ba361377c34a91cbd30f1a683d41fa12694ebd043b124f
+          EXPECTED_AFTER: ea6a97fcfc8cb6c1be840697f968c9fdc40fb92298680f18823478c4727473f2
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(curl -fsSL "https://cupajoe.live/shorelysafe/floodmapper/highlands/?hold=$GITHUB_SHA" | sha256sum | cut -d' ' -f1)" = "$EXPECTED_BEFORE"
+          cp data/highlands-forecast-hold-index.html index.html
+          test "$(sha256sum index.html | cut -d' ' -f1)" = "$EXPECTED_AFTER"
+          python3 .shorelysafe/publish_reviewed_index.py --source-commit "$GITHUB_SHA" --expected-before "$EXPECTED_BEFORE" --expected-after "$EXPECTED_AFTER"
