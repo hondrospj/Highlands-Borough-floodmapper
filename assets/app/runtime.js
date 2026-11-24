@@ -1,6 +1,6 @@
 
     const APP_BASE = new URL(".", window.location.href);
-    const UI_ASSET_BASE = new URL("../", "https://cdn.jsdelivr.net/gh/hondrospj/Highlands-Borough-floodmapper@59308111b233ab9cdbbe8c291e0bd434c24bfe5d/assets/app/runtime.js");
+    const UI_ASSET_BASE = new URL("../", document.currentScript?.src || new URL("assets/app/runtime.js", APP_BASE));
     let FORECAST_URL = "";
     let OBSERVED_URL = "";
     let CANONICAL_DAILY_URL = "";
@@ -115,7 +115,8 @@
       daily: { value: "daily", label: "Daily Maximum", minutes: 1440, frameLimit: 5 }
     };
     const PLAYBACK_DAY_CONFIRMATION_INTERVAL = 20;
-    const PLAYBACK_FRAME_DURATION_MS = 500;
+    const PLAYBACK_SIMULATED_HOUR_MS = 950;
+    const PLAYBACK_MINIMUM_FRAME_DELAY_MS = 20;
     const EXPORT_CAPTURE_DELAY_MS = 1;
     const EXPORT_GIF_SPEEDS = {
       slow: { value: "slow", label: "Slow", delayMs: 2000 },
@@ -877,8 +878,8 @@ function cloneStyleObject(value) {
       return /^\d{4}-/.test(iso) ? iso.slice(0, 16).replace(/[-:]/g, "") + "Z" : "";
     }
 
-    function physicsPointerUrl() {
-      const cycleId = physicsCycleIdFromUtc(forecastData?.petssCycleUtc);
+    function physicsPointerUrl(forecast = forecastData) {
+      const cycleId = physicsCycleIdFromUtc(forecast?.petssCycleUtc);
       const cyclePointerPath = PHYSICS_FORECAST_CYCLE_POINTER_TEMPLATE && cycleId
         ? PHYSICS_FORECAST_CYCLE_POINTER_TEMPLATE.replaceAll("{cycleId}", cycleId)
         : "";
@@ -912,13 +913,13 @@ function cloneStyleObject(value) {
       return physicsForecastManifests[currentForecastScenario] || null;
     }
 
-    async function loadPhysicsForecast(force = false) {
+    async function loadPhysicsForecast(force = false, selection = null) {
       if (!PHYSICS_FORECAST_POINTER_URL && !PHYSICS_FORECAST_CYCLE_POINTER_TEMPLATE) return null;
       if (Object.keys(physicsForecastManifests).length && !force) {
-        return getActivePhysicsManifest();
+        return selection ? physicsForecastManifests : getActivePhysicsManifest();
       }
       const generation = archiveGeneration;
-      const pointerUrl = physicsPointerUrl();
+      const pointerUrl = physicsPointerUrl(selection?.data);
       if (!pointerUrl) return null;
       const pointer = await fetchJson(pointerUrl);
       if (generation !== archiveGeneration) throw new Error("Physics request superseded by Reload");
@@ -953,15 +954,17 @@ function cloneStyleObject(value) {
         return [scenario, hydratePhysicsManifest(manifest, manifestUrl)];
       }));
       if (generation !== archiveGeneration) throw new Error("Physics request superseded by Reload");
-      physicsForecastManifests = Object.fromEntries(hydrated);
+      const manifests = Object.fromEntries(hydrated);
+      if (selection) return manifests;
+      physicsForecastManifests = manifests;
       physicsQueryImageCache = new Map();
       return getActivePhysicsManifest() || hydrated[0]?.[1] || null;
     }
 
-    function physicsManifestMatchesForecastCycle(manifest = getActivePhysicsManifest()) {
-      if (!manifest || !forecastData) return false;
+    function physicsManifestMatchesForecastCycle(manifest = getActivePhysicsManifest(), forecast = forecastData) {
+      if (!manifest || !forecast) return false;
       const physicsCycle = Date.parse(manifest?.petssSource?.cycleUtc || "");
-      const dashboardCycle = Date.parse(forecastData?.petssCycleUtc || "");
+      const dashboardCycle = Date.parse(forecast.petssCycleUtc || "");
       return Number.isFinite(physicsCycle) &&
         Number.isFinite(dashboardCycle) &&
         physicsCycle === dashboardCycle;
@@ -990,10 +993,13 @@ function cloneStyleObject(value) {
       };
     }
 
-    function getPhysicsForecastDisplaySeries() {
-      const manifest = getActivePhysicsManifest();
-      if (!physicsForecastApplies() || !manifest) return null;
-      const allFrames = annotateHydraulicSeries(manifest.frames.map(physicsFrameToForecastEntry));
+    function getPhysicsForecastDisplaySeries(selection = null) {
+      const manifest = selection ? selection.manifest : getActivePhysicsManifest();
+      if (!manifest || (selection
+        ? !physicsManifestMatchesForecastCycle(manifest, selection.data)
+        : !physicsForecastApplies())) return null;
+      const allFrames = selection ? selection.rawSeries
+        : annotateHydraulicSeries(manifest.frames.map(physicsFrameToForecastEntry));
       const interval = getTimelineIntervalMinutes();
       if (interval === 15) return allFrames;
       if (interval === 60) {
@@ -1266,22 +1272,62 @@ function cloneStyleObject(value) {
 
     async function switchForecastScenario(scenario) {
       if (!FORECAST_SCENARIOS[scenario]) return;
-      if (scenario === currentForecastScenario && currentDataMode === "forecast"
+      const pending = switchForecastScenario.pendingSelection;
+      const requestActive = pending && pending.generation === selectionGeneration && pending.token === lastRenderToken;
+      if (requestActive && pending.scenario === scenario) return;
+      if (!requestActive && scenario === currentForecastScenario && currentDataMode === "forecast"
           && (currentSeriesHours.length || loadForecast.pendingSelectionGeneration === selectionGeneration)
           && loadTopTideEvent.pendingSelectionGeneration !== selectionGeneration) return;
       stopPlayback();
-      const preferredEntry = currentDataMode === "forecast" ? currentSeriesHours[currentHourIndex] : null;
-      const floodSelectionToken = cancelPendingFloodFrame();
+      const preferredEntry = currentDataMode === "forecast" ? currentSeriesHours[getTimelineNavigationIndex()] : null;
+      const request = { scenario, generation: ++selectionGeneration, token: cancelPendingFloodFrame() };
+      switchForecastScenario.pendingSelection = request;
+      const ownsSelection = () => request.generation === selectionGeneration && request.token === lastRenderToken;
+      const failureMessage = `${getForecastScenarioLabel(scenario)} forecast could not load. Select it again to retry.`;
       toast("");
-      currentForecastScenario = scenario;
-      currentDataMode = "forecast";
-      updateForecastScenarioButtons();
-      updateDataModeButtons();
-      cancelPendingFloodFrame(false);
-      await loadForecast(preferredEntry, { preserveForecastDay: true });
-      if (floodSelectionToken !== lastRenderToken) return false;
-      renderTopTides();
-      await renderHour(currentHourIndex);
+      try {
+        const selection = await loadForecast(preferredEntry, { scenario, generation: request.generation, preserveForecastDay: true });
+        if (!ownsSelection()) return false;
+        if (!selection || !Number.isFinite(getStageValue(selection.series[selection.index]))) {
+          reportFloodFrameFailure();
+          setFloodFrameStatus(failureMessage, "error");
+          return false;
+        }
+        const rendering = renderHour(selection.index, { forecastSelection: {
+          ...selection,
+          commit() {
+            forecastData = selection.data;
+            if (physicsForecastManifests !== selection.manifests) {
+              physicsForecastManifests = selection.manifests;
+              physicsQueryImageCache = new Map();
+            }
+            currentForecastScenario = scenario;
+            currentDataMode = "forecast";
+            currentViewType = "forecast";
+            currentTopTideIndex = null;
+            currentRawSeriesHours = selection.rawSeries;
+            currentSeriesHours = selection.series;
+            currentSelectedLabel = getForecastScenarioLabel();
+            currentSelectedSubLabel = getForecastScenarioPercentileLabel();
+            currentRangeLabel = `${formatHourEntryTime(currentSeriesHours[0])} to ${formatHourEntryTime(currentSeriesHours[currentSeriesHours.length - 1])}`;
+            clearExportAvailabilityCache();
+            updateDataModeButtons();
+            syncSliderBounds();
+            scheduleForecastFreshnessNotice();
+          }
+        } });
+        request.token = lastRenderToken;
+        const rendered = await rendering;
+        if (!ownsSelection()) return false;
+        if (rendered === false) {
+          setFloodFrameStatus(failureMessage, "error");
+          return false;
+        }
+        renderTopTides();
+        return true;
+      } finally {
+        if (switchForecastScenario.pendingSelection === request) switchForecastScenario.pendingSelection = null;
+      }
     }
 
     function getReturnIntervalRecord(years = currentReturnIntervalYears) {
@@ -4971,7 +5017,6 @@ function normalizeBoundaryRingsFromArcGIS(rings, sourceWkid = 3857) {
         preferCanvas: true
       });
 
-      map.attributionControl?.setPrefix(false);
       map.createPane("basemapGrayPane");
       map.createPane("basemapColorPane");
       map.createPane("satellitePane");
@@ -7059,7 +7104,7 @@ function updateExportSegmentedUI() {
         return "The export date picker had an internal date-format issue. Reload the page; if it continues, use MM/DD/YY for both export dates.";
       }
       if (/Failed to fetch|NetworkError|Load failed/i.test(raw)) {
-        return "GIF export failed while loading browser export components. Reload the page and try again.";
+        return `${formatLabel} export failed while loading browser export components. Reload the page and try again.`;
       }
       if (/html2canvas|canvasToBlob|CanvasToBlob|Canvas export failed|taint|cross-origin resource/i.test(raw)) {
         return `${formatLabel} export could not capture the map cleanly. Reload the page and try again.`;
@@ -8731,6 +8776,7 @@ function findClosestExportEntryForSlot(entries, slotMs, usedKeys = new Set(), to
         : "Flood layer unavailable.", "error");
       if (!retained && typeof markInitialFloodFrameFailed === "function") markInitialFloodFrameFailed();
       if (typeof stopPlayback === "function") stopPlayback();
+      if (retained) updatePersistentDepthQueryPopup();
     }
 
     function waitForRecoveryFloodLayer(layer, token, onReady) {
@@ -10122,13 +10168,15 @@ function formatSelectedObservedDate(dateStr) {
       requestAnimationFrame(fitSnapshotTimeText);
     }
 
-    async function setFloodLayer(mode, stageValue, phase, token, entry = null, series = currentRawSeriesHours) {
+    async function setFloodLayer(mode, stageValue, phase, token, entry = null, series = currentRawSeriesHours, forecastSelection = null) {
       const frameEntry = typeof entry !== "undefined" && entry ? entry : currentSeriesHours[currentHourIndex];
       const frameStage = getStageValue(frameEntry);
+      const frameDataMode = forecastSelection ? "forecast" : currentDataMode;
+      const frameSource = forecastSelection?.data || (frameDataMode === "forecast" ? forecastData : null);
       const frameMetadata = { entry: frameEntry, stage: Number.isFinite(frameStage) ? frameStage : stageValue,
-        phase, dataMode: currentDataMode, overlayMode: mode, overlayStage: stageValue, series,
-        forecastSource: currentDataMode === "forecast" && forecastData
-          ? { petssCycleUtc: forecastData.petssCycleUtc, forecastEndUtc: forecastData.forecastEndUtc } : null };
+        phase, dataMode: frameDataMode, overlayMode: mode, overlayStage: stageValue, series,
+        forecastSource: frameSource
+          ? { petssCycleUtc: frameSource.petssCycleUtc, forecastEndUtc: frameSource.forecastEndUtc } : null };
 
       let releaseRaster = null;
       try {
@@ -10182,7 +10230,7 @@ function formatSelectedObservedDate(dateStr) {
             crossOrigin: true,
             zIndex: 500,
             pane: "floodPane",
-            className: currentDataMode === "return-interval" && mode === "depth"
+            className: frameDataMode === "return-interval" && mode === "depth"
               ? "return-interval-depth-overlay"
               : ""
           },
@@ -10196,8 +10244,6 @@ function formatSelectedObservedDate(dateStr) {
           if (typeof window !== "undefined" && window.NORTH_WILDWOOD_3D?.prepareFloodFrame &&
               !await window.NORTH_WILDWOOD_3D.prepareFloodFrame(nextLayer, frameMetadata, token)) return false;
           if (token !== lastRenderToken || pendingFloodLayer !== nextLayer || !map.hasLayer(nextLayer)) return false;
-          if (typeof window !== "undefined" && window.NORTH_WILDWOOD_3D?.commitFloodFrame &&
-              !window.NORTH_WILDWOOD_3D.commitFloodFrame(nextLayer, token)) return false;
           nextLayer.setOpacity(overlayOpacity);
           nextLayer._floodmapperFrame = frameMetadata;
           currentFloodLayer = nextLayer;
@@ -10209,7 +10255,7 @@ function formatSelectedObservedDate(dateStr) {
             map.removeLayer(previousLayer);
           }
   
-          updatePersistentDepthQueryPopup();
+          if (!forecastSelection) updatePersistentDepthQueryPopup();
   
           if (!mapHasFit && floodLatLngBounds) fitInitialFloodView(getBoundaryDrivenOverlayBounds() || floodLatLngBounds);
           markInitialFloodFrameReady();
@@ -10219,17 +10265,19 @@ function formatSelectedObservedDate(dateStr) {
       }
     }
 
-    async function setPhysicsFloodLayer(asset, token, entry = null, phase = "slack") {
+    async function setPhysicsFloodLayer(asset, token, entry = null, phase = "slack", forecastSelection = null) {
       const frameEntry = typeof entry !== "undefined" && entry ? entry : currentSeriesHours[currentHourIndex];
       const frameStage = getStageValue(frameEntry);
-      const frameMetadata = { entry: frameEntry, stage: Number.isFinite(frameStage) ? frameStage : (typeof stageValue !== "undefined" ? stageValue : null), phase: typeof phase !== "undefined" ? phase : "slack", dataMode: currentDataMode,
-        forecastSource: currentDataMode === "forecast" && forecastData
-          ? { petssCycleUtc: forecastData.petssCycleUtc, forecastEndUtc: forecastData.forecastEndUtc } : null };
+      const frameDataMode = forecastSelection ? "forecast" : currentDataMode;
+      const frameSource = forecastSelection?.data || (frameDataMode === "forecast" ? forecastData : null);
+      const frameMetadata = { entry: frameEntry, stage: Number.isFinite(frameStage) ? frameStage : (typeof stageValue !== "undefined" ? stageValue : null), phase: typeof phase !== "undefined" ? phase : "slack", dataMode: frameDataMode,
+        forecastSource: frameSource
+          ? { petssCycleUtc: frameSource.petssCycleUtc, forecastEndUtc: frameSource.forecastEndUtc } : null };
 
       toast("");
       ensureMap();
       const overlayUrl = getPhysicsDisplayRecord(asset)?.url;
-      const bounds = getActivePhysicsManifest()?.boundsWgs84;
+      const bounds = (forecastSelection ? forecastSelection.manifest : getActivePhysicsManifest())?.boundsWgs84;
       if (!overlayUrl || !Array.isArray(bounds) || bounds.length !== 2) {
         throw new Error("The selected physics frame is incomplete.");
       }
@@ -10238,15 +10286,14 @@ function formatSelectedObservedDate(dateStr) {
       if (!loaded) {
         return false;
       }
-      floodLatLngBounds = L.latLngBounds(bounds[0], bounds[1]);
-      floodOverlayGeometryMode = "axis-aligned";
+      const overlayBounds = L.latLngBounds(bounds[0], bounds[1]);
 
       if (pendingFloodLayer && map.hasLayer(pendingFloodLayer)) {
         map.removeLayer(pendingFloodLayer);
         pendingFloodLayer = null;
       }
       const previousLayer = currentFloodLayer;
-      const nextLayer = L.imageOverlay(overlayUrl, floodLatLngBounds, {
+      const nextLayer = L.imageOverlay(overlayUrl, overlayBounds, {
         opacity: 0,
         interactive: false,
         crossOrigin: true,
@@ -10258,8 +10305,8 @@ function formatSelectedObservedDate(dateStr) {
         if (typeof window !== "undefined" && window.NORTH_WILDWOOD_3D?.prepareFloodFrame &&
             !await window.NORTH_WILDWOOD_3D.prepareFloodFrame(nextLayer, frameMetadata, token)) return false;
         if (token !== lastRenderToken || pendingFloodLayer !== nextLayer || !map.hasLayer(nextLayer)) return false;
-        if (typeof window !== "undefined" && window.NORTH_WILDWOOD_3D?.commitFloodFrame &&
-            !window.NORTH_WILDWOOD_3D.commitFloodFrame(nextLayer, token)) return false;
+        floodLatLngBounds = overlayBounds;
+        floodOverlayGeometryMode = "axis-aligned";
         nextLayer.setOpacity(overlayOpacity);
         nextLayer._floodmapperFrame = frameMetadata;
         currentFloodLayer = nextLayer;
@@ -10289,10 +10336,11 @@ function formatSelectedObservedDate(dateStr) {
       };
     }
 
-    async function renderHour(index, { playback = null, observedSelection = null } = {}) {
+    async function renderHour(index, { playback = null, observedSelection = null, forecastSelection = null } = {}) {
       cancelTimelineSelection();
       const previousSeries = currentSeriesHours;
-      const requestedSeries = observedSelection?.series || previousSeries;
+      const preparedSelection = forecastSelection || observedSelection;
+      const requestedSeries = preparedSelection?.series || previousSeries;
 
       const entry = requestedSeries[index];
       if (!entry) return;
@@ -10309,15 +10357,15 @@ function formatSelectedObservedDate(dateStr) {
       const rawStage = getStageValue(entry);
       const displayStage = getOverlayStage(rawStage);
       const hydraulicPhase = getHydraulicPhaseForEntry(entry, index, requestedSeries);
-      const observedDate = !observedSelection && entry.isDailyMaximum && currentViewType === "observed-day" &&
+      const observedDate = !preparedSelection && entry.isDailyMaximum && currentViewType === "observed-day" &&
         entry.observedDate !== selectedObservedDate ? entry.observedDate : null;
       const observedDay = observedDate ? getObservedDayRecord(observedDate) : null;
-      const rawSeries = observedSelection?.rawSeries ?? (observedDay ? buildObservedCanonicalSeries(observedDay, observedDate) : currentRawSeriesHours);
+      const rawSeries = preparedSelection?.rawSeries ?? (observedDay ? buildObservedCanonicalSeries(observedDay, observedDate) : currentRawSeriesHours);
       const slider = document.getElementById("hourSlider");
       const commitSelection = () => {
         if (playback) playback.renderToken = null;
-        observedSelection?.commit();
         currentHourIndex = index;
+        preparedSelection?.commit();
         if (observedDay) {
           // The month-wide Daily Max slider can change the selected day.
           // Commit its date and tide context only when this frame is displayed.
@@ -10333,9 +10381,9 @@ function formatSelectedObservedDate(dateStr) {
         renderTimelineMeta(entry);
       };
 
-      updatePersistentDepthQueryPopup({ useRenderedFlood: false });
+      if (!forecastSelection) updatePersistentDepthQueryPopup({ useRenderedFlood: false });
 
-      if (!playback) {
+      if (!playback && !forecastSelection) {
         slider.value = String(index);
         updateSliderProgress();
       }
@@ -10353,7 +10401,9 @@ function formatSelectedObservedDate(dateStr) {
       }
 
       const initialFramePending = document.body.dataset.initialFloodFrame === "loading";
-      const physicsAsset = currentOverlayMode === "depth" ? getPhysicsAssetForEntry(entry) : null;
+      const physicsAsset = currentOverlayMode !== "depth" ? null : forecastSelection
+        ? forecastSelection.manifest && (entry.physicsDailyMaximum || entry.physicsFrame)
+        : getPhysicsAssetForEntry(entry);
       const physicsUiWasActive = document.body.classList.contains("physics-forecast-active");
       const physicsUiIsActive = Boolean(physicsAsset);
       const physicsDailyUiWasActive = document.body.classList.contains("physics-daily-maximum-active");
@@ -10363,7 +10413,7 @@ function formatSelectedObservedDate(dateStr) {
         document.body.classList.toggle("physics-daily-maximum-active", physicsDailyUiIsActive);
         if (physicsUiWasActive !== physicsUiIsActive || physicsDailyUiWasActive !== physicsDailyUiIsActive) renderLegend();
       };
-      if (!playback) updatePhysicsLegend();
+      if (!playback && !forecastSelection) updatePhysicsLegend();
       const note = physicsAsset
         ? (entry?.isDailyMaximum
           ? (currentOverlayMode === "dynamic"
@@ -10373,11 +10423,11 @@ function formatSelectedObservedDate(dateStr) {
             ? "Flood-impact bands reached by this exact 15-minute shallow-water simulation."
             : "Exact 15-minute nonlinear shallow-water simulation for this PETSS boundary level."))
         : buildNotes(rawStage, displayStage);
-      toast(note);
+      if (!forecastSelection) toast(note);
 
       const ready = await renderFloodFrameWithRetry(() => physicsAsset
-        ? setPhysicsFloodLayer(physicsAsset, token, entry, hydraulicPhase)
-        : setFloodLayer(currentOverlayMode, displayStage, hydraulicPhase, token, entry, rawSeries), token);
+        ? setPhysicsFloodLayer(physicsAsset, token, entry, hydraulicPhase, forecastSelection)
+        : setFloodLayer(currentOverlayMode, displayStage, hydraulicPhase, token, entry, rawSeries, forecastSelection), token);
       if (token !== lastRenderToken || previousSeries !== currentSeriesHours) return false;
       if (!ready) {
         if (playback) playback.renderToken = null;
@@ -10385,7 +10435,7 @@ function formatSelectedObservedDate(dateStr) {
         currentHourIndex = previousHourIndex;
         slider.value = String(previousHourIndex);
         updateSliderProgress();
-        if (!playback) {
+        if (!playback && !forecastSelection) {
           document.body.classList.toggle("physics-forecast-active", physicsUiWasActive);
           document.body.classList.toggle("physics-daily-maximum-active", physicsDailyUiWasActive);
           if (physicsUiWasActive !== physicsUiIsActive || physicsDailyUiWasActive !== physicsDailyUiIsActive) renderLegend();
@@ -10396,6 +10446,11 @@ function formatSelectedObservedDate(dateStr) {
       requestedTimelineSelection = null;
       if (playback) updatePhysicsLegend();
       commitSelection();
+      if (forecastSelection) {
+        updatePhysicsLegend();
+        updatePersistentDepthQueryPopup();
+        toast(note);
+      }
       updateNsiStructureImpactLayer();
       floodFrameState = "ready";
       document.body.dataset.floodFrame = "ready";
@@ -10554,8 +10609,12 @@ function formatSelectedObservedDate(dateStr) {
       const floodSelectionToken = lastRenderToken;
       const generation = options.generation ?? ++selectionGeneration;
       if (generation !== selectionGeneration) return false;
-      loadForecast.pendingSelectionGeneration = generation;
+      const stagingScenario = options.scenario != null;
+      const scenario = options.scenario ?? currentForecastScenario;
+      if (!stagingScenario) loadForecast.pendingSelectionGeneration = generation;
       const previousForecastData = forecastData;
+      let data = previousForecastData;
+      let manifests = physicsForecastManifests;
       let keptCachedReplay = false;
       try {
       const hasUsableScenario = (data, scenario) => {
@@ -10567,9 +10626,11 @@ function formatSelectedObservedDate(dateStr) {
           hours.every((entry, index) => Number.isFinite(getStageValue(entry)) && Number.isFinite(times[index]) &&
             (index === 0 || times[index] > times[index - 1]));
       };
-      if (!forecastData || options.forceRefresh ||
-          (!physicsForecastApplies() && !hasUsableScenario(forecastData, currentForecastScenario))) {
-        if (currentViewType !== "forecast") {
+      const hasPhysics = stagingScenario
+        ? physicsManifestMatchesForecastCycle(manifests[scenario] || null, data)
+        : physicsForecastApplies();
+      if (!data || options.forceRefresh || (!hasPhysics && !hasUsableScenario(data, scenario))) {
+        if (!stagingScenario && currentViewType !== "forecast") {
           // Retain the previous image while data loads, but its timeline must
           // not be rendered under the Forecast selection.
           currentViewType = "forecast";
@@ -10605,52 +10666,68 @@ function formatSelectedObservedDate(dateStr) {
               throw new Error("The updated forecast guidance has no usable current coverage.");
             }
           }
-          forecastData = payload;
-          scheduleForecastFreshnessNotice();
+          data = payload;
+          if (!stagingScenario) {
+            forecastData = data;
+            scheduleForecastFreshnessNotice();
+          }
         } catch (error) {
           if (generation !== selectionGeneration || floodSelectionToken !== lastRenderToken) return false;
-          if (!options.retryStale || !hasUsableScenario(previousForecastData, currentForecastScenario)) throw error;
+          if (!options.retryStale || !hasUsableScenario(previousForecastData, scenario)) throw error;
           keptCachedReplay = true;
         }
       }
-      if (!options.deferPhysicsCatalog && (!Object.keys(physicsForecastManifests).length || options.forceRefresh)) {
-        await loadPhysicsForecast(Boolean(options.forceRefresh)).catch(error => {
+      const newStagedCycle = stagingScenario && data?.petssCycleUtc !== previousForecastData?.petssCycleUtc;
+      if (!options.deferPhysicsCatalog && (!Object.keys(manifests).length || options.forceRefresh || newStagedCycle)) {
+        const loaded = await loadPhysicsForecast(Boolean(options.forceRefresh || newStagedCycle), stagingScenario ? { data } : null).catch(error => {
           if (generation !== selectionGeneration || floodSelectionToken !== lastRenderToken) return;
           console.warn("Physics forecast is not published yet; using the phase-aware atlas.", error);
-          physicsForecastManifests = {};
+          if (!stagingScenario) physicsForecastManifests = {};
         });
+        if (stagingScenario) manifests = loaded || {};
       }
       if (generation !== selectionGeneration) return;
       if (floodSelectionToken !== lastRenderToken) return false;
-      clearExportAvailabilityCache();
-      const physicsSeries = getPhysicsForecastDisplaySeries();
-      if (physicsSeries) {
-        currentRawSeriesHours = annotateHydraulicSeries(
-          getActivePhysicsManifest().frames.map(physicsFrameToForecastEntry)
-        );
-        currentSeriesHours = physicsSeries;
-      } else {
-        currentRawSeriesHours = buildForecastCanonicalSeries(getActiveForecastHours());
-        currentSeriesHours = buildForecastDisplaySeries(currentRawSeriesHours);
+      let physicsSelection = null;
+      if (stagingScenario && physicsManifestMatchesForecastCycle(manifests[scenario] || null, data)) {
+        const manifest = manifests[scenario];
+        const rawSeries = annotateHydraulicSeries(manifest.frames.map(frame => ({
+          ...physicsFrameToForecastEntry(frame), physicsCycleId: manifest.cycleId || ""
+        })));
+        physicsSelection = { manifest, data, rawSeries };
       }
+      const physicsSeries = stagingScenario
+        ? physicsSelection && getPhysicsForecastDisplaySeries(physicsSelection)
+        : getPhysicsForecastDisplaySeries();
+      const rawSeries = physicsSeries
+        ? (physicsSelection?.rawSeries || annotateHydraulicSeries(getActivePhysicsManifest().frames.map(physicsFrameToForecastEntry)))
+        : buildForecastCanonicalSeries(stagingScenario
+          ? (hasUsableScenario(data, scenario) ? getForecastScenarioHours(data, scenario) : [])
+          : getActiveForecastHours());
+      let series = physicsSeries || buildForecastDisplaySeries(rawSeries);
       const quarterHourMs = 15 * 60 * 1000;
       const openingQuarter = Number.isFinite(options.openedAt)
         ? Math.floor(options.openedAt / quarterHourMs) * quarterHourMs
         : null;
       if (openingQuarter !== null) {
-        const firstAvailable = currentSeriesHours.findIndex(entry => entryTimeMs(entry) >= openingQuarter);
-        if (firstAvailable > 0) currentSeriesHours = currentSeriesHours.slice(firstAvailable);
+        const firstAvailable = series.findIndex(entry => entryTimeMs(entry) >= openingQuarter);
+        if (firstAvailable > 0) series = series.slice(firstAvailable);
       }
-      currentViewType = "forecast";
-      currentTopTideIndex = null;
-      currentSelectedLabel = getForecastScenarioLabel();
-      currentSelectedSubLabel = getForecastScenarioPercentileLabel();
-      currentRangeLabel = currentSeriesHours.length
-        ? `${formatHourEntryTime(currentSeriesHours[0])} to ${formatHourEntryTime(currentSeriesHours[currentSeriesHours.length - 1])}`
-        : getForecastScenarioLabel();
-
-      syncSliderBounds();
-      if (!currentSeriesHours.length) {
+      if (!stagingScenario) {
+        clearExportAvailabilityCache();
+        currentRawSeriesHours = rawSeries;
+        currentSeriesHours = series;
+        currentViewType = "forecast";
+        currentTopTideIndex = null;
+        currentSelectedLabel = getForecastScenarioLabel();
+        currentSelectedSubLabel = getForecastScenarioPercentileLabel();
+        currentRangeLabel = currentSeriesHours.length
+          ? `${formatHourEntryTime(currentSeriesHours[0])} to ${formatHourEntryTime(currentSeriesHours[currentSeriesHours.length - 1])}`
+          : getForecastScenarioLabel();
+        syncSliderBounds();
+      }
+      if (!series.length) {
+        if (stagingScenario) return false;
         // Do not leave another scenario's flood image under this selection's label.
         currentHourIndex = 0;
         document.getElementById("hourSlider").value = "0";
@@ -10663,16 +10740,19 @@ function formatSelectedObservedDate(dateStr) {
       }
       const currentTimeEntry = options.selectCurrent ? { timeUtc: new Date(openingQuarter ?? Date.now()).toISOString() } : null;
       const selectionEntry = options.retryStale && !keptCachedReplay ? currentTimeEntry : preferredEntry || currentTimeEntry;
-      currentHourIndex = selectionEntry ? findClosestEntryIndex(currentSeriesHours, selectionEntry) : getPeakHourIndex(currentSeriesHours);
+      let index = selectionEntry ? findClosestEntryIndex(series, selectionEntry) : getPeakHourIndex(series);
       if (options.preserveForecastDay && selectionEntry?.dailyMaximumKind === "forecast") {
-        const sameDay = currentSeriesHours.findIndex(entry => entry.dailyMaximumKind === "forecast" &&
+        const sameDay = series.findIndex(entry => entry.dailyMaximumKind === "forecast" &&
           entry.observedDate === selectionEntry.observedDate);
-        if (sameDay >= 0) currentHourIndex = sameDay;
+        if (sameDay >= 0) index = sameDay;
       }
+      if (stagingScenario) return { data, manifests, manifest: physicsSelection?.manifest, rawSeries, series, index };
+      currentHourIndex = index;
       document.getElementById("hourSlider").value = String(currentHourIndex);
       } catch (error) {
         if (floodSelectionToken !== lastRenderToken) return false;
         if (generation !== selectionGeneration) return false;
+        if (stagingScenario) return false;
         forecastData = previousForecastData;
         currentRawSeriesHours = [];
         currentSeriesHours = [];
@@ -10748,8 +10828,9 @@ function formatSelectedObservedDate(dateStr) {
       };
     }
 
-    function addOrMergeObservedDayRecord(dayRecord) {
-      if (!dayRecord || !/^\d{4}-\d{2}-\d{2}$/.test(String(dayRecord.date || ""))) return;
+    function addOrMergeObservedDayRecord(record) {
+      if (!record || !/^\d{4}-\d{2}-\d{2}$/.test(String(record.date || ""))) return;
+      const { rejectedLiveSampleTimes = [], ...dayRecord } = record;
       if (!observedData || typeof observedData !== "object") observedData = {};
       if (!Array.isArray(observedData.days)) observedData.days = [];
 
@@ -10770,6 +10851,11 @@ function formatSelectedObservedDate(dateStr) {
           const time = entryTimeMs(hour);
           if (Number.isFinite(time) && Number.isFinite(getStageValue(hour))) byTime.set(time, hour);
         });
+        // An earlier response can end at a spike before the next reading
+        // arrives. Once the spike is confirmed, remove it from the live cache.
+        for (const time of rejectedLiveSampleTimes) {
+          if (byTime.get(time)?.isLiveObservedBackfill) byTime.delete(time);
+        }
         const hours = Array.from(byTime.entries()).sort((a, b) => a[0] - b[0]).map(([, hour]) => hour);
         const indexedPeak = existing.liveBackfilled ? existing.liveBackfillIndexedPeakNAVD88 : existing.peakNAVD88;
         const next = { ...existing, ...dayRecord, hours, timelineRawHours: hours,
@@ -10800,9 +10886,19 @@ function formatSelectedObservedDate(dateStr) {
     }
 
     function normalizeUsgsIvObservedDays(data) {
-      const rows = [];
+      // Keep the live backfill consistent with tools/update_observed_15min.py.
+      const isolatedSpikeThresholdFt = 3;
+      const spikeNeighborGapMs = 30 * 60 * 1000;
+      const rows = new Map();
+      const stationId = String(getUsgsObservedSiteId());
+      const parameterCd = String(getUsgsObservedParameterCd());
       const seriesList = Array.isArray(data?.value?.timeSeries) ? data.value.timeSeries : [];
       seriesList.forEach(series => {
+        const sites = series?.sourceInfo?.siteCode;
+        const parameters = series?.variable?.variableCode;
+        if (Array.isArray(sites) && sites.length && stationId && !sites.some(code => String(code?.value) === stationId)) return;
+        if (Array.isArray(parameters) && parameters.length && parameterCd &&
+            !parameters.some(code => String(code?.value) === parameterCd)) return;
         const noDataValue = normalizeStageValue(series?.variable?.noDataValue);
         const valueGroups = Array.isArray(series?.values) ? series.values : [];
         valueGroups.forEach(group => {
@@ -10810,17 +10906,20 @@ function formatSelectedObservedDate(dateStr) {
           values.forEach(item => {
             const n = normalizeStageValue(item?.value);
             const dtRaw = item?.dateTime;
-            const dt = dtRaw ? new Date(dtRaw) : null;
-            if (!Number.isFinite(n) || n === noDataValue || !(dt instanceof Date) || Number.isNaN(dt.getTime())) return;
+            if (!Number.isFinite(n) || n === noDataValue || Math.abs(n) >= 100 || typeof dtRaw !== "string" ||
+                !/(?:Z|[+-]\d{2}:\d{2})$/i.test(dtRaw)) return;
+            const dt = new Date(dtRaw);
+            if (!Number.isFinite(dt.getTime())) return;
             const localIso = formatNyLocalIso(dt);
+            const timeUtc = dt.toISOString();
             const dateKey = localIso.slice(0, 10);
             const hourIndex = Number(localIso.slice(11, 13));
             const minuteIndex = Number(localIso.slice(14, 16));
             if (!/^\d{4}-\d{2}-\d{2}$/.test(dateKey) || !Number.isInteger(hourIndex) || !Number.isInteger(minuteIndex)) return;
-            rows.push({
+            rows.set(dt.getTime(), {
               displayTimeEST: localIso,
-              displayTimeUtc: dt.toISOString(),
-              timeUtc: dt.toISOString(),
+              displayTimeUtc: timeUtc,
+              timeUtc,
               observedDate: dateKey,
               hourIndex,
               minuteIndex,
@@ -10829,7 +10928,7 @@ function formatSelectedObservedDate(dateStr) {
               value: n,
               observationInterval: "instantaneous",
               source: "usgs-iv-live",
-              sourceStationId: String(getUsgsObservedSiteId()),
+              sourceStationId: stationId,
               sourceResolutionMinutes: 6,
               observationQuality: "M",
               isMeasuredQuarterHourArchive: minuteIndex % 15 === 0 && dt.getUTCSeconds() === 0 && dt.getUTCMilliseconds() === 0,
@@ -10842,14 +10941,27 @@ function formatSelectedObservedDate(dateStr) {
       });
 
       const byDate = new Map();
-      rows
-        .sort((a, b) => String(a.displayTimeEST).localeCompare(String(b.displayTimeEST)))
-        .forEach(row => {
-          if (!byDate.has(row.observedDate)) byDate.set(row.observedDate, []);
-          byDate.get(row.observedDate).push(row);
-        });
+      const readings = [...rows].sort(([a], [b]) => a - b);
+      // Compare chronological neighbors before grouping by civil date, so a
+      // reading at local midnight is also checked against the previous day.
+      readings.forEach(([time, row], index) => {
+        if (!byDate.has(row.observedDate)) byDate.set(row.observedDate, { hours: [], rejectedLiveSampleTimes: [] });
+        const day = byDate.get(row.observedDate);
+        const [previousTime, previous] = readings[index - 1] || [];
+        const [nextTime, next] = readings[index + 1] || [];
+        if (previous && next && time - previousTime <= spikeNeighborGapMs && nextTime - time <= spikeNeighborGapMs) {
+          const changeFromPrevious = row.navd88StageFt - previous.navd88StageFt;
+          const changeFromNext = row.navd88StageFt - next.navd88StageFt;
+          if ((changeFromPrevious >= isolatedSpikeThresholdFt && changeFromNext >= isolatedSpikeThresholdFt) ||
+              (changeFromPrevious <= -isolatedSpikeThresholdFt && changeFromNext <= -isolatedSpikeThresholdFt)) {
+            day.rejectedLiveSampleTimes.push(time);
+            return;
+          }
+        }
+        day.hours.push(row);
+      });
 
-      return Array.from(byDate.entries()).map(([date, hours]) => {
+      return Array.from(byDate.entries()).map(([date, { hours, rejectedLiveSampleTimes }]) => {
         const stages = hours.map(getStageValue).filter(Number.isFinite);
         const peak = stages.length ? Math.max(...stages) : null;
         return {
@@ -10858,6 +10970,7 @@ function formatSelectedObservedDate(dateStr) {
           peakNAVD88: peak,
           source: "usgs-iv-live",
           liveBackfilled: true,
+          rejectedLiveSampleTimes,
           hours
         };
       });
@@ -11888,19 +12001,8 @@ function populateCalendarSelectors() {
 
     let playbackGeneration = 0;
     let pendingPlaybackStep = null;
-    let playbackSpeedMultiplier = 1;
-    let reschedulePlaybackFrame = null;
-
-    function togglePlaybackSpeed(event) {
-      playbackSpeedMultiplier = playbackSpeedMultiplier === 1 ? 2 : 1;
-      const button = event.currentTarget;
-      button.textContent = `${playbackSpeedMultiplier}×`;
-      button.setAttribute("aria-pressed", String(playbackSpeedMultiplier === 2));
-      reschedulePlaybackFrame?.();
-    }
     function clearPlaybackTimer() {
       ++playbackGeneration;
-      reschedulePlaybackFrame = null;
       if (playTimer) {
         clearTimeout(playTimer);
         clearInterval(playTimer);
@@ -12007,10 +12109,12 @@ function populateCalendarSelectors() {
     }
 
     function getPlaybackFrameDurationMs() {
-      return PLAYBACK_FRAME_DURATION_MS;
+      const intervalMinutes = getTimelineIntervalMinutes();
+      if (intervalMinutes === 1440) return PLAYBACK_SIMULATED_HOUR_MS;
+      return PLAYBACK_SIMULATED_HOUR_MS * (intervalMinutes / 60);
     }
 
-    function startPlayback() {
+function startPlayback() {
       stopPlayback({ resetDayGuard: false, closePrompt: true });
       if (!currentSeriesHours.length) {
         toast("No timeline frames are available to play for this selection.");
@@ -12021,12 +12125,10 @@ function populateCalendarSelectors() {
       playTimer = setTimeout(() => {}, 0);
       updatePlayPauseButton();
       const generation = playbackGeneration;
-      let scheduleNext = null;
 
-      reschedulePlaybackFrame = () => scheduleNext?.();
       const loop = async () => {
         if (!playTimer || generation !== playbackGeneration) return;
-        scheduleNext = null;
+        const frameStartedAt = performance.now();
         try {
           await stepPlaybackForward();
         } catch (err) {
@@ -12036,18 +12138,12 @@ function populateCalendarSelectors() {
           return;
         }
         if (!playTimer || generation !== playbackGeneration) return;
-        const frameDisplayedAt = performance.now();
-        let scheduledFrameTimer;
-        // Start the interval after the swap. Slow loads cannot trigger a burst
-        // of frames, and a speed change only reschedules the next frame.
-        scheduleNext = () => {
-          clearTimeout(scheduledFrameTimer);
-          const frameDurationMs = getPlaybackFrameDurationMs() / playbackSpeedMultiplier;
-          const elapsedMs = performance.now() - frameDisplayedAt;
-          const nextFrameDelayMs = Math.max(0, Math.ceil(frameDurationMs - elapsedMs));
-          scheduledFrameTimer = playTimer = setTimeout(loop, nextFrameDelayMs);
-        };
-        scheduleNext();
+        const renderDurationMs = performance.now() - frameStartedAt;
+        const nextFrameDelayMs = Math.max(
+          PLAYBACK_MINIMUM_FRAME_DELAY_MS,
+          getPlaybackFrameDurationMs() - renderDurationMs
+        );
+        playTimer = setTimeout(loop, nextFrameDelayMs);
         updatePlayPauseButton();
       };
 
@@ -13668,7 +13764,8 @@ function populateCalendarSelectors() {
         const rgba = renderedFloodPixelCache.context.getImageData(x, y, 1, 1).data;
         const visible = rgba[3] > 0;
         const green = isDisconnectedRasterPixel(rgba, 0);
-        const depthBandIndex = currentOverlayMode === "depth" ? DRAINAGE_DEPTH_COLORS.findIndex(color =>
+        const displayedMode = currentFloodLayer?._floodmapperFrame?.overlayMode || currentOverlayMode;
+        const depthBandIndex = displayedMode === "depth" ? DRAINAGE_DEPTH_COLORS.findIndex(color =>
           color.every((channel, index) => Math.abs(channel - rgba[index]) <= 3)) : -1;
         const depthBandFt = depthBandIndex < 0 ? null : [depthBandIndex ? DRAINAGE_DEPTH_BREAKS_FT[depthBandIndex - 1] : 0,
           DRAINAGE_DEPTH_BREAKS_FT[depthBandIndex] ?? Infinity];
@@ -13743,6 +13840,18 @@ function populateCalendarSelectors() {
         buildDepthQueryValueHtml(value) + '</div></div>';
     }
 
+    function readDisplayedPointDepth(latlng, sample, { useRenderedFlood = true } = {}) {
+      const layer = currentFloodLayer;
+      const frame = layer?._floodmapperFrame;
+      const retained = floodFrameState === "failed";
+      if (!sample || !frame || !map?.hasLayer(layer) || (!retained && floodFrameState !== "ready")) return null;
+      if (retained && (frame.overlayMode !== "depth" || frame.overlayMode !== currentOverlayMode || overlayOpacity <= 0)) return null;
+      const renderedFlood = useRenderedFlood ? sampleRenderedFloodPixel(latlng.lat, latlng.lng) : null;
+      // A retained map can only report what its still-visible pixels support.
+      if (retained && (!renderedFlood || renderedFlood.green)) return null;
+      return getDepthQueryDisplayDepth(sample, frame.stage, renderedFlood, frame.phase);
+    }
+
     function updatePersistentDepthQueryPopup(options = {}) {
       const context = persistentDepthQueryContext;
       const popup = persistentFloodPopup;
@@ -13766,39 +13875,13 @@ function populateCalendarSelectors() {
         updatePropertyPopup(popup, buildHouseAlertPopup(context.feature));
         return;
       }
-      const displayedFrame = currentFloodLayer?._floodmapperFrame;
-      const stage = displayedFrame ? displayedFrame.stage : getStageValue(currentSeriesHours[currentHourIndex]);
-      if (floodFrameState !== "ready") {
-        popup.setContent(buildDepthQueryPopupHtml(null));
-        popup.update();
-        return;
-      }
-      const renderedFlood = options.useRenderedFlood === false
-        ? null
-        : sampleRenderedFloodPixel(context.latlng.lat, context.latlng.lng);
-      const phase = displayedFrame?.phase || getHydraulicPhaseForEntry(
-        currentSeriesHours[currentHourIndex],
-        currentHourIndex,
-        currentSeriesHours
-      );
-      const depth = getDepthQueryDisplayDepth(context.sample, stage, renderedFlood, phase);
+      const depth = readDisplayedPointDepth(context.latlng, context.sample, options);
       popup.setContent(buildDepthQueryPopupHtml(depth));
       popup.update();
     }
 
     function openDepthQueryPopup(latlng, sample) {
-      const displayedFrame = currentFloodLayer?._floodmapperFrame;
-      const stage = displayedFrame ? displayedFrame.stage : getStageValue(currentSeriesHours[currentHourIndex]);
-      const renderedFlood = sample
-        ? sampleRenderedFloodPixel(latlng.lat, latlng.lng)
-        : null;
-      const phase = displayedFrame?.phase || getHydraulicPhaseForEntry(
-        currentSeriesHours[currentHourIndex],
-        currentHourIndex,
-        currentSeriesHours
-      );
-      const depth = floodFrameState === "ready"
-        ? getDepthQueryDisplayDepth(sample, stage, renderedFlood, phase) : null;
+      const depth = readDisplayedPointDepth(latlng, sample);
       const popup = openPersistentFloodPopup(latlng, buildDepthQueryPopupHtml(depth), 300);
       if (sample) {
         persistentDepthQueryContext = { popup, latlng, sample };
@@ -15177,7 +15260,6 @@ function populateCalendarSelectors() {
       }
       const stopBtn = document.getElementById("stopBtn");
       if (stopBtn) stopBtn.addEventListener("click", stopPlayback);
-      document.getElementById("timelineSpeedBtn")?.addEventListener("click", togglePlaybackSpeed);
 
       const reloadBtn = document.getElementById("reloadBtn");
       if (reloadBtn) {

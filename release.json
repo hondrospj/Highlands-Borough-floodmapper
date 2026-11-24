@@ -2,8 +2,8 @@
   "reference": "https://cupajoe.live/shorelysafe/floodmapper/north-wildwood/",
   "referenceIndexSha256": "5a8a2f5f9ef052e178583c01dc849e487c3a26227d7b88f2c437f9e4d6e2d8a3",
   "referenceSnapshotHead": "8875b07aa316d5d59654bd459674798fe0a2474d",
-  "fileCount": 48,
-  "bytes": 3381567,
+  "fileCount": 49,
+  "bytes": 4126959,
   "assets": {
     "assets/3d/elevation-contours.js": {
       "sha256": "391fe52da3fc04fbe10f9e6ac4ea963245f99363469e07d416ca16f57b975138",
@@ -46,8 +46,8 @@
       "bytes": 9043
     },
     "assets/app/runtime.js": {
-      "sha256": "fe7d2491af43cb5770aa1f4cdab7ba9b7b042e12bb311900282f524cd0a7ea3b",
-      "bytes": 730482
+      "sha256": "c786acc060f6d87c7b1727fed5e91b93ded7903968bb3178406a6bc1ad874105",
+      "bytes": 736174
     },
     "assets/app/startup.js": {
       "sha256": "072a3f119d4ffec83d70d1baf53ecc221cf64ffcf54f783ffe4254238b117d77",
@@ -196,6 +196,10 @@
     "assets/vendor/html2canvas-1.4.1.min.js": {
       "sha256": "e87e550794322e574a1fda0c1549a3c70dae5a93d9113417a429016838eab8cb",
       "bytes": 198689
+    },
+    "assets/app/highlands-native-client-runtime.js": {
+      "sha256": "70881204a4a7ac3d098a080deb4de001410034102d2d1e8924866228c4ed7c51",
+      "bytes": 739700
     }
   }
 }
