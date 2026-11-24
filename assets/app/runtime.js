@@ -10196,6 +10196,8 @@ function formatSelectedObservedDate(dateStr) {
           if (typeof window !== "undefined" && window.NORTH_WILDWOOD_3D?.prepareFloodFrame &&
               !await window.NORTH_WILDWOOD_3D.prepareFloodFrame(nextLayer, frameMetadata, token)) return false;
           if (token !== lastRenderToken || pendingFloodLayer !== nextLayer || !map.hasLayer(nextLayer)) return false;
+          if (typeof window !== "undefined" && window.NORTH_WILDWOOD_3D?.commitFloodFrame &&
+              !window.NORTH_WILDWOOD_3D.commitFloodFrame(nextLayer, token)) return false;
           nextLayer.setOpacity(overlayOpacity);
           nextLayer._floodmapperFrame = frameMetadata;
           currentFloodLayer = nextLayer;
@@ -10256,6 +10258,8 @@ function formatSelectedObservedDate(dateStr) {
         if (typeof window !== "undefined" && window.NORTH_WILDWOOD_3D?.prepareFloodFrame &&
             !await window.NORTH_WILDWOOD_3D.prepareFloodFrame(nextLayer, frameMetadata, token)) return false;
         if (token !== lastRenderToken || pendingFloodLayer !== nextLayer || !map.hasLayer(nextLayer)) return false;
+        if (typeof window !== "undefined" && window.NORTH_WILDWOOD_3D?.commitFloodFrame &&
+            !window.NORTH_WILDWOOD_3D.commitFloodFrame(nextLayer, token)) return false;
         nextLayer.setOpacity(overlayOpacity);
         nextLayer._floodmapperFrame = frameMetadata;
         currentFloodLayer = nextLayer;
