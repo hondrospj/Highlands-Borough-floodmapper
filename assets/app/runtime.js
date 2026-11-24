@@ -1,6 +1,6 @@
 
     const APP_BASE = new URL(".", window.location.href);
-    const UI_ASSET_BASE = new URL("../", document.currentScript?.src || new URL("assets/app/runtime.js", APP_BASE));
+    const UI_ASSET_BASE = new URL("../", "https://cdn.jsdelivr.net/gh/hondrospj/Highlands-Borough-floodmapper@59308111b233ab9cdbbe8c291e0bd434c24bfe5d/assets/app/runtime.js");
     let FORECAST_URL = "";
     let OBSERVED_URL = "";
     let CANONICAL_DAILY_URL = "";
@@ -115,8 +115,7 @@
       daily: { value: "daily", label: "Daily Maximum", minutes: 1440, frameLimit: 5 }
     };
     const PLAYBACK_DAY_CONFIRMATION_INTERVAL = 20;
-    const PLAYBACK_SIMULATED_HOUR_MS = 950;
-    const PLAYBACK_MINIMUM_FRAME_DELAY_MS = 20;
+    const PLAYBACK_FRAME_DURATION_MS = 500;
     const EXPORT_CAPTURE_DELAY_MS = 1;
     const EXPORT_GIF_SPEEDS = {
       slow: { value: "slow", label: "Slow", delayMs: 2000 },
@@ -5017,6 +5016,7 @@ function normalizeBoundaryRingsFromArcGIS(rings, sourceWkid = 3857) {
         preferCanvas: true
       });
 
+      map.attributionControl?.setPrefix(false);
       map.createPane("basemapGrayPane");
       map.createPane("basemapColorPane");
       map.createPane("satellitePane");
@@ -10244,6 +10244,8 @@ function formatSelectedObservedDate(dateStr) {
           if (typeof window !== "undefined" && window.NORTH_WILDWOOD_3D?.prepareFloodFrame &&
               !await window.NORTH_WILDWOOD_3D.prepareFloodFrame(nextLayer, frameMetadata, token)) return false;
           if (token !== lastRenderToken || pendingFloodLayer !== nextLayer || !map.hasLayer(nextLayer)) return false;
+          if (typeof window !== "undefined" && window.NORTH_WILDWOOD_3D?.commitFloodFrame &&
+              !window.NORTH_WILDWOOD_3D.commitFloodFrame(nextLayer, token)) return false;
           nextLayer.setOpacity(overlayOpacity);
           nextLayer._floodmapperFrame = frameMetadata;
           currentFloodLayer = nextLayer;
@@ -10305,6 +10307,8 @@ function formatSelectedObservedDate(dateStr) {
         if (typeof window !== "undefined" && window.NORTH_WILDWOOD_3D?.prepareFloodFrame &&
             !await window.NORTH_WILDWOOD_3D.prepareFloodFrame(nextLayer, frameMetadata, token)) return false;
         if (token !== lastRenderToken || pendingFloodLayer !== nextLayer || !map.hasLayer(nextLayer)) return false;
+        if (typeof window !== "undefined" && window.NORTH_WILDWOOD_3D?.commitFloodFrame &&
+            !window.NORTH_WILDWOOD_3D.commitFloodFrame(nextLayer, token)) return false;
         floodLatLngBounds = overlayBounds;
         floodOverlayGeometryMode = "axis-aligned";
         nextLayer.setOpacity(overlayOpacity);
@@ -12001,8 +12005,19 @@ function populateCalendarSelectors() {
 
     let playbackGeneration = 0;
     let pendingPlaybackStep = null;
+    let playbackSpeedMultiplier = 1;
+    let reschedulePlaybackFrame = null;
+
+    function togglePlaybackSpeed(event) {
+      playbackSpeedMultiplier = playbackSpeedMultiplier === 1 ? 2 : 1;
+      const button = event.currentTarget;
+      button.textContent = `${playbackSpeedMultiplier}×`;
+      button.setAttribute("aria-pressed", String(playbackSpeedMultiplier === 2));
+      reschedulePlaybackFrame?.();
+    }
     function clearPlaybackTimer() {
       ++playbackGeneration;
+      reschedulePlaybackFrame = null;
       if (playTimer) {
         clearTimeout(playTimer);
         clearInterval(playTimer);
@@ -12109,12 +12124,10 @@ function populateCalendarSelectors() {
     }
 
     function getPlaybackFrameDurationMs() {
-      const intervalMinutes = getTimelineIntervalMinutes();
-      if (intervalMinutes === 1440) return PLAYBACK_SIMULATED_HOUR_MS;
-      return PLAYBACK_SIMULATED_HOUR_MS * (intervalMinutes / 60);
+      return PLAYBACK_FRAME_DURATION_MS;
     }
 
-function startPlayback() {
+    function startPlayback() {
       stopPlayback({ resetDayGuard: false, closePrompt: true });
       if (!currentSeriesHours.length) {
         toast("No timeline frames are available to play for this selection.");
@@ -12125,10 +12138,12 @@ function startPlayback() {
       playTimer = setTimeout(() => {}, 0);
       updatePlayPauseButton();
       const generation = playbackGeneration;
+      let scheduleNext = null;
 
+      reschedulePlaybackFrame = () => scheduleNext?.();
       const loop = async () => {
         if (!playTimer || generation !== playbackGeneration) return;
-        const frameStartedAt = performance.now();
+        scheduleNext = null;
         try {
           await stepPlaybackForward();
         } catch (err) {
@@ -12138,12 +12153,18 @@ function startPlayback() {
           return;
         }
         if (!playTimer || generation !== playbackGeneration) return;
-        const renderDurationMs = performance.now() - frameStartedAt;
-        const nextFrameDelayMs = Math.max(
-          PLAYBACK_MINIMUM_FRAME_DELAY_MS,
-          getPlaybackFrameDurationMs() - renderDurationMs
-        );
-        playTimer = setTimeout(loop, nextFrameDelayMs);
+        const frameDisplayedAt = performance.now();
+        let scheduledFrameTimer;
+        // Start the interval after the swap. Slow loads cannot trigger a burst
+        // of frames, and a speed change only reschedules the next frame.
+        scheduleNext = () => {
+          clearTimeout(scheduledFrameTimer);
+          const frameDurationMs = getPlaybackFrameDurationMs() / playbackSpeedMultiplier;
+          const elapsedMs = performance.now() - frameDisplayedAt;
+          const nextFrameDelayMs = Math.max(0, Math.ceil(frameDurationMs - elapsedMs));
+          scheduledFrameTimer = playTimer = setTimeout(loop, nextFrameDelayMs);
+        };
+        scheduleNext();
         updatePlayPauseButton();
       };
 
@@ -15260,6 +15281,7 @@ function startPlayback() {
       }
       const stopBtn = document.getElementById("stopBtn");
       if (stopBtn) stopBtn.addEventListener("click", stopPlayback);
+      document.getElementById("timelineSpeedBtn")?.addEventListener("click", togglePlaybackSpeed);
 
       const reloadBtn = document.getElementById("reloadBtn");
       if (reloadBtn) {
