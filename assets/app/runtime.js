@@ -1,6 +1,6 @@
 
     const APP_BASE = new URL(".", window.location.href);
-    const UI_ASSET_BASE = new URL("../", document.currentScript?.src || new URL("assets/app/runtime.js", APP_BASE));
+    const UI_ASSET_BASE = new URL("../", "https://cdn.jsdelivr.net/gh/hondrospj/Highlands-Borough-floodmapper@59308111b233ab9cdbbe8c291e0bd434c24bfe5d/assets/app/runtime.js");
     let FORECAST_URL = "";
     let OBSERVED_URL = "";
     let CANONICAL_DAILY_URL = "";
@@ -1037,7 +1037,6 @@ function cloneStyleObject(value) {
     }
 
     let playTimer = null;
-    let playbackInFlight = false;
     let playbackObservedDaysAdvanced = 0;
     let playbackPausedForConfirmation = false;
     let overlayOpacity = DEFAULT_OPACITY;
@@ -10270,16 +10269,33 @@ function formatSelectedObservedDate(dateStr) {
       });
     }
 
-    async function renderHour(index) {
-      cancelTimelineSelection();
-      if (!currentSeriesHours.length) return;
+    function ownPlaybackFrame(playback, token) {
+      playback.renderToken = token;
+      if (playback.restoreDisplay) return;
+      const savedState = floodFrameState;
+      const savedRecovery = document.body.dataset.floodFrameRecovery;
+      const { frameMessage, frameState } = document.getElementById("floodFrameStatus")?.dataset || {};
+      playback.restoreDisplay = () => {
+        floodFrameState = savedState;
+        document.body.dataset.floodFrame = savedState;
+        if (savedRecovery == null) delete document.body.dataset.floodFrameRecovery;
+        else document.body.dataset.floodFrameRecovery = savedRecovery;
+        setFloodFrameStatus(frameMessage || "", frameState || "info");
+        updatePersistentDepthQueryPopup();
+      };
+    }
 
-      const entry = currentSeriesHours[index];
+    async function renderHour(index, { playback = null, observedSelection = null } = {}) {
+      cancelTimelineSelection();
+      const previousSeries = currentSeriesHours;
+      const requestedSeries = observedSelection?.series || previousSeries;
+
+      const entry = requestedSeries[index];
       if (!entry) return;
 
       const previousHourIndex = currentHourIndex;
-      const requestedSeries = currentSeriesHours;
       const token = ++lastRenderToken;
+      if (playback) ownPlaybackFrame(playback, token);
       requestedTimelineSelection = { series: requestedSeries, index, token };
       // Keep the last displayed frame visible while its replacement loads.
       floodFrameState = "loading";
@@ -10288,19 +10304,26 @@ function formatSelectedObservedDate(dateStr) {
 
       const rawStage = getStageValue(entry);
       const displayStage = getOverlayStage(rawStage);
-      const hydraulicPhase = getHydraulicPhaseForEntry(entry, index, currentSeriesHours);
-      const observedDate = entry.isDailyMaximum && currentViewType === "observed-day" &&
+      const hydraulicPhase = getHydraulicPhaseForEntry(entry, index, requestedSeries);
+      const observedDate = !observedSelection && entry.isDailyMaximum && currentViewType === "observed-day" &&
         entry.observedDate !== selectedObservedDate ? entry.observedDate : null;
       const observedDay = observedDate ? getObservedDayRecord(observedDate) : null;
-      const rawSeries = observedDay ? buildObservedCanonicalSeries(observedDay, observedDate) : currentRawSeriesHours;
+      const rawSeries = observedSelection?.rawSeries ?? (observedDay ? buildObservedCanonicalSeries(observedDay, observedDate) : currentRawSeriesHours);
+      const slider = document.getElementById("hourSlider");
       const commitSelection = () => {
+        if (playback) playback.renderToken = null;
+        observedSelection?.commit();
         currentHourIndex = index;
         if (observedDay) {
           // The month-wide Daily Max slider can change the selected day.
           // Commit its date and tide context only when this frame is displayed.
           setObservedDaySelection(observedDate, observedDay);
           currentRawSeriesHours = rawSeries;
-          renderCalendar().catch(error => toast(error.message));
+        }
+        if (observedSelection || observedDay) renderCalendar().catch(error => toast(error.message));
+        if (playback) {
+          slider.value = String(index);
+          updateSliderProgress();
         }
         renderSelectionMeta(entry, rawStage, displayStage);
         renderTimelineMeta(entry);
@@ -10308,9 +10331,10 @@ function formatSelectedObservedDate(dateStr) {
 
       updatePersistentDepthQueryPopup({ useRenderedFlood: false });
 
-      const slider = document.getElementById("hourSlider");
-      slider.value = String(index);
-      updateSliderProgress();
+      if (!playback) {
+        slider.value = String(index);
+        updateSliderProgress();
+      }
 
       if (displayStage == null) {
         commitSelection();
@@ -10330,12 +10354,12 @@ function formatSelectedObservedDate(dateStr) {
       const physicsUiIsActive = Boolean(physicsAsset);
       const physicsDailyUiWasActive = document.body.classList.contains("physics-daily-maximum-active");
       const physicsDailyUiIsActive = Boolean(physicsAsset && entry?.isDailyMaximum);
-      document.body.classList.toggle("physics-forecast-active", physicsUiIsActive);
-      document.body.classList.toggle("physics-daily-maximum-active", physicsDailyUiIsActive);
-      if (
-        physicsUiWasActive !== physicsUiIsActive ||
-        physicsDailyUiWasActive !== physicsDailyUiIsActive
-      ) renderLegend();
+      const updatePhysicsLegend = () => {
+        document.body.classList.toggle("physics-forecast-active", physicsUiIsActive);
+        document.body.classList.toggle("physics-daily-maximum-active", physicsDailyUiIsActive);
+        if (physicsUiWasActive !== physicsUiIsActive || physicsDailyUiWasActive !== physicsDailyUiIsActive) renderLegend();
+      };
+      if (!playback) updatePhysicsLegend();
       const note = physicsAsset
         ? (entry?.isDailyMaximum
           ? (currentOverlayMode === "dynamic"
@@ -10350,19 +10374,23 @@ function formatSelectedObservedDate(dateStr) {
       const ready = await renderFloodFrameWithRetry(() => physicsAsset
         ? setPhysicsFloodLayer(physicsAsset, token, entry, hydraulicPhase)
         : setFloodLayer(currentOverlayMode, displayStage, hydraulicPhase, token, entry, rawSeries), token);
-      if (token !== lastRenderToken || requestedSeries !== currentSeriesHours) return false;
+      if (token !== lastRenderToken || previousSeries !== currentSeriesHours) return false;
       if (!ready) {
+        if (playback) playback.renderToken = null;
         requestedTimelineSelection = null;
         currentHourIndex = previousHourIndex;
         slider.value = String(previousHourIndex);
         updateSliderProgress();
-        document.body.classList.toggle("physics-forecast-active", physicsUiWasActive);
-        document.body.classList.toggle("physics-daily-maximum-active", physicsDailyUiWasActive);
-        if (physicsUiWasActive !== physicsUiIsActive || physicsDailyUiWasActive !== physicsDailyUiIsActive) renderLegend();
+        if (!playback) {
+          document.body.classList.toggle("physics-forecast-active", physicsUiWasActive);
+          document.body.classList.toggle("physics-daily-maximum-active", physicsDailyUiWasActive);
+          if (physicsUiWasActive !== physicsUiIsActive || physicsDailyUiWasActive !== physicsDailyUiIsActive) renderLegend();
+        }
         reportFloodFrameFailure();
         return false;
       }
       requestedTimelineSelection = null;
+      if (playback) updatePhysicsLegend();
       commitSelection();
       updateNsiStructureImpactLayer();
       floodFrameState = "ready";
@@ -11219,8 +11247,15 @@ function populateCalendarSelectors() {
     }
 
     async function loadObservedDay(dateStr, preferredHourIndex = null, preferredEntry = null, options = {}) {
-      cancelPendingFloodFrame();
+      const playback = options.playback;
+      if (playback) ownPlaybackFrame(playback, lastRenderToken);
+      else stopPlayback();
+      const token = cancelPendingFloodFrame();
       const generation = ++selectionGeneration;
+      if (playback) {
+        playback.renderToken = token;
+        playback.observedGeneration = generation;
+      }
       loadObservedDay.pendingSelection = { generation, dateStr };
       try {
       let archiveAvailable = true;
@@ -11229,9 +11264,17 @@ function populateCalendarSelectors() {
       } catch {
         archiveAvailable = false;
       }
-      if (generation !== selectionGeneration) return false;
+      if (generation !== selectionGeneration || token !== lastRenderToken) return false;
       const dayRecord = archiveAvailable ? getObservedDayRecord(dateStr) : null;
+      const failPlaybackDay = () => {
+        stopPlayback();
+        const message = "The next observed day could not load. Try selecting it again.";
+        setFloodFrameStatus(message, "error");
+        toast(message);
+        return false;
+      };
       if (!dayRecord) {
+        if (playback) return failPlaybackDay();
         currentDataMode = "observed";
         currentRawSeriesHours = [];
         currentSeriesHours = [];
@@ -11255,41 +11298,51 @@ function populateCalendarSelectors() {
         return false;
       }
 
-      const preservePlayback = Boolean(options && options.preservePlayback);
-      if (!preservePlayback) stopPlayback();
-      currentDataMode = "observed";
-      updateDataModeButtons();
-
-      // Once data is committed, an interval change must rebuild this series
-      // rather than only updating the cadence of a still-pending request.
-      if (loadObservedDay.pendingSelection?.generation === generation) loadObservedDay.pendingSelection = null;
-      topTideEvents = buildTopTideEvents();
-      setObservedDaySelection(dateStr, dayRecord);
-      currentRawSeriesHours = buildObservedCanonicalSeries(dayRecord, dateStr);
-      currentSeriesHours = getTimelineIntervalMinutes() === 1440
+      const rawSeries = buildObservedCanonicalSeries(dayRecord, dateStr);
+      const daily = getTimelineIntervalMinutes() === 1440;
+      const series = daily
         ? buildObservedDailyMaximumSeries(dateStr.slice(0, 7))
-        : sampleCanonicalHydraulicSeries(currentRawSeriesHours, getTimelineIntervalMinutes());
-      currentViewType = "observed-day";
-      currentTopTideIndex = null;
+        : sampleCanonicalHydraulicSeries(rawSeries, getTimelineIntervalMinutes());
 
-      syncSliderBounds();
+      let index;
       if (preferredEntry) {
-        currentHourIndex = findClosestMeasuredEntryIndex(currentSeriesHours, preferredEntry);
-      } else if (getTimelineIntervalMinutes() === 1440) {
-        const selectedDayIndex = currentSeriesHours.findIndex(entry => entry?.observedDate === dateStr);
-        currentHourIndex = selectedDayIndex >= 0 ? selectedDayIndex : getPeakHourIndex(currentSeriesHours);
+        index = findClosestMeasuredEntryIndex(series, preferredEntry);
+      } else if (daily) {
+        const selectedDayIndex = series.findIndex(entry => entry?.observedDate === dateStr);
+        index = selectedDayIndex >= 0 ? selectedDayIndex : getPeakHourIndex(series);
       } else if (options.dayStep) {
-        currentHourIndex = options.dayStep < 0 ? Math.max(0, currentSeriesHours.length - 1) : 0;
+        index = options.dayStep < 0 ? Math.max(0, series.length - 1) : 0;
       } else if (preferredHourIndex != null) {
-        currentHourIndex = Math.max(0, Math.min(preferredHourIndex, Math.max(0, currentSeriesHours.length - 1)));
+        index = Math.max(0, Math.min(preferredHourIndex, Math.max(0, series.length - 1)));
       } else {
-        currentHourIndex = getPeakHourIndex(currentSeriesHours);
+        index = getPeakHourIndex(series);
       }
-      document.getElementById("hourSlider").value = String(currentHourIndex);
 
-      await renderCalendar();
-      if (generation !== selectionGeneration) return false;
-      const rendered = await renderHour(currentHourIndex);
+      const commit = () => {
+        currentDataMode = "observed";
+        currentViewType = "observed-day";
+        currentTopTideIndex = null;
+        // Cadence changes rebuild the committed series, rather than editing an in-flight request.
+        if (loadObservedDay.pendingSelection?.generation === generation) loadObservedDay.pendingSelection = null;
+        topTideEvents = buildTopTideEvents();
+        setObservedDaySelection(dateStr, dayRecord);
+        currentRawSeriesHours = rawSeries;
+        currentSeriesHours = series;
+        currentHourIndex = index;
+        updateDataModeButtons();
+        syncSliderBounds();
+        document.getElementById("hourSlider").value = String(index);
+      };
+
+      if (!playback) {
+        commit();
+        await renderCalendar();
+        if (generation !== selectionGeneration || token !== lastRenderToken) return false;
+      } else if (!series[index]) {
+        return failPlaybackDay();
+      }
+      const observedSelection = playback ? { series, rawSeries, commit } : null;
+      const rendered = await renderHour(index, { playback, observedSelection });
       if (rendered === false || generation !== selectionGeneration) return false;
       renderTopTides();
       } finally {
@@ -11830,14 +11883,35 @@ function populateCalendarSelectors() {
     }
 
     let playbackGeneration = 0;
+    let pendingPlaybackStep = null;
+    let playbackSpeedMultiplier = 1;
+    let reschedulePlaybackFrame = null;
+
+    function togglePlaybackSpeed(event) {
+      playbackSpeedMultiplier = playbackSpeedMultiplier === 1 ? 2 : 1;
+      const button = event.currentTarget;
+      button.textContent = `${playbackSpeedMultiplier}×`;
+      button.setAttribute("aria-pressed", String(playbackSpeedMultiplier === 2));
+      reschedulePlaybackFrame?.();
+    }
     function clearPlaybackTimer() {
       ++playbackGeneration;
+      reschedulePlaybackFrame = null;
       if (playTimer) {
         clearTimeout(playTimer);
         clearInterval(playTimer);
         playTimer = null;
       }
-      playbackInFlight = false;
+      const step = pendingPlaybackStep;
+      pendingPlaybackStep = null;
+      if (step?.renderToken != null && step.renderToken === lastRenderToken) {
+        if (step.observedGeneration != null && step.observedGeneration === selectionGeneration) {
+          ++selectionGeneration;
+          loadObservedDay.pendingSelection = null;
+        }
+        cancelPendingFloodFrame();
+        step.restoreDisplay();
+      }
       updatePlayPauseButton();
     }
 
@@ -11875,13 +11949,13 @@ function populateCalendarSelectors() {
       }
     }
 
-    async function stepSeriesBy(delta) {
+    async function stepSeriesBy(delta, playback = null) {
       if (!currentSeriesHours.length) return;
 
-      const navigationIndex = getTimelineNavigationIndex();
+      const navigationIndex = playback ? currentHourIndex : getTimelineNavigationIndex();
       const nextIndex = navigationIndex + delta;
       if (nextIndex >= 0 && nextIndex < currentSeriesHours.length) {
-        return renderHour(nextIndex);
+        return renderHour(nextIndex, { playback });
       }
 
       if (currentViewType === "observed-day" && selectedObservedDate) {
@@ -11891,10 +11965,7 @@ function populateCalendarSelectors() {
           : selectedObservedDate;
         const neighborDate = getNeighborObservedDate(displayedDate, delta > 0 ? 1 : -1);
         if (neighborDate) {
-          const playback = playTimer ? playbackGeneration : null;
-          const load = loadObservedDay(neighborDate, null, null, {
-            preservePlayback: playback !== null, dayStep: delta
-          });
+          const load = loadObservedDay(neighborDate, null, null, { playback, dayStep: delta });
           const generation = selectionGeneration;
           const loaded = await load;
           return loaded !== false && generation === selectionGeneration && currentViewType === "observed-day" &&
@@ -11902,24 +11973,55 @@ function populateCalendarSelectors() {
         }
       }
 
-      if (delta > 0) {
-        await renderHour(0);
-      } else {
-        await renderHour(Math.max(0, currentSeriesHours.length - 1));
-      }
+      return renderHour(delta > 0 ? 0 : currentSeriesHours.length - 1, { playback });
     }
 
-    async function stepPlaybackForward() {
+    function getPlaybackCatchUpStep() {
+      const index = getTimelineNavigationIndex();
+      const intervalMinutes = getTimelineIntervalMinutes();
+      if (index !== currentHourIndex || intervalMinutes === 1440) return 1;
+      const entries = currentSeriesHours.slice(index, index + 3);
+      const [current, intermediate, next] = entries;
+      if (!current || !intermediate || !next ||
+          intermediate.observedDate !== current.observedDate || next.observedDate !== current.observedDate) return 1;
+
+      const [startTime, middleTime, endTime] = entries.map(entryTimeMs);
+      const intervalMs = intervalMinutes * 60_000;
+      if (![startTime, middleTime, endTime].every(Number.isFinite) ||
+          middleTime - startTime !== intervalMs || endTime - middleTime !== intervalMs) return 1;
+      const levels = entries.map(getStageValue);
+      if (!levels.every(Number.isFinite)) return 1;
+      const [start, middle, end] = levels;
+      // Always show local highs/lows, category changes, and hydraulic
+      // transitions as individual frames, even if rendering falls behind.
+      if (middle < Math.min(start, end) || middle > Math.max(start, end)) return 1;
+      const category = classifyFloodStage(start);
+      if (levels.some(level => classifyFloodStage(level) !== category)) return 1;
+      const phase = getHydraulicPhaseForEntry(entries[0], index, currentSeriesHours);
+      if (entries.some((entry, offset) =>
+        getHydraulicPhaseForEntry(entry, index + offset, currentSeriesHours) !== phase)) return 1;
+      return 2;
+    }
+
+    async function stepPlaybackForward(catchUp = false) {
       const generation = playbackGeneration;
       const previousDate = currentViewType === "observed-day"
         ? currentSeriesHours[currentHourIndex]?.observedDate || selectedObservedDate : null;
-      const advanced = await stepSeriesBy(1);
+      const step = playTimer ? {} : null;
+      if (step) pendingPlaybackStep = step;
+      let advanced;
+      try {
+        advanced = await stepSeriesBy(catchUp ? getPlaybackCatchUpStep() : 1, step);
+      } finally {
+        if (pendingPlaybackStep === step) pendingPlaybackStep = null;
+      }
       if (!playTimer || generation !== playbackGeneration) return;
       if (!currentSeriesHours.length) {
         stopPlayback();
         return;
       }
-      if (advanced === false || !previousDate || currentViewType !== "observed-day") return;
+      if (advanced === false) return false;
+      if (!previousDate || currentViewType !== "observed-day") return;
       const nextDate = currentSeriesHours[currentHourIndex]?.observedDate || selectedObservedDate;
       if (nextDate && nextDate > previousDate) {
         playbackObservedDaysAdvanced += 1;
@@ -11944,12 +12046,35 @@ function startPlayback() {
       playTimer = setTimeout(() => {}, 0);
       updatePlayPauseButton();
       const generation = playbackGeneration;
+      let scheduleNext = null;
+      let previousFrameStartedAt = null;
+      let lagMs = 0;
 
+      reschedulePlaybackFrame = () => {
+        previousFrameStartedAt = null;
+        lagMs = 0;
+        scheduleNext?.();
+      };
       const loop = async () => {
         if (!playTimer || generation !== playbackGeneration) return;
+        scheduleNext = null;
         const frameStartedAt = performance.now();
+        const frameDurationMs = getPlaybackFrameDurationMs() / playbackSpeedMultiplier;
+        let catchUp = false;
+        if (playbackSpeedMultiplier === 2 && previousFrameStartedAt !== null) {
+          lagMs = Math.min(2 * frameDurationMs,
+            Math.max(0, lagMs + frameStartedAt - previousFrameStartedAt - frameDurationMs));
+          catchUp = lagMs >= frameDurationMs;
+          // Make up at most one overdue reading. Do not carry a burst of
+          // overdue frames after a stalled request or background tab.
+          if (catchUp) lagMs %= frameDurationMs;
+        }
+        previousFrameStartedAt = frameStartedAt;
         try {
-          await stepPlaybackForward();
+          if (await stepPlaybackForward(catchUp) === false) {
+            previousFrameStartedAt = null;
+            lagMs = 0;
+          }
         } catch (err) {
           if (generation !== playbackGeneration) return;
           toast(err?.message || String(err));
@@ -11957,12 +12082,17 @@ function startPlayback() {
           return;
         }
         if (!playTimer || generation !== playbackGeneration) return;
-        const renderDurationMs = performance.now() - frameStartedAt;
-        const nextFrameDelayMs = Math.max(
-          PLAYBACK_MINIMUM_FRAME_DELAY_MS,
-          getPlaybackFrameDurationMs() - renderDurationMs
-        );
-        playTimer = setTimeout(loop, nextFrameDelayMs);
+        let scheduledFrameTimer;
+        // Recalculate the current deadline when the speed changes between frames.
+        // A frame already rendering still finishes before the next one starts.
+        scheduleNext = () => {
+          clearTimeout(scheduledFrameTimer);
+          const elapsedMs = performance.now() - frameStartedAt;
+          const frameDurationMs = getPlaybackFrameDurationMs() / playbackSpeedMultiplier;
+          const nextFrameDelayMs = Math.max(PLAYBACK_MINIMUM_FRAME_DELAY_MS, frameDurationMs - elapsedMs);
+          scheduledFrameTimer = playTimer = setTimeout(loop, nextFrameDelayMs);
+        };
+        scheduleNext();
         updatePlayPauseButton();
       };
 
@@ -15092,6 +15222,7 @@ function startPlayback() {
       }
       const stopBtn = document.getElementById("stopBtn");
       if (stopBtn) stopBtn.addEventListener("click", stopPlayback);
+      document.getElementById("timelineSpeedBtn")?.addEventListener("click", togglePlaybackSpeed);
 
       const reloadBtn = document.getElementById("reloadBtn");
       if (reloadBtn) {
