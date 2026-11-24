@@ -956,7 +956,7 @@ body:has(#contoursToggle[aria-busy="true"]) #contoursStatus{display:none!importa
   <script src="https://cdn.jsdelivr.net/gh/hondrospj/Highlands-Borough-floodmapper@59308111b233ab9cdbbe8c291e0bd434c24bfe5d/assets/road-labels.js" integrity="sha256-OtUJy7QnS2xxcJDXDKIR8vJPTkEQwrWq1sj5JOegJoA=" crossorigin="anonymous"></script>
 
   <script src="https://cdn.jsdelivr.net/gh/hondrospj/Highlands-Borough-floodmapper@59308111b233ab9cdbbe8c291e0bd434c24bfe5d/assets/app/raster-readers.js" integrity="sha256-mAWka2OX2UzrEQjXNmPZlTMzntf4KmZAZB8GpnRC4zE=" crossorigin="anonymous"></script>
-  <script data-nww-script="script-004" src="https://cdn.jsdelivr.net/gh/hondrospj/Highlands-Borough-floodmapper@59308111b233ab9cdbbe8c291e0bd434c24bfe5d/assets/app/runtime.js" integrity="sha256-ds6KMSeGW+Cqm7UbyNMrfYN5sAWnpUBYQgOCPuI4FtM=" crossorigin="anonymous"></script>
+  <script data-nww-script="script-004" src="https://cdn.jsdelivr.net/gh/hondrospj/Highlands-Borough-floodmapper@98e9d701479196edf146796358f465122cd5ac5a/assets/app/runtime.js" integrity="sha256-x4aswGD22Hx7Fyf+1ekbk97XkDlouzF4QGprwa2HQQU=" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/gh/hondrospj/Highlands-Borough-floodmapper@59308111b233ab9cdbbe8c291e0bd434c24bfe5d/assets/app/hydraulic-catalog.js" integrity="sha256-ttK1nUGOedYbgchZxAIlfNlfDORheNAXbjz1Pc3LQ2s=" crossorigin="anonymous"></script>
 
 <script data-nww-script="script-005" src="https://cdn.jsdelivr.net/gh/hondrospj/Highlands-Borough-floodmapper@59308111b233ab9cdbbe8c291e0bd434c24bfe5d/assets/app/calendar-dialog.js" integrity="sha256-SuDuN3+wu1KZCtNGgFBGvTr9lGDI9GELq5g8JlKl3eM=" crossorigin="anonymous"></script>
@@ -984,8 +984,9 @@ body:has(#contoursToggle[aria-busy="true"]) #contoursStatus{display:none!importa
 
   // Matching timestamps alone cannot qualify a PETSS-driven simulation as V41.
   const originalPhysicsMatches = physicsManifestMatchesForecastCycle;
-  physicsManifestMatchesForecastCycle = function (manifest) {
-    return !isV41() && originalPhysicsMatches(manifest);
+  physicsManifestMatchesForecastCycle = function (manifest, forecast = forecastData) {
+    return forecast?.sourceType !== "SHORELYSAFE_V41_WEIGHTED_ECMWF_103_PATHS" &&
+      originalPhysicsMatches(manifest, forecast);
   };
 
   const { body } = HELP_COPY.forecastType;
