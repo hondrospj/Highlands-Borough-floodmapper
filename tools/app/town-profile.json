@@ -214,6 +214,28 @@
           221,
           90
         ]
+      },
+      "worldFileCornersWgs84": [
+        [
+          40.41149943094,
+          -74.0050378091
+        ],
+        [
+          40.4113830034,
+          -73.97853906072
+        ],
+        [
+          40.3889008538,
+          -73.97870809358
+        ],
+        [
+          40.38901732024,
+          -74.00520684195
+        ]
+      ],
+      "worldFileRasterSize": {
+        "width": 1476,
+        "height": 1638
       }
     },
     "addressLookup": {
@@ -274,7 +296,29 @@
     "parcels": {
       "geojsonPath": "assets/highlands-data/parcels.geojson",
       "boundaryPngPath": "assets/highlands-data/parcel-boundaries.png",
-      "houseAlertCdfPath": "assets/highlands-data/flood-projections.json"
+      "houseAlertCdfPath": "assets/highlands-data/flood-projections.json",
+      "worldFileCornersWgs84": [
+        [
+          40.41149943094,
+          -74.0050378091
+        ],
+        [
+          40.4113830034,
+          -73.97853906072
+        ],
+        [
+          40.3889008538,
+          -73.97870809358
+        ],
+        [
+          40.38901732024,
+          -74.00520684195
+        ]
+      ],
+      "worldFileRasterSize": {
+        "width": 1476,
+        "height": 1638
+      }
     },
     "structures": {
       "nsi2026GeojsonPath": "assets/highlands-data/structures.geojson",
