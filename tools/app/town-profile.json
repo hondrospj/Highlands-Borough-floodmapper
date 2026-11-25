@@ -239,7 +239,7 @@
       }
     },
     "addressLookup": {
-      "title": "Find a Highlands Borough Address",
+      "title": "Find a Highlands Address",
       "displayName": "Highlands Borough",
       "city": "Highlands Borough",
       "state": "NJ",
@@ -248,7 +248,7 @@
       "sourceCountry": "USA",
       "postalCode": "",
       "placeholder": "Example: 123 Main St",
-      "buttonText": "Search Highlands Borough",
+      "buttonText": "Search Highlands",
       "bbox": {
         "west": -74.0050561,
         "south": 40.3889225,
