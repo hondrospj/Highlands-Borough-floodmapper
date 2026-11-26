@@ -15,6 +15,12 @@
   const gaugeId = config.site.usgsGaugeId;
   const navdOffset = config.datums.navd88OffsetFromMllwFt;
   const sourceType = "SHORELYSAFE_V41_WEIGHTED_ECMWF_103_PATHS";
+  const geps20SourceType = "SHORELYSAFE_V41_WEIGHTED_ECMWF_GEPS20_124_PATHS";
+  const geps20Url = new URL("v41_geps20_forecasts_mllw.json", v41Url).href;
+  const holdRelease = Date.parse("2026-11-26T05:00:00Z");
+  const firstReplacementIssue = Date.parse("2026-11-26T00:00:00Z");
+  const heldStationId = stationId === "8531804" ? "8531680" : stationId;
+  const geps20Paths = { ifs: 1, aifs: 1, eps: 50, aifs_ens: 51, geps: 21 };
 
   async function getJson(url, timeout) {
     const controller = new AbortController();
@@ -33,7 +39,29 @@
     }
   }
 
-  function toTownForecast(feed, now) {
+  function isGeps20(feed, issue) {
+    if (feed?.variant !== "geps20" || feed.replay !== false ||
+        feed.physical_paths !== 124 || feed.geps_cycle_policy !== "same_cycle" ||
+        issue % (12 * hour) !== 0 || issue < firstReplacementIssue) return false;
+    const families = Object.keys(geps20Paths);
+    if ([feed.family_weights, feed.family_paths, feed.family_issues_utc]
+        .some(value => !value || Object.keys(value).length !== families.length)) return false;
+    return families.every(family => feed.family_weights[family] === 0.2 &&
+      feed.family_paths[family] === geps20Paths[family] &&
+      Date.parse(feed.family_issues_utc[family]) === issue);
+  }
+
+  function canLoadGeps20(feed, now) {
+    // The Sea Bright mapper shares Highlands' release gate with its Sandy Hook counterpart.
+    const heldStation = feed.stations?.[heldStationId];
+    return now >= holdRelease && Date.parse(feed.model_time_utc) >= firstReplacementIssue &&
+      heldStation?.station_id === heldStationId &&
+      heldStation.model_time_utc === feed.model_time_utc &&
+      !Object.hasOwn(heldStation, "issued_crest_hold") &&
+      !Object.hasOwn(feed.stations[stationId], "issued_crest_hold");
+  }
+
+  function toTownForecast(feed, now, geps20 = false) {
     const station = feed?.stations?.[stationId];
     const issue = Date.parse(feed?.model_time_utc);
     const generated = Date.parse(feed?.generated_utc);
@@ -43,10 +71,14 @@
         feed.datum !== "MLLW" || feed.units !== "ft" || feed.forecast_statistic !== "ensemble_mean" ||
         station?.station_id !== stationId || station.gauge_id !== gaugeId || station.gauge_agency !== "USGS" ||
         station.datum !== "MLLW" || station.model_time_utc !== feed.model_time_utc ||
-        station.physical_paths !== 103 || !/^[0-9a-f]{64}$/.test(station.forecast_receipt_sha256) ||
+        station.physical_paths !== (geps20 ? 124 : 103) ||
+        !/^[0-9a-f]{64}$/.test(station.forecast_receipt_sha256) ||
+        (geps20 && (!isGeps20(feed, issue) || station.forecast_hours < 144 ||
+          Object.hasOwn(station, "issued_crest_hold"))) ||
         !Number.isFinite(sourceOffset) || !Number.isFinite(navdOffset) ||
         Math.abs(sourceOffset + navdOffset) > 0.1 ||
-        !Number.isFinite(issue) || issue % (6 * hour) !== 0 || issue > now || now - issue > 18 * hour ||
+        !Number.isFinite(issue) || issue % (6 * hour) !== 0 || issue > now ||
+        now - issue > (geps20 ? 30 : 18) * hour ||
         !Number.isFinite(generated) || generated < issue || generated > now + 5 * 60000 ||
         !Array.isArray(rows) || rows.length !== station.forecast_hours ||
         Date.parse(station.through_utc) !== issue + rows.length * hour) {
@@ -81,8 +113,8 @@
     if (scenarios.mean.hours.length !== 97) throw new Error("V41 coverage is shorter than 96 hours");
     return {
       schema: "shorelysafe-v41-town-map-forecast-v1",
-      sourceType,
-      sourceUrl: v41Url,
+      sourceType: geps20 ? geps20SourceType : sourceType,
+      sourceUrl: geps20 ? geps20Url : v41Url,
       forecastReceiptSha256: station.forecast_receipt_sha256,
       experimental: true,
       gaugeName: config.site.gaugeName,
@@ -104,7 +136,17 @@
 
   window.floodmapperLoadTownForecast = async () => {
     try {
-      return toTownForecast(await getJson(v41Url, 4500), Date.now());
+      const feed = await getJson(v41Url, 4500);
+      const now = Date.now();
+      const baseline = toTownForecast(feed, now);
+      if (canLoadGeps20(feed, now)) {
+        try {
+          return toTownForecast(await getJson(geps20Url, 4500), Date.now(), true);
+        } catch {
+          return baseline;
+        }
+      }
+      return baseline;
     } catch (error) {
       console.warn("V41 forecast unavailable; using NOAA PETSS guidance.", error);
       return getJson(url, 30000);
@@ -988,7 +1030,9 @@ body:has(#contoursToggle[aria-busy="true"]) #contoursStatus{display:none!importa
 <script defer src="https://cdn.jsdelivr.net/gh/hondrospj/North-Wildwood-floodmapper@bf5e675734e4964e85d4272ffabb68cada1fb87b/assets/modal-focus.js" integrity="sha384-Y8H1Efb9GhQ3XZRq53OWSncimOhtWmC6CafYnlDjDpSRf++Ht7oKMHbap4MBtWux" crossorigin="anonymous"></script>
 <script id="floodmapper-v41-reload">
 (() => {
-  const isV41 = () => forecastData?.sourceType === "SHORELYSAFE_V41_WEIGHTED_ECMWF_103_PATHS";
+  const isV41 = (forecast = forecastData) =>
+    forecast?.sourceType === "SHORELYSAFE_V41_WEIGHTED_ECMWF_103_PATHS" ||
+    forecast?.sourceType === "SHORELYSAFE_V41_WEIGHTED_ECMWF_GEPS20_124_PATHS";
   const originalFetchJson = fetchJson;
   fetchJson = function (url, options) {
     if (url === FORECAST_URL && options?.cache === "no-cache" &&
@@ -1001,7 +1045,7 @@ body:has(#contoursToggle[aria-busy="true"]) #contoursStatus{display:none!importa
   // Matching timestamps alone cannot qualify a PETSS-driven simulation as V41.
   const originalPhysicsMatches = physicsManifestMatchesForecastCycle;
   physicsManifestMatchesForecastCycle = function (manifest, forecast = forecastData) {
-    return forecast?.sourceType !== "SHORELYSAFE_V41_WEIGHTED_ECMWF_103_PATHS" &&
+    return !isV41(forecast) &&
       originalPhysicsMatches(manifest, forecast);
   };
 
