@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-26T20:00:00Z",
+  "generatedAt": "2026-11-27T02:00:00Z",
   "schema": "single-zone-top-tides-v1",
   "town": "Highlands Borough",
   "toptides": [
@@ -290,6 +290,18 @@
       "rank": 16
     },
     {
+      "rank": 17,
+      "height_ft": 5.32,
+      "height_navd88_ft": 5.32,
+      "height_mllw_ft": 7.45,
+      "date": "2026-11-26",
+      "display_date": "Nov 26, 2026",
+      "zoneId": "default",
+      "zoneLabel": "Highlands Borough",
+      "gaugeName": "Sea Bright",
+      "source": "observed-archive"
+    },
+    {
       "height_ft": 5.24,
       "height_navd88_ft": 5.24,
       "height_mllw_ft": null,
@@ -307,10 +319,10 @@
       "officialCrestReportedTime": "",
       "officialCrestQualificationCodes": "1",
       "source_url": "https://nwis.waterdata.usgs.gov/nwis/peak?site_no=01407535&agency_cd=USGS&format=rdb",
-      "rank": 17
+      "rank": 18
     },
     {
-      "rank": 18,
+      "rank": 19,
       "height_ft": 5.17,
       "height_navd88_ft": 5.17,
       "height_mllw_ft": 7.3,
@@ -339,7 +351,7 @@
       "officialCrestReportedTime": "",
       "officialCrestQualificationCodes": "1",
       "source_url": "https://nwis.waterdata.usgs.gov/nwis/peak?site_no=01407535&agency_cd=USGS&format=rdb",
-      "rank": 19
+      "rank": 20
     },
     {
       "height_ft": 5.12,
@@ -359,7 +371,7 @@
       "officialCrestReportedTime": "",
       "officialCrestQualificationCodes": "1",
       "source_url": "https://nwis.waterdata.usgs.gov/nwis/peak?site_no=01407535&agency_cd=USGS&format=rdb",
-      "rank": 20
+      "rank": 21
     },
     {
       "height_ft": 5.09,
@@ -379,10 +391,10 @@
       "officialCrestReportedTime": "",
       "officialCrestQualificationCodes": "1",
       "source_url": "https://nwis.waterdata.usgs.gov/nwis/peak?site_no=01407535&agency_cd=USGS&format=rdb",
-      "rank": 21
+      "rank": 22
     },
     {
-      "rank": 22,
+      "rank": 23,
       "height_ft": 5.05,
       "height_navd88_ft": 5.05,
       "height_mllw_ft": 7.18,
@@ -411,19 +423,7 @@
       "officialCrestReportedTime": "",
       "officialCrestQualificationCodes": "1",
       "source_url": "https://nwis.waterdata.usgs.gov/nwis/peak?site_no=01407535&agency_cd=USGS&format=rdb",
-      "rank": 23
-    },
-    {
-      "rank": 24,
-      "height_ft": 5.04,
-      "height_navd88_ft": 5.04,
-      "height_mllw_ft": 7.17,
-      "date": "2021-02-01",
-      "display_date": "Feb 1, 2021",
-      "zoneId": "default",
-      "zoneLabel": "Highlands Borough",
-      "gaugeName": "Sea Bright",
-      "source": "observed-archive"
+      "rank": 24
     },
     {
       "height_ft": 5.04,
